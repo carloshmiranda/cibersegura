@@ -1,4 +1,4 @@
-# Robots.txt for CiberSegura
+# Robots.txt for CiberPME
 
 User-agent: *
 Allow: /
@@ -23,4 +23,4 @@ User-agent: Google-Extended
 Allow: /
 
 # Sitemap
-Sitemap: https://cibersegura.vercel.app/sitemap.xml
+Sitemap: https://ciberpme.vercel.app/sitemap.xml

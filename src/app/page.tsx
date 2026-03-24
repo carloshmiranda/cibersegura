@@ -2,7 +2,7 @@ import Link from "next/link";
 import { posts, CATEGORIES } from "@/lib/posts";
 import { NewsletterForm } from "./newsletter-form";
 
-const COMPANY_NAME = "CiberSegura";
+const COMPANY_NAME = "CiberPME";
 
 export default function HomePage() {
   return (
@@ -158,10 +158,10 @@ export default function HomePage() {
         {/* About */}
         <section id="sobre" className="max-w-3xl mx-auto px-6 py-20">
           <h2 className="text-xl font-bold text-brand mb-4 text-center">
-            Sobre o CiberSegura
+            Sobre o CiberPME
           </h2>
           <p className="text-text-secondary text-center leading-relaxed max-w-xl mx-auto mb-6">
-            O CiberSegura e um recurso gratuito dedicado a ajudar pequenas e
+            O CiberPME e um recurso gratuito dedicado a ajudar pequenas e
             medias empresas portuguesas a protegerem-se contra ameacas digitais.
             Publicamos artigos praticos, guias passo-a-passo e analises de
             ferramentas, tudo em portugues e adaptado a realidade do mercado

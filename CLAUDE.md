@@ -1,9 +1,9 @@
-# CiberSegura
+# CiberPME
 
 > Blog de ciberseguranca e recursos para PMEs portuguesas
 
 ## Identity
-- **Slug**: cibersegura
+- **Slug**: ciberpme
 - **Type**: blog
 - **Target audience**: pequenas e medias empresas portuguesas
 - **Status**: mvp
@@ -75,9 +75,9 @@ Aguardando primeira extração de insights do playbook Hive.
 ## Infrastructure
 - **Vercel project**: TBD
 - **Neon project**: TBD
-- **GitHub repo**: carloshmiranda/cibersegura
+- **GitHub repo**: carloshmiranda/ciberpme
 - **Stripe account**: TBD
-- **URL**: https://cibersegura.vercel.app
+- **URL**: https://ciberpme.vercel.app
 
 ## Search Engine Discovery (Day 1 Requirements)
 - sitemap.xml must list ALL pages (landing, tools, blog posts, legal)

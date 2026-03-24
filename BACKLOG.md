@@ -1,4 +1,4 @@
-# Backlog — CiberSegura
+# Backlog — CiberPME
 
 > Task-level improvements for this company. Agents add items here when they discover work that can't be done in the current cycle. The CEO reads this at the start of each cycle to inform planning.
 

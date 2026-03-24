@@ -3,7 +3,7 @@ import { posts } from "@/lib/posts";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl =
-    process.env.NEXT_PUBLIC_URL || "https://cibersegura-flax.vercel.app";
+    process.env.NEXT_PUBLIC_URL || "https://ciberpme.vercel.app";
 
   const blogPosts = posts.map((post) => ({
     url: `${baseUrl}/blog/${post.slug}`,

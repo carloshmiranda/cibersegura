@@ -3,7 +3,7 @@ import { NextRequest } from "next/server";
 
 export const runtime = "edge";
 
-const COMPANY_NAME = "CiberSegura";
+const COMPANY_NAME = "CiberPME";
 const DEFAULT_DESCRIPTION = "Plataforma de ferramentas e consciencialização em cibersegurança para empresas portuguesas";
 
 export async function GET(req: NextRequest) {

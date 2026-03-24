@@ -82,7 +82,7 @@ export async function POST(req: NextRequest) {
             method: "POST",
             headers: { Authorization: `Bearer ${resendKey}`, "Content-Type": "application/json" },
             body: JSON.stringify({
-              from: `CiberSegura <hello@${process.env.SENDING_DOMAIN || "resend.dev"}>`,
+              from: `CiberPME <hello@${process.env.SENDING_DOMAIN || "resend.dev"}>`,
               to: email,
               subject,
               html: bodyHtml,
