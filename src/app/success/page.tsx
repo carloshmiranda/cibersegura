@@ -9,10 +9,10 @@ export default function SuccessPage() {
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">You're in!</h1>
-        <p className="text-gray-600 mb-8">Your subscription is active. Welcome aboard.</p>
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">Esta dentro!</h1>
+        <p className="text-gray-600 mb-8">A sua subscricao esta ativa. Bem-vindo.</p>
         <Link href="/" className="px-6 py-3 bg-gray-900 text-white rounded-lg font-medium hover:bg-gray-800 transition inline-block">
-          Get started
+          Comecar
         </Link>
       </div>
     </div>

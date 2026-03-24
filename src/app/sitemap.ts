@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 
 // Dynamic sitemap — add new pages here as they're created
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_URL || "https://cibersegura.vercel.app";
+  const baseUrl = process.env.NEXT_PUBLIC_URL || "https://cibersegura-flax.vercel.app";
 
   return [
     {

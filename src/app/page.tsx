@@ -47,13 +47,13 @@ function WaitlistForm() {
     return (
       <div className="text-center">
         <p className="text-lg font-medium text-gray-900 mb-2">
-          {result.already_signed_up ? "You're already on the list!" : "You're in!"}
+          {result.already_signed_up ? "Ja esta na lista!" : "Esta dentro!"}
         </p>
         <p className="text-gray-600 mb-4">
-          You're <span className="font-bold">#{result.position}</span> on the waitlist.
+          E o <span className="font-bold">#{result.position}</span> na lista de espera.
         </p>
         <div className="bg-gray-50 rounded-lg p-4 text-sm">
-          <p className="text-gray-500 mb-2">Share your link to move up:</p>
+          <p className="text-gray-500 mb-2">Partilhe o seu link para subir na lista:</p>
           <div className="flex items-center gap-2">
             <input
               readOnly
@@ -65,7 +65,7 @@ function WaitlistForm() {
               onClick={() => navigator.clipboard.writeText(referralLink)}
               className="px-3 py-2 bg-gray-900 text-white rounded text-sm hover:bg-gray-800 transition"
             >
-              Copy
+              Copiar
             </button>
           </div>
         </div>
@@ -77,7 +77,7 @@ function WaitlistForm() {
     <form onSubmit={handleSubmit} className="flex flex-col gap-3 max-w-md mx-auto">
       <input
         type="text"
-        placeholder="Your name (optional)"
+        placeholder="O seu nome (opcional)"
         value={name}
         onChange={(e) => setName(e.target.value)}
         className="px-4 py-3 border border-gray-200 rounded-lg text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900"
@@ -86,7 +86,7 @@ function WaitlistForm() {
         <input
           type="email"
           required
-          placeholder="your@email.com"
+          placeholder="o-seu@email.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="flex-1 px-4 py-3 border border-gray-200 rounded-lg text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900"
@@ -96,25 +96,25 @@ function WaitlistForm() {
           disabled={state === "loading"}
           className="px-6 py-3 bg-gray-900 text-white rounded-lg font-medium hover:bg-gray-800 transition disabled:opacity-50"
         >
-          {state === "loading" ? "..." : "Join"}
+          {state === "loading" ? "..." : "Entrar"}
         </button>
       </div>
-      {ref && <p className="text-sm text-gray-500">Referred by a friend? You'll get priority access.</p>}
-      {state === "error" && <p className="text-sm text-red-500">Something went wrong. Please try again.</p>}
+      {ref && <p className="text-sm text-gray-500">Referido por um amigo? Tera acesso prioritario.</p>}
+      {state === "error" && <p className="text-sm text-red-500">Algo correu mal. Por favor, tente novamente.</p>}
     </form>
   );
 }
 
 function CTAButtons() {
   const href = LAUNCH_MODE === "early_access" ? "/checkout" : "#waitlist";
-  const label = LAUNCH_MODE === "early_access" ? "Get early access" : "Get started";
+  const label = LAUNCH_MODE === "early_access" ? "Acesso antecipado" : "Comecar";
   return (
     <div className="flex gap-4 justify-center">
       <Link href={href} className="px-6 py-3 bg-gray-900 text-white rounded-lg font-medium hover:bg-gray-800 transition">
         {label}
       </Link>
       <a href="#features" className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition">
-        Learn more
+        Saber mais
       </a>
     </div>
   );
@@ -180,9 +180,9 @@ export default function HomePage() {
       <nav className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
         <span className="text-lg font-bold text-gray-900">{COMPANY_NAME}</span>
         <div className="flex items-center gap-6 text-sm text-gray-600">
-          <a href="#preview" className="hover:text-gray-900 transition">Preview</a>
-          <a href="#features" className="hover:text-gray-900 transition">Features</a>
-          <a href="#how-it-works" className="hover:text-gray-900 transition">How it works</a>
+          <a href="#preview" className="hover:text-gray-900 transition">Demonstracao</a>
+          <a href="#features" className="hover:text-gray-900 transition">Funcionalidades</a>
+          <a href="#how-it-works" className="hover:text-gray-900 transition">Como funciona</a>
           <a href="#faq" className="hover:text-gray-900 transition">FAQ</a>
         </div>
       </nav>
@@ -191,7 +191,7 @@ export default function HomePage() {
       {/* Hero */}
       <header id="waitlist" className="max-w-3xl mx-auto px-6 pt-16 pb-20 text-center">
         <div className="inline-block px-3 py-1 mb-6 text-xs font-medium text-gray-600 bg-gray-100 rounded-full">
-          Now in early access
+          Acesso antecipado
         </div>
         <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 mb-6 leading-tight">
           {DESCRIPTION}
@@ -203,14 +203,14 @@ export default function HomePage() {
         {LAUNCH_MODE === "waitlist" && <WaitlistForm />}
         {LAUNCH_MODE !== "waitlist" && <CTAButtons />}
 
-        <p className="mt-4 text-xs text-gray-400">Free to try. No credit card required.</p>
+        <p className="mt-4 text-xs text-gray-400">Experimente gratuitamente. Sem cartao de credito.</p>
       </header>
 
       {/* Product Preview — "See it in action" */}
       <section id="preview" className="max-w-5xl mx-auto px-6 pb-24">
         <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold text-gray-900 mb-3">See it in action</h2>
-          <p className="text-gray-500 max-w-lg mx-auto">A clean, powerful dashboard designed to give you clarity at a glance.</p>
+          <h2 className="text-3xl font-bold text-gray-900 mb-3">Veja em acao</h2>
+          <p className="text-gray-500 max-w-lg mx-auto">Um painel limpo e poderoso, desenhado para lhe dar clareza num instante.</p>
         </div>
         {/* Browser chrome frame with perspective tilt */}
         <div className="relative mx-auto max-w-4xl" style={{ perspective: "1200px" }}>
@@ -245,7 +245,7 @@ export default function HomePage() {
                   </div>
                   <span className="text-sm font-semibold text-gray-900">{COMPANY_NAME}</span>
                 </div>
-                {["Dashboard", "Analytics", "Settings", "Billing"].map((item, i) => (
+                {["Painel", "Analises", "Definicoes", "Faturacao"].map((item, i) => (
                   <div
                     key={i}
                     className={`px-3 py-2 rounded-md text-sm ${i === 0 ? "bg-blue-50 text-blue-700 font-medium" : "text-gray-500"}`}
@@ -270,7 +270,7 @@ export default function HomePage() {
                     <div className="h-3 w-40 bg-gray-100 rounded" />
                   </div>
                   <div className="h-8 w-28 bg-blue-600 rounded-md flex items-center justify-center">
-                    <span className="text-xs text-white font-medium">New Report</span>
+                    <span className="text-xs text-white font-medium">Novo Relatorio</span>
                   </div>
                 </div>
 
@@ -292,10 +292,10 @@ export default function HomePage() {
                 {/* Chart area with SVG bar chart */}
                 <div className="bg-gray-50 border border-gray-100 rounded-lg p-4">
                   <div className="flex items-center justify-between mb-3">
-                    <span className="text-xs font-medium text-gray-500">Performance Overview</span>
+                    <span className="text-xs font-medium text-gray-500">Visao Geral de Desempenho</span>
                     <div className="flex gap-3 text-xs text-gray-400">
-                      <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-500 inline-block" /> This period</span>
-                      <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-200 inline-block" /> Last period</span>
+                      <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-500 inline-block" /> Este periodo</span>
+                      <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-200 inline-block" /> Periodo anterior</span>
                     </div>
                   </div>
                   <svg className="w-full h-28 md:h-36" viewBox="0 0 400 120" preserveAspectRatio="none">
@@ -324,9 +324,9 @@ export default function HomePage() {
       {/* Features */}
       <section id="features" className="max-w-4xl mx-auto px-6 py-20">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Everything you need</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Tudo o que precisa</h2>
           <p className="text-gray-500 max-w-lg mx-auto">
-            Built for people who want results, not complexity.
+            Feito para quem quer resultados, nao complicacoes.
           </p>
         </div>
         <div className="grid md:grid-cols-3 gap-8">
@@ -344,8 +344,8 @@ export default function HomePage() {
       <section id="how-it-works" className="bg-gray-50 py-20">
         <div className="max-w-4xl mx-auto px-6">
           <div className="text-center mb-14">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">How it works</h2>
-            <p className="text-gray-500">Get started in minutes, not hours.</p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Como funciona</h2>
+            <p className="text-gray-500">Comece em minutos, nao em horas.</p>
           </div>
           <div className="grid md:grid-cols-3 gap-10">
             {/* Step 1: Sign up — form mockup */}
@@ -362,7 +362,7 @@ export default function HomePage() {
                     <div className="h-7 w-full bg-gray-50 border border-gray-200 rounded-md" />
                     <div className="h-7 w-full bg-gray-50 border border-gray-200 rounded-md" />
                     <div className="h-7 w-full bg-blue-600 rounded-md flex items-center justify-center">
-                      <span className="text-[9px] text-white font-medium">Get Started</span>
+                      <span className="text-[9px] text-white font-medium">Comecar</span>
                     </div>
                   </div>
                 </div>
@@ -394,7 +394,7 @@ export default function HomePage() {
                     ))}
                     {/* Dropdown */}
                     <div className="h-7 w-full bg-gray-50 border border-gray-200 rounded-md flex items-center px-2 justify-between">
-                      <span className="text-[8px] text-gray-400">Select option...</span>
+                      <span className="text-[8px] text-gray-400">Selecionar opcao...</span>
                       <svg className="w-2.5 h-2.5 text-gray-300" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
                     </div>
                   </div>
@@ -455,7 +455,7 @@ export default function HomePage() {
                       <div className="w-3 h-3 rounded-full bg-green-400 flex items-center justify-center">
                         <svg className="w-2 h-2 text-white" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
                       </div>
-                      <span className="text-[8px] text-green-600 font-medium">All systems go</span>
+                      <span className="text-[8px] text-green-600 font-medium">Todos os sistemas operacionais</span>
                     </div>
                   </div>
                 </div>
@@ -479,7 +479,7 @@ export default function HomePage() {
       {/* FAQ */}
       <section id="faq" className="bg-gray-50 py-20">
         <div className="max-w-2xl mx-auto px-6">
-          <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Frequently asked questions</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Perguntas frequentes</h2>
           <div className="space-y-6">
             {FAQS.map((faq, i) => (
               <details key={i} className="group bg-white rounded-xl border border-gray-200 px-6 py-4">
@@ -496,9 +496,9 @@ export default function HomePage() {
 
       {/* Final CTA */}
       <section className="max-w-3xl mx-auto px-6 py-20 text-center">
-        <h2 className="text-3xl font-bold text-gray-900 mb-4">Ready to get started?</h2>
+        <h2 className="text-3xl font-bold text-gray-900 mb-4">Pronto para comecar?</h2>
         <p className="text-gray-500 mb-8 max-w-md mx-auto">
-          Join hundreds of early adopters who are already saving time.
+          Junte-se a centenas de empresas que ja estao a proteger o seu negocio.
         </p>
         {LAUNCH_MODE === "waitlist" && <WaitlistForm />}
         {LAUNCH_MODE !== "waitlist" && <CTAButtons />}
@@ -511,9 +511,9 @@ export default function HomePage() {
         <div className="max-w-4xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <span className="font-bold text-gray-900">{COMPANY_NAME}</span>
           <div className="flex gap-6 text-sm text-gray-500">
-            <a href="#preview" className="hover:text-gray-900 transition">Preview</a>
-            <a href="#features" className="hover:text-gray-900 transition">Features</a>
-            <a href="#how-it-works" className="hover:text-gray-900 transition">How it works</a>
+            <a href="#preview" className="hover:text-gray-900 transition">Demonstracao</a>
+            <a href="#features" className="hover:text-gray-900 transition">Funcionalidades</a>
+            <a href="#how-it-works" className="hover:text-gray-900 transition">Como funciona</a>
             <a href="#faq" className="hover:text-gray-900 transition">FAQ</a>
           </div>
           <p className="text-sm text-gray-400">&copy; {new Date().getFullYear()} {COMPANY_NAME}</p>

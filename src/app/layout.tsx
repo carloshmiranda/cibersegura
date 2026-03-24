@@ -5,7 +5,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "CiberSegura",
   description: "Plataforma de ferramentas e consciencialização em cibersegurança para empresas portuguesas",
-  metadataBase: new URL("https://cibersegura.vercel.app"),
+  metadataBase: new URL("https://cibersegura-flax.vercel.app"),
   verification: {
     google: "", // Google Search Console
   },
@@ -36,13 +36,13 @@ const jsonLd = {
     {
       "@type": "Organization",
       name: "CiberSegura",
-      url: "https://cibersegura.vercel.app",
+      url: "https://cibersegura-flax.vercel.app",
       description: "Plataforma de ferramentas e consciencialização em cibersegurança para empresas portuguesas",
     },
     {
       "@type": "WebSite",
       name: "CiberSegura",
-      url: "https://cibersegura.vercel.app",
+      url: "https://cibersegura-flax.vercel.app",
     },
   ],
 };
