@@ -3,15 +3,17 @@ import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "CiberSegura",
-  description: "Plataforma de ferramentas e consciencialização em cibersegurança para empresas portuguesas",
+  title: "CiberSegura — Ciberseguranca para PMEs Portuguesas",
+  description:
+    "Blog de ciberseguranca e recursos para pequenas e medias empresas portuguesas. Artigos sobre ameacas, boas praticas, ferramentas e legislacao RGPD.",
   metadataBase: new URL("https://cibersegura-flax.vercel.app"),
   verification: {
     google: "", // Google Search Console
   },
   openGraph: {
-    title: "CiberSegura",
-    description: "Plataforma de ferramentas e consciencialização em cibersegurança para empresas portuguesas",
+    title: "CiberSegura — Ciberseguranca para PMEs Portuguesas",
+    description:
+      "Blog de ciberseguranca e recursos para pequenas e medias empresas portuguesas.",
     type: "website",
     images: [
       {
@@ -24,8 +26,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "CiberSegura",
-    description: "Plataforma de ferramentas e consciencialização em cibersegurança para empresas portuguesas",
+    title: "CiberSegura — Ciberseguranca para PMEs Portuguesas",
+    description:
+      "Blog de ciberseguranca e recursos para pequenas e medias empresas portuguesas.",
     images: ["/api/og"],
   },
 };
@@ -37,7 +40,8 @@ const jsonLd = {
       "@type": "Organization",
       name: "CiberSegura",
       url: "https://cibersegura-flax.vercel.app",
-      description: "Plataforma de ferramentas e consciencialização em cibersegurança para empresas portuguesas",
+      description:
+        "Blog de ciberseguranca e recursos para pequenas e medias empresas portuguesas",
     },
     {
       "@type": "WebSite",
@@ -47,7 +51,11 @@ const jsonLd = {
   ],
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="pt">
       <head>
@@ -56,7 +64,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body>{children}<Analytics /></body>
+      <body>
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }

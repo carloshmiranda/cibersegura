@@ -1,0 +1,79 @@
+export interface Post {
+  slug: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  category: "ameacas" | "legislacao" | "boas-praticas" | "ferramentas";
+  categoryLabel: string;
+  publishedAt: string;
+  readingTime: number;
+}
+
+export const CATEGORIES: Record<string, string> = {
+  ameacas: "Ameacas",
+  legislacao: "Legislacao RGPD",
+  "boas-praticas": "Boas Praticas",
+  ferramentas: "Ferramentas",
+};
+
+export const posts: Post[] = [
+  {
+    slug: "10-ameacas-ciberseguranca-pmes-portuguesas",
+    title: "10 Ameacas de Ciberseguranca que as PMEs Portuguesas Ignoram",
+    excerpt:
+      "A maioria das pequenas e medias empresas portuguesas subestima os riscos de ciberseguranca. Descubra as 10 ameacas mais comuns e como se proteger.",
+    content: `As pequenas e medias empresas (PMEs) portuguesas sao alvos cada vez mais frequentes de ataques informaticos. Ao contrario do que muitos empresarios pensam, nao e preciso ser uma grande corporacao para atrair a atencao de cibercriminosos. Na verdade, as PMEs sao frequentemente preferidas precisamente porque tendem a ter menos proteccoes.
+
+Entre as ameacas mais ignoradas estao o phishing direcionado (spear phishing), onde os atacantes enviam emails personalizados que parecem vir de fornecedores ou clientes reais. Outra ameaca crescente e o ransomware, que encripta todos os ficheiros da empresa e exige um resgate para os desbloquear. Em 2024, Portugal registou um aumento de 35% neste tipo de ataques.
+
+O comprometimento de emails corporativos (BEC) e particularmente perigoso para PMEs que fazem transferencias bancarias regulares. Os atacantes infiltram-se nas comunicacoes por email e alteram dados de pagamento, desviando fundos para contas fraudulentas. Alem disso, muitas empresas ignoram ameacas internas, como colaboradores que inadvertidamente partilham credenciais ou utilizam passwords fracas.
+
+Outras ameacas incluem ataques a cadeias de fornecimento digitais, exploracao de vulnerabilidades em software desatualizado, ataques DDoS a lojas online, roubo de dados de clientes por falta de encriptacao, e a utilizacao de redes Wi-Fi empresariais sem segmentacao adequada. A boa noticia e que a maioria destas ameacas pode ser mitigada com medidas simples e acessiveis.`,
+    category: "ameacas",
+    categoryLabel: "Ameacas",
+    publishedAt: "2026-03-20",
+    readingTime: 6,
+  },
+  {
+    slug: "guia-rgpd-pequenas-empresas-portugal",
+    title: "Guia RGPD para Pequenas Empresas em Portugal",
+    excerpt:
+      "O RGPD aplica-se a todas as empresas que tratam dados pessoais, independentemente da dimensao. Saiba o que a sua PME precisa de fazer para estar em conformidade.",
+    content: `O Regulamento Geral sobre a Proteccao de Dados (RGPD) entrou em vigor em maio de 2018 e continua a ser uma das maiores preocupacoes para as PMEs portuguesas. Muitos empresarios acreditam erradamente que o RGPD so se aplica a grandes empresas, mas a verdade e que qualquer organizacao que trate dados pessoais de cidadaos europeus esta abrangida.
+
+Para as PMEs portuguesas, os passos essenciais para a conformidade incluem: fazer um inventario de todos os dados pessoais que a empresa recolhe e armazena, identificar a base legal para cada tratamento de dados, implementar medidas tecnicas de seguranca adequadas (como encriptacao e backups regulares), e designar um responsavel pela proteccao de dados, mesmo que seja uma funcao acumulada.
+
+A Comissao Nacional de Proteccao de Dados (CNPD) tem aumentado as fiscalizacoes a PMEs, e as coimas podem ir ate 20 milhoes de euros ou 4% do volume de negocios anual. No entanto, a CNPD tem adoptado uma abordagem proporcional, focando-se inicialmente em orientacao e avisos para empresas mais pequenas. O importante e demonstrar boa-fe e esforco genuino de conformidade.
+
+Comece por rever as suas politicas de privacidade, garantir que tem consentimento valido para todas as comunicacoes de marketing, implementar procedimentos para responder a pedidos de acesso ou eliminacao de dados, e formar a sua equipa sobre boas praticas de proteccao de dados. Existem modelos gratuitos disponiveis no site da CNPD que podem ajudar neste processo.`,
+    category: "legislacao",
+    categoryLabel: "Legislacao RGPD",
+    publishedAt: "2026-03-18",
+    readingTime: 7,
+  },
+  {
+    slug: "proteger-empresa-contra-phishing",
+    title: "Como Proteger a sua Empresa contra Phishing",
+    excerpt:
+      "O phishing e a porta de entrada para a maioria dos ataques informaticos. Aprenda estrategias praticas para proteger a sua equipa e os seus sistemas.",
+    content: `O phishing continua a ser o metodo de ataque mais utilizado contra empresas portuguesas. Segundo dados do Centro Nacional de Ciberseguranca (CNCS), mais de 60% dos incidentes reportados em Portugal em 2025 envolveram alguma forma de phishing. Para as PMEs, onde frequentemente nao existe uma equipa de TI dedicada, o risco e ainda maior.
+
+A primeira linha de defesa e a formacao da equipa. Todos os colaboradores devem saber identificar sinais de phishing: enderecos de email suspeitos (mesmo que parecam legitimos), pedidos urgentes de acao, links que nao correspondem ao texto visivel, e anexos inesperados. Realize simulacoes regulares de phishing para testar e reforcar esta consciencializacao.
+
+Do ponto de vista tecnico, implemente autenticacao multi-fator (MFA) em todas as contas corporativas, especialmente email e ferramentas financeiras. Configure filtros de spam avancados e proteccao de dominio com SPF, DKIM e DMARC para evitar que terceiros enviem emails em nome da sua empresa. Estas configuracoes sao gratuitas e podem ser implementadas pelo seu fornecedor de email.
+
+Crie um procedimento claro para reportar emails suspeitos. Quanto mais facil for para um colaborador reportar, mais rapidamente a ameaca pode ser contida. Ferramentas como o Microsoft Defender for Office 365 ou equivalentes do Google Workspace oferecem proteccao automatizada acessivel mesmo para pequenas empresas. O investimento em prevencao e sempre inferior ao custo de um ataque bem-sucedido.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-03-15",
+    readingTime: 5,
+  },
+];
+
+export function getPostBySlug(slug: string): Post | undefined {
+  return posts.find((p) => p.slug === slug);
+}
+
+export function getPostsByCategory(category: string): Post[] {
+  return posts.filter((p) => p.category === category);
+}

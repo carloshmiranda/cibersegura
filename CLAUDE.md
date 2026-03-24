@@ -1,24 +1,27 @@
 # CiberSegura
 
-> Plataforma de ferramentas e consciencialização em cibersegurança para empresas portuguesas
+> Blog de ciberseguranca e recursos para PMEs portuguesas
 
 ## Identity
 - **Slug**: cibersegura
-- **Target audience**: pequenas e médias empresas portuguesas
+- **Type**: blog
+- **Target audience**: pequenas e medias empresas portuguesas
 - **Status**: mvp
 - **Hive company ID**: 445a5486-197f-47cc-be0d-410639ffbe26
 
 ## Tech Stack
 - Next.js 15 (App Router)
 - Tailwind CSS 4
-- Neon serverless Postgres
-- Stripe Checkout + Customer Portal
+- Neon serverless Postgres (newsletter signups via waitlist table)
 - Resend for transactional email
 - Deployed on Vercel
 
 ## Current Priorities
 <!-- Updated by CEO agent each nightly cycle -->
-1. (awaiting first cycle)
+1. Publish more cybersecurity articles targeting Portuguese SME keywords
+2. SEO optimization — meta tags, structured data, internal linking
+3. Build email newsletter flow for subscribers
+4. Add more categories and resource pages
 
 ## Coding Standards
 - TypeScript strict mode
@@ -51,14 +54,23 @@ Aguardando primeira extração de insights do playbook Hive.
 - Every page: unique `<title>`, meta description, OG tags, proper heading hierarchy
 - JSON-LD structured data on layout (Organization + WebSite) and FAQ sections
 
+## Blog Structure
+- `src/lib/posts.ts` — static post data (title, slug, excerpt, content, category, publishedAt, readingTime)
+- `src/app/blog/page.tsx` — blog listing with category filters
+- `src/app/blog/[slug]/page.tsx` — individual article pages
+- `src/app/newsletter-form.tsx` — client component for newsletter signup (uses /api/waitlist)
+- Categories: ameacas, boas-praticas, ferramentas, legislacao
+
 ## Constraints
-- Landing page MUST include visual product previews (CSS/SVG mockups in browser frames). Never ship a landing page with text-only feature descriptions. Customize the generic dashboard mockup to match the product domain.
+- ALL content must be in Portuguese
+- Blog articles must provide genuine, useful cybersecurity advice for SMEs
+- Each article needs proper SEO: unique title, meta description, OG tags
 - Budget: minimal — free tier infrastructure until revenue justifies upgrades
 - No external dependencies unless absolutely necessary
 - Mobile-responsive from day one — `flex-col md:flex-row` for stacking, `px-4 sm:px-6` on containers
-- Core user flow must work in under 3 clicks
 - SEO: every page needs proper meta tags, OG images, structured data, sitemap.ts, robots.ts
-- `<html lang="...">` must match target audience language
+- `<html lang="pt">` — all content in Portuguese
+- One CTA per viewport — newsletter signup is the single conversion goal
 
 ## Infrastructure
 - **Vercel project**: TBD

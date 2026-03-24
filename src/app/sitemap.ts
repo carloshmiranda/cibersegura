@@ -1,15 +1,30 @@
 import { MetadataRoute } from "next";
+import { posts } from "@/lib/posts";
 
-// Dynamic sitemap — add new pages here as they're created
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_URL || "https://cibersegura-flax.vercel.app";
+  const baseUrl =
+    process.env.NEXT_PUBLIC_URL || "https://cibersegura-flax.vercel.app";
+
+  const blogPosts = posts.map((post) => ({
+    url: `${baseUrl}/blog/${post.slug}`,
+    lastModified: post.publishedAt,
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
 
   return [
     {
       url: baseUrl,
-      lastModified: "2026-03-23",
+      lastModified: "2026-03-24",
       changeFrequency: "weekly",
       priority: 1,
     },
+    {
+      url: `${baseUrl}/blog`,
+      lastModified: "2026-03-24",
+      changeFrequency: "daily",
+      priority: 0.9,
+    },
+    ...blogPosts,
   ];
 }
