@@ -108,10 +108,11 @@ jobs:
 
       - name: Mark tasks as in progress
         id: mark_progress
+        env:
+          PAYLOAD: ${{ github.event.inputs.payload }}
+          PRODUCT_CTX: ${{ steps.context.outputs.product_ctx }}
         run: |
-          # Extract task IDs from payload, CEO plan, and engineering tasks context
-          PAYLOAD='${{ github.event.inputs.payload }}'
-          PRODUCT_CTX='${{ steps.context.outputs.product_ctx }}'
+          set +e
           echo "Payload: $PAYLOAD"
 
           # Try multiple sources for task_id
@@ -121,19 +122,18 @@ jobs:
           if [ -n "$PAYLOAD" ] && [ "$PAYLOAD" != "{}" ]; then
             TASK_ID=$(echo "$PAYLOAD" | jq -r '.task_id // .id // empty' 2>/dev/null)
             if [ -z "$TASK_ID" ]; then
-              # Try alternative parsing for different payload formats
-              TASK_ID=$(echo "$PAYLOAD" | grep -oP '"(?:task_)?id":\s*"?\K[a-f0-9-]+' | head -1 || echo "")
+              TASK_ID=$(echo "$PAYLOAD" | grep -oP '"(?:task_)?id":\s*"?\K[a-f0-9-]+' | head -1 || true)
             fi
           fi
 
           # 2. If not found in payload, try CEO plan from product context
           if [ -z "$TASK_ID" ] && [ -n "$PRODUCT_CTX" ]; then
-            TASK_ID=$(echo "$PRODUCT_CTX" | jq -r '.cycle.ceo_plan.engineering_tasks[0].id // empty' 2>/dev/null)
+            TASK_ID=$(echo "$PRODUCT_CTX" | jq -r '.cycle.ceo_plan.engineering_tasks[0].id // empty' 2>/dev/null || true)
           fi
 
           # 3. If still not found, try engineering_tasks array from context
           if [ -z "$TASK_ID" ] && [ -n "$PRODUCT_CTX" ]; then
-            TASK_ID=$(echo "$PRODUCT_CTX" | jq -r '.engineering_tasks[0].id // empty' 2>/dev/null)
+            TASK_ID=$(echo "$PRODUCT_CTX" | jq -r '.engineering_tasks[0].id // empty' 2>/dev/null || true)
           fi
 
           if [ -n "$TASK_ID" ]; then
@@ -156,7 +156,7 @@ jobs:
               else
                 ERROR_MSG=$(echo "$TASK_UPDATE" | jq -r '.error // "unknown error"')
                 echo "❌ WARNING: Failed to mark task ${TASK_ID} as in_progress: $ERROR_MSG"
-                echo "task_id=$TASK_ID" >> $GITHUB_OUTPUT  # Still set the ID for later use
+                echo "task_id=$TASK_ID" >> $GITHUB_OUTPUT
               fi
             else
               echo "❌ WARNING: Failed to get OIDC token for task status update"
@@ -165,6 +165,7 @@ jobs:
           else
             echo "⚠️ No task_id found in payload, CEO plan, or engineering tasks - proceeding without task tracking"
           fi
+          exit 0
 
       - name: Run build agent
         id: agent
