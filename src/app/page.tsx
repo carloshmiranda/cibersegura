@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { posts, CATEGORIES } from "@/lib/posts";
 import { NewsletterForm } from "./newsletter-form";
+import { NIS2Banner } from "@/components/nis2-banner";
 
 const COMPANY_NAME = "CiberPME";
 
@@ -21,6 +22,9 @@ export default function HomePage() {
           </Link>
         </div>
       </nav>
+
+      {/* NIS2 Urgency Banner */}
+      <NIS2Banner />
 
       <main>
         {/* Hero */}
