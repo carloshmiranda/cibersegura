@@ -18,6 +18,35 @@ export const CATEGORIES: Record<string, string> = {
 
 export const posts: Post[] = [
   {
+    slug: "nis2-portugal-o-que-pmes-precisam-saber",
+    title: "NIS2 em Portugal: O que as PMEs Precisam de Saber sobre a Nova Diretiva",
+    excerpt:
+      "A Diretiva NIS2 entra em vigor em Portugal a 3 de abril de 2026 através do Decreto-Lei 125/2025. Saiba se a sua empresa está abrangida e quais os passos para garantir conformidade.",
+    content: `A Diretiva NIS2 (Network and Information Security) representa uma evolução significativa na regulamentação de cibersegurança na União Europeia, e Portugal transpôs-a para o direito nacional através do Decreto-Lei 125/2025, que entra em vigor a 3 de abril de 2026. Esta nova legislação expande drasticamente o âmbito das organizações obrigadas a cumprir requisitos de cibersegurança, afetando diretamente milhares de PMEs portuguesas.
+
+## Quem está abrangido pela NIS2?
+
+Ao contrário da diretiva anterior, a NIS2 não se limita a operadores de serviços essenciais. Agora, empresas médias (50-249 trabalhadores ou volume de negócios entre 10-50 milhões de euros) em setores críticos são automaticamente abrangidas. Os setores incluem energia, transportes, saúde, águas, infraestruturas digitais, serviços postais e de correio, gestão de resíduos, fabricação (produtos químicos, farmacêuticos, dispositivos médicos, informática, maquinaria, automóvel, equipamento elétrico), fornecimento de serviços digitais, e administração pública.
+
+Mais importante para as PMEs: mesmo empresas não diretamente regulamentadas podem ser afetadas através de requisitos contratuais de fornecedores. Se a sua empresa presta serviços a uma entidade NIS2, provavelmente terá de demonstrar conformidade com padrões de cibersegurança equivalentes.
+
+## Principais obrigações
+
+As entidades abrangidas devem implementar medidas técnicas e organizacionais apropriadas para gerir riscos de cibersegurança, incluindo: políticas de análise e avaliação de riscos de cibersegurança; políticas e procedimentos de cibersegurança para recursos humanos; políticas de controlo de acesso; criptografia e segurança das comunicações; segurança de sistemas, software e ativos; políticas de divulgação coordenada de vulnerabilidades e gestão de ativos; autenticação multi-fator; comunicações seguras de voz, vídeo e texto; e sistemas seguros de comunicação de emergência.
+
+Além disso, devem reportar incidentes significativos ao Centro Nacional de Cibersegurança (CNCS) num prazo máximo de 24 horas após terem conhecimento do incidente, e fornecer relatórios intermédios e finais detalhados.
+
+## Penalizações e prazos
+
+As penalizações são severas: coimas até 10 milhões de euros ou 2% do volume de negócios anual global, sendo aplicado o valor mais elevado. Para administradores, as coimas pessoais podem chegar a 5 milhões de euros. No entanto, existe um período de graça de 12 meses para penalizações administrativas, o que oferece tempo às empresas para se adaptarem.
+
+O primeiro passo é determinar se a sua empresa está abrangida. Se sim, deve designar um responsável pela cibersegurança, realizar uma avaliação de riscos, implementar as medidas técnicas necessárias, e preparar procedimentos de reporte de incidentes. O CNCS disponibiliza orientações específicas no seu website, e existem recursos gratuitos para ajudar na implementação.`,
+    category: "legislacao",
+    categoryLabel: "Legislacao RGPD",
+    publishedAt: "2026-03-28",
+    readingTime: 8,
+  },
+  {
     slug: "10-ameacas-ciberseguranca-pmes-portuguesas",
     title: "10 Ameacas de Ciberseguranca que as PMEs Portuguesas Ignoram",
     excerpt:
