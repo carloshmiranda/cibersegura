@@ -18,6 +18,275 @@ export const CATEGORIES: Record<string, string> = {
 
 export const posts: Post[] = [
   {
+    slug: "checklist-nis2-conformidade",
+    title: "Checklist NIS2: 10 Passos para Conformidade",
+    excerpt:
+      "Guia prático completo para PMEs portuguesas implementarem conformidade NIS2 antes da data limite de 3 de abril de 2026. Lista de verificação detalhada com modelos e recursos gratuitos.",
+    content: `Com a entrada em vigor da Diretiva NIS2 em Portugal a 3 de abril de 2026, as empresas têm apenas algumas semanas para implementar as medidas necessárias de cibersegurança. Este checklist prático oferece um roteiro estruturado para PMEs portuguesas garantirem conformidade com o Decreto-Lei 125/2025 de forma eficiente e económica.
+
+## Antes de Começar: Determine se Está Abrangido
+
+Antes de implementar qualquer medida, confirme se a sua empresa está sujeita à NIS2. Como explicamos no nosso [guia sobre NIS2 em Portugal](/blog/nis2-portugal-o-que-pmes-precisam-saber), empresas médias (50-249 trabalhadores ou volume de negócios entre 10-50 milhões) em setores críticos são automaticamente abrangidas. Mesmo empresas não diretamente regulamentadas podem ser afetadas através de contratos com entidades NIS2.
+
+**Setores abrangidos incluem:**
+- Energia (eletricidade, gás, petróleo, hidrogênio)
+- Transportes (aéreo, rodoviário, ferroviário, fluvial)
+- Saúde (prestadores de cuidados de saúde, farmácias)
+- Infraestruturas digitais (IXPs, DNS, TLD, cloud computing, data centers)
+- Água potável e águas residuais
+- Serviços postais e de correio
+- Gestão de resíduos
+- Fabricação (química, farmacêutica, dispositivos médicos, informática)
+- Fornecedores de serviços digitais (e-commerce, motores de busca, redes sociais)
+
+## Passo 1: Designe um Responsável pela Cibersegurança
+
+**Prazo: Imediato (Abril 2026)**
+
+A primeira obrigação NIS2 é designar formalmente um responsável pela cibersegurança. Esta pessoa não precisa de ser um especialista técnico, mas deve ter autoridade para implementar políticas e acesso direto à administração.
+
+**Checklist:**
+- [ ] Identifique um colaborador com disponibilidade para dedicar pelo menos 20% do tempo à cibersegurança
+- [ ] Formalize a nomeação por escrito com descrição de funções específicas
+- [ ] Garanta que tem orçamento e autoridade para implementar medidas de segurança
+- [ ] Inscreva o responsável na formação NIS2 do Centro Nacional de Cibersegurança (CNCS)
+- [ ] Configure acesso às ferramentas de monitorização e gestão de incidentes
+
+**Modelo de nomeação:**
+"[Nome] é designado responsável pela cibersegurança da empresa, com competência para: definir políticas de segurança, coordenar a resposta a incidentes, reportar ao CNCS, e liderar a implementação das medidas NIS2."
+
+## Passo 2: Realize uma Avaliação de Riscos Inicial
+
+**Prazo: 30 dias após designação do responsável**
+
+A avaliação de riscos é a base de toda a estratégia de cibersegurança NIS2. Deve ser documentada, revista anualmente, e atualizada sempre que há mudanças significativas nos sistemas.
+
+**Checklist:**
+- [ ] Inventarie todos os sistemas informáticos críticos para a operação
+- [ ] Identifique dados pessoais e informações sensíveis processadas
+- [ ] Mapeie conexões externas (fornecedores, clientes, internet)
+- [ ] Avalie vulnerabilidades conhecidas em software e hardware
+- [ ] Documente potenciais impactos de cada risco identificado
+- [ ] Priorize riscos por probabilidade e impacto (matriz de risco)
+- [ ] Defina níveis de risco aceitáveis para a organização
+
+**Ferramentas gratuitas:**
+- Framework NIST para pequenas empresas
+- Modelo de avaliação de riscos da ENISA
+- Checklist do CNCS para entidades NIS2
+
+## Passo 3: Implemente Políticas de Controlo de Acesso
+
+**Prazo: 60 dias**
+
+O controlo de acesso inadequado é uma das principais vulnerabilidades em PMEs. A NIS2 exige políticas claras sobre quem pode aceder a que sistemas e quando.
+
+**Checklist:**
+- [ ] Defina políticas de criação, modificação e eliminação de contas de utilizador
+- [ ] Implemente o princípio do menor privilégio (acesso mínimo necessário)
+- [ ] Configure autenticação multi-fator (MFA) em todas as contas administrativas
+- [ ] Estabeleça procedimentos de revisão de acessos (pelo menos de 6 em 6 meses)
+- [ ] Documente acessos de emergência e procedimentos de aprovação
+- [ ] Remova imediatamente acessos de colaboradores que saem da empresa
+
+**Implementação prática:**
+Para Microsoft 365: ative MFA em security.microsoft.com > MFA
+Para Google Workspace: configure em admin.google.com > Segurança > 2-Step Verification
+Para sistemas locais: use ferramentas como Authy ou Google Authenticator
+
+## Passo 4: Estabeleça Proteção e Monitorização de Redes
+
+**Prazo: 90 dias**
+
+A segurança da rede é fundamental para prevenir ataques e detetar intrusões precocemente.
+
+**Checklist:**
+- [ ] Configure firewalls nas ligações à internet (hardware ou software)
+- [ ] Segmente a rede separando sistemas críticos de computadores de utilizadores
+- [ ] Implemente monitorização de tráfego de rede (logs de firewall mínimo)
+- [ ] Configure alertas automáticos para atividade suspeita
+- [ ] Estabeleça políticas de segurança para redes Wi-Fi empresariais
+- [ ] Documente a topologia de rede e pontos de acesso críticos
+
+**Soluções acessíveis:**
+- Firewalls: SonicWall TZ ou Fortinet FortiGate série entrada
+- Monitorização: PRTG Network Monitor (gratuito até 100 sensores)
+- Segmentação: VLANs em switches geridos (TP-Link ou Netgear)
+
+## Passo 5: Implemente Criptografia e Proteção de Dados
+
+**Prazo: 90 dias**
+
+A NIS2 exige proteção adequada de dados em trânsito e em repouso através de criptografia.
+
+**Checklist:**
+- [ ] Configure HTTPS (SSL/TLS) em todos os websites e aplicações web
+- [ ] Ative criptografia em emails (S/MIME ou PGP quando necessário)
+- [ ] Implemente criptografia de disco em computadores portáteis
+- [ ] Configure backups encriptados automáticos (locais e cloud)
+- [ ] Use protocolos seguros para transferências de ficheiros (SFTP, não FTP)
+- [ ] Documente chaves de criptografia e procedimentos de recuperação
+
+**Ferramentas recomendadas:**
+- SSL/TLS: Let's Encrypt (gratuito) via Cloudflare ou cPanel
+- Backup encriptado: Veeam Backup, Acronis, ou Backblaze Business
+- Criptografia de disco: BitLocker (Windows) ou FileVault (Mac)
+
+## Passo 6: Desenvolva Procedimentos de Gestão de Vulnerabilidades
+
+**Prazo: 60 dias**
+
+A gestão proativa de vulnerabilidades previne exploração de falhas de segurança conhecidas.
+
+**Checklist:**
+- [ ] Estabeleça cronograma regular de atualizações de software (mensal mínimo)
+- [ ] Configure atualizações automáticas para sistemas críticos quando possível
+- [ ] Subscreva alertas de segurança dos fornecedores principais
+- [ ] Implemente sistema de gestão de patches para servidores
+- [ ] Documente procedimentos de aplicação de patches críticos (24-48h)
+- [ ] Teste atualizações em ambiente de desenvolvimento quando possível
+
+**Fontes de informação:**
+- Microsoft Security Response Center (MSRC)
+- CVE Database (Common Vulnerabilities and Exposures)
+- CERT-PT alertas de vulnerabilidades
+
+## Passo 7: Configure Sistemas de Backup e Recuperação
+
+**Prazo: 45 dias**
+
+Backups adequados são essenciais para recuperação de incidentes, especialmente ransomware.
+
+**Checklist:**
+- [ ] Implemente estratégia 3-2-1: 3 cópias, 2 suportes diferentes, 1 offsite
+- [ ] Configure backups automáticos diários de dados críticos
+- [ ] Teste restauros mensalmente para validar integridade dos backups
+- [ ] Mantenha pelo menos um backup offline ou imutável
+- [ ] Documente procedimentos completos de recuperação
+- [ ] Defina RTOs (Recovery Time Objectives) e RPOs (Recovery Point Objectives)
+
+**Soluções empresariais:**
+- Cloud: Microsoft Azure Backup, AWS Backup, Google Cloud Backup
+- Local: Synology NAS, QNAP, ou Veeam Backup & Replication
+
+## Passo 8: Estabeleça Procedimentos de Resposta a Incidentes
+
+**Prazo: 30 dias**
+
+A NIS2 exige reporte de incidentes ao CNCS em 24 horas. Ter procedimentos claros é crucial.
+
+**Checklist:**
+- [ ] Defina o que constitui um incidente de cibersegurança para a organização
+- [ ] Estabeleça contactos de emergência disponíveis 24/7
+- [ ] Configure canais de comunicação para situações de crise
+- [ ] Prepare modelos de relatórios para o CNCS
+- [ ] Treine a equipa nos procedimentos de resposta
+- [ ] Documente procedimentos de contenção e erradicação de ameaças
+
+**Fluxo de resposta:**
+1. Deteção → 2. Avaliação (15 min) → 3. Contenção → 4. Reporte CNCS (24h) → 5. Investigação → 6. Recuperação → 7. Lições aprendidas
+
+## Passo 9: Forme a Equipa em Consciencialização de Cibersegurança
+
+**Prazo: 90 dias**
+
+O fator humano continua a ser o elo mais fraco. A NIS2 exige formação regular de todos os colaboradores.
+
+**Checklist:**
+- [ ] Desenvolva programa de formação em cibersegurança adaptado à empresa
+- [ ] Realize sessões de consciencialização trimestrais
+- [ ] Implemente simulações de phishing mensais
+- [ ] Documente participação e resultados da formação
+- [ ] Estabeleça políticas de segurança para colaboradores remotos
+- [ ] Treine especificamente responsáveis por operações críticas
+
+**Recursos gratuitos:**
+- Portal de formação do CNCS
+- Materiais da ENISA (European Union Agency for Cybersecurity)
+- Campanha "Stop. Think. Connect." adaptada para Portugal
+
+## Passo 10: Documente Tudo e Prepare Auditorias
+
+**Prazo: Contínuo**
+
+A conformidade NIS2 exige documentação detalhada de todas as medidas implementadas.
+
+**Checklist:**
+- [ ] Compile dossiê de conformidade com todas as políticas e procedimentos
+- [ ] Mantenha logs de segurança por pelo menos 12 meses
+- [ ] Documente todas as avaliações de risco e revisões
+- [ ] Prepare evidências de formação e consciencialização
+- [ ] Estabeleça cronograma de revisões internas (semestrais)
+- [ ] Designe responsável por manter documentação atualizada
+
+## Cronograma de Implementação Recomendado
+
+**Semanas 1-2:**
+- Designar responsável (Passo 1)
+- Iniciar avaliação de riscos (Passo 2)
+
+**Semanas 3-6:**
+- Completar avaliação de riscos
+- Implementar controlos de acesso básicos (Passo 3)
+- Estabelecer procedimentos de resposta a incidentes (Passo 8)
+
+**Semanas 7-12:**
+- Implementar proteção de redes (Passo 4)
+- Configurar criptografia e backups (Passos 5 e 7)
+- Iniciar formação da equipa (Passo 9)
+
+**Semanas 13-16:**
+- Finalizar gestão de vulnerabilidades (Passo 6)
+- Completar documentação (Passo 10)
+- Teste completo de todos os sistemas
+
+## Custos Estimados para PMEs
+
+**Investimento mínimo (empresa 10-50 colaboradores):**
+- Software de segurança: €200-500/mês
+- Formação: €500-1.000 inicial
+- Hardware (firewall, backup): €2.000-5.000
+- Consultoria pontual: €2.000-5.000
+- **Total primeiro ano: €8.000-15.000**
+
+**Investimento recomendado:**
+- Soluções empresariais: €500-1.500/mês
+- Formação profissional: €2.000-5.000
+- Hardware redundante: €5.000-10.000
+- Consultoria especializada: €5.000-10.000
+- **Total primeiro ano: €20.000-35.000**
+
+## Recursos e Apoio Disponíveis
+
+**Entidades oficiais:**
+- Centro Nacional de Cibersegurança (CNCS): orientações e formação gratuita
+- IAPMEI: apoios financeiros para digitalização e cibersegurança de PMEs
+- Portugal Digital: programa de apoio à transformação digital
+
+**Certificações reconhecidas:**
+- ISO/IEC 27001: sistema de gestão de segurança da informação
+- NIS Toolkit: conformidade específica com diretiva NIS2
+- NIST Cybersecurity Framework: framework americano adaptável
+
+## Próximos Passos
+
+A conformidade NIS2 não é um projeto único, mas um processo contínuo de melhoria. Após implementar este checklist, as empresas devem:
+
+1. **Monitorizá** sistemas e indicadores de segurança continuamente
+2. **Rever** políticas e avaliações de risco pelo menos anualmente
+3. **Atualizar** medidas técnicas conforme evolução das ameaças
+4. **Formar** regularmente colaboradores e responsáveis
+5. **Testar** procedimentos de resposta a incidentes semestralmente
+
+Com a data limite da NIS2 a aproximar-se rapidamente, é crucial começar a implementação imediatamente. As empresas que adiarem podem enfrentar não apenas penalizações regulamentares, mas também riscos operacionais significativos. Lembre-se: a cibersegurança não é um custo, é um investimento na continuidade e credibilidade do seu negócio.
+
+Para mais informações sobre os requisitos específicos da NIS2, consulte o nosso [guia completo sobre NIS2 em Portugal](/blog/nis2-portugal-o-que-pmes-precisam-saber) e mantenha-se atualizado com as orientações do CNCS.`,
+    category: "legislacao",
+    categoryLabel: "Legislacao RGPD",
+    publishedAt: "2026-03-28",
+    readingTime: 15,
+  },
+  {
     slug: "nis2-portugal-o-que-pmes-precisam-saber",
     title: "NIS2 em Portugal: O que as PMEs Precisam de Saber sobre a Nova Diretiva",
     excerpt:
