@@ -172,6 +172,7 @@ jobs:
         env:
           VERCEL_TOKEN: ${{ steps.auth.outputs.vercel_token }}
         uses: anthropics/claude-code-action@v1
+        allowed_bots: '*'
         with:
           claude_code_oauth_token: ${{ steps.auth.outputs.claude_token }}
           claude_args: "--model claude-sonnet-4-20250514 --max-turns 35 --allowedTools Bash,Read,Write,Edit"
