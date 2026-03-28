@@ -22,3 +22,6 @@
 
 ## Done
 <!-- Completed items with date -->
+
+### 2026-03-28
+- ✅ **eng-1**: Fix allowed_bots configuration for workflow dispatch - verified working configuration in hive-build.yml and hive-fix.yml (both have `allowed_bots: '*'`)
