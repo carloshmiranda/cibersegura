@@ -18,6 +18,239 @@ export const CATEGORIES: Record<string, string> = {
 
 export const posts: Post[] = [
   {
+    slug: "nis2-portugal-guia-pme",
+    title: "Guia NIS2 Portugal: O que as PMEs Precisam de Saber para Estar em Conformidade",
+    excerpt:
+      "Guia completo sobre a diretiva NIS2 em Portugal. Saiba se a sua empresa está abrangida, quais os requisitos obrigatórios e como garantir conformidade até 3 de abril de 2026.",
+    content: `A diretiva NIS2 (Network and Information Systems Security) entra em vigor em Portugal a 3 de abril de 2026, através do Decreto-Lei 125/2025. Esta nova legislação europeia de cibersegurança expande significativamente o número de empresas obrigadas a cumprir requisitos rigorosos de segurança digital.
+
+Se é responsável por uma PME portuguesa, este guia explica tudo o que precisa de saber sobre a NIS2, incluindo se a sua empresa está abrangida, quais os requisitos obrigatórios e como garantir conformidade.
+
+## O que é a NIS2?
+
+A diretiva NIS2 é a segunda versão da legislação europeia sobre segurança de redes e sistemas de informação. Substitui a diretiva NIS de 2016 e introduz requisitos mais exigentes para um maior número de setores e empresas.
+
+**Principais mudanças da NIS2:**
+- Expansão dos setores abrangidos (de 7 para 18 setores)
+- Redução dos limiares de dimensão empresarial
+- Requisitos mais específicos de cibersegurança
+- Multas mais elevadas (até 2% do volume de negócios anual)
+- Responsabilidade pessoal dos administradores
+
+## Empresas Abrangidas pela NIS2
+
+### Setores de Alta Criticidade
+**Todas as empresas** nestes setores estão abrangidas, independentemente da dimensão:
+- Energia (eletricidade, petróleo, gás natural)
+- Transportes (aéreo, rodoviário, ferroviário, aquático)
+- Setor bancário e mercados financeiros
+- Saúde (hospitais, clínicas)
+- Água potável e águas residuais
+- Infraestruturas digitais (IXP, DNS, TLD)
+- Administração pública (central, regional, local)
+- Espaço
+
+### Setores Importantes
+**Empresas médias e grandes** (50+ funcionários e €10M+ volume de negócios):
+- Serviços postais e de correio
+- Gestão de resíduos
+- Fabricação de produtos químicos, farmacêuticos, dispositivos médicos
+- Produção de alimentos
+- Fabricação de equipamentos eletrónicos, máquinas, veículos
+- Fornecedores de serviços digitais
+- Investigação
+
+### Critérios de Dimensão
+Uma empresa está abrangida se cumprir **ambos** os critérios:
+- **50 ou mais funcionários**
+- **Volume de negócios anual ≥ €10 milhões**
+
+**Nota importante:** Mesmo empresas menores podem estar abrangidas se fornecerem serviços essenciais aos setores listados.
+
+## Requisitos Obrigatórios da NIS2
+
+### 1. Gestão de Risco de Cibersegurança
+
+**Políticas obrigatórias:**
+- Política de gestão de risco aprovada pela administração
+- Avaliação de riscos de cibersegurança anual
+- Plano de continuidade de negócio
+- Procedimentos de gestão de crises
+
+**Implementação prática:**
+- Inventário completo de sistemas e dados
+- Classificação de ativos por criticidade
+- Identificação de vulnerabilidades
+- Definição de controlos de segurança
+
+### 2. Medidas Técnicas e Organizacionais
+
+**Controlos técnicos obrigatórios:**
+- Políticas de backup e recuperação
+- Gestão de patches e vulnerabilidades
+- Controlo de acesso e gestão de identidades
+- Criptografia de dados sensíveis
+- Segmentação de rede
+- Monitorização de segurança 24/7
+
+**Controlos organizacionais:**
+- Formação em cibersegurança para funcionários
+- Políticas de segurança documentadas
+- Procedimentos de gestão de incidentes
+- Auditorias de segurança regulares
+
+### 3. Gestão de Incidentes
+
+**Requisitos de notificação:**
+- Notificação às autoridades em **24 horas** (alerta inicial)
+- Relatório detalhado em **72 horas**
+- Relatório final em **1 mês**
+
+**Categorias de incidentes notificáveis:**
+- Indisponibilidade de serviços críticos
+- Comprometimento de dados pessoais
+- Ataques cibernéticos bem-sucedidos
+- Falhas de segurança que afetem a continuidade
+
+### 4. Cadeia de Fornecimento
+
+**Avaliação de fornecedores:**
+- Due diligence de cibersegurança
+- Contratos com cláusulas de segurança
+- Monitorização contínua do risco
+- Planos de contingência para falhas de fornecedores
+
+### 5. Responsabilidade dos Administradores
+
+**Os administradores são pessoalmente responsáveis por:**
+- Aprovar políticas de cibersegurança
+- Alocar recursos adequados
+- Supervisionar a implementação das medidas
+- Garantir formação em cibersegurança
+
+## Cronograma de Implementação
+
+### Até 3 de abril de 2026 (obrigatório)
+- [ ] Identificação da aplicabilidade da NIS2 à empresa
+- [ ] Nomeação de responsável pela cibersegurança
+- [ ] Inventário completo de sistemas e dados
+- [ ] Avaliação inicial de riscos
+- [ ] Implementação de medidas básicas de segurança
+
+### Até julho de 2026 (recomendado)
+- [ ] Políticas de cibersegurança formalizadas
+- [ ] Procedimentos de gestão de incidentes
+- [ ] Plano de continuidade de negócio
+- [ ] Formação para funcionários
+- [ ] Auditoria de segurança externa
+
+### Ongoing (contínuo)
+- [ ] Monitorização 24/7
+- [ ] Gestão de patches
+- [ ] Exercícios de resposta a incidentes
+- [ ] Revisão anual das políticas
+- [ ] Relatórios de conformidade
+
+## Autoridades Nacionais
+
+Em Portugal, a NIS2 é supervisionada por:
+
+**CNCS (Centro Nacional de Cibersegurança)**
+- Supervisão geral da cibersegurança
+- Receção de notificações de incidentes
+- Orientações técnicas e boas práticas
+
+**ANACOM, Banco de Portugal, ASF, ERS**
+- Supervisão setorial específica
+- Aplicação de sanções
+- Auditorias de conformidade
+
+## Multas e Sanções
+
+### Empresas de Alta Criticidade
+- **Mínimo:** €7 milhões
+- **Máximo:** 1,4% do volume de negócios anual mundial
+
+### Empresas Importantes
+- **Mínimo:** €7 milhões
+- **Máximo:** 1,4% do volume de negócios anual mundial
+
+### Administradores
+- Proibição temporária de exercer funções de gestão
+- Multas pessoais até €1 milhão
+
+## Primeiros Passos para PMEs
+
+### 1. Avalie se está abrangido (1 semana)
+- Verifique o setor de atividade
+- Confirme critérios de dimensão
+- Consulte o CNCS em caso de dúvida
+
+### 2. Nomeie um responsável (imediato)
+- Designar Chief Information Security Officer (CISO) ou responsável equivalente
+- Definir orçamento para cibersegurança
+- Estabelecer reporte à administração
+
+### 3. Inventário de sistemas (2-4 semanas)
+- Mapear todos os sistemas informáticos
+- Identificar dados sensíveis
+- Documentar fluxos de informação
+- Avaliar dependências de fornecedores
+
+### 4. Gap analysis (4-6 semanas)
+- Comparar situação atual com requisitos NIS2
+- Identificar lacunas prioritárias
+- Estimar custos de implementação
+- Criar roadmap de conformidade
+
+## Ferramentas Recomendadas
+
+### Gestão de Vulnerabilidades
+- **Nessus Professional** - scanning automático
+- **OpenVAS** - alternativa gratuita
+- **Microsoft Defender Vulnerability Management**
+
+### Monitorização de Segurança
+- **ESET PROTECT** - para PMEs com orçamento limitado
+- **Microsoft Sentinel** - se já usa Microsoft 365
+- **Splunk** - para empresas maiores
+
+### Backup e Continuidade
+- **Veeam Backup** - solução robusta
+- **Azure Backup** - cloud nativa
+- **Acronis Cyber Backup** - all-in-one
+
+## Recursos Gratuitos
+
+### Orientações Oficiais
+- [Portal CNCS](https://cncs.gov.pt) - orientações oficiais
+- [ENISA NIS2 Guidelines](https://enisa.europa.eu) - boas práticas europeias
+- [Framework NIST](https://nist.gov/cyberframework) - metodologia de implementação
+
+### Formação
+- [CNCS Academy](https://academy.cncs.gov.pt) - cursos gratuitos
+- [SANS Cyber Aces](https://cyberaces.org) - tutoriais básicos
+- [Cybrary](https://cybrary.it) - cursos online
+
+## Conclusão
+
+A NIS2 representa uma mudança fundamental na abordagem europeia à cibersegurança, expandindo significativamente o número de empresas obrigadas a cumprir requisitos rigorosos.
+
+**Para PMEs portuguesas, a mensagem é clara:**
+- Comece a preparação **agora** - não espere por 2026
+- A conformidade é obrigatória, não opcional
+- Os custos de não-conformidade são proibitivos
+- Existem recursos e ferramentas acessíveis para PMEs
+
+**O prazo é real e as consequências são sérias.** Mas com planeamento adequado e implementação gradual, mesmo PMEs com recursos limitados podem atingir conformidade e, simultaneamente, melhorar significativamente a sua postura de cibersegurança.
+
+A NIS2 não é apenas uma obrigação legal - é uma oportunidade para fortalecer a resiliência digital do seu negócio e ganhar vantagem competitiva num mercado cada vez mais consciente dos riscos cibernéticos.`,
+    category: "legislacao",
+    categoryLabel: "Legislacao RGPD",
+    publishedAt: "2026-03-29",
+    readingTime: 12,
+  },
+  {
     slug: "melhores-ferramentas-ciberseguranca-pmes-2026",
     title: "As 7 Melhores Ferramentas de Cibersegurança para PMEs Portuguesas em 2026",
     excerpt:
