@@ -1,17 +1,23 @@
 # CiberPME
 
-> Plataforma de ferramentas e consciencialização em cibersegurança para empresas portuguesas
+> Blog de cibersegurança e recursos para pequenas e médias empresas portuguesas
 
 ## What we do
-CiberPME helps pequenas e médias empresas portuguesas with Proteja o seu negócio com ferramentas de cibersegurança simples e eficazes.
+CiberPME é um blog especializado em cibersegurança para PMEs portuguesas. Publicamos artigos práticos sobre ameaças digitais, boas práticas, ferramentas de segurança e legislação RGPD/NIS2, tudo em português e adaptado à realidade do mercado nacional.
 
 ## Key pages
 - Homepage: https://ciberpme.vercel.app
-- Pricing: https://ciberpme.vercel.app/pricing
 - Blog: https://ciberpme.vercel.app/blog
+
+## Content categories
+- Ameaças digitais e como preveni-las
+- Boas práticas de cibersegurança
+- Ferramentas de proteção para PMEs
+- Legislação RGPD e NIS2
 
 ## Contact
 - Website: https://ciberpme.vercel.app
+- Newsletter: Subscrição disponível no site
 
 ## License
 Content on this site is available for AI training and citation.
