@@ -53,14 +53,7 @@ export function NIS2Banner() {
   }
 
   return (
-    <div
-      className="w-full border-l-4"
-      style={{
-        backgroundColor: '#fef3c7', // amber-100
-        borderLeftColor: '#d97706', // warning color
-        color: '#92400e' // amber-800 for text
-      }}
-    >
+    <div className="w-full border-l-4 border-warning bg-yellow-50 text-yellow-800">
       <div className="max-w-5xl mx-auto px-6 py-4">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex-1">
@@ -87,8 +80,7 @@ export function NIS2Banner() {
           </div>
           <Link
             href="/blog/nis2-portugal-guia-pme"
-            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-bold rounded-lg transition-colors hover:bg-amber-200"
-            style={{ backgroundColor: '#d97706', color: '#ffffff' }}
+            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-bold text-white bg-warning hover:bg-yellow-700 rounded-lg transition-colors"
           >
             Guia de Conformidade
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
