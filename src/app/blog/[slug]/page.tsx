@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPostBySlug, posts } from "@/lib/posts";
+import { parseMarkdown, renderMarkdown } from "@/lib/markdown";
 import type { Metadata } from "next";
 
 export async function generateStaticParams() {
@@ -36,7 +37,8 @@ export default async function BlogPostPage({
   const post = getPostBySlug(slug);
   if (!post) notFound();
 
-  const paragraphs = post.content.split("\n\n");
+  const markdownElements = parseMarkdown(post.content);
+  const renderedContent = renderMarkdown(markdownElements);
 
   return (
     <div className="min-h-screen bg-bg">
@@ -91,14 +93,7 @@ export default async function BlogPostPage({
 
         {/* Article content */}
         <article className="space-y-6">
-          {paragraphs.map((paragraph, i) => (
-            <p
-              key={i}
-              className="text-text-secondary leading-relaxed text-base"
-            >
-              {paragraph}
-            </p>
-          ))}
+          {renderedContent}
         </article>
 
         {/* Back to blog */}
