@@ -40,9 +40,40 @@ export default async function BlogPostPage({
   const markdownElements = parseMarkdown(post.content);
   const renderedContent = renderMarkdown(markdownElements);
 
+  const baseUrl = process.env.NEXT_PUBLIC_URL || "https://ciberpme.vercel.app";
+  const articleUrl = `${baseUrl}/blog/${post.slug}`;
+
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.excerpt,
+    author: {
+      "@type": "Organization",
+      name: "CiberPME",
+      url: baseUrl,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "CiberPME",
+      url: baseUrl,
+    },
+    datePublished: post.publishedAt,
+    dateModified: post.publishedAt,
+    url: articleUrl,
+    articleSection: post.categoryLabel,
+    inLanguage: "pt-PT",
+    image: `${baseUrl}/api/og?title=${encodeURIComponent(post.title)}`,
+  };
+
   return (
-    <div className="min-h-screen bg-bg">
-      {/* Navigation */}
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
+      <div className="min-h-screen bg-bg">
+        {/* Navigation */}
       <nav className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
         <Link href="/" className="text-lg font-bold text-brand">
           CiberPME
@@ -125,5 +156,6 @@ export default async function BlogPostPage({
         </div>
       </footer>
     </div>
+    </>
   );
 }
