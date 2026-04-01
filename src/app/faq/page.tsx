@@ -93,6 +93,9 @@ export default function FAQPage() {
             <Link href="/faq" className="text-brand font-bold">
               FAQ
             </Link>
+            <Link href="/recursos" className="hover:text-brand transition">
+              Recursos
+            </Link>
             <Link href="/#sobre" className="hover:text-brand transition">
               Sobre
             </Link>
@@ -173,6 +176,9 @@ export default function FAQPage() {
               </Link>
               <Link href="/faq" className="hover:text-brand transition">
                 FAQ
+              </Link>
+              <Link href="/recursos" className="hover:text-brand transition">
+                Recursos
               </Link>
             </div>
             <p className="text-sm text-text-muted">

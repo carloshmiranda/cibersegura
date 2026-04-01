@@ -20,6 +20,9 @@ export default function HomePage() {
           <Link href="/faq" className="hover:text-brand transition">
             FAQ
           </Link>
+          <Link href="/recursos" className="hover:text-brand transition">
+            Recursos
+          </Link>
           <Link href="#sobre" className="hover:text-brand transition">
             Sobre
           </Link>
@@ -206,6 +209,9 @@ export default function HomePage() {
             </Link>
             <Link href="/faq" className="hover:text-brand transition">
               FAQ
+            </Link>
+            <Link href="/recursos" className="hover:text-brand transition">
+              Recursos
             </Link>
             <Link href="#sobre" className="hover:text-brand transition">
               Sobre
