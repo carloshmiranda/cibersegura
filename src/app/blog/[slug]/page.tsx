@@ -82,6 +82,9 @@ export default async function BlogPostPage({
           <Link href="/blog" className="hover:text-brand transition">
             Blog
           </Link>
+          <Link href="/faq" className="hover:text-brand transition">
+            FAQ
+          </Link>
           <Link href="/#sobre" className="hover:text-brand transition">
             Sobre
           </Link>
@@ -148,6 +151,9 @@ export default async function BlogPostPage({
             </Link>
             <Link href="/blog" className="hover:text-brand transition">
               Blog
+            </Link>
+            <Link href="/faq" className="hover:text-brand transition">
+              FAQ
             </Link>
           </div>
           <p className="text-sm text-text-muted">

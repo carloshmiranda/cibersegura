@@ -17,6 +17,9 @@ export default function HomePage() {
           <Link href="/blog" className="hover:text-brand transition">
             Blog
           </Link>
+          <Link href="/faq" className="hover:text-brand transition">
+            FAQ
+          </Link>
           <Link href="#sobre" className="hover:text-brand transition">
             Sobre
           </Link>
@@ -200,6 +203,9 @@ export default function HomePage() {
           <div className="flex gap-6 text-sm text-text-secondary">
             <Link href="/blog" className="hover:text-brand transition">
               Blog
+            </Link>
+            <Link href="/faq" className="hover:text-brand transition">
+              FAQ
             </Link>
             <Link href="#sobre" className="hover:text-brand transition">
               Sobre
