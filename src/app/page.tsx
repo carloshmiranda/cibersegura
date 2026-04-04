@@ -2,6 +2,29 @@ import Link from "next/link";
 import { posts, CATEGORIES } from "@/lib/posts";
 import { NewsletterForm } from "./newsletter-form";
 import { NIS2Banner } from "@/components/nis2-banner";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "CiberPME — Cibersegurança para PMEs Portuguesas",
+  description: "Blog de cibersegurança e recursos para pequenas e médias empresas portuguesas. Artigos sobre ameaças, boas práticas, ferramentas e legislação RGPD.",
+  alternates: {
+    canonical: "https://ciberpme.vercel.app",
+  },
+  openGraph: {
+    title: "CiberPME — Cibersegurança para PMEs Portuguesas",
+    description: "Blog de cibersegurança e recursos para pequenas e médias empresas portuguesas. Artigos sobre ameaças, boas práticas, ferramentas e legislação RGPD.",
+    type: "website",
+    url: "https://ciberpme.vercel.app",
+    images: [
+      {
+        url: "/api/og",
+        width: 1200,
+        height: 630,
+        alt: "CiberPME — Cibersegurança para PMEs Portuguesas",
+      },
+    ],
+  },
+};
 
 const COMPANY_NAME = "CiberPME";
 
