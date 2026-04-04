@@ -5,7 +5,25 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Blog — CiberPME",
   description:
-    "Artigos sobre ciberseguranca para pequenas e medias empresas portuguesas. Ameacas, boas praticas, ferramentas e legislacao RGPD.",
+    "Artigos sobre cibersegurança para pequenas e médias empresas portuguesas. Ameaças, boas práticas, ferramentas e legislação RGPD.",
+  alternates: {
+    canonical: "https://ciberpme.vercel.app/blog",
+  },
+  openGraph: {
+    title: "Blog — CiberPME",
+    description:
+      "Artigos sobre cibersegurança para pequenas e médias empresas portuguesas. Ameaças, boas práticas, ferramentas e legislação RGPD.",
+    type: "website",
+    url: "https://ciberpme.vercel.app/blog",
+    images: [
+      {
+        url: "/api/og?title=Blog%20de%20Cibersegurança",
+        width: 1200,
+        height: 630,
+        alt: "Blog de Cibersegurança - CiberPME",
+      },
+    ],
+  },
 };
 
 export default async function BlogPage({

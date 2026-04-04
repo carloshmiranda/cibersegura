@@ -16,14 +16,30 @@ export async function generateMetadata({
   const { slug } = await params;
   const post = getPostBySlug(slug);
   if (!post) return {};
+
+  const baseUrl = "https://ciberpme.vercel.app";
+  const postUrl = `${baseUrl}/blog/${post.slug}`;
+
   return {
     title: `${post.title} — CiberPME`,
     description: post.excerpt,
+    alternates: {
+      canonical: postUrl,
+    },
     openGraph: {
       title: post.title,
       description: post.excerpt,
       type: "article",
       publishedTime: post.publishedAt,
+      url: postUrl,
+      images: [
+        {
+          url: `/api/og?title=${encodeURIComponent(post.title)}`,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
     },
   };
 }

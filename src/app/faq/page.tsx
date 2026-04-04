@@ -5,6 +5,24 @@ export const metadata: Metadata = {
   title: "FAQ — Perguntas Frequentes sobre Cibersegurança para PMEs",
   description:
     "Respostas às perguntas mais frequentes sobre cibersegurança para pequenas e médias empresas portuguesas. RGPD, NIS2, backup, antivírus e mais.",
+  alternates: {
+    canonical: "https://ciberpme.vercel.app/faq",
+  },
+  openGraph: {
+    title: "FAQ — Perguntas Frequentes sobre Cibersegurança para PMEs",
+    description:
+      "Respostas às perguntas mais frequentes sobre cibersegurança para pequenas e médias empresas portuguesas. RGPD, NIS2, backup, antivírus e mais.",
+    type: "website",
+    url: "https://ciberpme.vercel.app/faq",
+    images: [
+      {
+        url: "/api/og?title=FAQ%20-%20Cibersegurança",
+        width: 1200,
+        height: 630,
+        alt: "FAQ - Perguntas Frequentes sobre Cibersegurança",
+      },
+    ],
+  },
 };
 
 const faqItems = [
