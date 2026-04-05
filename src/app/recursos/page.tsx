@@ -48,6 +48,7 @@ const categories: ResourceCategory[] = [
       "Proteção contra malware, ransomware e ameaças avançadas com gestão centralizada.",
     icon: (
       <svg
+        aria-hidden="true"
         className="w-8 h-8 text-accent"
         fill="none"
         viewBox="0 0 24 24"
@@ -109,6 +110,7 @@ const categories: ResourceCategory[] = [
       "Soluções para proteger dados críticos e garantir continuidade do negócio.",
     icon: (
       <svg
+        aria-hidden="true"
         className="w-8 h-8 text-accent"
         fill="none"
         viewBox="0 0 24 24"
@@ -170,6 +172,7 @@ const categories: ResourceCategory[] = [
       "Ferramentas para criar, armazenar e partilhar passwords de forma segura.",
     icon: (
       <svg
+        aria-hidden="true"
         className="w-8 h-8 text-accent"
         fill="none"
         viewBox="0 0 24 24"
@@ -231,6 +234,7 @@ const categories: ResourceCategory[] = [
       "Soluções para acesso seguro a recursos empresariais remotamente.",
     icon: (
       <svg
+        aria-hidden="true"
         className="w-8 h-8 text-accent"
         fill="none"
         viewBox="0 0 24 24"
@@ -292,6 +296,7 @@ const categories: ResourceCategory[] = [
       "Plataformas para educar colaboradores sobre cibersegurança.",
     icon: (
       <svg
+        aria-hidden="true"
         className="w-8 h-8 text-accent"
         fill="none"
         viewBox="0 0 24 24"
@@ -380,27 +385,29 @@ export default function RecursosPage() {
   return (
     <div className="min-h-screen bg-bg">
       {/* Navigation */}
-      <nav className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-        <Link href="/" className="text-lg font-bold text-brand">
-          CiberPME
-        </Link>
-        <div className="flex items-center gap-6 text-sm text-text-secondary">
-          <Link href="/blog" className="hover:text-brand transition">
-            Blog
+      <header>
+        <nav className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+          <Link href="/" className="text-lg font-bold text-brand">
+            CiberPME
           </Link>
-          <Link href="/recursos" className="text-brand font-bold">
-            Recursos
-          </Link>
-          <Link href="/faq" className="hover:text-brand transition">
-            FAQ
-          </Link>
-          <Link href="/#sobre" className="hover:text-brand transition">
-            Sobre
-          </Link>
-        </div>
-      </nav>
+          <div className="flex items-center gap-6 text-sm text-text-secondary">
+            <Link href="/blog" className="hover:text-brand transition">
+              Blog
+            </Link>
+            <Link href="/recursos" className="text-brand font-bold">
+              Recursos
+            </Link>
+            <Link href="/faq" className="hover:text-brand transition">
+              FAQ
+            </Link>
+            <Link href="/#sobre" className="hover:text-brand transition">
+              Sobre
+            </Link>
+          </div>
+        </nav>
+      </header>
 
-      <main className="max-w-5xl mx-auto px-6 py-12">
+      <main id="main-content" className="max-w-5xl mx-auto px-6 py-12">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-sm text-text-muted mb-8">
           <Link href="/" className="hover:text-brand transition">
@@ -451,7 +458,7 @@ export default function RecursosPage() {
                 {category.tools.map((tool, toolIndex) => (
                   <div
                     key={toolIndex}
-                    className="p-6 rounded-xl border border-border hover:border-accent hover:shadow-sm transition"
+                    className="p-6 rounded-xl border border-border hover:border-accent hover:shadow-sm transition cursor-pointer"
                   >
                     <div className="mb-4">
                       <h3 className="text-lg font-bold text-brand mb-2">
@@ -476,7 +483,9 @@ export default function RecursosPage() {
                             key={proIndex}
                             className="text-xs text-text-secondary flex items-start gap-2"
                           >
-                            <span className="text-accent mt-1">✓</span>
+                            <svg aria-hidden="true" className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                            </svg>
                             {pro}
                           </li>
                         ))}
@@ -516,7 +525,7 @@ export default function RecursosPage() {
             {additionalResources.map((resource, index) => (
               <div
                 key={index}
-                className="p-6 rounded-xl border border-border hover:border-accent transition"
+                className="p-6 rounded-xl border border-border hover:border-accent transition cursor-pointer"
               >
                 <div className="flex justify-between items-start mb-3">
                   <h3 className="font-bold text-brand">{resource.title}</h3>
