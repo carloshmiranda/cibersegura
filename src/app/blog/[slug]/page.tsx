@@ -59,9 +59,16 @@ export default async function BlogPostPage({
   const baseUrl = process.env.NEXT_PUBLIC_URL || "https://ciberpme.vercel.app";
   const articleUrl = `${baseUrl}/blog/${post.slug}`;
 
+  // Detect if this is a how-to guide based on content and slug
+  const isHowToGuide = post.slug.includes('guia') ||
+                       post.slug.includes('registo') ||
+                       post.content.includes('Passo ') ||
+                       post.content.includes('### Passo');
+
   const articleJsonLd = {
     "@context": "https://schema.org",
-    "@type": "BlogPosting",
+    "@type": isHowToGuide ? "HowTo" : "BlogPosting",
+    name: post.title,
     headline: post.title,
     description: post.excerpt,
     author: {
@@ -80,6 +87,71 @@ export default async function BlogPostPage({
     articleSection: post.categoryLabel,
     inLanguage: "pt-PT",
     image: `${baseUrl}/api/og?title=${encodeURIComponent(post.title)}`,
+    ...(isHowToGuide && {
+      totalTime: `PT${post.readingTime}M`,
+      supply: [
+        {
+          "@type": "HowToSupply",
+          name: "Documentos empresariais (certidão comercial, estatutos)"
+        },
+        {
+          "@type": "HowToSupply",
+          name: "Identificação do responsável pela cibersegurança"
+        },
+        {
+          "@type": "HowToSupply",
+          name: "Contactos de emergência 24/7"
+        }
+      ],
+      tool: [
+        {
+          "@type": "HowToTool",
+          name: "Chave Móvel Digital ou Cartão de Cidadão"
+        },
+        {
+          "@type": "HowToTool",
+          name: "Portal CNCS (portal.cncs.gov.pt)"
+        }
+      ],
+      step: [
+        {
+          "@type": "HowToStep",
+          name: "Avalie a Aplicabilidade",
+          text: "Confirme se a sua empresa está abrangida pela NIS2 consultando os anexos do Decreto-Lei 125/2025 e verificando os critérios de dimensão.",
+          url: `${articleUrl}#passo-1`
+        },
+        {
+          "@type": "HowToStep",
+          name: "Reúna a Documentação",
+          text: "Prepare todos os documentos obrigatórios incluindo certificado permanente da empresa, identificação do responsável pela cibersegurança e inventário de sistemas.",
+          url: `${articleUrl}#passo-2`
+        },
+        {
+          "@type": "HowToStep",
+          name: "Aceda ao Portal de Registo",
+          text: "Entre no portal oficial do CNCS e autentique-se com Chave Móvel Digital ou Cartão de Cidadão.",
+          url: `${articleUrl}#passo-3`
+        },
+        {
+          "@type": "HowToStep",
+          name: "Complete o Formulário",
+          text: "Preencha todas as secções obrigatórias do formulário de registo NIS2 com informação detalhada sobre a empresa e sistemas.",
+          url: `${articleUrl}#passo-4`
+        },
+        {
+          "@type": "HowToStep",
+          name: "Submeta Documentos",
+          text: "Faça upload de todos os documentos de suporte em formato PDF, Word ou Excel.",
+          url: `${articleUrl}#passo-5`
+        },
+        {
+          "@type": "HowToStep",
+          name: "Valide e Submeta",
+          text: "Revise toda a informação, confirme com a checklist automática e submeta o registo oficial.",
+          url: `${articleUrl}#passo-6`
+        }
+      ]
+    })
   };
 
   return (
