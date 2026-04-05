@@ -18,7 +18,7 @@
   /* Neutrals — universal, don't change per company */
   --color-text: #111827;        /* primary text */
   --color-text-secondary: #6b7280; /* secondary text, labels */
-  --color-text-muted: #9ca3af;  /* placeholders, hints */
+  --color-text-muted: #6b7280;  /* placeholders, hints — was #9ca3af (2.5:1 contrast, fails WCAG AA) */
   --color-bg: #ffffff;          /* page background */
   --color-bg-subtle: #f9fafb;   /* cards, sections */
   --color-border: #e5e7eb;      /* borders, dividers */
@@ -32,8 +32,8 @@
   --color-warning-text: #854d0e;
 
   /* Typography fonts */
-  --font-display: var(--font-display, 'Plus Jakarta Sans', system-ui, sans-serif);
-  --font-sans: var(--font-sans, 'Inter', system-ui, sans-serif);
+  --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
 
   /* Typography scale — 5 sizes max */
   --font-size-xs: 0.75rem;     /* 12px — labels, badges */
@@ -77,6 +77,12 @@
 
 html {
   scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 .font-display {
