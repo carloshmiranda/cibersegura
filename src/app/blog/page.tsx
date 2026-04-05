@@ -72,7 +72,7 @@ export default async function BlogPage({
           <Link
             href="/blog"
             aria-current={!categoria ? "page" : undefined}
-            className={`px-3 py-1.5 text-sm rounded-full border transition ${
+            className={`px-3 py-2.5 text-sm rounded-full border transition ${
               !categoria
                 ? "bg-accent text-white border-accent"
                 : "border-border text-text-secondary hover:border-accent"
@@ -85,7 +85,7 @@ export default async function BlogPage({
               key={key}
               href={`/blog?categoria=${key}`}
               aria-current={categoria === key ? "page" : undefined}
-              className={`px-3 py-1.5 text-sm rounded-full border transition ${
+              className={`px-3 py-2.5 text-sm rounded-full border transition ${
                 categoria === key
                   ? "bg-accent text-white border-accent"
                   : "border-border text-text-secondary hover:border-accent"

@@ -34,7 +34,7 @@ export default function HomePage() {
       {/* Navigation */}
       <header>
         <nav className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="text-lg font-bold text-brand">
+          <Link href="/" className="text-lg font-bold text-brand" aria-current="page">
             {COMPANY_NAME}
           </Link>
           <div className="flex items-center gap-6 text-sm text-text-secondary">
@@ -124,6 +124,7 @@ export default function HomePage() {
                   <div className="mb-2">
                     {key === "ameacas" && (
                       <svg
+                        aria-hidden="true"
                         className="w-6 h-6 mx-auto text-accent"
                         fill="none"
                         viewBox="0 0 24 24"
@@ -139,6 +140,7 @@ export default function HomePage() {
                     )}
                     {key === "boas-praticas" && (
                       <svg
+                        aria-hidden="true"
                         className="w-6 h-6 mx-auto text-accent"
                         fill="none"
                         viewBox="0 0 24 24"
@@ -154,6 +156,7 @@ export default function HomePage() {
                     )}
                     {key === "ferramentas" && (
                       <svg
+                        aria-hidden="true"
                         className="w-6 h-6 mx-auto text-accent"
                         fill="none"
                         viewBox="0 0 24 24"
@@ -169,6 +172,7 @@ export default function HomePage() {
                     )}
                     {key === "legislacao" && (
                       <svg
+                        aria-hidden="true"
                         className="w-6 h-6 mx-auto text-accent"
                         fill="none"
                         viewBox="0 0 24 24"
@@ -215,9 +219,15 @@ export default function HomePage() {
             <h2 className="text-xl font-bold text-brand mb-4 text-balance font-display">
               Receba as nossas dicas de segurança
             </h2>
-            <p className="text-text-secondary mb-8 text-pretty">
+            <p className="text-text-secondary mb-3 text-pretty">
               Subscreva a newsletter e receba artigos, alertas de segurança e
               guias práticos directamente no seu email.
+            </p>
+            <p className="text-sm text-text-secondary mt-3 mb-8 text-pretty">
+              Conteúdo verificado por especialistas.{' '}
+              <Link href="/blog" className="underline hover:text-brand transition">
+                Ver artigos publicados →
+              </Link>
             </p>
             <NewsletterForm />
           </div>
