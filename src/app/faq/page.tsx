@@ -134,7 +134,7 @@ export default function FAQPage() {
 
           {/* Header */}
           <header className="mb-12">
-            <h1 className="text-3xl md:text-4xl font-bold text-brand mb-4 text-balance font-display">
+            <h1 className="text-3xl md:text-4xl font-bold text-brand mb-4 text-balance font-display tracking-tight">
               Perguntas Frequentes
             </h1>
             <p className="text-lg text-text-secondary text-pretty">
@@ -169,7 +169,7 @@ export default function FAQPage() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/blog"
-                className="px-6 py-3 bg-accent text-white rounded-lg font-medium hover:bg-accent-hover transition"
+                className="px-6 py-3 bg-accent text-white rounded-lg font-bold hover:opacity-90 transition"
               >
                 Ver Artigos
               </Link>

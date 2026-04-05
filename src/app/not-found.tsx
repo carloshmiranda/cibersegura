@@ -20,7 +20,7 @@ export default function NotFound() {
           </Link>
           <Link
             href="/blog"
-            className="inline-block px-6 py-3 border border-border text-text-secondary rounded-lg font-bold hover:border-accent transition"
+            className="inline-block px-6 py-3 border border-border text-brand rounded-lg font-bold hover:border-accent transition"
           >
             Ver blog
           </Link>

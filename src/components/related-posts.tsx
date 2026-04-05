@@ -19,7 +19,7 @@ export function RelatedPosts({ currentPostSlug, category }: RelatedPostsProps) {
 
   return (
     <section className="mt-16 pt-12 border-t border-border">
-      <h2 className="text-2xl font-bold text-brand mb-8">Artigos Relacionados</h2>
+      <h2 className="text-2xl font-bold text-brand mb-8 font-display text-balance">Artigos Relacionados</h2>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {relatedPosts.map((post) => (
           <article
@@ -29,12 +29,12 @@ export function RelatedPosts({ currentPostSlug, category }: RelatedPostsProps) {
             <span className="inline-block px-2 py-0.5 text-xs font-medium text-accent bg-accent-light rounded-full mb-3">
               {post.categoryLabel}
             </span>
-            <h3 className="text-lg font-bold text-brand mb-2 group-hover:text-accent transition leading-tight">
+            <h3 className="text-lg font-bold text-brand mb-2 group-hover:text-accent transition leading-tight font-display">
               <Link href={`/blog/${post.slug}`} className="stretched-link">
                 {post.title}
               </Link>
             </h3>
-            <p className="text-sm text-text-muted mb-4 line-clamp-3">
+            <p className="text-sm text-text-secondary mb-4 line-clamp-3">
               {post.excerpt}
             </p>
             <div className="flex items-center gap-2 text-xs text-text-muted">

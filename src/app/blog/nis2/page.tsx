@@ -46,25 +46,33 @@ export default function NIS2SiloPage() {
   return (
     <div className="min-h-screen bg-bg">
       {/* Navigation */}
-      <nav className="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-        <Link href="/" className="text-lg font-bold text-brand">
-          CiberPME
-        </Link>
-        <div className="flex items-center gap-6 text-sm text-text-secondary">
-          <Link href="/blog" className="hover:text-brand transition">
-            Blog
+      <header>
+        <nav className="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+          <Link href="/" className="text-lg font-bold text-brand">
+            CiberPME
           </Link>
-          <Link href="/#sobre" className="hover:text-brand transition">
-            Sobre
-          </Link>
-        </div>
-      </nav>
+          <div className="flex items-center gap-6 text-sm text-text-secondary">
+            <Link href="/recursos" className="hover:text-brand transition">
+              Recursos
+            </Link>
+            <Link href="/blog" className="hover:text-brand transition">
+              Blog
+            </Link>
+            <Link href="/faq" className="hover:text-brand transition">
+              FAQ
+            </Link>
+            <Link href="/#sobre" className="hover:text-brand transition">
+              Sobre
+            </Link>
+          </div>
+        </nav>
+      </header>
 
       <main>
         {/* Hero Section */}
         <section className="max-w-4xl mx-auto px-4 sm:px-6 py-20">
           <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold text-brand mb-6">
+            <h1 className="text-4xl md:text-5xl font-bold text-brand mb-6 font-display text-balance">
               NIS2 em Portugal
             </h1>
             <p className="text-lg text-text-secondary max-w-3xl mx-auto leading-relaxed">
@@ -77,19 +85,19 @@ export default function NIS2SiloPage() {
           {/* Key Points */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
             <div className="p-6 rounded-xl border border-border bg-bg-subtle">
-              <h3 className="font-bold text-brand mb-2">18 Setores Abrangidos</h3>
+              <h3 className="font-bold text-brand mb-2 font-display">18 Setores Abrangidos</h3>
               <p className="text-sm text-text-secondary">
                 De energia a administração pública, a NIS2 expande de 7 para 18 setores regulamentados.
               </p>
             </div>
             <div className="p-6 rounded-xl border border-border bg-bg-subtle">
-              <h3 className="font-bold text-brand mb-2">PMEs Incluídas</h3>
+              <h3 className="font-bold text-brand mb-2 font-display">PMEs Incluídas</h3>
               <p className="text-sm text-text-secondary">
                 Empresas médias (50-249 trabalhadores) em setores essenciais estão automaticamente abrangidas.
               </p>
             </div>
             <div className="p-6 rounded-xl border border-border bg-bg-subtle">
-              <h3 className="font-bold text-brand mb-2">Multas até 2%</h3>
+              <h3 className="font-bold text-brand mb-2 font-display">Multas até 2%</h3>
               <p className="text-sm text-text-secondary">
                 Penalizações podem chegar a 2% do volume de negócios anual global da empresa.
               </p>
@@ -101,7 +109,7 @@ export default function NIS2SiloPage() {
         <section className="border-t border-border">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 py-20">
             <div className="text-center">
-              <h2 className="text-3xl font-bold text-brand mb-4">
+              <h2 className="text-3xl font-bold text-brand mb-4 font-display text-balance">
                 Prazo de Conformidade
               </h2>
               <p className="text-text-secondary mb-8">
@@ -109,14 +117,14 @@ export default function NIS2SiloPage() {
               </p>
 
               {countdown.isExpired ? (
-                <div className="p-8 rounded-xl border border-error bg-error/5">
+                <div className="p-8 rounded-xl border border-border bg-bg-subtle">
                   <p className="text-2xl font-bold text-error mb-2">Prazo Expirado</p>
                   <p className="text-text-secondary">
                     A data limite de 3 de abril de 2026 passou. Contacte um consultor especializado.
                   </p>
                 </div>
               ) : (
-                <div className="p-8 rounded-xl border border-accent bg-accent/5">
+                <div className="p-8 rounded-xl border border-border bg-bg-subtle">
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                     <div className="text-center">
                       <div className="text-5xl font-bold text-accent mb-2">
@@ -140,7 +148,7 @@ export default function NIS2SiloPage() {
         {/* Articles Section */}
         <section className="border-t border-border">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 py-20">
-            <h2 className="text-3xl font-bold text-brand mb-4 text-center">
+            <h2 className="text-3xl font-bold text-brand mb-4 text-center font-display text-balance">
               Guias NIS2 para PMEs Portuguesas
             </h2>
             <p className="text-text-secondary text-center mb-12">
@@ -157,9 +165,9 @@ export default function NIS2SiloPage() {
                 {nis2Posts.map((post, index) => {
                   const levelLabels = ["Introdução", "Implementação", "Conformidade"];
                   const levelColors = [
-                    "bg-success/10 text-success border-success/20",
-                    "bg-warning/10 text-warning border-warning/20",
-                    "bg-accent/10 text-accent border-accent/20",
+                    "bg-accent-light text-accent border-accent/20",
+                    "bg-bg-subtle text-text-secondary border-border",
+                    "bg-accent-light text-accent border-accent/20",
                   ];
 
                   return (

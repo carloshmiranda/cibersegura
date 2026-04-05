@@ -169,6 +169,7 @@ export default async function BlogPostPage({
             CiberPME
           </Link>
           <div className="flex items-center gap-6 text-sm text-text-secondary">
+            <Link href="/recursos" className="hover:text-brand transition">Recursos</Link>
             <Link href="/blog" className="text-brand font-bold" aria-current="page">
               Blog
             </Link>
@@ -201,7 +202,7 @@ export default async function BlogPostPage({
           <span className="inline-block px-2 py-0.5 text-xs font-medium text-accent bg-accent-light rounded-full mb-4">
             {post.categoryLabel}
           </span>
-          <h1 className="text-3xl md:text-4xl font-bold text-brand mb-4 leading-tight text-balance font-display">
+          <h1 className="text-3xl md:text-4xl font-bold text-brand mb-4 leading-tight text-balance font-display tracking-tight">
             {post.title}
           </h1>
           <div className="flex items-center gap-4 text-sm text-text-muted">

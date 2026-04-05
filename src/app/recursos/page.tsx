@@ -391,11 +391,11 @@ export default function RecursosPage() {
             CiberPME
           </Link>
           <div className="flex items-center gap-6 text-sm text-text-secondary">
-            <Link href="/blog" className="hover:text-brand transition">
-              Blog
-            </Link>
             <Link href="/recursos" className="text-brand font-bold" aria-current="page">
               Recursos
+            </Link>
+            <Link href="/blog" className="hover:text-brand transition">
+              Blog
             </Link>
             <Link href="/faq" className="hover:text-brand transition">
               FAQ
@@ -419,7 +419,7 @@ export default function RecursosPage() {
 
         {/* Header */}
         <div className="mb-16 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-brand mb-6 text-balance font-display">
+          <h1 className="text-4xl md:text-5xl font-bold text-brand mb-6 text-balance font-display tracking-tight">
             Recursos de Cibersegurança
           </h1>
           <p className="text-lg text-text-secondary max-w-3xl mx-auto text-pretty">
@@ -562,7 +562,7 @@ export default function RecursosPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/blog"
-              className="px-8 py-3 bg-accent text-white rounded-lg font-medium hover:bg-accent-hover transition"
+              className="px-8 py-3 bg-accent text-white rounded-lg font-bold hover:opacity-90 transition"
             >
               Ver Guias de Implementação
             </Link>

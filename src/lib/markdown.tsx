@@ -101,14 +101,14 @@ export function renderMarkdown(elements: MarkdownElement[]): React.ReactElement[
       case 'heading':
         if (element.level === 2) {
           return (
-            <h2 key={index} className="text-xl font-bold text-brand mt-8 mb-4 first:mt-0">
+            <h2 key={index} className="text-xl font-bold text-brand mt-8 mb-4 first:mt-0 font-display text-balance">
               {element.content}
             </h2>
           );
         }
         if (element.level === 3) {
           return (
-            <h3 key={index} className="text-lg font-bold text-brand mt-6 mb-3 first:mt-0">
+            <h3 key={index} className="text-lg font-bold text-brand mt-6 mb-3 first:mt-0 font-display">
               {element.content}
             </h3>
           );

@@ -62,7 +62,7 @@ export default async function BlogPage({
       </header>
 
       <main id="main-content" className="max-w-4xl mx-auto px-6 py-12">
-        <h1 className="text-3xl font-bold text-brand mb-4 text-balance font-display">Blog</h1>
+        <h1 className="text-3xl md:text-4xl font-bold text-brand mb-4 text-balance font-display tracking-tight">Blog</h1>
         <p className="text-text-secondary mb-8 text-pretty">
           Artigos praticos sobre ciberseguranca para proteger o seu negocio.
         </p>
