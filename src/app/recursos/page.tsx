@@ -394,7 +394,7 @@ export default function RecursosPage() {
             <Link href="/blog" className="hover:text-brand transition">
               Blog
             </Link>
-            <Link href="/recursos" className="text-brand font-bold">
+            <Link href="/recursos" className="text-brand font-bold" aria-current="page">
               Recursos
             </Link>
             <Link href="/faq" className="hover:text-brand transition">
@@ -418,17 +418,17 @@ export default function RecursosPage() {
         </div>
 
         {/* Header */}
-        <header className="mb-16 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-brand mb-6">
+        <div className="mb-16 text-center">
+          <h1 className="text-4xl md:text-5xl font-bold text-brand mb-6 text-balance font-display">
             Recursos de Cibersegurança
           </h1>
-          <p className="text-lg text-text-secondary max-w-3xl mx-auto">
+          <p className="text-lg text-text-secondary max-w-3xl mx-auto text-pretty">
             Ferramentas, serviços e recursos cuidadosamente selecionados para
             ajudar pequenas e médias empresas portuguesas a protegerem-se contra
             ameaças digitais. Todas as recomendações são baseadas em experiência
             real de implementação.
           </p>
-        </header>
+        </div>
 
         {/* Disclaimer */}
         <div className="mb-12 p-6 rounded-xl bg-accent-light border border-accent/20">
@@ -447,10 +447,10 @@ export default function RecursosPage() {
               <div className="flex items-center gap-4 mb-8">
                 {category.icon}
                 <div>
-                  <h2 className="text-2xl font-bold text-brand">
+                  <h2 className="text-2xl font-bold text-brand text-balance font-display">
                     {category.title}
                   </h2>
-                  <p className="text-text-secondary">{category.description}</p>
+                  <p className="text-text-secondary text-pretty">{category.description}</p>
                 </div>
               </div>
 
@@ -469,7 +469,7 @@ export default function RecursosPage() {
                       </span>
                     </div>
 
-                    <p className="text-text-secondary text-sm mb-4 leading-relaxed">
+                    <p className="text-text-secondary text-sm mb-4 leading-relaxed text-pretty">
                       {tool.description}
                     </p>
 
@@ -518,7 +518,7 @@ export default function RecursosPage() {
 
         {/* Additional Resources */}
         <section className="mt-20">
-          <h2 className="text-2xl font-bold text-brand mb-8 text-center">
+          <h2 className="text-2xl font-bold text-brand mb-8 text-center text-balance font-display">
             Recursos Oficiais e Técnicos
           </h2>
           <div className="grid md:grid-cols-2 gap-6">
@@ -551,10 +551,10 @@ export default function RecursosPage() {
 
         {/* CTA */}
         <div className="mt-20 p-8 rounded-xl bg-bg-subtle text-center">
-          <h2 className="text-2xl font-bold text-brand mb-4">
+          <h2 className="text-2xl font-bold text-brand mb-4 text-balance font-display">
             Precisa de ajuda na escolha?
           </h2>
-          <p className="text-text-secondary mb-6 max-w-2xl mx-auto">
+          <p className="text-text-secondary mb-6 max-w-2xl mx-auto text-pretty">
             Explore os nossos artigos detalhados sobre implementação de
             cibersegurança ou subscreva a newsletter para receber
             recomendações personalizadas.

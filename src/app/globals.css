@@ -12,8 +12,8 @@
   /* Brand — Cybersecurity colors that evoke trust, security and professionalism */
   --color-brand: #0f172a;       /* slate-900 — deeper, more authoritative than gray */
   --color-brand-light: #f1f5f9; /* slate-100 — cooler, tech-focused background */
-  --color-accent: #1e40af;      /* blue-800 — deeper blue that evokes trust and security */
-  --color-accent-light: #dbeafe;/* blue-100 — maintains accessibility while feeling more secure */
+  --color-accent: #0369a1;      /* sky-700 — more vibrant, distinct from brand navy */
+  --color-accent-light: #e0f2fe;/* sky-100 — updated to match new accent */
 
   /* Neutrals — universal, don't change per company */
   --color-text: #111827;        /* primary text */
@@ -41,6 +41,9 @@
   --font-size-base: 1rem;      /* 16px — body */
   --font-size-lg: 1.25rem;     /* 20px — section intros */
   --font-size-xl: 1.5rem;      /* 24px — section headings */
+  --font-size-2xl: 2rem;       /* 32px — large headings */
+  --font-size-3xl: 2.25rem;    /* 36px — h1 desktop */
+  --font-size-4xl: 2.5rem;     /* 40px — h1 large */
 
   /* Spacing scale — 8px base grid */
   --spacing-xs: 0.25rem;  /* 4px */
