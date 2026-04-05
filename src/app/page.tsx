@@ -2,6 +2,7 @@ import Link from "next/link";
 import { posts, CATEGORIES } from "@/lib/posts";
 import { NewsletterForm } from "./newsletter-form";
 import { NIS2Banner } from "@/components/nis2-banner";
+import Footer from "@/components/footer";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -239,32 +240,7 @@ export default function HomePage() {
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-border py-12">
-        <div className="max-w-4xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <span className="font-bold text-brand">{COMPANY_NAME}</span>
-          <div className="flex gap-6 text-sm text-text-secondary">
-            <Link href="/blog" className="hover:text-brand transition">
-              Blog
-            </Link>
-            <Link href="/recursos" className="hover:text-brand transition">
-              Recursos
-            </Link>
-            <Link href="/faq" className="hover:text-brand transition">
-              FAQ
-            </Link>
-            <Link href="#sobre" className="hover:text-brand transition">
-              Sobre
-            </Link>
-            <Link href="#newsletter" className="hover:text-brand transition">
-              Newsletter
-            </Link>
-          </div>
-          <p className="text-sm text-text-muted">
-            &copy; {new Date().getFullYear()} {COMPANY_NAME}
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

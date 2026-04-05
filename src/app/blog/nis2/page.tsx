@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { posts } from "@/lib/posts";
 import type { Metadata } from "next";
+import Footer from "@/components/footer";
 
 export const metadata: Metadata = {
   title: "NIS2 em Portugal: Guia Completo para PMEs — CiberPME",
@@ -233,23 +234,7 @@ export default function NIS2SiloPage() {
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-border py-12">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <span className="font-bold text-brand">CiberPME</span>
-          <div className="flex gap-6 text-sm text-text-secondary">
-            <Link href="/" className="hover:text-brand transition">
-              Início
-            </Link>
-            <Link href="/blog" className="hover:text-brand transition">
-              Blog
-            </Link>
-          </div>
-          <p className="text-sm text-text-muted">
-            &copy; {new Date().getFullYear()} CiberPME
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
