@@ -63,8 +63,11 @@ export function NewsletterForm() {
         onChange={(e) => setName(e.target.value)}
         className="px-4 py-3 border border-border rounded-lg text-brand placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent"
       />
-      <div className="flex gap-2">
-        <label htmlFor="newsletter-email" className="sr-only">Endereço de email</label>
+      <div>
+        <label htmlFor="newsletter-email" className="block text-sm font-medium text-text-secondary mb-1">
+          Email <span className="text-error" aria-hidden="true">*</span>
+        </label>
+        <div className="flex gap-2">
         <input
           id="newsletter-email"
           type="email"
@@ -83,6 +86,7 @@ export function NewsletterForm() {
         >
           {state === "loading" ? "A subscrever…" : "Subscrever"}
         </button>
+        </div>
       </div>
       {state === "error" && (
         <p id="newsletter-error" role="alert" className="text-sm text-error">
