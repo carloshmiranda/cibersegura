@@ -54,7 +54,9 @@ export function NewsletterForm() {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+      <label htmlFor="newsletter-name" className="sr-only">Nome (opcional)</label>
       <input
+        id="newsletter-name"
         type="text"
         placeholder="O seu nome (opcional)"
         value={name}
@@ -62,25 +64,29 @@ export function NewsletterForm() {
         className="px-4 py-3 border border-border rounded-lg text-brand placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent"
       />
       <div className="flex gap-2">
+        <label htmlFor="newsletter-email" className="sr-only">Endereço de email</label>
         <input
+          id="newsletter-email"
           type="email"
           required
           placeholder="o-seu@email.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          aria-describedby={state === "error" ? "newsletter-error" : undefined}
           className="flex-1 px-4 py-3 border border-border rounded-lg text-brand placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent"
         />
         <button
           type="submit"
           disabled={state === "loading"}
+          aria-busy={state === "loading"}
           className="px-6 py-3 bg-accent text-white rounded-lg font-bold hover:opacity-90 transition disabled:opacity-50"
         >
-          {state === "loading" ? "..." : "Subscrever"}
+          {state === "loading" ? "A subscrever…" : "Subscrever"}
         </button>
       </div>
       {state === "error" && (
-        <p className="text-sm text-error">
-          Algo correu mal. Por favor, tente novamente.
+        <p id="newsletter-error" role="alert" className="text-sm text-error">
+          Não foi possível subscrever. Verifique o email e tente novamente.
         </p>
       )}
     </form>

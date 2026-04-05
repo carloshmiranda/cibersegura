@@ -100,27 +100,29 @@ export default function FAQPage() {
       />
       <div className="min-h-screen bg-bg">
         {/* Navigation */}
-        <nav className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="text-lg font-bold text-brand">
-            CiberPME
-          </Link>
-          <div className="flex items-center gap-6 text-sm text-text-secondary">
-            <Link href="/blog" className="hover:text-brand transition">
-              Blog
+        <header>
+          <nav className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+            <Link href="/" className="text-lg font-bold text-brand">
+              CiberPME
             </Link>
-            <Link href="/recursos" className="hover:text-brand transition">
-              Recursos
-            </Link>
-            <Link href="/faq" className="text-brand font-bold">
-              FAQ
-            </Link>
-            <Link href="/#sobre" className="hover:text-brand transition">
-              Sobre
-            </Link>
-          </div>
-        </nav>
+            <div className="flex items-center gap-6 text-sm text-text-secondary">
+              <Link href="/recursos" className="hover:text-brand transition">
+                Recursos
+              </Link>
+              <Link href="/blog" className="hover:text-brand transition">
+                Blog
+              </Link>
+              <Link href="/faq" className="text-brand font-bold" aria-current="page">
+                FAQ
+              </Link>
+              <Link href="/#sobre" className="hover:text-brand transition">
+                Sobre
+              </Link>
+            </div>
+          </nav>
+        </header>
 
-        <main className="max-w-3xl mx-auto px-6 py-12">
+        <main id="main-content" className="max-w-3xl mx-auto px-6 py-12">
           {/* Breadcrumb */}
           <div className="flex items-center gap-2 text-sm text-text-muted mb-8">
             <Link href="/" className="hover:text-brand transition">
@@ -132,10 +134,10 @@ export default function FAQPage() {
 
           {/* Header */}
           <header className="mb-12">
-            <h1 className="text-3xl md:text-4xl font-bold text-brand mb-4">
+            <h1 className="text-3xl md:text-4xl font-bold text-brand mb-4 text-balance font-display">
               Perguntas Frequentes
             </h1>
-            <p className="text-lg text-text-secondary">
+            <p className="text-lg text-text-secondary text-pretty">
               Respostas às questões mais comuns sobre cibersegurança para
               pequenas e médias empresas portuguesas.
             </p>
@@ -145,7 +147,7 @@ export default function FAQPage() {
           <div className="space-y-8">
             {faqItems.map((item, index) => (
               <div key={index} className="border-b border-border pb-8">
-                <h2 className="text-lg font-bold text-brand mb-4">
+                <h2 className="text-lg font-bold text-brand mb-4 text-balance font-display">
                   {item.question}
                 </h2>
                 <div className="text-text-secondary leading-relaxed whitespace-pre-line">
@@ -157,10 +159,10 @@ export default function FAQPage() {
 
           {/* CTA */}
           <div className="mt-16 p-8 rounded-xl bg-bg-subtle text-center">
-            <h2 className="text-xl font-bold text-brand mb-4">
+            <h2 className="text-xl font-bold text-brand mb-4 text-balance font-display">
               Não encontrou a resposta?
             </h2>
-            <p className="text-text-secondary mb-6">
+            <p className="text-text-secondary mb-6 text-pretty">
               Explore os nossos artigos detalhados ou subscreva a newsletter
               para receber mais dicas de segurança.
             </p>
