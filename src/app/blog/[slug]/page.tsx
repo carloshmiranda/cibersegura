@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPostBySlug, posts } from "@/lib/posts";
 import { parseMarkdown, renderMarkdown } from "@/lib/markdown";
+import { RelatedPosts } from "@/components/related-posts";
 import type { Metadata } from "next";
 
 export async function generateStaticParams() {
@@ -219,6 +220,9 @@ export default async function BlogPostPage({
         <article className="space-y-6">
           {renderedContent}
         </article>
+
+        {/* Related posts */}
+        <RelatedPosts currentPostSlug={post.slug} category={post.category} />
 
         {/* Back to blog */}
         <div className="mt-12 pt-8 border-t border-border">

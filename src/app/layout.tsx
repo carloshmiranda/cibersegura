@@ -22,6 +22,11 @@ export const metadata: Metadata = {
   description:
     "Blog de ciberseguranca e recursos para pequenas e medias empresas portuguesas. Artigos sobre ameacas, boas praticas, ferramentas e legislacao RGPD.",
   metadataBase: new URL("https://ciberpme.vercel.app"),
+  verification: {
+    other: {
+      "msvalidate.01": "BING_WMT_TOKEN", // Placeholder for Bing Webmaster Tools verification
+    },
+  },
   openGraph: {
     title: "CiberPME — Ciberseguranca para PMEs Portuguesas",
     description:
