@@ -90,24 +90,26 @@ export default async function BlogPostPage({
       />
       <div className="min-h-screen bg-bg">
         {/* Navigation */}
-      <nav className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-        <Link href="/" className="text-lg font-bold text-brand">
-          CiberPME
-        </Link>
-        <div className="flex items-center gap-6 text-sm text-text-secondary">
-          <Link href="/blog" className="hover:text-brand transition">
-            Blog
+      <header>
+        <nav className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+          <Link href="/" className="text-lg font-bold text-brand">
+            CiberPME
           </Link>
-          <Link href="/faq" className="hover:text-brand transition">
-            FAQ
-          </Link>
-          <Link href="/#sobre" className="hover:text-brand transition">
-            Sobre
-          </Link>
-        </div>
-      </nav>
+          <div className="flex items-center gap-6 text-sm text-text-secondary">
+            <Link href="/blog" className="text-brand font-bold" aria-current="page">
+              Blog
+            </Link>
+            <Link href="/faq" className="hover:text-brand transition">
+              FAQ
+            </Link>
+            <Link href="/#sobre" className="hover:text-brand transition">
+              Sobre
+            </Link>
+          </div>
+        </nav>
+      </header>
 
-      <main className="max-w-3xl mx-auto px-6 py-12">
+      <main id="main-content" className="max-w-3xl mx-auto px-6 py-12">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-sm text-text-muted mb-8">
           <Link href="/" className="hover:text-brand transition">
@@ -126,7 +128,7 @@ export default async function BlogPostPage({
           <span className="inline-block px-2 py-0.5 text-xs font-medium text-accent bg-accent-light rounded-full mb-4">
             {post.categoryLabel}
           </span>
-          <h1 className="text-3xl md:text-4xl font-bold text-brand mb-4 leading-tight">
+          <h1 className="text-3xl md:text-4xl font-bold text-brand mb-4 leading-tight text-balance font-display">
             {post.title}
           </h1>
           <div className="flex items-center gap-4 text-sm text-text-muted">

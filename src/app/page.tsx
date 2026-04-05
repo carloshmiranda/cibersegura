@@ -32,39 +32,41 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-bg">
       {/* Navigation */}
-      <nav className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-        <Link href="/" className="text-lg font-bold text-brand">
-          {COMPANY_NAME}
-        </Link>
-        <div className="flex items-center gap-6 text-sm text-text-secondary">
-          <Link href="/blog" className="hover:text-brand transition">
-            Blog
+      <header>
+        <nav className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+          <Link href="/" className="text-lg font-bold text-brand">
+            {COMPANY_NAME}
           </Link>
-          <Link href="/recursos" className="hover:text-brand transition">
-            Recursos
-          </Link>
-          <Link href="/faq" className="hover:text-brand transition">
-            FAQ
-          </Link>
-          <Link href="#sobre" className="hover:text-brand transition">
-            Sobre
-          </Link>
-        </div>
-      </nav>
+          <div className="flex items-center gap-6 text-sm text-text-secondary">
+            <Link href="/recursos" className="hover:text-brand transition">
+              Recursos
+            </Link>
+            <Link href="/blog" className="hover:text-brand transition">
+              Blog
+            </Link>
+            <Link href="/faq" className="hover:text-brand transition">
+              FAQ
+            </Link>
+            <Link href="#sobre" className="hover:text-brand transition">
+              Sobre
+            </Link>
+          </div>
+        </nav>
+      </header>
 
       {/* NIS2 Urgency Banner */}
       <NIS2Banner />
 
-      <main>
+      <main id="main-content">
         {/* Hero */}
         <header className="max-w-3xl mx-auto px-6 pt-16 pb-20 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-brand mb-6 leading-tight">
-            Ciberseguranca para PMEs Portuguesas
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-brand mb-6 leading-tight text-balance font-display">
+            Cibersegurança para PMEs Portuguesas
           </h1>
-          <p className="text-lg text-text-secondary mb-10 max-w-xl mx-auto leading-relaxed">
-            Artigos praticos, guias e ferramentas para proteger o seu negocio
-            contra ameacas digitais. Conteudo em portugues, pensado para
-            pequenas e medias empresas.
+          <p className="text-lg text-text-secondary mb-10 max-w-xl mx-auto leading-relaxed text-pretty">
+            Artigos práticos, guias e ferramentas para proteger o seu negócio
+            contra ameaças digitais. Conteúdo em português, pensado para
+            pequenas e médias empresas.
           </p>
           <div id="newsletter" className="max-w-md mx-auto">
             <NewsletterForm />
@@ -74,7 +76,7 @@ export default function HomePage() {
         {/* Featured Articles */}
         <section className="max-w-4xl mx-auto px-6 pb-20">
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-xl font-bold text-brand">Artigos Recentes</h2>
+            <h2 className="text-xl font-bold text-brand text-balance font-display">Artigos Recentes</h2>
             <Link
               href="/blog"
               className="text-sm text-accent hover:underline transition"
@@ -92,10 +94,10 @@ export default function HomePage() {
                 <span className="inline-block px-2 py-0.5 text-xs font-medium text-accent bg-accent-light rounded-full mb-3">
                   {post.categoryLabel}
                 </span>
-                <h3 className="font-bold text-brand mb-2 group-hover:text-accent transition">
+                <h3 className="font-bold text-brand mb-2 group-hover:text-accent transition text-balance font-display">
                   {post.title}
                 </h3>
-                <p className="text-sm text-text-secondary leading-relaxed mb-3">
+                <p className="text-sm text-text-secondary leading-relaxed mb-3 text-pretty">
                   {post.excerpt}
                 </p>
                 <span className="text-xs text-text-muted">
@@ -109,7 +111,7 @@ export default function HomePage() {
         {/* Categories */}
         <section className="bg-bg-subtle py-20">
           <div className="max-w-4xl mx-auto px-6">
-            <h2 className="text-xl font-bold text-brand mb-8 text-center">
+            <h2 className="text-xl font-bold text-brand mb-8 text-center text-balance font-display">
               Categorias
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -190,32 +192,32 @@ export default function HomePage() {
 
         {/* About */}
         <section id="sobre" className="max-w-3xl mx-auto px-6 py-20">
-          <h2 className="text-xl font-bold text-brand mb-4 text-center">
+          <h2 className="text-xl font-bold text-brand mb-4 text-center text-balance font-display">
             Sobre o CiberPME
           </h2>
-          <p className="text-text-secondary text-center leading-relaxed max-w-xl mx-auto mb-6">
-            O CiberPME e um recurso gratuito dedicado a ajudar pequenas e
-            medias empresas portuguesas a protegerem-se contra ameacas digitais.
-            Publicamos artigos praticos, guias passo-a-passo e analises de
-            ferramentas, tudo em portugues e adaptado a realidade do mercado
+          <p className="text-text-secondary text-center leading-relaxed max-w-xl mx-auto mb-6 text-pretty">
+            O CiberPME é um recurso gratuito dedicado a ajudar pequenas e
+            médias empresas portuguesas a protegerem-se contra ameaças digitais.
+            Publicamos artigos práticos, guias passo-a-passo e análises de
+            ferramentas, tudo em português e adaptado à realidade do mercado
             nacional.
           </p>
-          <p className="text-text-secondary text-center leading-relaxed max-w-xl mx-auto">
-            Acreditamos que a ciberseguranca nao deve ser um luxo reservado a
-            grandes empresas. Com as praticas certas, qualquer PME pode proteger
-            os seus dados, os seus clientes e o seu negocio.
+          <p className="text-text-secondary text-center leading-relaxed max-w-xl mx-auto text-pretty">
+            Acreditamos que a cibersegurança não deve ser um luxo reservado a
+            grandes empresas. Com as práticas certas, qualquer PME pode proteger
+            os seus dados, os seus clientes e o seu negócio.
           </p>
         </section>
 
         {/* Newsletter CTA */}
         <section className="bg-bg-subtle py-20">
           <div className="max-w-md mx-auto px-6 text-center">
-            <h2 className="text-xl font-bold text-brand mb-4">
-              Receba as nossas dicas de seguranca
+            <h2 className="text-xl font-bold text-brand mb-4 text-balance font-display">
+              Receba as nossas dicas de segurança
             </h2>
-            <p className="text-text-secondary mb-8">
-              Subscreva a newsletter e receba artigos, alertas de seguranca e
-              guias praticos directamente no seu email.
+            <p className="text-text-secondary mb-8 text-pretty">
+              Subscreva a newsletter e receba artigos, alertas de segurança e
+              guias práticos directamente no seu email.
             </p>
             <NewsletterForm />
           </div>

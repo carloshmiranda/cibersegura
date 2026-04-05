@@ -39,29 +39,31 @@ export default async function BlogPage({
   return (
     <div className="min-h-screen bg-bg">
       {/* Navigation */}
-      <nav className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-        <Link href="/" className="text-lg font-bold text-brand">
-          CiberPME
-        </Link>
-        <div className="flex items-center gap-6 text-sm text-text-secondary">
-          <Link href="/blog" className="text-brand font-bold">
-            Blog
+      <header>
+        <nav className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+          <Link href="/" className="text-lg font-bold text-brand">
+            CiberPME
           </Link>
-          <Link href="/recursos" className="hover:text-brand transition">
-            Recursos
-          </Link>
-          <Link href="/faq" className="hover:text-brand transition">
-            FAQ
-          </Link>
-          <Link href="/#sobre" className="hover:text-brand transition">
-            Sobre
-          </Link>
-        </div>
-      </nav>
+          <div className="flex items-center gap-6 text-sm text-text-secondary">
+            <Link href="/recursos" className="hover:text-brand transition">
+              Recursos
+            </Link>
+            <Link href="/blog" className="text-brand font-bold" aria-current="page">
+              Blog
+            </Link>
+            <Link href="/faq" className="hover:text-brand transition">
+              FAQ
+            </Link>
+            <Link href="/#sobre" className="hover:text-brand transition">
+              Sobre
+            </Link>
+          </div>
+        </nav>
+      </header>
 
-      <main className="max-w-4xl mx-auto px-6 py-12">
-        <h1 className="text-3xl font-bold text-brand mb-4">Blog</h1>
-        <p className="text-text-secondary mb-8">
+      <main id="main-content" className="max-w-4xl mx-auto px-6 py-12">
+        <h1 className="text-3xl font-bold text-brand mb-4 text-balance font-display">Blog</h1>
+        <p className="text-text-secondary mb-8 text-pretty">
           Artigos praticos sobre ciberseguranca para proteger o seu negocio.
         </p>
 
@@ -69,6 +71,7 @@ export default async function BlogPage({
         <div className="flex flex-wrap gap-2 mb-10">
           <Link
             href="/blog"
+            aria-current={!categoria ? "page" : undefined}
             className={`px-3 py-1.5 text-sm rounded-full border transition ${
               !categoria
                 ? "bg-accent text-white border-accent"
@@ -81,6 +84,7 @@ export default async function BlogPage({
             <Link
               key={key}
               href={`/blog?categoria=${key}`}
+              aria-current={categoria === key ? "page" : undefined}
               className={`px-3 py-1.5 text-sm rounded-full border transition ${
                 categoria === key
                   ? "bg-accent text-white border-accent"
@@ -113,10 +117,10 @@ export default async function BlogPage({
                     {post.readingTime} min de leitura
                   </span>
                 </div>
-                <h2 className="text-lg font-bold text-brand mb-2 group-hover:text-accent transition">
+                <h2 className="text-lg font-bold text-brand mb-2 group-hover:text-accent transition text-balance font-display">
                   {post.title}
                 </h2>
-                <p className="text-sm text-text-secondary leading-relaxed">
+                <p className="text-sm text-text-secondary leading-relaxed text-pretty">
                   {post.excerpt}
                 </p>
               </Link>
