@@ -1,103 +1,154 @@
-import { ImageResponse } from "next/og";
-import { NextRequest } from "next/server";
+import { ImageResponse } from 'next/og';
+import { NextRequest } from 'next/server';
 
-export const runtime = "edge";
+export const runtime = 'edge';
 
-const COMPANY_NAME = "CiberPME";
-const DEFAULT_DESCRIPTION = "Plataforma de ferramentas e consciencialização em cibersegurança para empresas portuguesas";
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const title = searchParams.get('title') || 'CiberPME — Cibersegurança para PMEs Portuguesas';
+    const description = searchParams.get('description') || 'Blog de cibersegurança e recursos para pequenas e médias empresas portuguesas';
 
-export async function GET(req: NextRequest) {
-  const { searchParams } = req.nextUrl;
-  const title = searchParams.get("title") || COMPANY_NAME;
-  const description = searchParams.get("description") || DEFAULT_DESCRIPTION;
-
-  return new ImageResponse(
-    (
-      <div
-        style={{
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          background: "linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)",
-          padding: "60px",
-          fontFamily: "sans-serif",
-        }}
-      >
-        {/* Left content */}
+    return new ImageResponse(
+      (
         <div
           style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            flex: 1,
-            paddingRight: "40px",
+            height: '100%',
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#f1f5f9', // brand-light from design tokens
+            fontSize: 32,
+            fontWeight: 600,
+            position: 'relative',
           }}
         >
+          {/* Content */}
           <div
             style={{
-              fontSize: 64,
-              fontWeight: 800,
-              color: "#f8fafc",
-              lineHeight: 1.1,
-              marginBottom: "20px",
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '60px',
+              textAlign: 'center',
+              maxWidth: '900px',
             }}
           >
-            {title}
-          </div>
-          <div
-            style={{
-              fontSize: 28,
-              color: "#94a3b8",
-              lineHeight: 1.4,
-            }}
-          >
-            {description}
+            {/* Logo/Brand */}
+            <div
+              style={{
+                fontSize: '48px',
+                fontWeight: 700,
+                color: '#0f172a', // brand color from design tokens
+                marginBottom: '40px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '16px',
+              }}
+            >
+              {/* Simple shield icon */}
+              <div
+                style={{
+                  width: '56px',
+                  height: '56px',
+                  backgroundColor: '#1e40af', // accent color from design tokens
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <div
+                  style={{
+                    width: '32px',
+                    height: '36px',
+                    borderRadius: '4px 4px 16px 16px',
+                    border: '3px solid white',
+                    position: 'relative',
+                  }}
+                >
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: '8px',
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      width: '8px',
+                      height: '8px',
+                      backgroundColor: 'white',
+                      borderRadius: '50%',
+                    }}
+                  />
+                  <div
+                    style={{
+                      position: 'absolute',
+                      bottom: '4px',
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      width: '12px',
+                      height: '2px',
+                      backgroundColor: 'white',
+                      borderRadius: '1px',
+                    }}
+                  />
+                </div>
+              </div>
+              CiberPME
+            </div>
+
+            {/* Title */}
+            <div
+              style={{
+                fontSize: '56px',
+                fontWeight: 700,
+                color: '#0f172a', // brand color
+                lineHeight: '1.1',
+                marginBottom: '24px',
+                textAlign: 'center',
+              }}
+            >
+              {title}
+            </div>
+
+            {/* Description */}
+            <div
+              style={{
+                fontSize: '24px',
+                color: '#6b7280', // text-secondary from design tokens
+                lineHeight: '1.4',
+                textAlign: 'center',
+                maxWidth: '700px',
+              }}
+            >
+              {description}
+            </div>
+
+            {/* Domain */}
+            <div
+              style={{
+                position: 'absolute',
+                bottom: '60px',
+                right: '60px',
+                fontSize: '18px',
+                color: '#9ca3af', // text-muted from design tokens
+                fontWeight: 500,
+              }}
+            >
+              ciberpme.vercel.app
+            </div>
           </div>
         </div>
-
-        {/* Right side icon area */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: "240px",
-          }}
-        >
-          <div
-            style={{
-              width: "160px",
-              height: "160px",
-              borderRadius: "32px",
-              background: "linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 72,
-              fontWeight: 800,
-              color: "#ffffff",
-            }}
-          >
-            {title.charAt(0).toUpperCase()}
-          </div>
-        </div>
-
-        {/* Bottom accent line */}
-        <div
-          style={{
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: "6px",
-            background: "linear-gradient(90deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%)",
-          }}
-        />
-      </div>
-    ),
-    {
-      width: 1200,
-      height: 630,
-    }
-  );
+      ),
+      {
+        width: 1200,
+        height: 630,
+      }
+    );
+  } catch (e) {
+    console.error('Error generating OG image:', e);
+    return new Response('Failed to generate image', { status: 500 });
+  }
 }
