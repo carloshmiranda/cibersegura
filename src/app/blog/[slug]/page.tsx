@@ -65,6 +65,24 @@ export default async function BlogPostPage({
                        post.content.includes('Passo ') ||
                        post.content.includes('### Passo');
 
+  // Detect and extract FAQ sections
+  const faqRegex = /\*\*P:\s*([^*]+?)\*\*[\s\S]*?R:\s*([^*]+?)(?=\*\*P:|$)/g;
+  const faqMatches = Array.from(post.content.matchAll(faqRegex));
+  const hasFAQ = faqMatches.length > 0;
+
+  const faqJsonLd = hasFAQ ? {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqMatches.map((match) => ({
+      "@type": "Question",
+      name: match[1].trim(),
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: match[2].trim(),
+      },
+    })),
+  } : null;
+
   const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": isHowToGuide ? "HowTo" : "BlogPosting",
@@ -160,6 +178,12 @@ export default async function BlogPostPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
       />
+      {faqJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
+      )}
       <div className="min-h-screen bg-bg">
         {/* Navigation */}
       <header>

@@ -2100,6 +2100,515 @@ Para apoio adicional na implementação das medidas NIS2 após o registo, consul
     publishedAt: "2026-04-05",
     readingTime: 15,
   },
+  {
+    slug: "registo-cncs-guia-pme",
+    title: "Registo no CNCS — Guia Passo a Passo para PMEs (Prazo Maio 2026)",
+    excerpt:
+      "Guia completo para registo obrigatório no Centro Nacional de Cibersegurança. Quem deve registar-se sob o Decreto-Lei 125/2025, como fazer o registo na plataforma CNCS, nomeação de responsável de cibersegurança e penalidades por incumprimento.",
+    content: `Com a entrada em vigor da [diretiva NIS2 a 3 de abril de 2026](/blog/nis2-entrou-em-vigor), milhares de empresas portuguesas têm agora **20 dias úteis para se registarem** no Centro Nacional de Cibersegurança (CNCS). Este prazo termina em **30 de maio de 2026** e o incumprimento resulta em multas que podem atingir os €10 milhões.
+
+Este guia prático explica exatamente como completar o registo obrigatório no CNCS, quem deve fazê-lo, que documentação reunir e como nomear um responsável de cibersegurança conforme exigido pelo Decreto-Lei 125/2025.
+
+## Quem Deve Registar-se no CNCS
+
+### Empresas Obrigatoriamente Abrangidas
+
+Sob o **Decreto-Lei 125/2025**, devem registar-se no CNCS todas as empresas que:
+
+**Entidades Essenciais:**
+- Mais de 250 trabalhadores OU
+- Volume de negócios anual superior a €50 milhões OU
+- Balanço anual superior a €43 milhões
+
+**Entidades Importantes:**
+- Entre 50-250 trabalhadores OU
+- Volume de negócios €10-50 milhões OU
+- Balanço anual €10-43 milhões
+
+E que operem nos **setores críticos** definidos nos Anexos I e II:
+
+### Setores Abrangidos pela NIS2
+
+**Energia:**
+- Eletricidade (produção, transmissão, distribuição)
+- Petróleo, gás natural e biocombustíveis
+- Hidrogénio
+
+**Transportes:**
+- Transporte aéreo, ferroviário, marítimo, rodoviário
+- Gestão de tráfego
+
+**Serviços Bancários e Infraestruturas de Mercado Financeiro:**
+- Instituições de crédito
+- Empresas de investimento
+- Operadores de sistemas de pagamento
+
+**Saúde:**
+- Prestadores de cuidados de saúde
+- Laboratórios de referência
+- Entidades de investigação e desenvolvimento farmacêutico
+
+**Água Potável e Águas Residuais:**
+- Fornecimento e distribuição de água
+- Recolha, tratamento e descarga de águas residuais
+
+**Infraestruturas Digitais:**
+- Prestadores de serviços de internet
+- Serviços de DNS
+- Registos de nomes de domínio de topo
+- Prestadores de serviços de computação em nuvem
+- Centros de dados
+
+**ICT (Tecnologias de Informação):**
+- Redes e serviços de comunicações eletrónicas
+- Fabricantes de equipamentos
+
+**Gestão de Serviços TIC:**
+- Fornecedores de serviços geridos
+- Empresas de segurança gerida
+
+**Administração Pública:**
+- Administração central
+- Administração regional e local
+
+**Espaço:**
+- Operadores de infraestruturas terrestres
+
+**Serviços Postais e de Correio:**
+- Operadores designados de serviço postal universal
+
+**Gestão de Resíduos:**
+- Recolha, transporte, tratamento e eliminação de resíduos
+
+**Produção, Transformação e Distribuição de Alimentos:**
+- Empresas alimentares
+- Distribuição de produtos alimentares
+
+**Indústria Transformadora:**
+- Produtos farmacêuticos, médicos e equipamentos
+- Equipamento informático, eletrónico e ótico
+- Equipamento elétrico
+- Máquinas e equipamento
+- Veículos automóveis, reboques e semi-reboques
+- Outros equipamentos de transporte
+- Produtos químicos e produtos químicos
+
+**Fornecedores de Serviços Digitais:**
+- Plataformas de comércio eletrónico online
+- Motores de pesquisa online
+- Plataformas de redes sociais
+
+**Investigação:**
+- Organismos de investigação
+
+### Entidades com Dependências Críticas
+
+**Importante:** Mesmo que a sua empresa não esteja diretamente abrangida, pode ser obrigada ao registo se:
+
+- **Fornecer serviços essenciais** a entidades NIS2
+- **Ser fornecedor crítico** de infraestruturas tecnológicas para entidades abrangidas
+- **Processar dados pessoais** para organizações sujeitas à NIS2
+
+**Exemplo prático:** Uma empresa de contabilidade com 30 funcionários que presta serviços a uma empresa energética com mais de 250 trabalhadores pode ter de se registar como fornecedor de serviços críticos.
+
+## Passo a Passo para Registo no CNCS
+
+### Passo 1: Confirmação de Elegibilidade (1-2 dias)
+
+Antes de iniciar o registo formal:
+
+1. **Aceda ao Portal de Auto-Avaliação:** [cncs.gov.pt/nis2/elegibilidade](https://cncs.gov.pt)
+2. **Introduza os dados da empresa:**
+   - Número de trabalhadores
+   - Volume de negócios anual
+   - Balanço total
+   - Código de Atividade Económica (CAE) principal
+3. **Identifique dependências:** Liste clientes ou fornecedores potencialmente sujeitos à NIS2
+4. **Obtenha o relatório de elegibilidade** — document será necessário no registo
+
+**Ferramenta de Apoio:** O CNCS disponibiliza uma calculadora online que cruza os vossos dados com os anexos do Decreto-Lei 125/2025 para determinar automaticamente a obrigatoriedade de registo.
+
+### Passo 2: Recolha de Documentação (3-5 dias)
+
+Antes de aceder à plataforma CNCS, reúna os seguintes documentos:
+
+**Documentos Corporativos:**
+- **Certidão comercial atualizada** (máximo 3 meses)
+- **Estatutos da empresa** em vigor
+- **Relatório e contas** do último exercício
+- **Declaração de IRS/IRC** do último ano fiscal
+
+**Dados Operacionais:**
+- **Lista de todas as instalações** (moradas completas, coordenadas GPS)
+- **Mapeamento de infraestruturas críticas** (servidores, redes, aplicações essenciais)
+- **Inventário de sistemas de informação** principais
+- **Contratos com fornecedores TIC** críticos
+
+**Recursos Humanos:**
+- **Organigrama atualizado** com responsabilidades TIC
+- **CV do futuro responsável de cibersegurança** (será nomeado durante o registo)
+- **Contactos de emergência** (24/7) para cibersegurança
+
+**Documentação de Segurança Existente:**
+- **Política de segurança de informação** (se existir)
+- **Plano de continuidade de negócio** (se existir)
+- **Relatórios de auditorias de segurança** do último ano
+- **Inventário de incidentes de segurança** dos últimos 12 meses
+
+### Passo 3: Acesso à Plataforma CNCS (30 minutos)
+
+1. **Aceda a** [registonis2.cncs.gov.pt](https://registonis2.cncs.gov.pt)
+2. **Crie conta com Chave Móvel Digital** ou **certificado digital**
+   - Apenas o representante legal da empresa pode criar a conta inicial
+   - É necessária autenticação forte (2FA) obrigatória
+3. **Valide a empresa:**
+   - Introduza o NIPC
+   - Sistema valida automaticamente contra base de dados da Autoridade Tributária
+   - Upload da certidão comercial para verificação
+4. **Confirme contactos:**
+   - Email corporativo (não pessoal) para notificações oficiais
+   - Telefone fixo e móvel para emergências
+   - Morada da sede social
+
+### Passo 4: Preenchimento dos Dados Obrigatórios (2-3 horas)
+
+A plataforma CNCS está dividida em 7 secções obrigatórias:
+
+**Secção 1: Identificação da Entidade**
+- Designação social completa
+- NIPC, CAE principal e secundários
+- Contactos (telefone, email, website)
+- Estrutura acionista (se aplicável)
+- Grupo empresarial (se aplicável)
+
+**Secção 2: Caracterização Operacional**
+- Descrição detalhada da atividade
+- Localização de todas as instalações
+- Número de trabalhadores por categoria
+- Volume de negócios e balanço dos últimos 3 anos
+- Mercados de atuação (nacional/internacional)
+
+**Secção 3: Infraestruturas e Sistemas Críticos**
+- **Mapeamento de ativos críticos:** Lista todos os sistemas, aplicações e infraestruturas essenciais para o funcionamento
+- **Dependências externas:** Fornecedores de serviços TIC, cloud providers, conexões internet
+- **Interligações:** Sistemas partilhados com outras entidades, integrações API
+- **Dados sensíveis:** Tipos e volumes de dados processados, localização de armazenamento
+
+**Secção 4: Gestão de Cibersegurança Atual**
+- **Políticas existentes:** Upload de documentos de política de segurança
+- **Controlos implementados:** Firewalls, antivírus, backup, monitorização
+- **Formação:** Programas de sensibilização em cibersegurança
+- **Auditorias:** Relatórios de auditoria dos últimos 2 anos
+
+**Secção 5: Gestão de Incidentes**
+- **Histórico de incidentes:** Relatório dos últimos 12 meses
+- **Procedimentos de resposta:** Planos de contingência existentes
+- **Contactos de emergência:** Equipas internas e fornecedores externos 24/7
+- **Ferramentas de monitorização:** SOC, SIEM, outras soluções
+
+**Secção 6: Continuidade de Negócio**
+- **Análise de impacto:** Tempos máximos de paragem toleráveis
+- **Planos de recuperação:** Procedimentos de restore e disaster recovery
+- **Testes:** Frequência e resultados dos testes aos planos
+- **Sites alternativos:** Localizações de backup e procedimentos de ativação
+
+**Secção 7: Responsabilidades e Contactos**
+- **Representante legal:** Dados do CEO/administrador responsável
+- **Responsável de cibersegurança:** Nomeação obrigatória (ver secção seguinte)
+- **Contacto técnico:** Pessoa responsável pela coordenação técnica
+- **Contactos de emergência:** Disponíveis 24/7/365
+
+### Passo 5: Nomeação do Responsável de Cibersegurança
+
+Uma das obrigações mais críticas é a **nomeação de um responsável de cibersegurança** com competências técnicas adequadas.
+
+**Requisitos Legais para o Responsável:**
+
+**Qualificações Mínimas:**
+- **Formação superior** em área tecnológica (Informática, Telecomunicações, Engenharia) OU
+- **Certificação profissional** em cibersegurança (CISSP, CISM, CISSP, CEH) OU
+- **Experiência comprovada** de pelo menos 3 anos em gestão de segurança de informação
+
+**Responsabilidades do Cargo:**
+- Supervisão da implementação das medidas NIS2
+- Coordenação com o CNCS em caso de incidentes
+- Gestão do plano de resposta a incidentes
+- Reportes regulares à administração sobre postura de cibersegurança
+- Formação e sensibilização dos colaboradores
+
+**Dedicação Requerida:**
+- **Empresas até 50 trabalhadores:** Pode acumular com outras funções, dedicação mínima 25%
+- **Empresas 51-250 trabalhadores:** Dedicação mínima 50%
+- **Empresas >250 trabalhadores:** Função a tempo inteiro
+
+**Dados a Submeter na Plataforma:**
+- **CV completo** com experiência em cibersegurança
+- **Certificados de formação** ou certificações profissionais
+- **Carta de nomeação** assinada pelo representante legal
+- **Declaração de aceitação** assinada pelo nomeado
+- **Contactos diretos** (email, telefone móvel) para emergências
+
+### Passo 6: Upload de Documentação Comprovativa (1-2 horas)
+
+Todos os documentos devem ser submetidos em formato PDF assinado digitalmente:
+
+**Documentos Obrigatórios:**
+- Certidão comercial (máx. 3 meses)
+- Relatório e contas do último exercício
+- Organigrama atual com responsabilidades TIC
+- CV e certificações do responsável de cibersegurança
+- Carta de nomeação do responsável de cibersegurança
+- Política de segurança de informação (se existir)
+- Plano de gestão de incidentes (se existir)
+
+**Documentos Opcionais mas Recomendados:**
+- Certificações ISO 27001, SOC 2, ou similares
+- Relatórios de auditorias de segurança
+- Contratos com fornecedores de segurança gerida
+- Planos de continuidade de negócio testados
+
+### Passo 7: Submissão e Validação (24-48 horas)
+
+1. **Revisão final:** Verifique todos os dados antes de submeter
+2. **Submissão:** Clique em "Submeter Registo" — depois desta ação não é possível editar
+3. **Confirmação:** Recebe um número de registo e comprovativo PDF
+4. **Validação técnica:** CNCS tem 10 dias úteis para validar a documentação
+5. **Notificação:** Recebe email com aprovação ou pedido de esclarecimentos
+
+**Prazos de Resposta do CNCS:**
+- **Aprovação direta:** 2-5 dias úteis para dossiês completos
+- **Pedido de esclarecimentos:** 7-10 dias úteis, com 5 dias para resposta
+- **Aprovação final:** Até 15 dias úteis após receção de todos os elementos
+
+## Penalidades por Não-Registo
+
+O incumprimento da obrigação de registo no CNCS resulta em **sanções administrativas severas** definidas no Decreto-Lei 125/2025:
+
+### Multas por Ausência de Registo
+
+**Entidades Essenciais:**
+- **Primeira autuação:** €10.000 a €50.000
+- **Multa diária** após notificação: €1.000 por dia
+- **Multa máxima:** €10.000.000 ou 2% do volume de negócios anual
+
+**Entidades Importantes:**
+- **Primeira autuação:** €5.000 a €25.000
+- **Multa diária** após notificação: €500 por dia
+- **Multa máxima:** €7.000.000 ou 1,4% do volume de negócios anual
+
+### Outras Penalidades Aplicáveis
+
+**Nomeação Incorreta do Responsável de Cibersegurança:**
+- Multa de €2.000 a €10.000
+- Prazo de 30 dias para regularização
+- Multa diária de €200 por cada dia de atraso
+
+**Documentação Incompleta ou Falsa:**
+- Multa de €1.000 a €5.000
+- Suspensão do registo até regularização
+- Possível participação ao Ministério Público em casos de falsificação
+
+**Incumprimento de Prazos de Atualização:**
+- Multa de €500 a €2.500
+- Obrigação de atualização imediata
+- Revisão extraordinária do estatuto de conformidade
+
+### Consequências Operacionais do Não-Registo
+
+**Exclusão de Concursos Públicos:**
+- Impedimento de participar em contratos públicos
+- Exclusão de programas de apoio estatal
+- Impossibilidade de obter certas licenças setoriais
+
+**Responsabilidade Civil Acrescida:**
+- Seguros podem recusar cobertura por incumprimento legal
+- Responsabilidade pessoal dos administradores
+- Ações judiciais de clientes por quebra de segurança
+
+**Impacto Reputacional:**
+- Lista pública de entidades não conformes
+- Comunicação obrigatória a clientes sobre estatuto irregular
+- Danos na confiança de parceiros e fornecedores
+
+## Cronograma de Implementação Recomendado
+
+Para garantir registo dentro do prazo de 30 de maio de 2026:
+
+**Semana 1 (5-11 abril):**
+- Confirmação de elegibilidade
+- Nomeação interna do responsável de cibersegurança
+- Início da recolha documental
+
+**Semana 2 (12-18 abril):**
+- Recolha completa de documentação
+- Preparação dos dados operacionais
+- Criação de conta na plataforma CNCS
+
+**Semana 3 (19-25 abril):**
+- Preenchimento completo da plataforma
+- Upload de toda a documentação
+- Submissão oficial do registo
+
+**Semana 4-6 (26 abril - 9 maio):**
+- Aguardar validação do CNCS
+- Responder a eventuais pedidos de esclarecimento
+- Preparar implementação das medidas obrigatórias
+
+**Reserva de Segurança (12-30 maio):**
+- Resolução de questões pendentes
+- Últimas correções se necessário
+- Confirmação final de aprovação
+
+## Apoio e Recursos Disponíveis
+
+### Suporte Oficial do CNCS
+
+**Portal de Apoio:** [suporte.cncs.gov.pt](https://suporte.cncs.gov.pt)
+- **Horário:** Segunda a sexta, 9h-18h
+- **Email:** suporte.nis2@cncs.gov.pt
+- **Telefone:** 214 004 000
+- **Webchat:** Disponível no portal durante horário de atendimento
+
+**Centros de Atendimento Regional:**
+- **Norte:** Porto - Rua de Ceuta, 118
+- **Centro:** Coimbra - Pólo II da Universidade
+- **Sul:** Lisboa - Av. da República, 50
+- **Agendamento obrigatório:** [agendamento.cncs.gov.pt](https://agendamento.cncs.gov.pt)
+
+### Formação e Workshops
+
+**Workshop "Registo NIS2 para PMEs":**
+- **Duração:** 4 horas presenciais + 2 horas online
+- **Preço:** Gratuito para primeiras 1.000 inscrições
+- **Calendário:** Todas as terças e quintas de abril
+- **Inscrições:** [formacao.cncs.gov.pt](https://formacao.cncs.gov.pt)
+
+**Webinar "Nomeação de Responsável de Cibersegurança":**
+- **Data:** Todas as sextas de abril, 14h30-16h00
+- **Conteúdo:** Requisitos legais, competências, responsabilidades
+- **Certificado:** Válido para comprovação de formação
+
+### Recursos de Apoio Gratuitos
+
+**Modelos e Templates:**
+- **Template de política de segurança** adaptado à NIS2
+- **Modelo de plano de gestão de incidentes**
+- **Checklist de preparação** para registo CNCS
+- **Formato de carta de nomeação** do responsável de cibersegurança
+
+**Ferramentas Online:**
+- **Calculadora de elegibilidade** NIS2 automática
+- **Avaliador de maturidade** de cibersegurança
+- **Simulador de registo** CNCS para treino
+- **Gerador de relatórios** de conformidade
+
+Todos disponíveis em [recursos.cncs.gov.pt](https://recursos.cncs.gov.pt)
+
+## FAQ: Dúvidas Mais Frequentes sobre Registo CNCS
+
+### Elegibilidade e Obrigações
+
+**P: A minha empresa tem 45 funcionários e €8M de volume de negócios. Devo registar-me?**
+
+R: Não está diretamente abrangida pelos critérios de dimensão da NIS2. No entanto, se a sua atividade (CAE) estiver nos anexos do Decreto-Lei 125/2025 OU se fornecer serviços críticos a entidades NIS2, pode ser obrigatório. Use a [ferramenta de auto-avaliação do CNCS](/blog/nis2-entrou-em-vigor) para confirmação definitiva.
+
+**P: Sou fornecedor de serviços TIC para um banco. Tenho 30 funcionários. Devo registar-me?**
+
+R: Provavelmente sim. Fornecedores de serviços TIC críticos para entidades financeiras estão frequentemente abrangidos, independentemente da dimensão. Contacte o seu cliente bancário para confirmar se o consideram fornecedor crítico e consulte o anexo II do Decreto-Lei 125/2025.
+
+**P: Opero em vários países da UE. Devo registar-me em cada país?**
+
+R: Sim, deve registar-se em cada Estado-Membro onde tenha operações que se enquadrem nos critérios NIS2. Portugal exige registo para atividades exercidas em território nacional, independentemente da sede da empresa estar noutro país.
+
+### Processo de Registo
+
+**P: Posso registar várias empresas do mesmo grupo com uma única conta?**
+
+R: Não. Cada empresa (NIPC) deve ter um registo individual no CNCS, mesmo que façam parte do mesmo grupo empresarial. No entanto, pode nomear o mesmo responsável de cibersegurança para várias empresas se ele tiver dedicação adequada.
+
+**P: Que acontece se não conseguir nomear um responsável de cibersegurança com as qualificações exigidas até ao prazo?**
+
+R: Pode nomear temporariamente alguém com experiência relevante e comprometer-se a completar a formação/certificação num prazo máximo de 6 meses. Deve apresentar um plano de formação específico e cronograma. O CNCS pode aceitar esta solução transitória para PMEs.
+
+**P: Os documentos podem ser em inglês?**
+
+R: Não. Toda a documentação submetida no registo CNCS deve estar em português. Documentos originalmente em inglês (como certificações internacionais) devem ser acompanhados de tradução juramentada.
+
+### Prazos e Penalidades
+
+**P: O que acontece se submeter o registo a 29 de maio mas o CNCS só aprovar em junho?**
+
+R: Se submeter dentro do prazo (30 de maio), não há penalização mesmo que a aprovação seja posterior. O que conta é a data de submissão completa, não a data de aprovação final.
+
+**P: As multas começam imediatamente a 31 de maio?**
+
+R: Não. Há um período de notificação prévia de 15 dias. As multas diárias só começam após notificação formal do CNCS sobre o incumprimento e decurso do prazo adicional concedido.
+
+**P: Posso suspender atividade temporariamente para evitar o registo?**
+
+R: Não é uma estratégia viável. Se a empresa estava ativa no momento da entrada em vigor da NIS2 (3 de abril) e se enquadra nos critérios, mantém a obrigação de registo mesmo que suspenda temporariamente a atividade.
+
+### Responsável de Cibersegurança
+
+**P: Posso nomear um consultor externo como responsável de cibersegurança?**
+
+R: Sim, mas com condições: deve ter um contrato formal de prestação de serviços, estar disponível 24/7 para emergências, e a empresa mantém responsabilidade legal total. É preferível ter um responsável interno ou misto (interno + apoio externo).
+
+**P: O responsável de cibersegurança pode ser o CEO?**
+
+R: Sim, especialmente em PMEs onde o CEO tem formação técnica. No entanto, deve demonstrar competências específicas em cibersegurança e ter tempo disponível para as responsabilidades do cargo.
+
+**P: Que acontece se o responsável de cibersegurança sair da empresa?**
+
+R: Deve nomear um substituto no prazo máximo de 30 dias e atualizar o registo no CNCS. Durante este período, pode nomear temporariamente outro colaborador ou consultor externo, mas deve comunicar a situação ao CNCS.
+
+### Custos e Apoios
+
+**P: O registo no CNCS é pago?**
+
+R: O registo inicial é gratuito. No entanto, há custos associados à obtenção de documentação (certidões), formação do responsável de cibersegurança, e eventual consultoria para preparação do dossiê.
+
+**P: Existem apoios financeiros para implementação das medidas NIS2?**
+
+R: O IAPMEI e as CCDR têm programas de apoio específicos para cibersegurança PME. O "Programa Cibersegurança 2026" cofinancia até 75% dos custos de implementação, com máximo de €50.000 por empresa. Candidaturas abertas em [candidaturas.iapmei.pt](https://candidaturas.iapmei.pt).
+
+### Implementação e Conformidade
+
+**P: Preciso implementar todas as medidas NIS2 antes do registo?**
+
+R: Não é obrigatório ter todas as medidas implementadas no momento do registo, mas deve apresentar um plano de implementação com cronograma. O CNCS pode fazer auditorias de verificação 6-12 meses após o registo.
+
+**P: Que diferença faz registar-me como "entidade essencial" vs "entidade importante"?**
+
+R: Entidades essenciais têm obrigações mais rigorosas (relatórios trimestrais vs semestrais, auditorias anuais vs bianuais, multas mais elevadas). A classificação é automática com base nos critérios de dimensão e setor.
+
+## Próximos Passos
+
+**Ação Imediata (Esta Semana):**
+1. **Confirme a elegibilidade** da sua empresa usando a [ferramenta de auto-avaliação NIS2](/blog/nis2-entrou-em-vigor)
+2. **Identifique o futuro responsável** de cibersegurança e verifique as suas qualificações
+3. **Inicie a recolha documental** usando a checklist deste guia
+
+**Curto Prazo (Próximas 2 Semanas):**
+1. **Complete o registo** na plataforma CNCS
+2. **Submeta toda a documentação** necessária
+3. **Implemente as medidas prioritárias** do [checklist de conformidade NIS2](/blog/checklist-nis2-conformidade)
+
+**Médio Prazo (Próximos 6 Meses):**
+1. **Monitorize o estatuto** do registo e responda a pedidos do CNCS
+2. **Complete a implementação** de todas as medidas obrigatórias
+3. **Prepare-se para auditorias** de verificação da conformidade
+
+**Lembre-se:** O registo no CNCS é apenas o primeiro passo da conformidade NIS2. A implementação efetiva das medidas de cibersegurança é um processo contínuo que protege tanto a sua empresa como toda a cadeia de valor digital portuguesa.
+
+Para orientação adicional sobre implementação das medidas técnicas após o registo, consulte o nosso [guia completo de conformidade NIS2](/blog/checklist-nis2-conformidade) e mantenha-se atualizado com as [últimas atualizações do CNCS](/blog/nis2-entrou-em-vigor).
+
+**O prazo de 30 de maio é definitivo. O registo é obrigatório. Comece o processo hoje mesmo.**`,
+    category: "legislacao",
+    categoryLabel: "Legislacao RGPD",
+    publishedAt: "2026-04-05",
+    readingTime: 18,
+  },
 ];
 
 export function getPostBySlug(slug: string): Post | undefined {
