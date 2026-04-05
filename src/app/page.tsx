@@ -58,20 +58,25 @@ export default function HomePage() {
       <NIS2Banner />
 
       <main id="main-content">
-        {/* Hero */}
-        <header className="max-w-3xl mx-auto px-6 pt-16 pb-20 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-brand mb-6 leading-tight text-balance font-display">
-            Cibersegurança para PMEs Portuguesas
-          </h1>
-          <p className="text-lg text-text-secondary mb-10 max-w-xl mx-auto leading-relaxed text-pretty">
-            Artigos práticos, guias e ferramentas para proteger o seu negócio
-            contra ameaças digitais. Conteúdo em português, pensado para
-            pequenas e médias empresas.
-          </p>
-          <div id="newsletter" className="max-w-md mx-auto">
-            <NewsletterForm />
+        {/* Hero — dark navy */}
+        <section className="bg-brand pt-16 pb-20 text-center">
+          <div className="max-w-3xl mx-auto px-6">
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-6 leading-tight text-balance font-display">
+              Cibersegurança para PMEs Portuguesas
+            </h1>
+            <p className="text-lg text-white/80 mb-10 max-w-xl mx-auto leading-relaxed text-pretty">
+              Artigos práticos, guias e ferramentas para proteger o seu negócio
+              contra ameaças digitais. Conteúdo em português, pensado para
+              pequenas e médias empresas.
+            </p>
+            <a
+              href="#newsletter"
+              className="inline-block px-8 py-3 bg-accent text-white rounded-lg font-bold hover:opacity-90 transition"
+            >
+              Subscrever Newsletter
+            </a>
           </div>
-        </header>
+        </section>
 
         {/* Featured Articles */}
         <section className="max-w-4xl mx-auto px-6 pb-20">
@@ -214,7 +219,7 @@ export default function HomePage() {
         </section>
 
         {/* Newsletter CTA */}
-        <section className="bg-bg-subtle py-20">
+        <section id="newsletter" className="bg-bg-subtle py-20">
           <div className="max-w-md mx-auto px-6 text-center">
             <h2 className="text-xl font-bold text-brand mb-4 text-balance font-display">
               Receba as nossas dicas de segurança
