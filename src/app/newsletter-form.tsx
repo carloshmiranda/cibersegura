@@ -42,11 +42,10 @@ export function NewsletterForm() {
     return (
       <div className="text-center">
         <p className="text-lg font-bold text-brand mb-2">
-          Subscricao confirmada!
+          Subscrição confirmada!
         </p>
         <p className="text-text-secondary">
-          Obrigado. Ira receber os nossos artigos e dicas de seguranca no seu
-          email.
+          Irá receber os nossos artigos e dicas de segurança no seu email.
         </p>
       </div>
     );
@@ -67,7 +66,6 @@ export function NewsletterForm() {
         <label htmlFor="newsletter-email" className="block text-sm font-medium text-text-secondary mb-1">
           Email <span className="text-error" aria-hidden="true">*</span>
         </label>
-        <div className="flex gap-2">
         <input
           id="newsletter-email"
           type="email"
@@ -76,18 +74,17 @@ export function NewsletterForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           aria-describedby={state === "error" ? "newsletter-error" : undefined}
-          className="flex-1 px-4 py-3 border border-border rounded-lg text-brand placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent"
+          className="w-full px-4 py-3 border border-border rounded-lg text-brand placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent"
         />
-        <button
-          type="submit"
-          disabled={state === "loading"}
-          aria-busy={state === "loading"}
-          className="px-6 py-3 bg-accent text-white rounded-lg font-bold hover:opacity-90 transition disabled:opacity-50"
-        >
-          {state === "loading" ? "A subscrever…" : "Subscrever"}
-        </button>
-        </div>
       </div>
+      <button
+        type="submit"
+        disabled={state === "loading"}
+        aria-busy={state === "loading"}
+        className="w-full px-6 py-3 bg-accent text-white rounded-lg font-bold hover:opacity-90 transition disabled:opacity-50"
+      >
+        {state === "loading" ? "A subscrever…" : "Subscrever"}
+      </button>
       {state === "error" && (
         <p id="newsletter-error" role="alert" className="text-sm text-error">
           Não foi possível subscrever. Verifique o email e tente novamente.

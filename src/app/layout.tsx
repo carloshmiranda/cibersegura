@@ -18,9 +18,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "CiberPME — Ciberseguranca para PMEs Portuguesas",
+  title: "CiberPME — Cibersegurança para PMEs Portuguesas",
   description:
-    "Blog de ciberseguranca e recursos para pequenas e medias empresas portuguesas. Artigos sobre ameacas, boas praticas, ferramentas e legislacao RGPD.",
+    "Blog de cibersegurança e recursos para pequenas e médias empresas portuguesas. Artigos sobre ameaças, boas práticas, ferramentas e legislação RGPD.",
   metadataBase: new URL("https://ciberpme.vercel.app"),
   verification: {
     other: {
@@ -28,9 +28,9 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "CiberPME — Ciberseguranca para PMEs Portuguesas",
+    title: "CiberPME — Cibersegurança para PMEs Portuguesas",
     description:
-      "Blog de ciberseguranca e recursos para pequenas e medias empresas portuguesas.",
+      "Blog de cibersegurança e recursos para pequenas e médias empresas portuguesas.",
     type: "website",
     images: [
       {
@@ -43,9 +43,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "CiberPME — Ciberseguranca para PMEs Portuguesas",
+    title: "CiberPME — Cibersegurança para PMEs Portuguesas",
     description:
-      "Blog de ciberseguranca e recursos para pequenas e medias empresas portuguesas.",
+      "Blog de cibersegurança e recursos para pequenas e médias empresas portuguesas.",
     images: ["/api/og"],
   },
 };
@@ -58,7 +58,7 @@ const jsonLd = {
       name: "CiberPME",
       url: "https://ciberpme.vercel.app",
       description:
-        "Blog de ciberseguranca e recursos para pequenas e medias empresas portuguesas",
+        "Blog de cibersegurança e recursos para pequenas e médias empresas portuguesas",
     },
     {
       "@type": "WebSite",
