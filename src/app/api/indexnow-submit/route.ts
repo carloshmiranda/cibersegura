@@ -44,6 +44,14 @@ export async function POST() {
       );
     }
 
+    // Also ping Bing sitemap directly
+    try {
+      await fetch(`https://www.bing.com/ping?sitemap=${baseUrl}/sitemap.xml`);
+    } catch (error) {
+      console.warn("Bing sitemap ping failed:", error);
+      // Continue even if Bing ping fails - don't block the main IndexNow response
+    }
+
     return NextResponse.json({
       success: true,
       submitted: urls.length,
