@@ -49,6 +49,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.8,
     },
+    {
+      url: `${baseUrl}/politica-privacidade`,
+      lastModified: "2026-04-07",
+      changeFrequency: "yearly",
+      priority: 0.5,
+    },
     ...blogPosts,
   ];
 }
