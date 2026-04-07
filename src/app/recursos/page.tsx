@@ -292,6 +292,68 @@ const categories: ResourceCategory[] = [
     ],
   },
   {
+    title: "Firewall e Segurança de Rede",
+    description:
+      "Proteção perimetral e monitorização de tráfego para prevenir intrusões e ataques.",
+    icon: (
+      <svg
+        aria-hidden="true"
+        className="w-8 h-8 text-accent"
+        fill="none"
+        viewBox="0 0 24 24"
+        strokeWidth={1.5}
+        stroke="currentColor"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M5.25 14.25h13.5m-13.5 0a3 3 0 0 1-3-3V7.875a1.125 1.125 0 0 1 1.125-1.125h16.5A1.125 1.125 0 0 1 21.75 7.875v3.375a3 3 0 0 1-3 3m-16.5 0a3 3 0 0 1 3-3h10.5a3 3 0 0 1 3 3m-16.5 0h13.5m-16.5 0v5.25A2.25 2.25 0 0 0 7.5 21.75h9a2.25 2.25 0 0 0 2.25-2.25V14.25"
+        />
+      </svg>
+    ),
+    tools: [
+      {
+        name: "FortiGate SMB Series",
+        description:
+          "Firewall empresarial da Fortinet especificamente desenhado para pequenas e médias empresas com interface intuitiva.",
+        pricing: "€300-800/ano + hardware",
+        pros: [
+          "Interface muito intuitiva para não especialistas",
+          "Proteção integrada contra ameaças avançadas",
+          "Suporte técnico em português disponível",
+        ],
+        ideal: "PMEs que precisam de firewall robusto mas fácil de gerir",
+        website: "fortinet.com/products/smb",
+      },
+      {
+        name: "SonicWall TZ Series",
+        description:
+          "Firewall compacto com proteção avançada contra ransomware e controlo de aplicações integrado.",
+        pricing: "€200-600/ano + hardware",
+        pros: [
+          "Excelente proteção contra ransomware",
+          "Relatórios de segurança detalhados",
+          "Implementação rápida (menos de 1 hora)",
+        ],
+        ideal: "Empresas que querem proteção anti-ransomware especializada",
+        website: "sonicwall.com/products/firewalls/tz-series",
+      },
+      {
+        name: "Cisco Meraki MX",
+        description:
+          "Firewall gerido em cloud com visibilidade completa e gestão simplificada através de dashboard web.",
+        pricing: "€100-400/mês (inclui hardware)",
+        pros: [
+          "Gestão 100% em cloud (sem servidores locais)",
+          "Visibilidade de tráfego em tempo real",
+          "Atualizações automáticas de segurança",
+        ],
+        ideal: "PMEs que preferem soluções geridas externamente",
+        website: "meraki.cisco.com/products/appliances",
+      },
+    ],
+  },
+  {
     title: "Formação e Sensibilização",
     description:
       "Plataformas para educar colaboradores sobre cibersegurança.",
