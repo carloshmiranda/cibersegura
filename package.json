@@ -12,7 +12,9 @@
     "indexnow": "node scripts/indexnow-batch.js",
     "seed-emails": "node scripts/seed-email-sequences.js",
     "send-emails": "node scripts/send-scheduled-emails.js",
-    "send-emails:dry-run": "node scripts/send-scheduled-emails.js --dry-run"
+    "send-emails:dry-run": "node scripts/send-scheduled-emails.js --dry-run",
+    "analyze-links": "node scripts/analyze-internal-linking.js",
+    "analyze-links:stats": "node scripts/analyze-internal-linking.js --stats"
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.10.0",
