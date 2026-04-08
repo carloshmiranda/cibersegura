@@ -14,15 +14,20 @@ export async function POST(req: NextRequest) {
   const sql = getDb();
 
   try {
-    // Simple auth check - in production, use proper authentication
-    const authHeader = req.headers.get("authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return json({ ok: false, error: "Authorization required" }, 401);
-    }
+    // Allow Vercel Cron requests (identified by x-vercel-cron header)
+    const isVercelCron = req.headers.get("x-vercel-cron");
 
-    const token = authHeader.split(" ")[1];
-    if (token !== process.env.ADMIN_API_TOKEN) {
-      return json({ ok: false, error: "Invalid token" }, 403);
+    if (!isVercelCron) {
+      // Simple auth check for manual requests - in production, use proper authentication
+      const authHeader = req.headers.get("authorization");
+      if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        return json({ ok: false, error: "Authorization required" }, 401);
+      }
+
+      const token = authHeader.split(" ")[1];
+      if (token !== process.env.ADMIN_API_TOKEN) {
+        return json({ ok: false, error: "Invalid token" }, 403);
+      }
     }
 
     const resendKey = process.env.RESEND_API_KEY;
