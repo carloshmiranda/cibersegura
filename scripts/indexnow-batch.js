@@ -79,7 +79,7 @@ async function submitToIndexNow(urls) {
   const payload = {
     host: SITE_URL.replace('https://', ''),
     key: INDEXNOW_KEY,
-    keyLocation: `${SITE_URL}/indexnow-key.txt`,
+    keyLocation: `${SITE_URL}/${INDEXNOW_KEY}.txt`,
     urlList: fullUrls
   };
 
@@ -142,7 +142,7 @@ async function validateKeyFile() {
   return new Promise((resolve, reject) => {
     const options = {
       hostname: SITE_URL.replace('https://', ''),
-      path: '/indexnow-key.txt',
+      path: `/${INDEXNOW_KEY}.txt`,
       method: 'GET'
     };
 

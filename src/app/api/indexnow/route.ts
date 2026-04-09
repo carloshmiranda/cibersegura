@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { posts } from "@/lib/posts";
 
-// IndexNow API key - matches the key in /indexnow-key.txt
+// IndexNow API key - matches the key in /fc431a309850fb7ff6682a95bee49ba3.txt
 const INDEXNOW_KEY = "fc431a309850fb7ff6682a95bee49ba3";
 
 export async function GET(request: NextRequest) {

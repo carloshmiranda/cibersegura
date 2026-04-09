@@ -18,7 +18,7 @@ export async function POST() {
     const payload = {
       host: "ciberpme.vercel.app",
       key: INDEXNOW_KEY,
-      keyLocation: `${baseUrl}/indexnow-key.txt`,
+      keyLocation: `${baseUrl}/${INDEXNOW_KEY}.txt`,
       urlList: urls,
     };
 
