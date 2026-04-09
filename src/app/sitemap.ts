@@ -1,5 +1,5 @@
 import { MetadataRoute } from "next";
-import { posts } from "@/lib/posts";
+import { posts, CATEGORIES } from "@/lib/posts";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl =
@@ -22,6 +22,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: post.publishedAt,
     changeFrequency: "monthly" as const,
     priority: 0.7,
+  }));
+
+  const categoryPages = Object.keys(CATEGORIES).map((categoria) => ({
+    url: `${baseUrl}/blog/categoria/${categoria}`,
+    lastModified: recentDate,
+    changeFrequency: "weekly" as const,
+    priority: 0.8,
   }));
 
   return [
@@ -55,6 +62,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "yearly",
       priority: 0.5,
     },
+    ...categoryPages,
     ...blogPosts,
   ];
 }
