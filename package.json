@@ -13,6 +13,8 @@
     "seed-emails": "node scripts/seed-email-sequences.js",
     "send-emails": "node scripts/send-scheduled-emails.js",
     "send-emails:dry-run": "node scripts/send-scheduled-emails.js --dry-run",
+    "send-newsletter": "node scripts/send-weekly-newsletter.js",
+    "send-newsletter:dry-run": "node scripts/send-weekly-newsletter.js --dry-run",
     "analyze-links": "node scripts/analyze-internal-linking.js",
     "analyze-links:stats": "node scripts/analyze-internal-linking.js --stats"
   },

@@ -62,6 +62,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "yearly",
       priority: 0.5,
     },
+    {
+      url: `${baseUrl}/unsubscribe`,
+      lastModified: recentDate,
+      changeFrequency: "monthly",
+      priority: 0.3,
+    },
     ...categoryPages,
     ...blogPosts,
   ];
