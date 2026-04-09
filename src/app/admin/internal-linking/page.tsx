@@ -92,7 +92,7 @@ export default function InternalLinkingAdmin() {
     setApplyingChanges(true);
 
     try {
-      const response = await fetch('/api/admin/internal-linking/apply', {
+      const response = await fetch('/api/admin/internal-linking', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${adminToken}`,
