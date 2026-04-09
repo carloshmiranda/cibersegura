@@ -84,13 +84,8 @@ export default async function BlogPage({
           {Object.entries(CATEGORIES).map(([key, label]) => (
             <Link
               key={key}
-              href={`/blog?categoria=${key}`}
-              aria-current={categoria === key ? "page" : undefined}
-              className={`px-3 py-2.5 text-sm rounded-full border transition ${
-                categoria === key
-                  ? "bg-accent text-white border-accent"
-                  : "border-border text-text-secondary hover:border-accent"
-              }`}
+              href={`/blog/categoria/${key}`}
+              className="px-3 py-2.5 text-sm rounded-full border border-border text-text-secondary hover:border-accent transition"
             >
               {label}
             </Link>
