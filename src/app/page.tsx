@@ -3,6 +3,7 @@ import { posts, CATEGORIES } from "@/lib/posts";
 import { NewsletterForm } from "./newsletter-form";
 import { NIS2Banner } from "@/components/nis2-banner";
 import Footer from "@/components/footer";
+import { neon } from "@neondatabase/serverless";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -29,7 +30,20 @@ export const metadata: Metadata = {
 
 const COMPANY_NAME = "CiberPME";
 
-export default function HomePage() {
+async function getWaitlistCount() {
+  try {
+    const sql = neon(process.env.DATABASE_URL!);
+    const [{ count }] = await sql`SELECT COUNT(*) as count FROM waitlist`;
+    return Number(count);
+  } catch (error) {
+    console.error("Failed to fetch waitlist count:", error);
+    return 0;
+  }
+}
+
+export default async function HomePage() {
+  const waitlistCount = await getWaitlistCount();
+
   return (
     <div className="min-h-screen bg-bg">
       {/* Navigation */}
@@ -79,38 +93,239 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Featured Articles */}
-        <section className="max-w-4xl mx-auto px-6 pb-20">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-xl font-bold text-brand text-balance font-display">Artigos Recentes</h2>
+        {/* Social Proof — only show if we have real signups */}
+        {waitlistCount > 0 && (
+          <section className="bg-bg-subtle py-12">
+            <div className="max-w-3xl mx-auto px-6 text-center">
+              <p className="text-text-secondary text-sm">
+                Juntaram-se {waitlistCount > 1 ? <strong>{waitlistCount}</strong> : <strong>{waitlistCount}</strong>} {waitlistCount === 1 ? "empresa" : "empresas"} à nossa newsletter de cibersegurança
+              </p>
+            </div>
+          </section>
+        )}
+
+        {/* Problem — specific to Portuguese SMEs */}
+        <section className="max-w-4xl mx-auto px-6 py-20">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-brand mb-4 text-balance font-display">
+              As PMEs portuguesas enfrentam ameaças crescentes
+            </h2>
+            <p className="text-lg text-text-secondary max-w-2xl mx-auto text-pretty">
+              Sem departamento de IT dedicado, muitas empresas ficam vulneráveis a ataques que podem custar milhares de euros.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="w-12 h-12 mx-auto mb-4 text-error">
+                <svg
+                  aria-hidden="true"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-12 h-12"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z"
+                  />
+                </svg>
+              </div>
+              <h3 className="font-bold text-brand mb-2">Ransomware em alta</h3>
+              <p className="text-sm text-text-secondary text-pretty">
+                Ataques aumentaram 40% em Portugal nos últimos 2 anos, com PMEs como alvo principal.
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="w-12 h-12 mx-auto mb-4 text-warning">
+                <svg
+                  aria-hidden="true"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-12 h-12"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H4.5m2.25 0v3.75m0-3.75a1.875 1.875 0 0 1 1.875-1.875h1.875m0 0v.375c0 .621-.504 1.125-1.125 1.125h-1.5m0-3.75v.375c0 .621.504 1.125 1.125 1.125h1.5m-3.75 0V2.25m0 1.5v.375a1.125 1.125 0 0 1-1.125 1.125H9.75v1.5m3 0V4.875c0-.621.504-1.125 1.125-1.125h1.875a1.125 1.125 0 0 1 1.125 1.125v.375m-6 5.25v-.375a1.125 1.125 0 0 1 1.125-1.125h1.875a1.125 1.125 0 0 1 1.125 1.125v.375m-6 0V9.75a1.875 1.875 0 0 1 1.875-1.875h1.875A1.875 1.875 0 0 1 16.5 9.75v.375m-6 0h.008v.008H9.75V15Zm0 0v.375A1.125 1.125 0 0 1 8.625 16.5h-1.25A1.125 1.125 0 0 1 6.25 15.375v-.375m3.5 0v-.375A1.125 1.125 0 0 1 10.875 14.5h1.25a1.125 1.125 0 0 1 1.125 1.125v.375m-3.5 0h2.25v-.375a1.125 1.125 0 0 1 1.125-1.125H15.5a1.875 1.875 0 0 1 1.875 1.875v.375m-6.75 0V15a2.25 2.25 0 1 1 4.5 0v.375M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Z"
+                  />
+                </svg>
+              </div>
+              <h3 className="font-bold text-brand mb-2">RGPD e compliance</h3>
+              <p className="text-sm text-text-secondary text-pretty">
+                Falhas de segurança podem resultar em multas até 20 milhões de euros sob o RGPD.
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="w-12 h-12 mx-auto mb-4 text-accent">
+                <svg
+                  aria-hidden="true"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-12 h-12"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                  />
+                </svg>
+              </div>
+              <h3 className="font-bold text-brand mb-2">Falta de tempo</h3>
+              <p className="text-sm text-text-secondary text-pretty">
+                Empresários focados no negócio não têm tempo para se manterem atualizados sobre ameaças.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Features — benefits of using CiberPME */}
+        <section className="max-w-4xl mx-auto px-6 py-20">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-brand mb-4 text-balance font-display">
+              Proteja a sua empresa com conhecimento prático
+            </h2>
+            <p className="text-lg text-text-secondary max-w-2xl mx-auto text-pretty">
+              Receba orientações claras, alertas de segurança e ferramentas testadas para manter o seu negócio seguro.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="w-16 h-16 mx-auto mb-4 text-accent">
+                <svg
+                  aria-hidden="true"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-16 h-16"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 18v-5.25m0 0a6.01 6.01 0 0 0 1.5-.189 6.01 6.01 0 0 0 1.125-2.486c.729-.065 1.434-.403 1.984-.963A3.961 3.961 0 0 0 18 7.5a3.968 3.968 0 0 0-3-3.85V3a.75.75 0 0 0-1.5 0v.65A3.968 3.968 0 0 0 10.5 7.5a3.961 3.961 0 0 0 1.391 3.002c.55.56 1.255.898 1.984.963a6.01 6.01 0 0 0 1.125 2.486A6.01 6.01 0 0 0 16.5 14.25H12Z"
+                  />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-brand mb-3 font-display">Conteúdo verificado</h3>
+              <p className="text-text-secondary text-pretty">
+                Artigos revistos por especialistas em cibersegurança, adaptados à realidade das PMEs portuguesas.
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 mx-auto mb-4 text-accent">
+                <svg
+                  aria-hidden="true"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-16 h-16"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0M3.124 7.5A8.969 8.969 0 0 1 5.292 3m13.416 0a8.969 8.969 0 0 1 2.168 4.5"
+                  />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-brand mb-3 font-display">Alertas antecipados</h3>
+              <p className="text-text-secondary text-pretty">
+                Seja o primeiro a saber sobre novas ameaças e vulnerabilidades que podem afetar o seu setor.
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 mx-auto mb-4 text-accent">
+                <svg
+                  aria-hidden="true"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-16 h-16"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M11.42 15.17 17.25 21A2.652 2.652 0 0 0 21 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 1 1-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 0 0 4.486-6.336l-3.276 3.277a3.004 3.004 0 0 1-2.25-2.25l3.276-3.276a4.5 4.5 0 0 0-6.336 4.486c.049.58.025 1.194-.14 1.743"
+                  />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-brand mb-3 font-display">Ferramentas práticas</h3>
+              <p className="text-text-secondary text-pretty">
+                Guias passo-a-passo e listas de verificação que pode implementar hoje na sua empresa.
+              </p>
+            </div>
+          </div>
+          <div className="text-center mt-12">
             <Link
               href="/blog"
-              className="text-sm text-accent hover:underline transition"
+              className="inline-flex items-center gap-2 px-6 py-3 border border-border rounded-lg hover:border-accent hover:text-accent transition"
             >
-              Ver todos
+              Ver todos os artigos
+              <svg
+                aria-hidden="true"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-4 h-4"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+                />
+              </svg>
             </Link>
           </div>
-          <div className="grid md:grid-cols-3 gap-6">
-            {posts.map((post) => (
-              <Link
-                key={post.slug}
-                href={`/blog/${post.slug}`}
-                className="group block p-6 rounded-xl border border-border hover:border-accent hover:shadow-sm transition"
-              >
-                <span className="inline-block px-2 py-0.5 text-xs font-medium text-accent bg-accent-light rounded-full mb-3">
-                  {post.categoryLabel}
-                </span>
-                <h3 className="font-bold text-brand mb-2 group-hover:text-accent transition text-balance font-display">
-                  {post.title}
-                </h3>
-                <p className="text-sm text-text-secondary leading-relaxed mb-3 text-pretty">
-                  {post.excerpt}
+        </section>
+
+        {/* How It Works */}
+        <section className="bg-bg-subtle py-20">
+          <div className="max-w-4xl mx-auto px-6">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-brand mb-4 text-balance font-display">
+                Como funciona o CiberPME
+              </h2>
+              <p className="text-lg text-text-secondary max-w-2xl mx-auto text-pretty">
+                Três passos simples para manter a sua empresa protegida contra ameaças digitais.
+              </p>
+            </div>
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="text-center">
+                <div className="w-12 h-12 mx-auto mb-4 bg-accent rounded-full flex items-center justify-center">
+                  <span className="text-white font-bold text-lg">1</span>
+                </div>
+                <h3 className="text-xl font-bold text-brand mb-3 font-display">Subscreva a newsletter</h3>
+                <p className="text-text-secondary text-pretty">
+                  Receba artigos semanais e alertas de segurança directamente no seu email. Conteúdo curado e verificado por especialistas.
                 </p>
-                <span className="text-xs text-text-muted">
-                  {post.readingTime} min de leitura
-                </span>
-              </Link>
-            ))}
+              </div>
+              <div className="text-center">
+                <div className="w-12 h-12 mx-auto mb-4 bg-accent rounded-full flex items-center justify-center">
+                  <span className="text-white font-bold text-lg">2</span>
+                </div>
+                <h3 className="text-xl font-bold text-brand mb-3 font-display">Implemente as práticas</h3>
+                <p className="text-text-secondary text-pretty">
+                  Use os nossos guias passo-a-passo para fortalecer a segurança da sua empresa. Cada artigo inclui listas de verificação práticas.
+                </p>
+              </div>
+              <div className="text-center">
+                <div className="w-12 h-12 mx-auto mb-4 bg-accent rounded-full flex items-center justify-center">
+                  <span className="text-white font-bold text-lg">3</span>
+                </div>
+                <h3 className="text-xl font-bold text-brand mb-3 font-display">Mantenha-se atualizado</h3>
+                <p className="text-text-secondary text-pretty">
+                  Continue a receber alertas sobre novas ameaças e ferramentas de proteção adequadas ao seu setor e dimensão.
+                </p>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -219,6 +434,60 @@ export default function HomePage() {
           </p>
         </section>
 
+        {/* FAQ */}
+        <section className="max-w-3xl mx-auto px-6 py-20">
+          <h2 className="text-3xl font-bold text-brand mb-12 text-center text-balance font-display">
+            Perguntas frequentes
+          </h2>
+          <div className="space-y-8">
+            <div>
+              <h3 className="text-lg font-bold text-brand mb-2">
+                O CiberPME é adequado para a minha pequena empresa?
+              </h3>
+              <p className="text-text-secondary text-pretty">
+                Sim. O nosso conteúdo é especificamente direcionado para PMEs portuguesas com recursos limitados.
+                Focamos em soluções práticas e económicas que pode implementar sem um departamento de IT dedicado.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-brand mb-2">
+                Preciso de conhecimentos técnicos para seguir os vossos conselhos?
+              </h3>
+              <p className="text-text-secondary text-pretty">
+                Não. Todos os nossos artigos são escritos em linguagem clara, com instruções passo-a-passo.
+                Quando abordarmos temas mais técnicos, explicamos tudo de forma acessível.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-brand mb-2">
+                Quanto custa implementar as vossas recomendações?
+              </h3>
+              <p className="text-text-secondary text-pretty">
+                A maioria das nossas recomendações são gratuitas ou de baixo custo. Priorizamos sempre soluções
+                acessíveis e indicamos quando uma ferramenta pode ter custos associados.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-brand mb-2">
+                Com que frequência publicam novo conteúdo?
+              </h3>
+              <p className="text-text-secondary text-pretty">
+                Publicamos artigos semanalmente e enviamos alertas de segurança sempre que surge uma ameaça
+                relevante. A newsletter semanal resume as principais novidades em cibersegurança.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-brand mb-2">
+                Posso confiar na informação que partilham?
+              </h3>
+              <p className="text-text-secondary text-pretty">
+                Todo o nosso conteúdo é verificado por especialistas em cibersegurança e baseado em fontes oficiais.
+                Citamos sempre as nossas fontes e atualizamos artigos quando surgem novas informações.
+              </p>
+            </div>
+          </div>
+        </section>
+
         {/* Newsletter CTA */}
         <section id="newsletter" className="bg-bg-subtle py-20">
           <div className="max-w-md mx-auto px-6 text-center">
@@ -241,6 +510,59 @@ export default function HomePage() {
       </main>
 
       <Footer />
+
+      {/* FAQ Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "O CiberPME é adequado para a minha pequena empresa?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Sim. O nosso conteúdo é especificamente direcionado para PMEs portuguesas com recursos limitados. Focamos em soluções práticas e económicas que pode implementar sem um departamento de IT dedicado."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Preciso de conhecimentos técnicos para seguir os vossos conselhos?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Não. Todos os nossos artigos são escritos em linguagem clara, com instruções passo-a-passo. Quando abordarmos temas mais técnicos, explicamos tudo de forma acessível."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Quanto custa implementar as vossas recomendações?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "A maioria das nossas recomendações são gratuitas ou de baixo custo. Priorizamos sempre soluções acessíveis e indicamos quando uma ferramenta pode ter custos associados."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Com que frequência publicam novo conteúdo?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Publicamos artigos semanalmente e enviamos alertas de segurança sempre que surge uma ameaça relevante. A newsletter semanal resume as principais novidades em cibersegurança."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Posso confiar na informação que partilham?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Todo o nosso conteúdo é verificado por especialistas em cibersegurança e baseado em fontes oficiais. Citamos sempre as nossas fontes e atualizamos artigos quando surgem novas informações."
+                }
+              }
+            ]
+          })
+        }}
+      />
     </div>
   );
 }
