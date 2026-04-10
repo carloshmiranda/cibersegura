@@ -67,6 +67,103 @@ export default async function BlogPostPage({
                        post.content.includes('Passo ') ||
                        post.content.includes('### Passo');
 
+  // Detect if this post has FAQ content
+  const hasFAQContent = post.content.includes('Perguntas Frequentes') ||
+                        post.content.includes('## FAQ') ||
+                        post.content.includes('### FAQ');
+
+  // Extract FAQ structured data if present
+  const extractFAQStructuredData = () => {
+    if (!hasFAQContent) return null;
+
+    const faqItems = [];
+    const lines = post.content.split('\n');
+    let currentQuestion = '';
+    let currentAnswer = '';
+    let inFAQSection = false;
+    let collectingAnswer = false;
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim();
+
+      // Start of FAQ section
+      if (line.includes('Perguntas Frequentes') || line.includes('## FAQ')) {
+        inFAQSection = true;
+        continue;
+      }
+
+      // Question (starts with ###)
+      if (inFAQSection && line.startsWith('### ')) {
+        // Save previous Q&A if exists
+        if (currentQuestion && currentAnswer) {
+          faqItems.push({
+            "@type": "Question",
+            name: currentQuestion,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: currentAnswer.trim()
+            }
+          });
+        }
+
+        currentQuestion = line.replace('### ', '');
+        currentAnswer = '';
+        collectingAnswer = true;
+        continue;
+      }
+
+      // Collect answer content
+      if (inFAQSection && collectingAnswer && line && !line.startsWith('##')) {
+        // Skip lines that start with **Sim or **Não as those are just formatting
+        if (!line.startsWith('**Sim,') && !line.startsWith('**Não,') && !line.startsWith('**Depende')) {
+          currentAnswer += line + ' ';
+        } else {
+          currentAnswer += line.replace(/\*\*/g, '') + ' ';
+        }
+      }
+
+      // End of current section
+      if (inFAQSection && line.startsWith('## ') && !line.includes('FAQ') && !line.includes('Perguntas')) {
+        // Save last Q&A
+        if (currentQuestion && currentAnswer) {
+          faqItems.push({
+            "@type": "Question",
+            name: currentQuestion,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: currentAnswer.trim()
+            }
+          });
+        }
+        break;
+      }
+    }
+
+    // Save final Q&A if we're at the end
+    if (inFAQSection && currentQuestion && currentAnswer) {
+      faqItems.push({
+        "@type": "Question",
+        name: currentQuestion,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: currentAnswer.trim()
+        }
+      });
+    }
+
+    if (faqItems.length > 0) {
+      return {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: faqItems
+      };
+    }
+
+    return null;
+  };
+
+  const faqStructuredData = extractFAQStructuredData();
+
   const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": isHowToGuide ? "HowTo" : "BlogPosting",
@@ -162,6 +259,12 @@ export default async function BlogPostPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
       />
+      {faqStructuredData && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }}
+        />
+      )}
       <div className="min-h-screen bg-bg">
         {/* Navigation */}
       <header>

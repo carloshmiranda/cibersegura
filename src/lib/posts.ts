@@ -1843,6 +1843,29 @@ Este guia detalha as principais diferenças entre NIS2 e RGPD, identifica onde s
 - Multa máxima RGPD: €4M (4% de €100M)
 - Multa máxima NIS2: €2M (2% de €100M)
 
+## Tabela Comparativa Completa: NIS2 vs RGPD
+
+| **Critério** | **NIS2** | **RGPD** |
+|--------------|----------|-----------|
+| **Objetivo Principal** | Proteger infraestruturas críticas e essenciais | Proteger dados pessoais e privacidade dos cidadãos |
+| **Âmbito de Aplicação** | Setores específicos (energia, saúde, transportes, etc.) | Universal - qualquer tratamento de dados pessoais |
+| **Critério de Dimensão** | ≥250 trabalhadores OU ≥€50M faturação | Qualquer dimensão (mesmo microempresas) |
+| **Foco de Proteção** | Redes, sistemas e infraestruturas digitais | Dados pessoais de indivíduos |
+| **Autoridade Reguladora** | ANSSI (Agência Nacional de Segurança) | CNPD (Comissão Nacional de Proteção de Dados) |
+| **Multa Máxima** | 2% da faturação anual OU €10 milhões | 4% da faturação anual OU €20 milhões |
+| **Prazo de Notificação** | 24 horas (incidentes de cibersegurança) | 72 horas (violações de dados pessoais) |
+| **Responsabilidade Pessoal** | ✅ Administradores podem ser criminalmente responsáveis | ❌ Apenas responsabilidade da empresa |
+| **Medidas Obrigatórias** | Gestão de riscos, testes de penetração, backup | Consentimento, DPO, avaliação de impacto |
+| **Aplicação a PMEs** | Apenas setores críticos e fornecedores essenciais | Praticamente todas as PMEs |
+| **Direitos dos Indivíduos** | ❌ Não aplicável | ✅ Acesso, retificação, eliminação, portabilidade |
+| **Gestão de Fornecedores** | ✅ Avaliação obrigatória da cadeia de fornecimento | ✅ Contratos de subcontratação adequados |
+| **Documentação Obrigatória** | Logs de segurança, políticas de cibersegurança | Registos de atividades, políticas de privacidade |
+| **Formação Obrigatória** | ✅ Cibersegurança para todos os colaboradores | ✅ Proteção de dados para equipas relevantes |
+| **Auditorias** | ✅ Testes de cibersegurança periódicos | ❌ Não obrigatórias (recomendadas) |
+| **Registo Oficial** | ✅ Registo no CNCS obrigatório | ❌ Não existe registo central |
+| **Prazo de Implementação** | Até 3 de abril de 2026 | Em vigor desde maio de 2018 |
+| **Cooperação Internacional** | ✅ Partilha de informações com outros Estados | ❌ Limitada a transferências autorizadas |
+
 ## Obrigações Específicas de Cada Regulamento
 
 ### Obrigações RGPD Únicas
@@ -2009,11 +2032,41 @@ Para PMEs sujeitas a ambos, começar com uma auditoria integrada e desenvolver u
 
 O investimento inicial pode parecer significativo, mas os benefícios a longo prazo — menor risco de multas, maior confiança dos clientes, melhor posicionamento competitivo — justificam claramente o esforço.
 
-**Próximo passo:** Faça uma [avaliação da aplicabilidade](/blog/nis2-entrou-em-vigor) da NIS2 à sua empresa e inicie o processo de harmonização com as suas obrigações RGPD existentes.`,
+**Próximo passo:** Faça uma [avaliação da aplicabilidade](/blog/nis2-entrou-em-vigor) da NIS2 à sua empresa e inicie o processo de harmonização com as suas obrigações RGPD existentes.
+
+## Perguntas Frequentes sobre NIS2 vs RGPD
+
+### A minha PME pode estar sujeita apenas ao RGPD e não à NIS2?
+
+**Sim, é o cenário mais comum.** A grande maioria das PMEs portuguesas está obrigada apenas ao RGPD porque praticamente todas tratam dados pessoais (contactos de clientes, dados de funcionários, etc.). A NIS2 só se aplica a setores específicos (energia, saúde, transportes, etc.) e geralmente apenas a empresas com mais de 250 trabalhadores. Uma padaria, loja de roupa, ou gabinete de contabilidade típicos estão sujeitos ao RGPD mas não à NIS2.
+
+### Se a minha empresa está sujeita a ambos, preciso de implementar tudo em duplicado?
+
+**Não, existe uma sobreposição significativa que permite sinergias.** Medidas como criptografia de dados, controlo de acessos, backup, formação de colaboradores e gestão de incidentes servem ambos os regulamentos. O ideal é desenvolver uma estratégia integrada com políticas harmonizadas, em vez de duas implementações paralelas. Isto reduz custos e complexidade.
+
+### As multas do RGPD e NIS2 podem ser aplicadas em simultâneo?
+
+**Sim, são regulamentos independentes.** Se um incidente violar ambas as legislações - por exemplo, um ciberataque que exponha dados pessoais e comprometa sistemas críticos - a empresa pode enfrentar multas de ambas as autoridades (CNPD para RGPD, ANSSI para NIS2). Por isso é crucial ter medidas que protejam contra ambos os tipos de violação.
+
+### Qual das duas legislações é mais rigorosa para PMEs?
+
+**Depende do contexto da empresa.** Para PMEs fora dos setores NIS2, o RGPD é mais relevante porque é universal. Para PMEs nos setores críticos, a NIS2 pode ser mais exigente devido à responsabilidade criminal pessoal dos administradores, prazos de notificação mais curtos (24h vs 72h), e requisitos técnicos específicos como testes de penetração obrigatórios.
+
+### Como posso saber se sou "fornecedor crítico" e por isso sujeito à NIS2?
+
+**Será notificado pelas empresas clientes.** Se fornece serviços essenciais a entidades regulamentadas pela NIS2 (bancos, hospitais, operadores de energia, etc.), essas empresas têm obrigação de avaliar os seus fornecedores e informá-lo se considera os seus serviços críticos. Nesse caso, pode ser-lhe exigido contratualmente cumprir padrões de cibersegurança equivalentes aos da NIS2.
+
+### Posso usar o mesmo DPO (Data Protection Officer) como responsável pela cibersegurança NIS2?
+
+**Não é recomendado, mas é possível em PMEs muito pequenas.** O DPO foca-se na proteção de dados pessoais, enquanto o responsável pela cibersegurança NIS2 tem um âmbito mais amplo (toda a infraestrutura crítica). Idealmente, devem ser pessoas diferentes que coordenem entre si. Em PMEs com recursos limitados, a mesma pessoa pode acumular ambas as funções desde que tenha competências adequadas em ambas as áreas.
+
+### A conformidade com uma das legislações facilita a conformidade com a outra?
+
+**Sim, significativamente.** Se já tem um sistema maduro de proteção de dados (RGPD), muitos controlos servem também para a NIS2: criptografia, gestão de acessos, formação de colaboradores, políticas de segurança, backup e recuperação. Da mesma forma, se implementou medidas robustas de cibersegurança para a NIS2, já tem muito do que precisa para proteger dados pessoais conforme o RGPD. A chave é planear uma implementação coordenada desde o início.`,
     category: "legislacao",
     categoryLabel: "Legislacao RGPD",
     publishedAt: "2026-04-05",
-    readingTime: 12,
+    readingTime: 16,
   },
   {
     slug: "registo-cncs-nis2-guia-completo",
