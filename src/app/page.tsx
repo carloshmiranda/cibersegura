@@ -53,6 +53,9 @@ export default async function HomePage() {
             {COMPANY_NAME}
           </Link>
           <div className="flex items-center gap-6 text-sm text-text-secondary">
+            <Link href="/avaliacao-seguranca" className="hover:text-brand transition">
+              Avaliação
+            </Link>
             <Link href="/recursos" className="hover:text-brand transition">
               Recursos
             </Link>
@@ -87,12 +90,20 @@ export default async function HomePage() {
               contra ameaças digitais. Conteúdo em português, pensado para
               pequenas e médias empresas.
             </p>
-            <a
-              href="#newsletter"
-              className="inline-block px-8 py-3 bg-accent text-white rounded-lg font-bold hover:opacity-90 transition"
-            >
-              Subscrever Newsletter
-            </a>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                href="/avaliacao-seguranca"
+                className="px-8 py-3 bg-accent text-white rounded-lg font-bold hover:opacity-90 transition"
+              >
+                Avaliar a Minha Empresa
+              </Link>
+              <a
+                href="#newsletter"
+                className="px-8 py-3 border border-white/20 text-white rounded-lg font-medium hover:bg-white/10 transition"
+              >
+                Subscrever Newsletter
+              </a>
+            </div>
           </div>
         </section>
 

@@ -357,6 +357,9 @@ export default function FerramentasPage() {
             CiberPME
           </Link>
           <div className="flex items-center gap-6 text-sm text-text-secondary">
+            <Link href="/avaliacao-seguranca" className="hover:text-brand transition">
+              Avaliação
+            </Link>
             <Link href="/recursos" className="hover:text-brand transition">
               Recursos
             </Link>
