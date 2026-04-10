@@ -52,6 +52,9 @@ export default async function BlogPage({
             <Link href="/blog" className="text-brand font-bold" aria-current="page">
               Blog
             </Link>
+            <Link href="/ferramentas" className="hover:text-brand transition">
+              Ferramentas
+            </Link>
             <Link href="/faq" className="hover:text-brand transition">
               FAQ
             </Link>
