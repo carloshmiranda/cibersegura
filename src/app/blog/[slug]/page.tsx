@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getPostBySlug, posts } from "@/lib/posts";
 import { parseMarkdown, renderMarkdown } from "@/lib/markdown";
 import { RelatedPosts } from "@/components/related-posts";
+import { SocialShare } from "@/components/social-share";
 import type { Metadata } from "next";
 import Footer from "@/components/footer";
 
@@ -42,6 +43,12 @@ export async function generateMetadata({
           alt: post.title,
         },
       ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.excerpt,
+      images: [`/api/og?title=${encodeURIComponent(post.title)}`],
     },
   };
 }
@@ -320,6 +327,15 @@ export default async function BlogPostPage({
             <span>{post.readingTime} min de leitura</span>
           </div>
         </header>
+
+        {/* Social share buttons */}
+        <div className="mb-8 pb-8 border-b border-border">
+          <SocialShare
+            title={post.title}
+            url={articleUrl}
+            description={post.excerpt}
+          />
+        </div>
 
         {/* Article content */}
         <article className="space-y-6">
