@@ -454,6 +454,9 @@ export default function RecursosPage() {
             CiberPME
           </Link>
           <div className="flex items-center gap-6 text-sm text-text-secondary">
+            <Link href="/avaliacao-seguranca" className="hover:text-brand transition">
+              Avaliação
+            </Link>
             <Link href="/recursos" className="text-brand font-bold" aria-current="page">
               Recursos
             </Link>
