@@ -7,9 +7,13 @@
  * Supports Bing, Yandex, and other IndexNow compatible search engines.
  */
 
-const fs = require('fs');
-const path = require('path');
-const https = require('https');
+import fs from 'fs';
+import path from 'path';
+import https from 'https';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Configuration
 const SITE_URL = process.env.SITE_URL || 'https://ciberpme.vercel.app';
@@ -27,7 +31,7 @@ const URLS_TO_SUBMIT = [
   '/blog/nis2-entrou-em-vigor',
   '/blog/nis2-portugal-guia-pme',
   '/blog/melhores-ferramentas-ciberseguranca-pmes-2026',
-  '/blog/checklist-nis2-conformidade',
+  '/blog/checklist-nis2-10-passos-conformidade',
   '/blog/nis2-portugal-o-que-pmes-precisam-saber',
   '/blog/10-ameacas-ciberseguranca-pmes-portuguesas',
   '/blog/guia-rgpd-pequenas-empresas-portugal',
@@ -203,8 +207,8 @@ async function main() {
 }
 
 // Run if called directly
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   main();
 }
 
-module.exports = { submitToIndexNow, loadPostUrls, validateKeyFile };
+export { submitToIndexNow, loadPostUrls, validateKeyFile };
