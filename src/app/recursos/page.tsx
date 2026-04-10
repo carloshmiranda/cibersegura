@@ -460,6 +460,9 @@ export default function RecursosPage() {
             <Link href="/blog" className="hover:text-brand transition">
               Blog
             </Link>
+            <Link href="/ferramentas" className="hover:text-brand transition">
+              Ferramentas
+            </Link>
             <Link href="/faq" className="hover:text-brand transition">
               FAQ
             </Link>
