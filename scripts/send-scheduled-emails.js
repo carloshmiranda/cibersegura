@@ -15,11 +15,7 @@
  *   - NEXT_PUBLIC_URL: Base URL of the application
  */
 
-import dotenv from 'dotenv';
 import process from 'process';
-
-// Load environment variables
-dotenv.config();
 
 const isDryRun = process.argv.includes('--dry-run');
 const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
