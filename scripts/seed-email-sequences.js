@@ -258,7 +258,7 @@ https://ciberpme.vercel.app
     `,
     delay_hours: 0,
     variant: "a",
-    is_active: false // Template only, not automatically sent
+    is_active: true // Now active for weekly newsletter automation
   },
 
   // Follow-up after 7 days
