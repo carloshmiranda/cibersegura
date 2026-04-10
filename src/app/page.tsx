@@ -62,6 +62,9 @@ export default async function HomePage() {
             <Link href="/ferramentas" className="hover:text-brand transition">
               Ferramentas
             </Link>
+            <Link href="/avaliacao-risco" className="hover:text-brand transition">
+              Avaliação
+            </Link>
             <Link href="/faq" className="hover:text-brand transition">
               FAQ
             </Link>
@@ -289,6 +292,44 @@ export default async function HomePage() {
           </div>
         </section>
 
+        {/* Risk Assessment CTA */}
+        <section className="max-w-4xl mx-auto px-6 py-20">
+          <div className="bg-accent-light rounded-xl p-8 md:p-12 text-center">
+            <div className="w-16 h-16 mx-auto mb-6 text-accent">
+              <svg
+                aria-hidden="true"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-16 h-16"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z"
+                />
+              </svg>
+            </div>
+            <h2 className="text-3xl font-bold text-brand mb-4 text-balance font-display">
+              Avalie o Risco da Sua Empresa
+            </h2>
+            <p className="text-lg text-text-secondary mb-8 max-w-2xl mx-auto text-pretty">
+              Descubra em 5 minutos o nível de risco de cibersegurança da sua PME
+              e receba recomendações personalizadas para fortalecer a proteção.
+            </p>
+            <Link
+              href="/avaliacao-risco"
+              className="inline-block px-8 py-4 bg-accent text-white rounded-lg font-bold text-lg hover:opacity-90 transition"
+            >
+              Iniciar Avaliação Gratuita
+            </Link>
+            <p className="text-sm text-text-secondary mt-4">
+              ✓ Gratuito ✓ 10 perguntas ✓ Resultados instantâneos
+            </p>
+          </div>
+        </section>
+
         {/* How It Works */}
         <section className="bg-bg-subtle py-20">
           <div className="max-w-4xl mx-auto px-6">
@@ -305,9 +346,9 @@ export default async function HomePage() {
                 <div className="w-12 h-12 mx-auto mb-4 bg-accent rounded-full flex items-center justify-center">
                   <span className="text-white font-bold text-lg">1</span>
                 </div>
-                <h3 className="text-xl font-bold text-brand mb-3 font-display">Subscreva a newsletter</h3>
+                <h3 className="text-xl font-bold text-brand mb-3 font-display">Avalie o seu risco</h3>
                 <p className="text-text-secondary text-pretty">
-                  Receba artigos semanais e alertas de segurança directamente no seu email. Conteúdo curado e verificado por especialistas.
+                  Comece com a nossa ferramenta de avaliação gratuita para identificar vulnerabilidades e priorizar melhorias na sua empresa.
                 </p>
               </div>
               <div className="text-center">
@@ -316,7 +357,7 @@ export default async function HomePage() {
                 </div>
                 <h3 className="text-xl font-bold text-brand mb-3 font-display">Implemente as práticas</h3>
                 <p className="text-text-secondary text-pretty">
-                  Use os nossos guias passo-a-passo para fortalecer a segurança da sua empresa. Cada artigo inclui listas de verificação práticas.
+                  Use os nossos guias passo-a-passo e ferramentas práticas para fortalecer a segurança da sua empresa com base nas recomendações.
                 </p>
               </div>
               <div className="text-center">
@@ -325,7 +366,7 @@ export default async function HomePage() {
                 </div>
                 <h3 className="text-xl font-bold text-brand mb-3 font-display">Mantenha-se atualizado</h3>
                 <p className="text-text-secondary text-pretty">
-                  Continue a receber alertas sobre novas ameaças e ferramentas de proteção adequadas ao seu setor e dimensão.
+                  Subscreva a newsletter para receber alertas sobre novas ameaças, atualizações regulamentares e melhores práticas.
                 </p>
               </div>
             </div>
