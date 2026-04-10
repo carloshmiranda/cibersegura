@@ -79,7 +79,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt" className={`${jakartaSans.variable} ${inter.variable}`}>
+    <html lang="pt-PT" className={`${jakartaSans.variable} ${inter.variable}`}>
       <head>
         <script
           type="application/ld+json"

@@ -171,6 +171,37 @@ export default async function BlogPostPage({
 
   const faqStructuredData = extractFAQStructuredData();
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Início",
+        item: baseUrl,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Blog",
+        item: `${baseUrl}/blog`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: post.categoryLabel,
+        item: `${baseUrl}/blog/categoria/${post.category}`,
+      },
+      {
+        "@type": "ListItem",
+        position: 4,
+        name: post.title,
+        item: articleUrl,
+      },
+    ],
+  };
+
   const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": isHowToGuide ? "HowTo" : "BlogPosting",
@@ -262,6 +293,10 @@ export default async function BlogPostPage({
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
