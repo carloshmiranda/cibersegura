@@ -2,6 +2,7 @@ import Link from "next/link";
 import { posts, CATEGORIES } from "@/lib/posts";
 import type { Metadata } from "next";
 import Footer from "@/components/footer";
+import { BlogContent } from "@/components/blog-content";
 
 export const metadata: Metadata = {
   title: "Blog — CiberPME",
@@ -68,64 +69,15 @@ export default async function BlogPage({
       <main id="main-content" className="max-w-4xl mx-auto px-6 py-12">
         <h1 className="text-3xl md:text-4xl font-bold text-brand mb-4 text-balance font-display tracking-tight">Blog</h1>
         <p className="text-text-secondary mb-8 text-pretty">
-          Artigos praticos sobre ciberseguranca para proteger o seu negocio.
+          Artigos práticos sobre cibersegurança para proteger o seu negócio.
         </p>
 
-        {/* Category filters */}
-        <div className="flex flex-wrap gap-2 mb-10">
-          <Link
-            href="/blog"
-            aria-current={!categoria ? "page" : undefined}
-            className={`px-3 py-2.5 text-sm rounded-full border transition ${
-              !categoria
-                ? "bg-accent text-white border-accent"
-                : "border-border text-text-secondary hover:border-accent"
-            }`}
-          >
-            Todos
-          </Link>
-          {Object.entries(CATEGORIES).map(([key, label]) => (
-            <Link
-              key={key}
-              href={`/blog/categoria/${key}`}
-              className="px-3 py-2.5 text-sm rounded-full border border-border text-text-secondary hover:border-accent transition"
-            >
-              {label}
-            </Link>
-          ))}
-        </div>
-
-        {/* Article list */}
-        {filtered.length === 0 ? (
-          <p className="text-text-muted">
-            Nenhum artigo encontrado nesta categoria.
-          </p>
-        ) : (
-          <div className="space-y-6">
-            {filtered.map((post) => (
-              <Link
-                key={post.slug}
-                href={`/blog/${post.slug}`}
-                className="group block p-6 rounded-xl border border-border hover:border-accent hover:shadow-sm transition"
-              >
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="inline-block px-2 py-0.5 text-xs font-medium text-accent bg-accent-light rounded-full">
-                    {post.categoryLabel}
-                  </span>
-                  <span className="text-xs text-text-muted">
-                    {post.readingTime} min de leitura
-                  </span>
-                </div>
-                <h2 className="text-lg font-bold text-brand mb-2 group-hover:text-accent transition text-balance font-display">
-                  {post.title}
-                </h2>
-                <p className="text-sm text-text-secondary leading-relaxed text-pretty">
-                  {post.excerpt}
-                </p>
-              </Link>
-            ))}
-          </div>
-        )}
+        <BlogContent
+          allPosts={posts}
+          initialPosts={filtered}
+          categories={CATEGORIES}
+          selectedCategory={categoria}
+        />
       </main>
 
       <Footer />
