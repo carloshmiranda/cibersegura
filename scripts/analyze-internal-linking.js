@@ -16,7 +16,8 @@ import { generateInternalLinkingReport, analyzeInternalLinking } from '../src/li
 import { getPostBySlug } from '../src/lib/posts.ts';
 
 const args = process.argv.slice(2);
-const postSlug = args[args.indexOf('--post') + 1] || null;
+const postIndex = args.indexOf('--post');
+const postSlug = postIndex !== -1 ? args[postIndex + 1] : null;
 const showStats = args.includes('--stats');
 
 function formatConfidence(confidence) {
