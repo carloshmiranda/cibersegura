@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import type { Post } from "@/lib/posts";
 
 interface BlogSearchProps {
@@ -12,8 +12,9 @@ interface BlogSearchProps {
 export function BlogSearch({ posts, onFilteredPosts, selectedCategory }: BlogSearchProps) {
   const [searchTerm, setSearchTerm] = useState("");
 
-  useEffect(() => {
-    const filtered = posts.filter(post => {
+  // Memoize the filtering logic to avoid duplication
+  const filteredPosts = useMemo(() => {
+    return posts.filter(post => {
       const matchesCategory = !selectedCategory || post.category === selectedCategory;
       const matchesSearch = !searchTerm ||
         post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -22,9 +23,11 @@ export function BlogSearch({ posts, onFilteredPosts, selectedCategory }: BlogSea
 
       return matchesCategory && matchesSearch;
     });
+  }, [posts, selectedCategory, searchTerm]);
 
-    onFilteredPosts(filtered);
-  }, [searchTerm, selectedCategory, posts, onFilteredPosts]);
+  useEffect(() => {
+    onFilteredPosts(filteredPosts);
+  }, [filteredPosts, onFilteredPosts]);
 
   return (
     <div className="relative">
@@ -56,19 +59,7 @@ export function BlogSearch({ posts, onFilteredPosts, selectedCategory }: BlogSea
       </div>
       {searchTerm && (
         <p className="mt-2 text-sm text-text-secondary">
-          {posts.filter(post => {
-            const matchesCategory = !selectedCategory || post.category === selectedCategory;
-            const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              post.content.toLowerCase().includes(searchTerm.toLowerCase());
-            return matchesCategory && matchesSearch;
-          }).length} {posts.filter(post => {
-            const matchesCategory = !selectedCategory || post.category === selectedCategory;
-            const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              post.content.toLowerCase().includes(searchTerm.toLowerCase());
-            return matchesCategory && matchesSearch;
-          }).length === 1 ? 'artigo encontrado' : 'artigos encontrados'}
+          {filteredPosts.length} {filteredPosts.length === 1 ? 'artigo encontrado' : 'artigos encontrados'}
         </p>
       )}
     </div>
