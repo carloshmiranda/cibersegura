@@ -347,6 +347,16 @@ const categories: ToolCategory[] = [
   },
 ];
 
+// Map tool titles to download IDs
+const getToolDownloadId = (title: string): string | null => {
+  const downloadMap: Record<string, string> = {
+    "Lista de Verificação de Cibersegurança para PMEs": "security-checklist",
+    "Auditoria RGPD Simplificada": "rgpd-audit",
+    "Avaliação de Risco de Fornecedores": "vendor-risk-assessment",
+  };
+  return downloadMap[title] || null;
+};
+
 export default function FerramentasPage() {
   return (
     <div className="min-h-screen bg-bg">
@@ -540,17 +550,41 @@ export default function FerramentasPage() {
                       </ul>
                     </div>
 
-                    {/* CTA - Simplified to newsletter signup for MVP */}
+                    {/* CTA - Download or Newsletter */}
                     <div className="border-t border-border pt-6">
-                      <p className="text-xs text-text-muted mb-3">
-                        Subscreva a newsletter para receber esta ferramenta gratuitamente:
-                      </p>
-                      <Link
-                        href="#newsletter"
-                        className="inline-block w-full text-center px-4 py-3 bg-accent text-white rounded-lg font-medium hover:opacity-90 transition"
-                      >
-                        Aceder à Ferramenta
-                      </Link>
+                      {(() => {
+                        const downloadId = getToolDownloadId(tool.title);
+                        if (downloadId) {
+                          return (
+                            <>
+                              <p className="text-xs text-text-muted mb-3">
+                                Ferramenta disponível para download gratuito:
+                              </p>
+                              <a
+                                href={`/api/tools/download?tool=${downloadId}`}
+                                className="inline-block w-full text-center px-4 py-3 bg-accent text-white rounded-lg font-medium hover:opacity-90 transition"
+                                download
+                              >
+                                Download Gratuito
+                              </a>
+                            </>
+                          );
+                        } else {
+                          return (
+                            <>
+                              <p className="text-xs text-text-muted mb-3">
+                                Subscreva a newsletter para receber esta ferramenta gratuitamente:
+                              </p>
+                              <Link
+                                href="#newsletter"
+                                className="inline-block w-full text-center px-4 py-3 bg-accent text-white rounded-lg font-medium hover:opacity-90 transition"
+                              >
+                                Aceder à Ferramenta
+                              </Link>
+                            </>
+                          );
+                        }
+                      })()}
                     </div>
                   </div>
                 ))}
@@ -563,11 +597,11 @@ export default function FerramentasPage() {
         <section id="newsletter" className="mt-20 bg-bg-subtle py-16 rounded-xl">
           <div className="max-w-md mx-auto px-6 text-center">
             <h2 className="text-2xl font-bold text-brand mb-4 text-balance font-display">
-              Aceda a todas as ferramentas gratuitamente
+              Receba mais ferramentas gratuitamente
             </h2>
             <p className="text-text-secondary mb-6 text-pretty">
-              Subscreva a nossa newsletter e receba acesso imediato a todas as
-              listas de verificação, templates e guias práticos de cibersegurança.
+              Subscreva a nossa newsletter e seja o primeiro a receber novas
+              ferramentas, templates e guias práticos de cibersegurança.
             </p>
             <NewsletterForm />
             <p className="text-xs text-text-muted mt-4">
