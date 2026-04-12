@@ -14,15 +14,17 @@ export async function POST(req: NextRequest) {
   const sql = getDb();
 
   try {
-    // Simple auth check - in production, use proper authentication
+    // Check if request is from Vercel Cron or authenticated admin
     const authHeader = req.headers.get("authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return json({ ok: false, error: "Authorization required" }, 401);
-    }
+    const cronHeader = req.headers.get("x-vercel-cron");
 
-    const token = authHeader.split(" ")[1];
-    if (token !== process.env.ADMIN_API_TOKEN) {
-      return json({ ok: false, error: "Invalid token" }, 403);
+    // Allow Vercel Cron (has x-vercel-cron header) or admin with valid token
+    const isVercelCron = cronHeader === "1";
+    const isAdminRequest = authHeader?.startsWith("Bearer ") &&
+                          authHeader.split(" ")[1] === process.env.ADMIN_API_TOKEN;
+
+    if (!isVercelCron && !isAdminRequest) {
+      return json({ ok: false, error: "Authorization required" }, 401);
     }
 
     const resendKey = process.env.RESEND_API_KEY;

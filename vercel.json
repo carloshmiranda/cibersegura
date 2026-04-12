@@ -1,0 +1,12 @@
+{
+  "crons": [
+    {
+      "path": "/api/admin/send-scheduled-emails",
+      "schedule": "0 */6 * * *"
+    },
+    {
+      "path": "/api/admin/send-weekly-newsletter",
+      "schedule": "0 9 * * 1"
+    }
+  ]
+}
