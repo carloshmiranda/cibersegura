@@ -75,6 +75,7 @@ const categories: ToolCategory[] = [
         typeLabel: "Lista de Verificação",
         estimatedTime: "2-3 horas",
         difficulty: "Básico",
+        downloadUrl: "/api/download/checklist",
         sections: [
           "Segurança da rede e firewall",
           "Gestão de utilizadores e acessos",
@@ -540,17 +541,34 @@ export default function FerramentasPage() {
                       </ul>
                     </div>
 
-                    {/* CTA - Simplified to newsletter signup for MVP */}
+                    {/* CTA - Download if available, otherwise newsletter signup */}
                     <div className="border-t border-border pt-6">
-                      <p className="text-xs text-text-muted mb-3">
-                        Subscreva a newsletter para receber esta ferramenta gratuitamente:
-                      </p>
-                      <Link
-                        href="#newsletter"
-                        className="inline-block w-full text-center px-4 py-3 bg-accent text-white rounded-lg font-medium hover:opacity-90 transition"
-                      >
-                        Aceder à Ferramenta
-                      </Link>
+                      {tool.downloadUrl ? (
+                        <>
+                          <p className="text-xs text-text-muted mb-3">
+                            Descarregue esta ferramenta gratuitamente:
+                          </p>
+                          <a
+                            href={tool.downloadUrl}
+                            download
+                            className="inline-block w-full text-center px-4 py-3 bg-accent text-white rounded-lg font-medium hover:opacity-90 transition"
+                          >
+                            📄 Descarregar Lista
+                          </a>
+                        </>
+                      ) : (
+                        <>
+                          <p className="text-xs text-text-muted mb-3">
+                            Subscreva a newsletter para receber esta ferramenta gratuitamente:
+                          </p>
+                          <Link
+                            href="#newsletter"
+                            className="inline-block w-full text-center px-4 py-3 bg-accent text-white rounded-lg font-medium hover:opacity-90 transition"
+                          >
+                            Aceder à Ferramenta
+                          </Link>
+                        </>
+                      )}
                     </div>
                   </div>
                 ))}
