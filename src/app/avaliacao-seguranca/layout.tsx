@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Avaliação de Cibersegurança Gratuita — CiberPME",
   description:
-    "Descubra o nível de segurança da sua PME em 5 minutos. Avaliação gratuita com recomendações personalizadas para proteger o seu negócio contra ameaças digitais.",
+    "Avaliação especializada de cibersegurança para PMEs portuguesas. Análise detalhada por categorias, relatório em PDF e plano de ação personalizado. Gratuito e completo em 5-7 minutos.",
   keywords: [
     "avaliação cibersegurança",
     "auditoria segurança PME",
@@ -80,10 +80,12 @@ export default function AvaliacaoSegurancaLayout({
               },
             },
             featureList: [
-              "Avaliação rápida de cibersegurança",
-              "Recomendações personalizadas",
-              "Relatório detalhado de vulnerabilidades",
-              "Priorização de ações de segurança",
+              "Avaliação especializada de cibersegurança em 10 critérios fundamentais",
+              "Análise detalhada por categorias (Rede, Dados, Acessos, Incidentes)",
+              "Pontuação ponderada com explicações técnicas",
+              "Relatório em PDF com plano de ação personalizado",
+              "Recomendações específicas com cronograma e recursos",
+              "Links diretos para ferramentas e artigos relevantes",
             ],
           }),
         }}
