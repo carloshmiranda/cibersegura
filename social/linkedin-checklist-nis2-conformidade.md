@@ -17,7 +17,7 @@ Não sabe por onde começar a conformidade NIS2? Este roteiro simplifica o proce
 9️⃣ Testar planos resposta
 🔟 Registar no CNCS (se aplicável)
 
-⏰ Prazo: até outubro 2024 para estar em conformidade!
+⏰ Prazo: até maio de 2026 para estar em conformidade!
 
 💡 Cada passo tem templates e recursos práticos para acelerar a implementação.
 
@@ -25,4 +25,4 @@ Não deixe para a última hora - comece hoje!
 
 Aceda ao checklist completo: ciberpme.vercel.app/blog/checklist-nis2-10-passos-conformidade
 
-#NIS2 #Checklist #PME #CNCS #Compliance #Portugal #Ciberseguranca #Outubro2024
+#NIS2 #Checklist #PME #CNCS #Compliance #Portugal #Ciberseguranca #CNCS2026
