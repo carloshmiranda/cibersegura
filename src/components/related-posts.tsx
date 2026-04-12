@@ -7,10 +7,24 @@ interface RelatedPostsProps {
 }
 
 export function RelatedPosts({ currentPostSlug, category }: RelatedPostsProps) {
-  // Filter posts by same category, excluding current post, take first 3
-  const relatedPosts = posts
-    .filter((post) => post.category === category && post.slug !== currentPostSlug)
-    .slice(0, 3);
+  // Get all posts excluding current post, sorted by published date (most recent first)
+  const allOtherPosts = posts
+    .filter((post) => post.slug !== currentPostSlug)
+    .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+
+  // First, get posts from the same category
+  const sameCategoryPosts = allOtherPosts
+    .filter((post) => post.category === category);
+
+  // Then, get posts from other categories to fill up to 3 total
+  const otherCategoryPosts = allOtherPosts
+    .filter((post) => post.category !== category);
+
+  // Combine: prefer same category posts, then fill with others, limit to 3 total
+  const relatedPosts = [
+    ...sameCategoryPosts,
+    ...otherCategoryPosts
+  ].slice(0, 3);
 
   // Don't render if no related posts found
   if (relatedPosts.length === 0) {
