@@ -19,10 +19,11 @@ interface ApiResponse {
 interface ApplyResponse {
   ok: boolean;
   data: {
-    modified_content: string;
+    modified_content?: string;
     applied_suggestions: LinkSuggestion[];
     failed_suggestions: Array<{ suggestion: LinkSuggestion; reason: string }>;
     changes_count: number;
+    backup_path?: string;
   };
   error?: string;
 }
@@ -86,7 +87,7 @@ export default function InternalLinkingAdmin() {
     setSelectedSuggestions(newSelected);
   };
 
-  const applySuggestions = async (postSlug: string, suggestions: LinkSuggestion[]) => {
+  const applySuggestions = async (postSlug: string, suggestions: LinkSuggestion[], applyToFile: boolean = false) => {
     if (!adminToken || suggestions.length === 0) return;
 
     setApplyingChanges(true);
@@ -100,7 +101,8 @@ export default function InternalLinkingAdmin() {
         },
         body: JSON.stringify({
           post_slug: postSlug,
-          suggestions
+          suggestions,
+          apply_to_file: applyToFile
         })
       });
 
@@ -110,8 +112,16 @@ export default function InternalLinkingAdmin() {
         throw new Error(result.error || 'Failed to apply suggestions');
       }
 
-      // Show results in a modal or alert
-      alert(`Successfully applied ${result.data.changes_count} suggestions to ${postSlug}. Check console for details.`);
+      if (applyToFile) {
+        alert(`✅ Successfully applied ${result.data.changes_count} suggestions to ${postSlug}!\n\nChanges have been written to posts.ts file.\nBackup created: ${result.data.backup_path || 'N/A'}\n\nReload the page to see updated analysis.`);
+        // Reload the data to see the changes
+        setTimeout(() => {
+          loadData();
+        }, 1000);
+      } else {
+        alert(`Simulation complete: ${result.data.changes_count} suggestions would be applied to ${postSlug}. Check console for details.`);
+      }
+
       console.log('Applied changes:', result.data);
 
     } catch (err) {
@@ -247,18 +257,34 @@ export default function InternalLinkingAdmin() {
                         <span>Existing links: {analysis.existingLinks.length}</span>
                       </div>
                     </div>
-                    <button
-                      onClick={() => {
-                        const postSuggestions = analysis.suggestions.filter((_, index) =>
-                          selectedSuggestions.has(`${analysis.sourcePost.slug}-${index}`)
-                        );
-                        applySuggestions(analysis.sourcePost.slug, postSuggestions);
-                      }}
-                      disabled={applyingChanges || !Array.from(selectedSuggestions).some(key => key.startsWith(analysis.sourcePost.slug))}
-                      className="px-4 py-2 bg-success text-white rounded-lg font-medium hover:opacity-90 transition disabled:opacity-50"
-                    >
-                      {applyingChanges ? "Applying..." : "Apply Selected"}
-                    </button>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => {
+                          const postSuggestions = analysis.suggestions.filter((_, index) =>
+                            selectedSuggestions.has(`${analysis.sourcePost.slug}-${index}`)
+                          );
+                          applySuggestions(analysis.sourcePost.slug, postSuggestions, false);
+                        }}
+                        disabled={applyingChanges || !Array.from(selectedSuggestions).some(key => key.startsWith(analysis.sourcePost.slug))}
+                        className="px-3 py-2 bg-accent text-white rounded-lg font-medium hover:opacity-90 transition disabled:opacity-50"
+                      >
+                        {applyingChanges ? "Processing..." : "Preview"}
+                      </button>
+                      <button
+                        onClick={() => {
+                          const postSuggestions = analysis.suggestions.filter((_, index) =>
+                            selectedSuggestions.has(`${analysis.sourcePost.slug}-${index}`)
+                          );
+                          if (confirm(`Are you sure you want to apply ${postSuggestions.length} selected suggestions to "${analysis.sourcePost.title}"?\n\nThis will modify the posts.ts file. A backup will be created automatically.`)) {
+                            applySuggestions(analysis.sourcePost.slug, postSuggestions, true);
+                          }
+                        }}
+                        disabled={applyingChanges || !Array.from(selectedSuggestions).some(key => key.startsWith(analysis.sourcePost.slug))}
+                        className="px-3 py-2 bg-success text-white rounded-lg font-medium hover:opacity-90 transition disabled:opacity-50"
+                      >
+                        {applyingChanges ? "Applying..." : "Apply to File"}
+                      </button>
+                    </div>
                   </div>
                 </div>
 

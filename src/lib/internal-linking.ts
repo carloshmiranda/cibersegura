@@ -238,3 +238,227 @@ export function validateSuggestion(currentContent: string, suggestion: LinkSugge
   return currentContent.includes(suggestion.contextSentence) &&
          !currentContent.includes(`[${suggestion.anchorText}](/blog/${suggestion.targetPost})`);
 }
+
+/**
+ * File system utilities for modifying posts.ts
+ */
+import { writeFileSync, readFileSync, existsSync } from 'fs';
+import { join } from 'path';
+
+const POSTS_FILE_PATH = join(process.cwd(), 'src/lib/posts.ts');
+const BACKUP_DIR = join(process.cwd(), '.backups');
+
+/**
+ * Creates a backup of the posts.ts file with timestamp
+ */
+function createBackup(): string {
+  try {
+    // Ensure backup directory exists
+    if (!existsSync(BACKUP_DIR)) {
+      require('fs').mkdirSync(BACKUP_DIR, { recursive: true });
+    }
+
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const backupPath = join(BACKUP_DIR, `posts-${timestamp}.ts.backup`);
+    const currentContent = readFileSync(POSTS_FILE_PATH, 'utf-8');
+
+    writeFileSync(backupPath, currentContent, 'utf-8');
+    return backupPath;
+  } catch (error) {
+    throw new Error(`Failed to create backup: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+}
+
+/**
+ * Reads and parses the current posts.ts file
+ */
+function readPostsFile(): { content: string; posts: Post[] } {
+  try {
+    const fileContent = readFileSync(POSTS_FILE_PATH, 'utf-8');
+
+    // Extract posts array from the file (this is a simplified approach)
+    // In a real implementation, we might use AST parsing for better reliability
+    const postsMatch = fileContent.match(/export const posts: Post\[\] = (\[[\s\S]*?\]);/);
+
+    if (!postsMatch) {
+      throw new Error('Could not find posts array in posts.ts file');
+    }
+
+    // For now, we'll work with the current in-memory posts array
+    // and update the file content manually
+    return {
+      content: fileContent,
+      posts: posts // Use the imported posts array
+    };
+  } catch (error) {
+    throw new Error(`Failed to read posts file: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+}
+
+/**
+ * Validates that the content doesn't break the file structure
+ */
+function validateContentStructure(content: string): { valid: boolean; issues: string[] } {
+  const issues: string[] = [];
+
+  // Check for unescaped backticks that could break the template literal
+  const unescapedBackticks = content.match(/(?<!\\)`/g);
+  if (unescapedBackticks && unescapedBackticks.length > 0) {
+    issues.push('Content contains unescaped backticks that could break the template literal');
+  }
+
+  // Check for ${...} patterns that could be interpreted as template expressions
+  const templateExpressions = content.match(/\$\{[^}]*\}/g);
+  if (templateExpressions && templateExpressions.length > 0) {
+    issues.push('Content contains ${...} patterns that could be interpreted as template expressions');
+  }
+
+  // Check that the content is reasonable size (not corrupted)
+  if (content.length < 100) {
+    issues.push('Content is suspiciously short, possible data loss');
+  }
+
+  if (content.length > 100000) {
+    issues.push('Content is suspiciously long, possible corruption');
+  }
+
+  return {
+    valid: issues.length === 0,
+    issues
+  };
+}
+
+/**
+ * Validates the posts.ts file syntax after modification
+ */
+function validateFileStructure(fileContent: string): { valid: boolean; issues: string[] } {
+  const issues: string[] = [];
+
+  // Check that essential exports exist
+  if (!fileContent.includes('export interface Post')) {
+    issues.push('Missing Post interface export');
+  }
+
+  if (!fileContent.includes('export const posts: Post[]')) {
+    issues.push('Missing posts array export');
+  }
+
+  if (!fileContent.includes('export const CATEGORIES')) {
+    issues.push('Missing CATEGORIES export');
+  }
+
+  // Check for balanced braces and brackets
+  const openBraces = (fileContent.match(/\{/g) || []).length;
+  const closeBraces = (fileContent.match(/\}/g) || []).length;
+  if (openBraces !== closeBraces) {
+    issues.push(`Unbalanced braces: ${openBraces} open, ${closeBraces} close`);
+  }
+
+  const openBrackets = (fileContent.match(/\[/g) || []).length;
+  const closeBrackets = (fileContent.match(/\]/g) || []).length;
+  if (openBrackets !== closeBrackets) {
+    issues.push(`Unbalanced brackets: ${openBrackets} open, ${closeBrackets} close`);
+  }
+
+  return {
+    valid: issues.length === 0,
+    issues
+  };
+}
+
+/**
+ * Updates a specific post content in the posts.ts file
+ */
+function updatePostContent(postSlug: string, newContent: string): void {
+  try {
+    // Validate the new content first
+    const contentValidation = validateContentStructure(newContent);
+    if (!contentValidation.valid) {
+      throw new Error(`Content validation failed: ${contentValidation.issues.join(', ')}`);
+    }
+
+    const { content: fileContent } = readPostsFile();
+
+    // Escape special regex characters in the new content
+    const escapedNewContent = newContent
+      .replace(/\\/g, '\\\\')
+      .replace(/`/g, '\\`')
+      .replace(/\$/g, '\\$');
+
+    // Find the post object and replace its content
+    // This regex looks for the post with matching slug and captures the content field
+    const postRegex = new RegExp(
+      `(\\{[\\s\\S]*?slug:\\s*["']${postSlug}["'][\\s\\S]*?content:\\s*\`)([\\s\\S]*?)(\`[\\s\\S]*?\\})`,
+      'g'
+    );
+
+    const updatedContent = fileContent.replace(postRegex, (match, beforeContent, oldContent, afterContent) => {
+      return beforeContent + escapedNewContent + afterContent;
+    });
+
+    if (updatedContent === fileContent) {
+      throw new Error(`Post with slug "${postSlug}" not found in posts.ts`);
+    }
+
+    // Validate file structure before writing
+    const fileValidation = validateFileStructure(updatedContent);
+    if (!fileValidation.valid) {
+      throw new Error(`File structure validation failed: ${fileValidation.issues.join(', ')}`);
+    }
+
+    writeFileSync(POSTS_FILE_PATH, updatedContent, 'utf-8');
+  } catch (error) {
+    throw new Error(`Failed to update post content: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+}
+
+/**
+ * Applies link suggestions to a post and updates the posts.ts file
+ */
+export function applyLinkSuggestionsToFile(
+  postSlug: string,
+  suggestions: LinkSuggestion[]
+): { backupPath: string; appliedSuggestions: LinkSuggestion[]; failedSuggestions: Array<{ suggestion: LinkSuggestion; reason: string }> } {
+
+  // Create backup first
+  const backupPath = createBackup();
+
+  try {
+    // Get current post
+    const post = posts.find(p => p.slug === postSlug);
+    if (!post) {
+      throw new Error(`Post with slug "${postSlug}" not found`);
+    }
+
+    let modifiedContent = post.content;
+    const appliedSuggestions: LinkSuggestion[] = [];
+    const failedSuggestions: Array<{ suggestion: LinkSuggestion; reason: string }> = [];
+
+    // Apply each suggestion
+    for (const suggestion of suggestions) {
+      if (validateSuggestion(modifiedContent, suggestion)) {
+        modifiedContent = applyLinkSuggestion(modifiedContent, suggestion);
+        appliedSuggestions.push(suggestion);
+      } else {
+        failedSuggestions.push({
+          suggestion,
+          reason: 'Content changed or link already exists'
+        });
+      }
+    }
+
+    // Only update file if we applied at least one suggestion
+    if (appliedSuggestions.length > 0) {
+      updatePostContent(postSlug, modifiedContent);
+    }
+
+    return {
+      backupPath,
+      appliedSuggestions,
+      failedSuggestions
+    };
+
+  } catch (error) {
+    throw new Error(`Failed to apply suggestions to file: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+}

@@ -4,6 +4,7 @@ import {
   analyzeInternalLinking,
   applyLinkSuggestion,
   validateSuggestion,
+  applyLinkSuggestionsToFile,
   LinkSuggestion
 } from "@/lib/internal-linking";
 import { getPostBySlug } from "@/lib/posts";
@@ -93,8 +94,9 @@ export async function GET(request: NextRequest) {
 }
 
 /**
- * POST /api/admin/internal-linking/apply
- * Applies selected link suggestions (simulation - returns modified content)
+ * POST /api/admin/internal-linking
+ * Applies selected link suggestions - can simulate or actually modify posts.ts
+ * Body: { suggestions: LinkSuggestion[], post_slug: string, apply_to_file?: boolean }
  */
 export async function POST(request: NextRequest) {
   if (!isAuthorized(request)) {
@@ -106,11 +108,11 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { suggestions, post_slug } = body;
+    const { suggestions, post_slug, apply_to_file = false } = body;
 
     if (!suggestions || !Array.isArray(suggestions) || !post_slug) {
       return NextResponse.json(
-        { ok: false, error: 'Invalid request body. Expected: { suggestions: LinkSuggestion[], post_slug: string }' },
+        { ok: false, error: 'Invalid request body. Expected: { suggestions: LinkSuggestion[], post_slug: string, apply_to_file?: boolean }' },
         { status: 400 }
       );
     }
@@ -123,38 +125,71 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    let modifiedContent = post.content;
-    const appliedSuggestions: LinkSuggestion[] = [];
-    const failedSuggestions: Array<{ suggestion: LinkSuggestion; reason: string }> = [];
+    if (apply_to_file) {
+      // Actually modify the posts.ts file
+      try {
+        const result = applyLinkSuggestionsToFile(post_slug, suggestions);
 
-    // Apply each suggestion
-    for (const suggestion of suggestions) {
-      if (validateSuggestion(modifiedContent, suggestion)) {
-        modifiedContent = applyLinkSuggestion(modifiedContent, suggestion);
-        appliedSuggestions.push(suggestion);
-      } else {
-        failedSuggestions.push({
-          suggestion,
-          reason: 'Content changed or link already exists'
+        return NextResponse.json({
+          ok: true,
+          data: {
+            applied_suggestions: result.appliedSuggestions,
+            failed_suggestions: result.failedSuggestions,
+            changes_count: result.appliedSuggestions.length,
+            backup_path: result.backupPath
+          },
+          meta: {
+            post_slug,
+            processed_at: new Date().toISOString(),
+            mode: 'file_modification',
+            note: 'Changes have been applied to posts.ts file. A backup has been created.'
+          }
         });
-      }
-    }
 
-    return NextResponse.json({
-      ok: true,
-      data: {
-        original_content: post.content,
-        modified_content: modifiedContent,
-        applied_suggestions: appliedSuggestions,
-        failed_suggestions: failedSuggestions,
-        changes_count: appliedSuggestions.length
-      },
-      meta: {
-        post_slug,
-        processed_at: new Date().toISOString(),
-        note: 'This is a simulation. To actually modify posts, update the posts.ts file manually.'
+      } catch (fileError) {
+        console.error('File modification error:', fileError);
+        return NextResponse.json(
+          { ok: false, error: `Failed to modify posts.ts: ${fileError instanceof Error ? fileError.message : 'Unknown error'}` },
+          { status: 500 }
+        );
       }
-    });
+
+    } else {
+      // Simulation mode (existing behavior)
+      let modifiedContent = post.content;
+      const appliedSuggestions: LinkSuggestion[] = [];
+      const failedSuggestions: Array<{ suggestion: LinkSuggestion; reason: string }> = [];
+
+      // Apply each suggestion
+      for (const suggestion of suggestions) {
+        if (validateSuggestion(modifiedContent, suggestion)) {
+          modifiedContent = applyLinkSuggestion(modifiedContent, suggestion);
+          appliedSuggestions.push(suggestion);
+        } else {
+          failedSuggestions.push({
+            suggestion,
+            reason: 'Content changed or link already exists'
+          });
+        }
+      }
+
+      return NextResponse.json({
+        ok: true,
+        data: {
+          original_content: post.content,
+          modified_content: modifiedContent,
+          applied_suggestions: appliedSuggestions,
+          failed_suggestions: failedSuggestions,
+          changes_count: appliedSuggestions.length
+        },
+        meta: {
+          post_slug,
+          processed_at: new Date().toISOString(),
+          mode: 'simulation',
+          note: 'This is a simulation. To actually modify posts, set apply_to_file: true.'
+        }
+      });
+    }
 
   } catch (error) {
     console.error('Apply suggestions API error:', error);
