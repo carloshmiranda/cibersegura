@@ -4,6 +4,7 @@ import { getPostBySlug, posts } from "@/lib/posts";
 import { parseMarkdown, renderMarkdown } from "@/lib/markdown";
 import { RelatedPosts } from "@/components/related-posts";
 import { SocialShare } from "@/components/social-share";
+import CountdownTimer from "@/components/countdown-timer";
 import type { Metadata } from "next";
 import Footer from "@/components/footer";
 
@@ -170,6 +171,9 @@ export default async function BlogPostPage({
   };
 
   const faqStructuredData = extractFAQStructuredData();
+
+  // Check if this article should show the NIS2 countdown timer
+  const shouldShowCountdown = post.slug.includes('nis2') || post.category === 'legislacao';
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -362,6 +366,21 @@ export default async function BlogPostPage({
             <span>{post.readingTime} min de leitura</span>
           </div>
         </header>
+
+        {/* NIS2 Countdown Timer for legislacao articles */}
+        {shouldShowCountdown && (
+          <div className="mb-8 p-6 bg-warning-bg border border-warning-border rounded-lg">
+            <div className="text-center mb-4">
+              <h2 className="text-lg font-semibold text-warning-text mb-2">
+                Prazo para Registo NIS2
+              </h2>
+              <p className="text-sm text-warning-text/80">
+                Tempo restante para cumprir as obrigações de registo
+              </p>
+            </div>
+            <CountdownTimer targetDate="2026-05-04T23:59:59" />
+          </div>
+        )}
 
         {/* Social share buttons */}
         <div className="mb-8 pb-8 border-b border-border">
