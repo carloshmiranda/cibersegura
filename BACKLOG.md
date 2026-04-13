@@ -13,7 +13,6 @@
 ## Up Next
 <!-- Items to tackle in the next cycle -->
 
-- 🟡 **P1 — SEO**: Add `updatedAt` field to Post interface and expose `dateModified` in Article schema — Google rewards freshness signals
 - 🟡 **P1 — SEO**: Internal linking pass — new posts (Zero Trust, CNCS/CERT.PT, IA phishing, SPF/DKIM/DMARC, cloud security, incident reporting) should link to each other and to related existing posts; use `/api/admin/internal-linking` endpoint if implemented
 - 🟡 **P1 — Content**: Article on "Segurança de Endpoints para PMEs: EDR vs Antivírus Tradicional" — high-search-volume gap, complements Zero Trust post
 
@@ -34,6 +33,7 @@
 <!-- Completed items with date -->
 
 ### 2026-04-13
+- ✅ **seo-updated-at**: Add `updatedAt` field to Post interface and expose `dateModified` in Article schema — Implemented optional updatedAt field for posts and updated JSON-LD schema to use it for Google freshness signals
 - ✅ **growth**: Article "Zero Trust para PMEs: O Que É e Como Implementar Sem Gastar Uma Fortuna" — `/blog/zero-trust-pme-guia-pratico`
 - ✅ **growth**: Article "CNCS e CERT.PT: O Que São e Como Podem Ajudar a sua PME" — `/blog/cncs-cert-pt-o-que-sao-como-ajudam-pme`
 - ✅ **growth**: Article "IA ao Serviço dos Atacantes: As Novas Ameaças de Phishing e Deepfake para PMEs" — `/blog/ciberataques-ia-phishing-deepfake-pme`
