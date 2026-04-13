@@ -7731,6 +7731,232 @@ A cibersegurança não termina na prevenção. Saber como responder e a quem rep
     publishedAt: "2026-04-13",
     readingTime: 11,
   },
+  {
+    slug: "registo-cncs-nis2-prazo-4-maio-2026",
+    title:
+      "Registo CNCS NIS2 — O Prazo de 4 de Maio 2026 Aproxima-se",
+    excerpt:
+      "Faltam menos de 21 dias para o prazo de autoidentificação junto do CNCS. Saiba quem deve registar-se, o processo passo a passo, as consequências do incumprimento e como agir agora para evitar multas pesadas.",
+    content: `Faltam **menos de 21 dias** para o primeiro prazo crítico do regime NIS2 em Portugal. A **4 de maio de 2026**, termina o período de autoidentificação junto do Centro Nacional de Cibersegurança (CNCS) — o passo obrigatório que antecede o registo completo e sem o qual a sua empresa fica imediatamente em incumprimento.
+
+Se ainda não iniciou este processo, o tempo para agir é agora. Cada dia de atraso aproxima a sua PME de multas diárias, exclusão de concursos públicos e responsabilidade pessoal dos administradores. Este artigo explica exactamente o que precisa de fazer, quem está abrangido, como funciona o processo e o que acontece se não cumprir.
+
+## Contexto: O Que Mudou a 3 de Abril de 2026
+
+O Decreto-Lei 125/2025 transpôs a diretiva europeia NIS2 para a lei portuguesa e [entrou em vigor a 3 de abril de 2026](/blog/nis2-entrou-em-vigor). A partir dessa data, todas as obrigações de cibersegurança passaram de orientações voluntárias a requisitos legais com força sancionatória.
+
+Uma das primeiras obrigações concretas é a **autoidentificação junto do CNCS**: as empresas abrangidas devem notificar formalmente a sua existência e enquadramento no regime NIS2. Este passo é o pré-requisito para o registo completo, que tem o seu próprio prazo de 60 dias (até 2 de junho de 2026). Mas sem a autoidentificação concluída até **4 de maio**, a empresa não pode sequer iniciar o registo formal dentro do prazo legal.
+
+**Em resumo:** 4 de maio é o prazo de notificação. 2 de junho é o prazo de registo. Falhar o primeiro torna impossível cumprir o segundo.
+
+## Quem Deve Registar-se no CNCS
+
+### Entidades Essenciais — Prazo Imediato
+
+As entidades classificadas como essenciais são as primeiras obrigadas a completar a autoidentificação. Os setores de alta criticidade incluem:
+
+**Energia e Utilities**
+- Empresas de eletricidade (produção, transporte, distribuição)
+- Distribuidores de combustíveis e gás natural
+- Petrolíferas e refinarias
+
+**Transportes**
+- Transportes aéreos, ferroviários e aquaviários
+- Gestão de tráfego aéreo
+- Operadores de infraestruturas críticas de transporte
+
+**Setor Financeiro**
+- Bancos e instituições de crédito
+- Infraestruturas de mercados financeiros
+- Gestores de fundos de investimento
+
+**Saúde**
+- Hospitais públicos e privados
+- Clínicas com mais de 50 camas
+- Prestadores de cuidados de saúde essenciais
+
+**Água e Infraestruturas Digitais**
+- Fornecedores e distribuidores de água potável
+- Pontos de intercâmbio de internet (IXPs)
+- Fornecedores de serviços DNS e registries de domínios de topo
+
+### Entidades Importantes — Também Abrangidas
+
+Embora o prazo de registo completo para entidades importantes se estenda até abril de 2027, a autoidentificação de 4 de maio aplica-se igualmente a estas empresas caso operem em setores com dependências críticas. Estes incluem:
+
+- Correio e serviços de entrega (CTT, operadores privados)
+- Gestão de resíduos urbanos e perigosos
+- Indústria química, alimentar e farmacêutica
+- Fabricantes de equipamentos médicos e eletrónicos
+- Serviços de cloud computing, data centers e CDNs
+- Marketplaces e plataformas digitais
+
+### Critérios de Dimensão
+
+A NIS2 abrange automaticamente **empresas médias e grandes**:
+- 50 ou mais trabalhadores, OU
+- Volume de negócios anual superior a €10 milhões, OU
+- Balanço anual superior a €10 milhões
+
+**Atenção PMEs:** Mesmo empresas com menos de 50 trabalhadores podem estar abrangidas se fornecerem serviços críticos a entidades NIS2, forem únicas fornecedoras de serviços essenciais ou tiverem sido notificadas diretamente pelo CNCS. Na dúvida, consulte o [guia completo de registo CNCS NIS2](/blog/registo-cncs-nis2-guia-completo) para avaliar o seu enquadramento.
+
+## O Que o Registo CNCS Exige: Processo Passo a Passo
+
+### Fase 1: Autoidentificação (Até 4 de Maio)
+
+Este é o passo urgente. A autoidentificação consiste em notificar o CNCS de que a sua empresa se enquadra no regime NIS2.
+
+**Passo 1 — Avalie a aplicabilidade (1 dia)**
+
+Antes de tudo, confirme definitivamente se a sua empresa está abrangida:
+1. Consulte os anexos do Decreto-Lei 125/2025
+2. Verifique o CAE principal da empresa contra a lista de setores abrangidos
+3. Aplique os critérios de dimensão (trabalhadores, volume de negócios, balanço)
+4. Se fornecer serviços a entidades NIS2, pode estar abrangido por cadeia de fornecimento
+
+**Passo 2 — Aceda ao portal do CNCS (30 minutos)**
+
+1. Aceda ao portal de registo em portal.cncs.gov.pt
+2. Autentique-se com Chave Móvel Digital ou Cartão de Cidadão (representante legal)
+3. Selecione "Autoidentificação NIS2"
+4. Confirme os dados pré-preenchidos da empresa
+
+**Passo 3 — Preencha o formulário de autoidentificação (1-2 horas)**
+
+O formulário de autoidentificação é mais simples do que o registo completo. Exige:
+- **Dados da empresa:** NIPC, razão social, morada da sede, CAE
+- **Setor de enquadramento:** selecione o setor NIS2 aplicável
+- **Classificação pretendida:** entidade essencial ou importante
+- **Contacto do responsável pela cibersegurança:** nome, telefone e email
+- **Descrição sumária dos serviços** prestados nos setores abrangidos
+
+**Passo 4 — Submeta e guarde o comprovativo (5 minutos)**
+
+Após submissão, o portal gera um comprovativo com número de registo e data. **Guarde este documento** — é a prova de cumprimento do prazo de 4 de maio e será necessário na fase de registo completo.
+
+### Fase 2: Registo Completo (Até 2 de Junho)
+
+Após a autoidentificação, tem até 2 de junho de 2026 para completar o registo com a documentação integral. Este processo está detalhado no nosso [Guia Completo de Registo CNCS NIS2](/blog/registo-cncs-nis2-guia-completo), mas inclui:
+
+- Certificado permanente e certidão de registo comercial
+- Identificação detalhada do responsável pela cibersegurança
+- Diagrama simplificado de rede e descrição dos sistemas críticos
+- Inventário de dados tratados
+- Contactos de emergência 24/7
+- Licenças setoriais e certificações de segurança existentes
+
+## Consequências do Incumprimento do Prazo de 4 de Maio
+
+### Multas por Atraso
+
+O regime sancionatório da NIS2 em Portugal é severo e progressivo:
+
+| Período de Atraso | Multa Diária | Acumulado em 30 Dias |
+|---|---|---|
+| 1 a 30 dias | €5.000/dia | até €150.000 |
+| 31 a 60 dias | €10.000/dia | até €300.000 |
+| Mais de 60 dias | €25.000/dia | + processo de incumprimento |
+
+Para uma PME com volume de negócios de €5 milhões, um atraso de 45 dias pode significar uma multa superior a €200.000 — um valor potencialmente fatal para a empresa.
+
+### Penalizações Adicionais
+
+As multas são apenas o início. O incumprimento do registo NIS2 acarreta também:
+
+**Exclusão de concursos públicos.** Empresas em incumprimento ficam impedidas de participar em concursos de contratação pública — um impacto direto no volume de negócios para muitas PMEs portuguesas que dependem do setor público.
+
+**Suspensão de apoios estatais.** Subsídios, incentivos fiscais e apoios ao investimento podem ser suspensos enquanto durar o incumprimento. Isto inclui programas do PRR e Portugal 2030.
+
+**Responsabilidade pessoal dos administradores.** Em casos de incumprimento grave ou reiterado, os administradores e gerentes podem ser pessoalmente responsabilizados, incluindo responsabilidade criminal. A NIS2 estabelece explicitamente que a cibersegurança é responsabilidade da gestão de topo, não apenas do departamento de TI.
+
+**Fiscalizações prioritárias.** Empresas que não cumpram o prazo de autoidentificação serão sinalizadas para fiscalização prioritária pela autoridade competente (CNCS/ANSSI). Auditorias surpresa, pedidos de documentação e prazos de correção obrigatórios tornam-se muito mais prováveis.
+
+## O Que Fazer Agora: Plano de Ação para os Próximos 21 Dias
+
+### Semana 1 (14-20 de Abril): Avaliação e Preparação
+
+**Dia 1-2: Confirme o enquadramento**
+- Verifique o CAE da empresa contra os setores NIS2
+- Aplique os critérios de dimensão
+- Se fornecer serviços a entidades essenciais, consulte o enquadramento por cadeia de fornecimento
+
+**Dia 3-5: Prepare a documentação base**
+- Identifique o responsável pela cibersegurança na empresa (ou nomeie um)
+- Reúna os dados da empresa necessários (NIPC, morada, contactos)
+- Prepare a descrição sumária dos serviços nos setores abrangidos
+
+**Dia 6-7: Obtenha credenciais de acesso**
+- Assegure que o representante legal tem Chave Móvel Digital ativa
+- Se necessário, ative a CMD em lojas de cidadão ou online (leva 1-3 dias úteis)
+
+### Semana 2 (21-27 de Abril): Submissão
+
+**Dia 8-10: Complete a autoidentificação no portal CNCS**
+- Aceda ao portal e complete o formulário
+- Reveja todos os dados antes de submeter
+- Guarde o comprovativo em local seguro
+
+**Dia 11-14: Inicie o registo completo**
+- Com a autoidentificação feita, comece a reunir a documentação para o registo completo
+- Solicite o certificado permanente atualizado
+- Inicie o levantamento dos sistemas críticos e diagrama de rede
+
+### Semana 3 (28 de Abril - 4 de Maio): Verificação e Contingência
+
+**Dia 15-18: Confirme e corrija**
+- Verifique se o comprovativo de autoidentificação foi recebido
+- Corrija eventuais erros ou dados em falta sinalizados pelo portal
+- Contacte o CNCS se houver dúvidas sobre classificação
+
+**Dia 19-21: Plano de contingência**
+- Se descobriu que precisa de registar-se mas ainda não o fez, faça-o imediatamente
+- Em caso de dificuldades técnicas com o portal, contacte o suporte do CNCS (211 308 200)
+- Documente todas as tentativas de registo como prova de boa-fé
+
+## Erros Comuns a Evitar
+
+### 1. Assumir Que a Sua Empresa Não Está Abrangida
+
+Muitas PMEs assumem que a NIS2 é apenas para grandes empresas. Isto é falso. Se tem 50 ou mais trabalhadores e opera em qualquer dos setores listados, está abrangido. E mesmo empresas mais pequenas podem ser apanhadas pela obrigação de cadeia de fornecimento.
+
+### 2. Confundir Autoidentificação com Registo Completo
+
+São processos distintos com prazos distintos. A autoidentificação (até 4 de maio) é mais simples e rápida. O registo completo (até 2 de junho) exige documentação extensa. Não espere pelo segundo prazo para iniciar o primeiro.
+
+### 3. Esperar Pela Notificação do CNCS
+
+A lei estabelece que a obrigação de autoidentificação é proativa — cabe à empresa identificar-se, não ao CNCS notificá-la. Esperar por uma notificação não constitui desculpa legal para o incumprimento.
+
+### 4. Delegar Sem Verificar
+
+Muitos administradores delegam o processo ao departamento de TI sem acompanhar. A responsabilidade legal é dos administradores. Confirme pessoalmente que a autoidentificação foi submetida e guarde o comprovativo.
+
+## Recursos e Contactos Úteis
+
+| Recurso | Contacto |
+|---------|----------|
+| Portal de Registo CNCS | portal.cncs.gov.pt |
+| Suporte Técnico CNCS | 211 308 200 |
+| CERT.PT (Incidentes) | cert@cncs.gov.pt |
+| Chave Móvel Digital | autenticacao.gov.pt |
+
+## Próximos Passos Após 4 de Maio
+
+Completar a autoidentificação é apenas o primeiro passo. Depois de 4 de maio, as suas prioridades devem ser:
+
+1. **Completar o registo até 2 de junho** — reúna toda a documentação detalhada no [Guia Completo de Registo CNCS NIS2](/blog/registo-cncs-nis2-guia-completo)
+2. **Implementar medidas de cibersegurança** — políticas de segurança, gestão de risco, plano de resposta a incidentes
+3. **Nomear formalmente o responsável pela cibersegurança** — com formação adequada e mandato claro
+4. **Preparar-se para auditorias** — as autoridades podem iniciar fiscalizações logo após o prazo de registo
+
+O prazo de 4 de maio não é negociável. Cada dia que passa sem ação é um dia mais perto de multas, exclusões e responsabilidade pessoal. A boa notícia: o processo de autoidentificação é relativamente simples e pode ser concluído em poucas horas. Não deixe que a inércia transforme uma obrigação administrativa numa crise empresarial.
+
+**Aja hoje.** Consulte o nosso [guia completo de registo](/blog/registo-cncs-nis2-guia-completo) e o artigo sobre [o que mudou com a entrada em vigor da NIS2](/blog/nis2-entrou-em-vigor) para toda a informação de que precisa.`,
+    category: "legislacao",
+    categoryLabel: "Legislacao RGPD",
+    publishedAt: "2026-04-13",
+    readingTime: 12,
+  },
 ];
 
 export function getPostBySlug(slug: string): Post | undefined {
