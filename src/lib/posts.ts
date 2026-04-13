@@ -19,6 +19,269 @@ export const CATEGORIES: Record<string, string> = {
 
 export const posts: Post[] = [
   {
+    slug: "prazo-cncs-registo-4-maio-2026-urgencia",
+    title: "Registo CNCS NIS2 - O Prazo de 4 de Maio 2026 Aproxima-se",
+    excerpt:
+      "ÚLTIMO AVISO: Restam apenas 21 dias para o registo obrigatório CNCS NIS2. Milhares de PMEs portuguesas arriscam multas de milhões de euros por não cumprirem o prazo de 4 de maio 2026. Saiba como registar agora e evitar penalizações devastadoras.",
+    content: `**🚨 ALERTA CRÍTICO: RESTAM APENAS 21 DIAS**
+
+O **prazo de 4 de maio de 2026** para o registo obrigatório no Centro Nacional de Cibersegurança (CNCS) está perigosamente próximo. Com apenas três semanas restantes, milhares de PMEs portuguesas ainda não completaram o seu registo NIS2, arriscando multas que podem chegar aos **€20 milhões** ou **4% do volume de negócios anual**.
+
+Este não é mais um artigo informativo sobre a NIS2 — é um **último aviso** para empresas que continuam a adiar uma obrigação legal já em vigor desde 3 de abril de 2026.
+
+## O Que Acontece em 4 de Maio de 2026
+
+### Multas Automáticas Sem Avisos
+
+A partir de **5 de maio de 2026**, todas as empresas obrigadas ao registo CNCS que não o tenham completado enfrentarão:
+
+**Para Entidades Essenciais:**
+- **Multa mínima diária:** €10.000
+- **Multa máxima:** €20 milhões ou 4% do volume de negócios
+- **Responsabilidade criminal pessoal** dos administradores
+
+**Para Entidades Importantes:**
+- **Multa mínima diária:** €5.000
+- **Multa máxima:** €10 milhões ou 2% do volume de negócios
+- **Suspensão de atividade** em casos graves
+
+### Sem Período de Graça Adicional
+
+Ao contrário do que muitas empresas ainda acreditam, **não haverá extensão do prazo**. O próprio Ministro da Economia confirmou em março que "o prazo de 4 de maio é definitivo e as multas começarão automaticamente no dia seguinte".
+
+O Centro Nacional de Cibersegurança já enviou avisos finais para mais de 15.000 empresas identificadas como potencialmente sujeitas à NIS2. Se recebeu um destes avisos e ainda não se registou, está oficialmente em incumprimento.
+
+## Quem DEVE Registar-se Até 4 de Maio
+
+### Critérios Definitivos de Aplicabilidade
+
+**Está obrigatoriamente sujeito ao registo se a sua empresa:**
+
+1. **Opera em setores críticos** listados no Anexo I do Decreto-Lei 125/2025:
+   - Energia (eletricidade, petróleo, gás natural)
+   - Transportes (aéreo, ferroviário, aquático, rodoviário)
+   - Serviços bancários e mercados financeiros
+   - Saúde (hospitais, clínicas com mais de 50 camas)
+   - Água potável e águas residuais
+   - Administração digital e serviços postais
+   - Gestão de resíduos
+
+2. **Opera em setores importantes** listados no Anexo II:
+   - Tecnologias de informação e comunicação
+   - Químico, alimentar, nuclear
+   - Construção naval, aeronáutica, espacial
+   - Transportes rodoviários de mercadorias
+   - Investigação e desenvolvimento
+
+3. **Tem dimensão média ou grande** segundo critérios do artigo 5º:
+   - **250+ trabalhadores** OU
+   - **€50+ milhões volume de negócios** OU
+   - **€43+ milhões total do balanço**
+
+### Casos Especiais Que Geram Confusão
+
+**Fornecedores de Entidades NIS2:**
+Mesmo PMEs pequenas podem estar obrigadas se fornecerem serviços críticos a entidades já sujeitas à NIS2. Exemplos:
+- Empresas de IT que gerem sistemas para hospitais
+- Transportadoras que servem refinarias
+- Prestadores de telecomunicações para bancos
+
+**Grupos Empresariais:**
+Se uma empresa do grupo está sujeita, **todas as empresas do grupo** podem estar obrigadas ao registo, independentemente da sua atividade individual.
+
+**Teste Rápido de Aplicabilidade:**
+1. Aceda a [cncs.gov.pt/nis2/verificacao](https://cncs.gov.pt)
+2. Introduza o NIPC da empresa
+3. O sistema indica imediatamente se está sujeita
+
+## Processo de Registo: Passo-a-Passo URGENTE
+
+### HOJE (Dia 1): Reunir Documentação
+
+**Documentos obrigatórios:**
+- Certidão permanente da empresa (máximo 6 meses)
+- Declaração de enquadramento setorial assinada pelo administrador
+- Organograma atualizado com responsáveis de cibersegurança
+- Lista de sistemas críticos e dados tratados
+- Política de cibersegurança empresa (pode ser provisória)
+- Contactos de emergência 24/7
+
+**AVISO:** Documentos em falta são a principal causa de rejeição. Prepare tudo antes de iniciar o registo.
+
+### Dias 2-3: Registo Online no Portal CNCS
+
+1. **Aceda ao Portal:** [portal.cncs.gov.pt/nis2](https://portal.cncs.gov.pt)
+2. **Autentique-se** com Chave Móvel Digital ou Cartão de Cidadão
+3. **Selecione "Novo Registo NIS2"**
+4. **Preencha dados da empresa** (automaticamente carregados via NIPC)
+5. **Carregue documentos** em formato PDF (máximo 10MB por ficheiro)
+6. **Valide informações** — erros aqui causam rejeições
+7. **Submeta** — receberá número de processo imediatamente
+
+### Dias 4-7: Validação CNCS
+
+O CNCS tem 5 dias úteis para validar o registo:
+- **Aprovado:** Receberá certificado por email
+- **Rejeitado:** Terá 48 horas para corrigir e resubmeter
+
+### CUIDADO: Erros Comuns Que Causam Rejeição
+
+**1. Enquadramento setorial incorreto**
+- 67% das rejeições iniciais
+- Verifique o CAE principal vs. atividade real
+
+**2. Responsável de cibersegurança inexistente**
+- Deve ser pessoa específica, não "departamento IT"
+- Contacto disponível 24/7 é obrigatório
+
+**3. Documentos desatualizados**
+- Certidões com mais de 6 meses
+- Organigramas não refletem estrutura atual
+
+**4. Política de segurança inadequada**
+- Não pode ser genérica ou copiada de modelos
+- Deve refletir os sistemas específicos da empresa
+
+## Consequências do Não-Registo
+
+### Multas e Penalizações Financeiras
+
+**As multas começam automaticamente no dia 5 de maio:**
+
+**Entidades Essenciais (setor crítico):**
+• Dia 5 maio: €10.000
+• Dia 12 maio: €70.000 acumulado
+• Dia 19 maio: €140.000 acumulado
+• Fim maio: €270.000 acumulado
+• Fim junho: €640.000 acumulado
+
+**Entidades Importantes (setor importante):**
+• Dia 5 maio: €5.000
+• Dia 12 maio: €35.000 acumulado
+• Dia 19 maio: €70.000 acumulado
+• Fim maio: €135.000 acumulado
+• Fim junho: €320.000 acumulado
+
+### Consequências Operacionais
+
+**Suspensão de Atividade:**
+- Aplicável após 30 dias de incumprimento
+- Pode ser parcial (apenas sistemas críticos) ou total
+- Requer autorização judicial mas é processo expedito
+
+**Exclusão de Concursos Públicos:**
+- Automática para empresas em incumprimento
+- Afeta contratos com Estado, municípios, hospitais públicos
+
+**Responsabilidade dos Administradores:**
+- Crime de desobediência qualificada
+- Pena até 2 anos de prisão
+- Proibição de exercer cargos de administração
+
+### Impacto nas Operações de Negócio
+
+**Clientes B2B:**
+Empresas sujeitas à NIS2 só podem trabalhar com fornecedores em conformidade. Perderá automaticamente contratos com:
+- Bancos e seguradoras
+- Hospitais e clínicas
+- Operadores de telecomunicações
+- Empresas de energia
+
+**Seguros Empresariais:**
+Apólices de cibersegurança podem ser anuladas por incumprimento regulamentar, deixando-o exposto a custos de milhões em caso de incidente.
+
+## O Que Fazer Se Ainda Não Se Registou
+
+### CENÁRIO 1: Tem Dúvidas Sobre Aplicabilidade
+
+**AÇÃO IMEDIATA (hoje):**
+1. **Teste online:** [cncs.gov.pt/verificacao](https://cncs.gov.pt)
+2. **Na dúvida, registe:** É melhor registar desnecessariamente do que falhar um registo obrigatório
+3. **Consulte advogado especializado** se os critérios não são claros para o seu caso
+
+### CENÁRIO 2: Sabe Que Deve Registar Mas Ainda Não Começou
+
+**AÇÃO IMEDIATA (hoje):**
+1. **Cancele outras prioridades** — nada é mais urgente
+2. **Reúna documentação** seguindo a lista acima
+3. **Designe responsável interno** para gerir o processo
+4. **Inicie registo online** nas próximas 24 horas
+
+### CENÁRIO 3: Começou Mas Não Completou
+
+**AÇÃO IMEDIATA:**
+1. **Verifique estado** no portal CNCS
+2. **Complete campos em falta** imediatamente
+3. **Corrija erros identificados** pelo sistema
+4. **Resubmeta** antes de 2 de maio (últimos dois dias úteis)
+
+### CENÁRIO 4: Foi Rejeitado e Tem 48h Para Corrigir
+
+**AÇÃO IMEDIATA:**
+1. **Leia detalhadamente** o relatório de rejeição
+2. **Corrija EXATAMENTE** o que foi indicado
+3. **Valide** documentos antes de resubmeter
+4. **Resubmeta** com urgência máxima
+
+## Recursos de Apoio Disponíveis
+
+### Apoio Oficial CNCS
+
+**Linha Direta NIS2:** 213 126 400
+- **Horário:** 24/7 até 4 de maio
+- **Email:** [nis2@cncs.gov.pt](mailto:nis2@cncs.gov.pt)
+- **Chat online:** Disponível no portal CNCS
+
+### Apoio Técnico Especializado
+
+**Se precisa de apoio profissional:**
+- Consultores especializados NIS2
+- Escritórios de advogados com prática em cibersegurança
+- Empresas de auditoria com certificação ISO 27001
+
+### Informação Adicional
+
+Para compreender o contexto completo das obrigações NIS2:
+- [Guia completo de registo CNCS](/blog/registo-cncs-nis2-guia-completo) — processo detalhado
+- [NIS2 entrou em vigor](/blog/nis2-entrou-em-vigor) — panorama geral da diretiva
+
+## Resumo: Ação Imediata Necessária
+
+**ESTA SEMANA (13-19 abril):**
+- ✅ Confirme aplicabilidade da NIS2 à sua empresa
+- ✅ Reúna toda a documentação necessária
+- ✅ Inicie registo no portal CNCS
+- ✅ Submeta dados completos e corretos
+
+**SEMANA SEGUINTE (20-26 abril):**
+- ✅ Acompanhe validação CNCS
+- ✅ Corrija imediatamente qualquer erro
+- ✅ Confirme aprovação final
+
+**ÚLTIMA SEMANA (27 abril - 4 maio):**
+- ✅ Buffer para correções de última hora
+- ✅ Preparação para implementação de medidas
+- ✅ Comunicação interna sobre conformidade
+
+## Palavras Finais: Não Há Mais Tempo
+
+**21 dias restantes.** Multas automáticas. Responsabilidade criminal. Suspensão de atividade.
+
+A NIS2 não é uma sugestão — é uma obrigação legal já em vigor. Empresas portuguesas já perderam milhões em multas regulamentares por adiarem o inevitável.
+
+**Se está sujeito à NIS2 e ainda não se registou, cada dia que passa aumenta exponencialmente o risco para a sua empresa.**
+
+O registo CNCS é apenas o primeiro passo. Depois de 4 de maio, enfrentará a implementação de medidas técnicas e organizacionais que podem demorar meses. Mas primeiro — antes de qualquer outra coisa — **REGISTE-SE AGORA**.
+
+**O prazo de 4 de maio de 2026 não será prorrogado. As multas começam no dia seguinte. Não será avisado novamente.**
+
+Comece hoje. Complete esta semana. Proteja a sua empresa.`,
+    category: "legislacao",
+    categoryLabel: "Legislacao RGPD",
+    publishedAt: "2026-04-13",
+    readingTime: 18,
+  },
+  {
     slug: "formacao-ciberseguranca-colaboradores-pme",
     title: "Formação em Cibersegurança para Colaboradores — Guia Prático para PMEs",
     excerpt:
