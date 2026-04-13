@@ -7024,6 +7024,713 @@ A regra que elimina a maioria dos casos de BEC é simples: **qualquer pedido de 
     publishedAt: "2026-04-13",
     readingTime: 14,
   },
+  {
+    slug: "spf-dkim-dmarc-seguranca-email-pme",
+    title: "SPF, DKIM e DMARC: Como Proteger o Email da sua PME contra Spoofing e Phishing",
+    excerpt:
+      "Três configurações DNS gratuitas que impedem criminosos de enviar emails em nome do domínio da sua empresa. Guia passo-a-passo para implementar SPF, DKIM e DMARC em PMEs portuguesas.",
+    content: `O email é o vetor de ataque número um contra empresas. Mas existe um conjunto de proteções técnicas gratuitas — SPF, DKIM e DMARC — que a maioria das PMEs portuguesas não ativou, deixando o seu domínio vulnerável a ser usado por criminosos para enviar emails fraudulentos em nome da empresa.
+
+Este guia explica o que são, porque são críticos, e como os configurar, mesmo sem departamento de IT.
+
+## O Problema: Qualquer Um Pode Enviar Email "da sua Empresa"
+
+Por omissão, o protocolo de email (SMTP) não verifica se quem envia é realmente quem diz ser. Um criminoso pode enviar um email com o remetente **pagamentos@suaempresa.pt** sem ter acesso ao seu servidor — basta configurar um servidor de email e definir esse endereço como remetente.
+
+Este tipo de ataque chama-se **email spoofing** e está na base de:
+- Fraude CEO/BEC (Business Email Compromise)
+- Phishing direcionado a clientes e fornecedores
+- Ataques a parceiros que confiam nos emails da sua empresa
+
+O impacto é duplo: a sua empresa é usada como vetor de ataque, e a reputação do domínio degrada-se rapidamente quando os emails falsificados são marcados como spam.
+
+## As Três Camadas de Defesa
+
+### SPF — Sender Policy Framework
+
+**O que faz:** Define quais servidores estão autorizados a enviar email em nome do seu domínio.
+
+**Como funciona:** Publica um registo DNS que lista os endereços IP e servidores legítimos. Quando um servidor de email recebe uma mensagem do seu domínio, verifica se o IP de origem está na lista. Se não estiver, o email pode ser marcado como suspeito.
+
+**Exemplo de registo SPF:**
+\`\`\`
+v=spf1 include:_spf.google.com include:sendgrid.net -all
+\`\`\`
+
+Esta linha diz: "Apenas os servidores do Google e do Sendgrid podem enviar email por este domínio. Rejeitem tudo o resto (-all)."
+
+**Limitações do SPF:**
+- Não protege o campo "From" visível ao utilizador — apenas o "envelope sender" técnico
+- Falha com emails reencaminhados (forwarding)
+- Não garante que o conteúdo não foi alterado
+
+### DKIM — DomainKeys Identified Mail
+
+**O que faz:** Assina criptograficamente os emails enviados, provando que vieram do seu servidor e que o conteúdo não foi alterado.
+
+**Como funciona:** O servidor de email assina cada mensagem com uma chave privada. O destinatário verifica a assinatura usando a chave pública publicada nos seus registos DNS. Se a assinatura não bater certo, algo foi adulterado ou o email não veio do servidor legítimo.
+
+**Benefícios do DKIM:**
+- Funciona mesmo com email reencaminhado
+- Protege a integridade do conteúdo do email
+- Contribui positivamente para a reputação do domínio
+
+**Exemplo de registo DKIM:**
+\`\`\`
+google._domainkey.suaempresa.pt TXT "v=DKIM1; k=rsa; p=MIGfMA0GCSqGS..."
+\`\`\`
+
+A chave pública longa é gerada automaticamente pelo seu serviço de email (Google Workspace, Microsoft 365, etc.).
+
+### DMARC — Domain-based Message Authentication, Reporting and Conformance
+
+**O que faz:** Liga o SPF e o DKIM, define o que fazer com emails que falham a verificação, e envia relatórios de uso do domínio.
+
+**É o mais importante dos três** porque:
+1. Instrui os servidores destinatários sobre o que fazer com emails não autenticados (deixar passar, colocar em spam, ou rejeitar)
+2. Fornece visibilidade de quem está a usar o seu domínio (incluindo criminosos)
+3. Protege o campo "From" visível — o único que os utilizadores veem
+
+**Políticas DMARC:**
+- **none** — Monitorização apenas, sem ação sobre emails suspeitos (bom para começar)
+- **quarantine** — Coloca emails suspeitos na pasta de spam
+- **reject** — Rejeita completamente emails que falham a verificação (máxima proteção)
+
+**Exemplo de registo DMARC:**
+\`\`\`
+_dmarc.suaempresa.pt TXT "v=DMARC1; p=quarantine; rua=mailto:dmarc-reports@suaempresa.pt; pct=100"
+\`\`\`
+
+## Como Implementar: Guia Passo-a-Passo
+
+### Pré-requisitos
+
+Antes de começar, precisa de:
+- Acesso ao painel de gestão DNS do seu domínio (registado em SAPO Dominios, GoDaddy, Namecheap, ou similar)
+- Saber qual serviço de email usa (Google Workspace, Microsoft 365, Zoho, etc.)
+- Cerca de 30-60 minutos
+
+### Passo 1: Configurar o SPF
+
+**Para Google Workspace:**
+No painel DNS, adicione um registo TXT na raiz do domínio (@):
+\`\`\`
+v=spf1 include:_spf.google.com ~all
+\`\`\`
+
+**Para Microsoft 365:**
+\`\`\`
+v=spf1 include:spf.protection.outlook.com ~all
+\`\`\`
+
+**Para Zoho Mail:**
+\`\`\`
+v=spf1 include:zoho.com ~all
+\`\`\`
+
+**Se usa múltiplos serviços** (ex: Google Workspace + Mailchimp para newsletters):
+\`\`\`
+v=spf1 include:_spf.google.com include:servers.mcsv.net ~all
+\`\`\`
+
+Nota: Use **~all** (softfail) em vez de **-all** (hardfail) enquanto está a configurar, para não bloquear emails legítimos por engano. Mude para -all depois de validar que tudo funciona.
+
+**Verificação:** Use a ferramenta MXToolbox SPF Lookup para confirmar que o registo está correto.
+
+### Passo 2: Configurar o DKIM
+
+O DKIM é gerado pelo seu serviço de email, não por si. O processo é:
+
+**Google Workspace:**
+1. Aceda a admin.google.com → Apps → Google Workspace → Gmail
+2. Clique em "Autenticar email"
+3. Selecione o domínio e clique "Gerar nova chave"
+4. Copie o valor TXT mostrado e adicione-o no DNS do domínio
+5. Aguarde até 48h para propagação e depois clique "Iniciar autenticação"
+
+**Microsoft 365:**
+1. Aceda ao Microsoft Defender portal (security.microsoft.com)
+2. Email e colaboração → Políticas e regras → Políticas de ameaças → DKIM
+3. Selecione o domínio e ative o DKIM
+4. O sistema gera os registos DNS — adicione-os no seu painel de DNS
+
+**Verificação:** Use MXToolbox DKIM Lookup com o seletor correto (geralmente "google" para Google Workspace ou "selector1"/"selector2" para Microsoft 365).
+
+### Passo 3: Configurar o DMARC (comece com monitorização)
+
+Adicione um registo TXT em **_dmarc.suaempresa.pt**:
+
+**Fase 1 — Apenas monitorização (primeira semana):**
+\`\`\`
+v=DMARC1; p=none; rua=mailto:dmarc@suaempresa.pt; ruf=mailto:dmarc@suaempresa.pt; fo=1
+\`\`\`
+
+**Fase 2 — Quarentena (após analisar relatórios):**
+\`\`\`
+v=DMARC1; p=quarantine; pct=25; rua=mailto:dmarc@suaempresa.pt
+\`\`\`
+O parâmetro **pct=25** aplica a política apenas a 25% dos emails suspeitos — útil para testar gradualmente.
+
+**Fase 3 — Rejeição total (quando tudo estiver verificado):**
+\`\`\`
+v=DMARC1; p=reject; rua=mailto:dmarc@suaempresa.pt
+\`\`\`
+
+### Passo 4: Interpretar os relatórios DMARC
+
+Os relatórios chegam em formato XML para o email configurado em **rua=**. São difíceis de ler diretamente, mas existem serviços gratuitos que os interpretam:
+
+- **Postmark DMARC** (dmarc.postmarkapp.com) — gratuito para domínios pequenos
+- **Google Postmaster Tools** — para monitorizar reputação com Gmail
+- **DMARC Analyzer** — versão gratuita disponível
+
+Os relatórios mostram:
+- Que servidores enviaram email em nome do seu domínio
+- Que percentagem passou SPF, DKIM, e DMARC
+- Fontes suspeitas ou não autorizadas
+
+## Erros Comuns a Evitar
+
+### Múltiplos registos SPF
+Só pode existir **um único registo SPF** por domínio. Se já tem um e precisa de adicionar um serviço, edite o existente em vez de criar um novo.
+
+Errado:
+\`\`\`
+v=spf1 include:_spf.google.com ~all
+v=spf1 include:mailchimp.com ~all
+\`\`\`
+
+Correto:
+\`\`\`
+v=spf1 include:_spf.google.com include:servers.mcsv.net ~all
+\`\`\`
+
+### Muitos lookups DNS no SPF
+O SPF permite no máximo 10 lookups DNS. Cada "include:" conta como pelo menos um. Se exceder, o SPF falha. Use ferramentas de validação para verificar a contagem.
+
+### Avançar para p=reject demasiado depressa
+Sem analisar os relatórios DMARC primeiro, pode rejeitar emails legítimos que não sabia estarem a usar o seu domínio (ex: serviços de email marketing, CRMs, plataformas de faturação). Passe sempre por **p=none** e depois **p=quarantine** antes de **p=reject**.
+
+### Esquecer subdomínios
+Por omissão, o DMARC aplica-se ao domínio raiz mas não aos subdomínios. Se usa **newsletter.suaempresa.pt** ou **pagamentos.suaempresa.pt**, adicione o parâmetro **sp=reject** para proteger também os subdomínios:
+\`\`\`
+v=DMARC1; p=reject; sp=reject; rua=mailto:dmarc@suaempresa.pt
+\`\`\`
+
+## Impacto na Entregabilidade de Email
+
+Uma preocupação legítima das PMEs é que estas configurações afetem a entrega dos seus próprios emails. A realidade é o oposto:
+
+- SPF, DKIM e DMARC corretamente configurados **melhoram** a entregabilidade
+- Gmail, Outlook, e outros grandes serviços dão prioridade a emails autenticados
+- A partir de fevereiro de 2024, Google e Yahoo exigem DMARC para quem envia mais de 5.000 emails/dia
+- Domínios sem DMARC têm maior probabilidade de cair em spam
+
+## O Estado Atual em Portugal
+
+Segundo dados agregados de relatórios DMARC, **mais de 70% dos domínios .pt não têm DMARC configurado**. Isto significa:
+- Qualquer pessoa pode fazer spoofing do seu email
+- Os seus clientes, fornecedores e parceiros podem receber emails fraudulentos "da sua empresa"
+- A sua reputação pode ser prejudicada sem que sequer saiba
+
+A boa notícia: implementar estas três proteções é gratuito e leva menos de uma hora. É provavelmente a melhor relação custo-benefício em toda a cibersegurança para PMEs.
+
+## Checklist de Implementação
+
+\`\`\`
+□ Identificar qual serviço de email usa (Google Workspace, M365, outro)
+□ Adicionar registo SPF correto no DNS do domínio
+□ Ativar e publicar chave DKIM no painel do serviço de email
+□ Adicionar registo DMARC com p=none e email de relatórios
+□ Aguardar 48h e verificar com MXToolbox
+□ Analisar primeiro relatório DMARC (após 1-2 dias)
+□ Confirmar que todos os serviços legítimos estão no SPF
+□ Avançar para p=quarantine
+□ Após 2 semanas sem problemas, avançar para p=reject
+□ Configurar alertas para relatórios DMARC mensais
+\`\`\`
+
+## Próximos Passos
+
+Com SPF, DKIM e DMARC configurados, a sua empresa está protegida contra o spoofing do domínio. Mas a segurança de email não fica por aqui. Complementar estas configurações com:
+
+- **Filtro antispam e antivírus** na gateway de email
+- **Formação anti-phishing** para colaboradores — porque um email que passa DMARC pode ainda ser phishing de outro domínio
+- **MFA** em todas as contas de email para prevenir comprometimento de credenciais
+- **Políticas de email seguro** documentadas para a equipa
+
+Para uma visão completa da proteção contra fraude por email, consulte também o nosso artigo sobre [Fraude CEO e BEC em PMEs Portuguesas](/blog/fraude-ceo-bec-pme-portugal) e o guia de [Formação em Cibersegurança para Colaboradores](/blog/formacao-ciberseguranca-colaboradores-pme).`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-13",
+    readingTime: 13,
+  },
+  {
+    slug: "seguranca-cloud-pme-guia-pratico",
+    title: "Segurança na Cloud para PMEs: Guia Prático para Microsoft 365, Google Workspace e AWS",
+    excerpt:
+      "A cloud trouxe flexibilidade mas também novos riscos. Guia prático de configurações de segurança essenciais para PMEs portuguesas que usam Microsoft 365, Google Workspace ou serviços AWS.",
+    content: `A maioria das PMEs portuguesas já usa cloud — seja Microsoft 365 para email e Office, Google Workspace, ou serviços AWS/Azure para alojamento. Mas migrar para a cloud sem ajustar as configurações de segurança equivale a mudar de casa e deixar a porta da frente aberta.
+
+Este guia cobre as configurações de segurança mais críticas e frequentemente ignoradas nos serviços cloud mais usados por PMEs em Portugal.
+
+## O Modelo de Responsabilidade Partilhada
+
+O erro mais comum das PMEs na cloud é assumir que o fornecedor (Microsoft, Google, Amazon) trata de tudo. Não é assim.
+
+**O fornecedor é responsável por:**
+- Segurança física dos datacenters
+- Infraestrutura de rede subjacente
+- Disponibilidade e redundância da plataforma
+
+**A sua empresa é responsável por:**
+- Gestão de identidades e acessos (quem acede ao quê)
+- Configuração de segurança dos serviços contratados
+- Dados que coloca na cloud
+- Dispositivos que acedem à cloud
+- Deteção e resposta a incidentes na sua conta
+
+Uma violação de dados que resulta de uma configuração incorreta da sua parte não é responsabilidade da Microsoft nem do Google. E acontece frequentemente — a maioria das violações em cloud resulta de má configuração, não de falhas do fornecedor.
+
+## Microsoft 365: Configurações Essenciais de Segurança
+
+O Microsoft 365 inclui dezenas de controlos de segurança. Estes são os mais críticos para PMEs:
+
+### 1. Ativar MFA para Todos os Utilizadores
+
+Este é o passo mais importante. Sem MFA, uma password comprometida dá acesso total ao email, OneDrive, Teams e todos os serviços Microsoft da empresa.
+
+**Como ativar:**
+- Centro de administração M365 → Utilizadores → Utilizadores ativos → Autenticação multifator
+- Ative para TODOS os utilizadores, incluindo administradores
+- Use a app Microsoft Authenticator em vez de SMS (SMS é menos seguro)
+
+**Contas de administrador:** Devem ter MFA obrigatório e, idealmente, ser contas separadas das contas de trabalho do dia-a-dia.
+
+### 2. Configurar Políticas de Acesso Condicional
+
+O Acesso Condicional define regras para quando e como os utilizadores podem aceder. Exemplos práticos:
+
+- **Bloquear acesso de países de alto risco:** Se a sua empresa é portuguesa e ninguém trabalha da Rússia ou China, bloqueie o acesso a partir desses países.
+- **Exigir dispositivo gerido:** Só permite acesso de computadores e telemóveis geridos pela empresa.
+- **Bloquear protocolos legados:** Desative IMAP, POP3 e SMTP básico — são protocolos antigos que não suportam MFA e são frequentemente explorados.
+
+**Onde configurar:** Centro de administração Microsoft Entra (antigo Azure AD) → Segurança → Acesso Condicional.
+
+### 3. Ativar Microsoft Defender para Office 365
+
+Mesmo no plano básico M365, existe proteção anti-phishing e antimalware que não está ativada por omissão.
+
+**No Microsoft Defender (security.microsoft.com):**
+- **Anexos seguros:** Analisa anexos em sandbox antes da entrega
+- **Links seguros:** Verifica links em tempo real quando clicados
+- **Anti-phishing:** Proteção contra impersonation e spoofing
+
+Para PMEs sem equipa IT, as políticas predefinidas ("Standard Protection") são um bom ponto de partida.
+
+### 4. Auditar Permissões de Aplicações de Terceiros
+
+Muitos utilizadores instalam apps que pedem acesso ao email ou OneDrive ("Ligar com Microsoft"). Algumas destas apps têm acesso total e permanente, mesmo que o utilizador já não as use.
+
+**Auditoria:**
+- Microsoft Entra → Aplicações → Aplicações empresariais → Todas as aplicações
+- Reveja que aplicações têm acesso e com que permissões
+- Remova acesso de apps não reconhecidas ou desnecessárias
+
+### 5. Configurar Retenção e Recuperação de Dados
+
+O M365 não é um sistema de backup. Se um utilizador apagar emails ou ficheiros — acidentalmente ou deliberadamente — o período de recuperação é limitado.
+
+**Configure:**
+- **Política de retenção:** Em Conformidade M365, defina quanto tempo os emails são retidos (recomendado: mínimo 90 dias)
+- **Caixas de correio inativas:** Quando um colaborador sai, preserve o conteúdo da caixa de correio
+- **Lixo eliminado:** O período de recuperação padrão é 30 dias — pode ser alargado para 93 dias
+
+### 6. Monitorizar com o Secure Score
+
+O Microsoft Secure Score (security.microsoft.com → Secure Score) é uma métrica de 0-100 que avalia a postura de segurança da sua conta M365 e sugere melhorias ordenadas por impacto.
+
+Pontuação de referência para PMEs:
+- **Abaixo de 40:** Configuração de alto risco, ação imediata necessária
+- **40-60:** Básico implementado, melhorias possíveis
+- **Acima de 60:** Boa postura para uma PME
+
+## Google Workspace: Configurações Críticas
+
+### 1. MFA e Chaves de Segurança
+
+Tal como no M365, o MFA é prioritário.
+
+**Console de administração Google (admin.google.com):**
+- Segurança → Autenticação de 2 passos → Aplicar a todos os utilizadores
+- Defina um período de carência (2-4 semanas) para que os utilizadores configurem antes do prazo
+- Considere chaves de segurança físicas (YubiKey) para contas de administrador
+
+### 2. Gerir Apps de Terceiros
+
+No Google Workspace, utilizadores podem ligar apps de terceiros às suas contas Google. Controle o que é permitido:
+
+- Console de administração → Segurança → Controlos de acesso a API
+- Defina se os utilizadores podem instalar apps não verificadas pelo Google
+- Para máxima segurança: só permita apps aprovadas pela administração
+
+### 3. Proteção Contra Phishing e Malware no Gmail
+
+- Console de administração → Apps → Google Workspace → Gmail → Segurança
+- Ative: "Phishing e software malicioso", "Encriptação de e-mail", "Autenticação avançada de remetente"
+- Configure SPF, DKIM e DMARC para o domínio (ver artigo específico sobre [SPF, DKIM e DMARC](/blog/spf-dkim-dmarc-seguranca-email-pme))
+
+### 4. Partilha de Ficheiros no Google Drive
+
+Um erro frequente: ficheiros do Google Drive partilhados publicamente ("Qualquer pessoa com o link").
+
+**Políticas recomendadas:**
+- Console de administração → Apps → Google Drive → Configurações de partilha
+- Restrinja a partilha externa ao domínio
+- Desative "Qualquer pessoa com o link" para utilizadores regulares
+- Ative alertas quando ficheiros são partilhados externamente
+
+### 5. Registos de Auditoria
+
+O Google Workspace regista todas as ações dos utilizadores. Ative alertas para eventos críticos:
+
+- Console de administração → Relatórios → Alertas
+- Configure alertas para: login suspeito, acesso de novo dispositivo, alteração de password de administrador, exportação massiva de dados
+
+## AWS/Azure: Fundamentos para PMEs
+
+Se a sua empresa usa serviços AWS ou Azure (alojamento web, bases de dados, APIs), as seguintes práticas são essenciais.
+
+### IAM: Gestão de Identidades e Acessos
+
+O princípio de menor privilégio é crítico na cloud: cada pessoa e serviço deve ter apenas as permissões mínimas necessárias.
+
+**Erros comuns a evitar:**
+- Usar a conta de administrador raiz para operações do dia-a-dia (crie utilizadores IAM específicos)
+- Dar permissões "AdministratorAccess" a todos os utilizadores
+- Credenciais de acesso (access keys) em código-fonte ou emails
+- Credenciais que nunca expiram
+
+**Boas práticas:**
+\`\`\`
+□ Ative MFA na conta raiz e em todas as contas de administrador
+□ Crie utilizadores IAM individuais (nunca partilhe credenciais)
+□ Use grupos IAM com políticas de permissão em vez de permissões individuais
+□ Revise permissões trimestralmente — remova o que não é usado
+□ Nunca coloque access keys em código (use variáveis de ambiente ou serviços de segredos)
+□ Ative a rotação automática de credenciais
+\`\`\`
+
+### Monitorização e Alertas
+
+**AWS:**
+- Ative AWS CloudTrail — regista todas as chamadas à API (grátis para registo básico)
+- Configure alertas CloudWatch para eventos críticos: login de root, alteração de políticas IAM, criação de utilizadores
+- Ative AWS Config para monitorizar configurações de segurança
+
+**Azure:**
+- Ative Azure Monitor e Log Analytics
+- Use Microsoft Defender for Cloud (antes Security Center) — tem uma camada gratuita
+- Configure alertas para login impossível (dois países em pouco tempo) e outras anomalias
+
+### Segurança de Buckets S3 / Blob Storage
+
+Dados expostos publicamente em buckets cloud (AWS S3, Azure Blob Storage) são uma das causas mais frequentes de violações de dados.
+
+**Verifique imediatamente:**
+- Nenhum bucket deve ser público a menos que seja explicitamente necessário (ex: ficheiros estáticos de um website)
+- Ative o "Block Public Access" ao nível da conta AWS, não apenas bucket a bucket
+- No Azure, verifique o nível de acesso de cada container no Storage Explorer
+
+## Segurança de Identidade: O Denominador Comum
+
+Independentemente do serviço cloud, as contas de utilizador são o alvo principal dos atacantes. Para além do MFA:
+
+### Gestão de Acessos Quando Colaboradores Saem
+
+Um risco frequentemente ignorado: ex-colaboradores que mantêm acesso ativo.
+
+**Checklist de offboarding:**
+\`\`\`
+□ Desativar conta imediatamente (não espere "até terminar a transição")
+□ Revogar tokens de acesso e sessões ativas
+□ Transferir propriedade de ficheiros e emails para o gestor
+□ Alterar passwords de contas partilhadas
+□ Revogar acesso a aplicações de terceiros ligadas com a conta da empresa
+□ Verificar regras de reencaminhamento de email (podem ter configurado reencaminhamento para conta pessoal)
+\`\`\`
+
+### Single Sign-On (SSO)
+
+Para PMEs com 10+ utilizadores, um sistema de SSO centraliza o controlo de acessos:
+- Um único ponto para gerir quem tem acesso ao quê
+- Revogar acesso de forma imediata e completa quando alguém sai
+- Relatórios de acesso centralizados
+
+O Microsoft Entra ID (incluído no M365) e o Google Workspace funcionam como SSO para muitas aplicações populares.
+
+## Backup na Cloud: Um Equívoco Comum
+
+A cloud não é um backup. Os principais serviços cloud têm SLAs de disponibilidade elevados, mas não garantem recuperação de dados apagados por erro humano, ransomware, ou utilizadores mal-intencionados.
+
+**Estratégia de backup recomendada para PMEs cloud:**
+- Use um serviço de backup dedicado para M365/Google Workspace (ex: Veeam Backup for M365, Backupify)
+- Mantenha pelo menos uma cópia de backup fora da cloud principal (regra 3-2-1)
+- Teste a recuperação regularmente — um backup não testado não é um backup
+
+Para detalhes sobre estratégias de backup, consulte o nosso guia sobre [Backup de Dados para PMEs: Regra 3-2-1](/blog/backup-dados-pme-regra-3-2-1).
+
+## Avaliação Rápida: O Que Implementar Primeiro
+
+Se tiver de priorizar, esta é a ordem recomendada pelo impacto na redução de risco:
+
+| Prioridade | Ação | Tempo Estimado |
+|-----------|------|----------------|
+| 1 | MFA para todos os utilizadores | 2-4 horas |
+| 2 | Desativar protocolos de email legados | 30 minutos |
+| 3 | Rever permissões de contas saídas | 1 hora |
+| 4 | Configurar alertas de login suspeito | 1 hora |
+| 5 | Auditar apps de terceiros com acesso | 1-2 horas |
+| 6 | Configurar backup dedicado | 2-4 horas |
+| 7 | Rever partilha pública de ficheiros | 1-2 horas |
+| 8 | Implementar SPF/DKIM/DMARC | 1-2 horas |
+
+O MFA sozinho previne **99% dos ataques baseados em credenciais comprometidas**. Se só fizer uma coisa desta lista, que seja essa.
+
+## Recursos Adicionais
+
+Para uma proteção completa, leia também:
+- [Autenticação de Dois Fatores: Guia Prático para PMEs](/blog/autenticacao-dois-fatores-2fa-pme)
+- [Segurança no Microsoft 365: 10 Configurações que Deve Ativar Hoje](/blog/seguranca-microsoft-365-pme)
+- [Gestão de Passwords para PMEs](/blog/gestao-passwords-pme-guia-completo)`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-13",
+    readingTime: 14,
+  },
+  {
+    slug: "como-reportar-ciberataque-portugal-pme",
+    title: "Como Reportar um Ciberataque em Portugal: Guia Prático para PMEs",
+    excerpt:
+      "Sofreu um ataque informático? Saiba a quem reportar, em que prazo, e como documentar o incidente. Guia completo sobre CNCS, Polícia Judiciária, RGPD e seguradoras para PMEs portuguesas.",
+    content: `Sofreu um ataque informático. O ransomware bloqueou os ficheiros, alguém entrou no email da empresa, ou transferiram dinheiro com base num email falso. Agora o quê?
+
+A maioria das PMEs portuguesas não sabe a quem reportar, em que prazo, ou o que dizer. Este guia desmistifica o processo e explica o que fazer nas primeiras 72 horas.
+
+## Porquê Reportar? Não é Apenas Obrigação Legal
+
+Muitas empresas optam por não reportar incidentes por receio de exposição ou por considerar que não vai adiantar. É um erro por várias razões:
+
+**Razões práticas:**
+- As autoridades têm ferramentas forenses que podem ajudar na recuperação
+- O reporte ajuda outras empresas a evitar o mesmo ataque
+- Pode ser necessário para acionar o seguro cibernético
+- Demonstra boa-fé em caso de investigação regulatória
+
+**Razões legais:**
+- O RGPD exige notificação à CNPD em 72 horas se houve acesso a dados pessoais
+- A NIS2 exige notificação ao CNCS para entidades abrangidas
+- Não reportar pode agravar penalizações regulatórias
+
+## As Quatro Entidades a Contactar
+
+### 1. CNCS — Centro Nacional de Cibersegurança
+
+**Quando reportar ao CNCS:**
+- Sempre que houver um incidente de cibersegurança significativo
+- Obrigatório para entidades abrangidas pela NIS2
+- Recomendado para qualquer empresa, mesmo sem obrigação legal
+
+**Como reportar:**
+- Portal: cert.pt (Plataforma de Reporte de Incidentes)
+- Email: cert@cncs.gov.pt
+- Telefone: +351 211 308 200 (em horário laboral)
+- Para incidentes críticos 24/7: consulte cert.pt para contactos de emergência
+
+**O que fornecer:**
+- Descrição do que aconteceu e quando foi detetado
+- Sistemas e dados afetados
+- Impacto estimado nas operações
+- Medidas já tomadas
+
+O CNCS pode fornecer orientação técnica, análise de malware, e coordenação com outros organismos. Para PMEs sem equipa de IT, este apoio pode ser valioso.
+
+### 2. Polícia Judiciária — Unidade Nacional de Combate ao Cibercrime
+
+**Quando reportar à PJ:**
+- Sempre que houver um crime informático (acesso não autorizado, fraude, extorsão)
+- Obrigatório para acionar seguros que cubram crime informático
+- Quando há prejuízo financeiro
+
+**Como reportar:**
+- Online: queixas.ministeriopublico.pt (queixa eletrónica)
+- Presencialmente: qualquer posto da PJ ou Ministério Público
+- Linha de denúncia: 213 128 200
+- Para crimes em curso ou urgentes: 112
+
+**O crime de acesso ilegítimo** (artigo 6.º da Lei do Cibercrime, Lei n.º 109/2009) está sujeito a queixa — o prazo para apresentar queixa é de 6 meses após tomar conhecimento do facto e do autor. Não espere.
+
+**Documentação necessária para a PJ:**
+- Capturas de ecrã de mensagens, alertas, ecrãs de ransomware
+- Logs de sistema se disponíveis
+- Registos bancários se houve fraude financeira
+- Emails ou comunicações dos atacantes
+- Identificação de possíveis suspeitos ou pontos de entrada
+
+### 3. CNPD — Comissão Nacional de Proteção de Dados
+
+**Quando reportar à CNPD:**
+- Sempre que o incidente envolveu acesso, perda, alteração ou destruição de dados pessoais
+- Prazo: **72 horas após tomar conhecimento do incidente**
+- Obrigação decorre do RGPD (artigo 33.º)
+
+Este prazo é muitas vezes subestimado pelas empresas. A contagem começa quando a empresa fica a saber do incidente, não quando o incidente ocorreu.
+
+**Como reportar:**
+- Portal: www.cnpd.pt → Notificação de violação de dados pessoais
+- O formulário online é o método preferencial
+
+**O que avaliar primeiro:**
+- Que dados pessoais estiveram expostos? (nomes, emails, dados de saúde, dados financeiros, etc.)
+- Quantas pessoas afetadas?
+- É provável que haja risco para os direitos e liberdades dos titulares?
+
+**Notificação aos titulares dos dados:**
+Se o incidente representar um risco elevado para os direitos das pessoas (ex: dados de saúde, dados bancários, dados que podem levar a discriminação), a empresa deve também notificar diretamente os afetados "sem demora injustificada".
+
+**Exceções ao reporte:**
+- Se os dados estavam encriptados e a chave não foi comprometida, a notificação à CNPD pode não ser necessária
+- Se a probabilidade de risco para os titulares é baixa, pode bastar um registo interno
+
+### 4. Seguradora — Se Tiver Seguro Cibernético
+
+**Se tiver seguro cibernético:**
+- Notifique a seguradora nas primeiras horas — muitas apólices têm prazos de 24-72 horas
+- Não tome ações de remediação significativas sem consultar a seguradora — pode invalidar a cobertura
+- A seguradora pode ter equipas de resposta a incidentes disponíveis
+
+**O que verificar na apólice:**
+- Prazo de notificação exigido
+- Processo de autorização antes de contratar serviços externos de resposta a incidentes
+- Cobertura para perda de dados, paragem de negócio, extorsão (ransomware), e fraude
+
+Para mais detalhes sobre seguros cibernéticos, consulte o nosso artigo sobre [Seguro Cibernético para PMEs](/blog/seguro-cibernetico-pme-portugal).
+
+## O Que Fazer nas Primeiras Horas: Sequência de Ações
+
+### Minutos 0-30: Contenção Imediata
+
+\`\`\`
+□ Isolar sistemas afetados da rede (desligar cabo de rede, desativar Wi-Fi)
+   ⚠ Não desligue os sistemas — preserve a memória RAM para análise forense
+□ Preservar evidências (fotografar ecrãs, não apagar emails suspeitos)
+□ Alertar os responsáveis internos
+□ Ativar comunicação alternativa se o email estiver comprometido
+□ Documentar tudo com hora e data
+\`\`\`
+
+### Horas 1-4: Avaliação e Primeiros Reportes
+
+\`\`\`
+□ Determinar o que foi afetado (sistemas, dados, operações)
+□ Identificar o tipo de incidente (ransomware, phishing bem-sucedido, BEC, etc.)
+□ Contactar seguradora (se aplicável)
+□ Contactar CNCS/CERT.PT para orientação técnica
+□ Avaliar se há dados pessoais comprometidos (obrigação RGPD)
+\`\`\`
+
+### Primeiras 24 Horas: Reporte Formal
+
+\`\`\`
+□ Apresentar queixa na PJ (se houver crime)
+□ Notificar a CNPD (se dados pessoais afetados — prazo 72h, não espere)
+□ Comunicar a clientes/parceiros afetados se necessário
+□ Iniciar processo de recuperação com backup
+□ Contratar apoio externo de cibersegurança se necessário
+\`\`\`
+
+## O Que NÃO Fazer
+
+**Não pague o resgate de ransomware** sem consultar as autoridades e a seguradora. O pagamento:
+- Não garante recuperação dos dados (muitas vítimas não recuperam mesmo pagando)
+- Financia grupos criminosos
+- Pode ser ilegal se o grupo estiver em sanções internacionais
+- Torna a sua empresa um alvo futuro (sinaliza que paga)
+
+**Não apague os sistemas afetados** antes de ter análise forense. Mesmo que queira reinstalar tudo do zero, preserve pelo menos uma imagem dos discos — pode ser necessária para a investigação.
+
+**Não comunique publicamente antes de ter a situação controlada** e ter notificado as autoridades relevantes. A comunicação prematura pode complicar a investigação.
+
+**Não negligencie o reporte ao CNCS por achar que não vai adiantar.** Para além da orientação técnica, os dados de incidentes em Portugal ajudam a CNCS a identificar campanhas em curso e alertar outras empresas.
+
+## Template: Email de Reporte Inicial ao CERT.PT
+
+\`\`\`
+Para: cert@cncs.gov.pt
+Assunto: Notificação de Incidente de Cibersegurança — [Nome da Empresa]
+
+Boa tarde,
+
+Venho por este meio notificar um incidente de cibersegurança que afetou a nossa empresa.
+
+**Dados da empresa:**
+- Nome: [Nome da empresa]
+- NIF: [NIF]
+- Setor de atividade: [Setor]
+- Contacto responsável: [Nome, telefone, email]
+
+**Descrição do incidente:**
+- Data/hora de deteção: [dd/mm/aaaa hh:mm]
+- Tipo de incidente: [Ransomware / Phishing / Acesso não autorizado / BEC / Outro]
+- Sistemas afetados: [Descrição dos sistemas]
+- Dados possivelmente comprometidos: [Sim/Não — descrição]
+
+**Impacto:**
+- Operações afetadas: [Descrição]
+- Número estimado de utilizadores/clientes afetados: [Número]
+
+**Medidas já tomadas:**
+[Descrição das ações de contenção já realizadas]
+
+**Apoio necessário:**
+[Análise de malware / Orientação de resposta / Outro]
+
+Agradeço a orientação disponível.
+[Assinatura]
+\`\`\`
+
+## Após a Recuperação: Análise Pós-Incidente
+
+Depois de restaurar as operações, é fundamental perceber como o ataque aconteceu para evitar repetição:
+
+**Perguntas a responder:**
+- Qual foi o vetor de entrada? (email de phishing, credencial comprometida, vulnerabilidade de software?)
+- Quanto tempo o atacante esteve nos sistemas antes de ser detetado?
+- Que dados foram acedidos ou exfiltrados?
+- As medidas de segurança existentes falharam, ou simplesmente não existiam?
+
+**Melhorias a implementar:**
+- Corrija a vulnerabilidade explorada antes de restaurar sistemas
+- Implemente monitorização adicional para detetar atividade semelhante no futuro
+- Atualize o plano de resposta a incidentes com as lições aprendidas
+
+Para uma estrutura completa de resposta a incidentes, consulte o nosso [Plano de Resposta a Incidentes de Cibersegurança para PMEs](/blog/plano-resposta-incidentes-ciberseguranca-pme).
+
+## Recursos de Contacto Rápido
+
+| Entidade | Contacto | Prazo |
+|----------|----------|-------|
+| CERT.PT (CNCS) | cert@cncs.gov.pt / 211 308 200 | Imediato |
+| Polícia Judiciária | 213 128 200 / queixas.ministeriopublico.pt | O mais breve possível |
+| CNPD | cnpd.pt (formulário online) | 72 horas (se dados pessoais afetados) |
+| Linha de Emergência | 112 | Se houver risco imediato |
+
+A cibersegurança não termina na prevenção. Saber como responder e a quem reportar é parte essencial da resiliência de qualquer PME portuguesa.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-13",
+    readingTime: 11,
+  },
 ];
 
 export function getPostBySlug(slug: string): Post | undefined {
