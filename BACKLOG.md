@@ -13,11 +13,8 @@
 ## Up Next
 <!-- Items to tackle in the next cycle -->
 
-- 🟡 **P1 — SEO**: Add breadcrumb JSON-LD schema to blog post pages (`/blog/[slug]/page.tsx`) — missing structured data that improves SERP display
-- 🟡 **P1 — SEO**: Add `updatedAt` field to Post interface and expose `dateModified` in Article schema — Google rewards freshness signals
-- 🟡 **P1 — Content**: Write comparison/landing page `/blog/cncs-vs-cert-pt` explaining the two entities — high-intent informational keyword for Portuguese SMEs
-- 🟡 **P1 — Content**: Article on "Zero Trust para PMEs" — trending topic, no post yet, good long-tail keyword
-- 🟡 **P1 — SEO**: Internal linking pass — new posts (SPF/DKIM/DMARC, cloud security, incident reporting) should link to each other and to related existing posts; use `/api/admin/internal-linking` endpoint if implemented
+- 🟡 **P1 — SEO**: Internal linking pass — new posts (Zero Trust, CNCS/CERT.PT, IA phishing, SPF/DKIM/DMARC, cloud security, incident reporting) should link to each other and to related existing posts; use `/api/admin/internal-linking` endpoint if implemented
+- 🟡 **P1 — Content**: Article on "Segurança de Endpoints para PMEs: EDR vs Antivírus Tradicional" — high-search-volume gap, complements Zero Trust post
 
 ---
 
@@ -34,6 +31,12 @@
 
 ## Done
 <!-- Completed items with date -->
+
+### 2026-04-13
+- ✅ **seo-updated-at**: Add `updatedAt` field to Post interface and expose `dateModified` in Article schema — Implemented optional updatedAt field for posts and updated JSON-LD schema to use it for Google freshness signals
+- ✅ **growth**: Article "Zero Trust para PMEs: O Que É e Como Implementar Sem Gastar Uma Fortuna" — `/blog/zero-trust-pme-guia-pratico`
+- ✅ **growth**: Article "CNCS e CERT.PT: O Que São e Como Podem Ajudar a sua PME" — `/blog/cncs-cert-pt-o-que-sao-como-ajudam-pme`
+- ✅ **growth**: Article "IA ao Serviço dos Atacantes: As Novas Ameaças de Phishing e Deepfake para PMEs" — `/blog/ciberataques-ia-phishing-deepfake-pme`
 
 ### 2026-03-28
 - ✅ **eng-1**: Fix allowed_bots configuration for workflow dispatch - verified working configuration in hive-build.yml and hive-fix.yml (both have `allowed_bots: '*'`)
