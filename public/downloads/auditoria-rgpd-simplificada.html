@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auditoria RGPD Simplificada para PMEs</title>
+    <style>
+        @media print {
+            body { margin: 0; }
+            .no-print { display: none; }
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.4;
+            color: #1f2937;
+            max-width: 210mm;
+            margin: 0 auto;
+            padding: 20mm;
+            background: white;
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #0369a1;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #0f172a;
+            margin: 0 0 10px 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .header p {
+            color: #6b7280;
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .intro {
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .intro h2 {
+            color: #0f172a;
+            margin: 0 0 10px 0;
+            font-size: 18px;
+        }
+
+        .intro p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #374151;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            break-inside: avoid;
+        }
+
+        .section h3 {
+            background: #0369a1;
+            color: white;
+            padding: 12px 15px;
+            margin: 0 0 15px 0;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .checklist {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .checklist li {
+            padding: 8px 0;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .checklist li:last-child {
+            border-bottom: none;
+        }
+
+        .checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #0369a1;
+            border-radius: 3px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .priority {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+
+        .priority.obrigatoria {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .priority.importante {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .priority.recomendada {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e5e7eb;
+            text-align: center;
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .instructions {
+            background: #fefce8;
+            border: 1px solid #facc15;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 30px;
+        }
+
+        .instructions h4 {
+            margin: 0 0 8px 0;
+            color: #854d0e;
+            font-size: 14px;
+        }
+
+        .instructions p {
+            margin: 0;
+            font-size: 12px;
+            color: #a16207;
+        }
+
+        .legal-notice {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 30px;
+        }
+
+        .legal-notice h4 {
+            margin: 0 0 8px 0;
+            color: #991b1b;
+            font-size: 14px;
+        }
+
+        .legal-notice p {
+            margin: 0;
+            font-size: 12px;
+            color: #7f1d1d;
+        }
+
+        @page {
+            margin: 15mm;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Auditoria RGPD Simplificada para PMEs</h1>
+        <p><strong>Avaliação de conformidade com o Regulamento Geral sobre a Proteção de Dados</strong></p>
+        <p>Desenvolvido por CiberPME | ciberpme.vercel.app</p>
+        <p style="margin-top: 15px;">Data: ________________ | Empresa: ________________________________</p>
+    </div>
+
+    <div class="intro">
+        <h2>Como usar esta auditoria</h2>
+        <p><strong>Objetivo:</strong> Verificar a conformidade da sua empresa com o RGPD e identificar gaps que precisam de correção.</p>
+        <p><strong>Tempo estimado:</strong> 4-6 horas | <strong>Dificuldade:</strong> Intermédia</p>
+        <p><strong>Resultado:</strong> Plano de ação para conformidade RGPD com prioridades claras.</p>
+    </div>
+
+    <div class="legal-notice">
+        <h4>⚖️ Aviso Legal</h4>
+        <p>Esta auditoria é uma ferramenta informativa. Não substitui aconselhamento jurídico especializado. Recomendamos consultar um advogado especializado em proteção de dados para questões complexas.</p>
+    </div>
+
+    <div class="instructions">
+        <h4>📋 Instruções</h4>
+        <p>Marque cada item como ✓ (conforme), ✗ (não conforme) ou N/A (não aplicável). Priorize ações corretivas: OBRIGATÓRIA → IMPORTANTE → RECOMENDADA.</p>
+    </div>
+
+    <div class="section">
+        <h3>📊 1. Inventário e Mapeamento de Dados</h3>
+        <ul class="checklist">
+            <li>
+                <div class="checkbox"></div>
+                <span>Inventário completo de todos os dados pessoais tratados pela empresa <span class="priority obrigatoria">OBRIGATÓRIA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Identificação de todas as categorias de titulares (clientes, funcionários, fornecedores) <span class="priority obrigatoria">OBRIGATÓRIA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Mapeamento dos fluxos de dados (origem, tratamento, destino) <span class="priority importante">IMPORTANTE</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Identificação de dados sensíveis (saúde, origem racial, convicções, etc.) <span class="priority obrigatoria">OBRIGATÓRIA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Localização física e lógica onde os dados são armazenados <span class="priority importante">IMPORTANTE</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Periodicidade de atualização do inventário de dados <span class="priority recomendada">RECOMENDADA</span></span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h3>⚖️ 2. Base Legal para Tratamento</h3>
+        <ul class="checklist">
+            <li>
+                <div class="checkbox"></div>
+                <span>Base legal claramente identificada para cada tipo de tratamento <span class="priority obrigatoria">OBRIGATÓRIA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Consentimentos documentados quando essa é a base legal utilizada <span class="priority obrigatoria">OBRIGATÓRIA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Mecanismo para retirar consentimento facilmente implementado <span class="priority obrigatoria">OBRIGATÓRIA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Contratos atualizados com cláusulas de proteção de dados <span class="priority importante">IMPORTANTE</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Avaliação de interesses legítimos quando aplicável <span class="priority importante">IMPORTANTE</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Processo para verificar a validade dos consentimentos existentes <span class="priority recomendada">RECOMENDADA</span></span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h3>🛡️ 3. Direitos dos Titulares</h3>
+        <ul class="checklist">
+            <li>
+                <div class="checkbox"></div>
+                <span>Processo definido para responder a pedidos de acesso aos dados <span class="priority obrigatoria">OBRIGATÓRIA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Procedimento para retificação de dados pessoais implementado <span class="priority obrigatoria">OBRIGATÓRIA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Capacidade técnica para apagar dados ("direito ao esquecimento") <span class="priority obrigatoria">OBRIGATÓRIA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Mecanismo para limitar o tratamento de dados quando solicitado <span class="priority importante">IMPORTANTE</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Funcionalidade de portabilidade de dados implementada <span class="priority importante">IMPORTANTE</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Procedimento para oposição ao tratamento de dados <span class="priority importante">IMPORTANTE</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Tempo de resposta conforme (1 mês, prorrogável por mais 2) <span class="priority obrigatoria">OBRIGATÓRIA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Formulário ou canal específico para exercício de direitos <span class="priority recomendada">RECOMENDADA</span></span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h3>🔒 4. Medidas Técnicas e Organizativas</h3>
+        <ul class="checklist">
+            <li>
+                <div class="checkbox"></div>
+                <span>Encriptação implementada para dados sensíveis <span class="priority obrigatoria">OBRIGATÓRIA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Controlo de acessos baseado em necessidade de conhecer <span class="priority obrigatoria">OBRIGATÓRIA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Autenticação multifator para sistemas com dados pessoais <span class="priority importante">IMPORTANTE</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Backup regular e seguro de dados pessoais <span class="priority importante">IMPORTANTE</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Política de retenção de dados definida e implementada <span class="priority obrigatoria">OBRIGATÓRIA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Procedimentos de eliminação segura de dados <span class="priority importante">IMPORTANTE</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Logs de acesso e alterações em dados pessoais <span class="priority recomendada">RECOMENDADA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Testes regulares das medidas de segurança implementadas <span class="priority recomendada">RECOMENDADA</span></span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h3>🌍 5. Transferências Internacionais</h3>
+        <ul class="checklist">
+            <li>
+                <div class="checkbox"></div>
+                <span>Mapeamento de todas as transferências de dados para países terceiros <span class="priority obrigatoria">OBRIGATÓRIA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Verificação de decisões de adequação para países de destino <span class="priority obrigatoria">OBRIGATÓRIA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Cláusulas contratuais tipo (CCT) implementadas quando necessário <span class="priority obrigatoria">OBRIGATÓRIA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Avaliação de impacto para transferências de alto risco <span class="priority importante">IMPORTANTE</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Certificações ou códigos de conduta verificados <span class="priority recomendada">RECOMENDADA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Revisão regular das garantias para transferências internacionais <span class="priority recomendada">RECOMENDADA</span></span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h3>📋 6. Avaliação de Impacto (AIPD)</h3>
+        <ul class="checklist">
+            <li>
+                <div class="checkbox"></div>
+                <span>Critérios definidos para quando fazer uma AIPD <span class="priority importante">IMPORTANTE</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>AIPD realizada para tratamentos de alto risco <span class="priority obrigatoria">OBRIGATÓRIA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Consulta prévia à CNPD quando aplicável <span class="priority obrigatoria">OBRIGATÓRIA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Documentação das medidas mitigadoras implementadas <span class="priority importante">IMPORTANTE</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Revisão periódica das AIPD existentes <span class="priority recomendada">RECOMENDADA</span></span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h3>📝 7. Registos e Documentação</h3>
+        <ul class="checklist">
+            <li>
+                <div class="checkbox"></div>
+                <span>Registo das atividades de tratamento mantido e atualizado <span class="priority obrigatoria">OBRIGATÓRIA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Políticas de proteção de dados documentadas <span class="priority importante">IMPORTANTE</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Procedimentos de violação de dados documentados <span class="priority obrigatoria">OBRIGATÓRIA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Contratos com subcontratantes incluem cláusulas RGPD <span class="priority obrigatoria">OBRIGATÓRIA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Registo de formações em proteção de dados <span class="priority recomendada">RECOMENDADA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Documentação das bases legais e avaliações realizadas <span class="priority importante">IMPORTANTE</span></span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h3>🚨 8. Violações de Dados</h3>
+        <ul class="checklist">
+            <li>
+                <div class="checkbox"></div>
+                <span>Procedimento de resposta a violações de dados implementado <span class="priority obrigatoria">OBRIGATÓRIA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Capacidade de notificar a CNPD em 72 horas <span class="priority obrigatoria">OBRIGATÓRIA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Processo para notificar titulares afetados quando necessário <span class="priority obrigatoria">OBRIGATÓRIA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Registo de todas as violações de dados (independentemente da notificação) <span class="priority importante">IMPORTANTE</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Contactos de emergência e responsabilidades definidas <span class="priority importante">IMPORTANTE</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Simulações regulares de cenários de violação <span class="priority recomendada">RECOMENDADA</span></span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h3>👨‍💼 9. Governance e Responsabilização</h3>
+        <ul class="checklist">
+            <li>
+                <div class="checkbox"></div>
+                <span>Responsável designado pela proteção de dados (quando obrigatório DPO) <span class="priority obrigatoria">OBRIGATÓRIA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Formação regular em proteção de dados para colaboradores <span class="priority importante">IMPORTANTE</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Revisão anual das políticas de proteção de dados <span class="priority importante">IMPORTANTE</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Auditoria interna periódica de conformidade RGPD <span class="priority recomendada">RECOMENDADA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Canal para reportar preocupações sobre proteção de dados <span class="priority recomendada">RECOMENDADA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Demonstração de conformidade preparada para auditorias <span class="priority importante">IMPORTANTE</span></span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h3>🌐 10. Transparência e Informação</h3>
+        <ul class="checklist">
+            <li>
+                <div class="checkbox"></div>
+                <span>Política de privacidade clara e acessível publicada <span class="priority obrigatoria">OBRIGATÓRIA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Informação sobre tratamentos fornecida no momento da recolha <span class="priority obrigatoria">OBRIGATÓRIA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Contactos do responsável pelo tratamento facilmente encontráveis <span class="priority obrigatoria">OBRIGATÓRIA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Informação sobre direitos dos titulares disponível <span class="priority obrigatoria">OBRIGATÓRIA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Avisos sobre cookies e tecnologias similares <span class="priority importante">IMPORTANTE</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Linguagem simples e compreensível utilizada nas comunicações <span class="priority recomendada">RECOMENDADA</span></span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="footer">
+        <p><strong>Próximos Passos:</strong> Priorize ações corretivas (OBRIGATÓRIA → IMPORTANTE → RECOMENDADA)</p>
+        <p><strong>Prazo de Conformidade:</strong> Itens obrigatórios devem ser corrigidos imediatamente</p>
+        <p><strong>Recomendação:</strong> Revise esta auditoria a cada 12 meses ou após mudanças significativas no tratamento de dados</p>
+        <br>
+        <p>© 2026 CiberPME | Recurso gratuito para PMEs portuguesas</p>
+        <p>Para mais recursos visite: <strong>ciberpme.vercel.app</strong></p>
+        <p><strong>Contactos úteis:</strong> CNPD - cnpd.pt | Linha de apoio: 213 928 400</p>
+    </div>
+
+    <div class="no-print" style="position: fixed; top: 20px; right: 20px; background: #0369a1; color: white; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-size: 14px;" onclick="window.print()">
+        🖨️ Imprimir PDF
+    </div>
+</body>
+</html>

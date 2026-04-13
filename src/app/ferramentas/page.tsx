@@ -97,6 +97,7 @@ const categories: ToolCategory[] = [
         typeLabel: "Avaliação",
         estimatedTime: "4-6 horas",
         difficulty: "Intermédio",
+        downloadUrl: "/api/download/rgpd-audit",
         sections: [
           "Inventário de dados pessoais",
           "Base legal para tratamento",
