@@ -161,6 +161,7 @@ const categories: ToolCategory[] = [
         typeLabel: "Template",
         estimatedTime: "3-4 horas",
         difficulty: "Intermédio",
+        downloadUrl: "/api/download/politica-seguranca",
         sections: [
           "Objetivos e âmbito da política",
           "Responsabilidades dos colaboradores",

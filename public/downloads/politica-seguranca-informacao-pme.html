@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Política de Segurança da Informação - Template para PMEs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+        }
+        h1 {
+            color: #0f172a;
+            border-bottom: 3px solid #0369a1;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #0f172a;
+            margin-top: 30px;
+            border-left: 4px solid #0369a1;
+            padding-left: 15px;
+        }
+        h3 {
+            color: #0369a1;
+            margin-top: 20px;
+        }
+        .placeholder {
+            background-color: #e0f2fe;
+            padding: 3px 6px;
+            border-radius: 3px;
+            font-weight: bold;
+            color: #0369a1;
+        }
+        .warning {
+            background-color: #fefce8;
+            border: 1px solid #d97706;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .section {
+            margin: 25px 0;
+        }
+        ol, ul {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #e5e7eb;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f1f5f9;
+            font-weight: bold;
+        }
+        .footer {
+            margin-top: 50px;
+            border-top: 2px solid #e5e7eb;
+            padding-top: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+    <h1>Política de Segurança da Informação</h1>
+
+    <div class="warning">
+        <strong>⚠️ Como usar este template:</strong><br>
+        Este documento contém campos destacados que deve preencher com informações específicas da sua empresa.
+        Procure por texto como <span class="placeholder">[NOME DA EMPRESA]</span> e substitua pela informação correta.
+        Este template cumpre os requisitos básicos do RGPD e legislação portuguesa aplicável.
+    </div>
+
+    <div class="section">
+        <h2>1. Informações da Empresa</h2>
+        <p><strong>Nome da Empresa:</strong> <span class="placeholder">[NOME DA EMPRESA]</span></p>
+        <p><strong>Morada:</strong> <span class="placeholder">[MORADA COMPLETA]</span></p>
+        <p><strong>NIPC:</strong> <span class="placeholder">[NÚMERO DE IDENTIFICAÇÃO]</span></p>
+        <p><strong>Responsável pela Segurança:</strong> <span class="placeholder">[NOME E CARGO]</span></p>
+        <p><strong>Data de Aprovação:</strong> <span class="placeholder">[DD/MM/AAAA]</span></p>
+        <p><strong>Versão:</strong> 1.0</p>
+    </div>
+
+    <div class="section">
+        <h2>2. Objetivos e Âmbito</h2>
+
+        <h3>2.1 Objetivos</h3>
+        <p>Esta Política de Segurança da Informação tem como objetivos:</p>
+        <ul>
+            <li>Proteger a confidencialidade, integridade e disponibilidade da informação da <span class="placeholder">[NOME DA EMPRESA]</span></li>
+            <li>Garantir o cumprimento das obrigações legais, incluindo o RGPD</li>
+            <li>Estabelecer responsabilidades claras para todos os colaboradores</li>
+            <li>Minimizar os riscos de incidentes de segurança</li>
+            <li>Assegurar a continuidade do negócio</li>
+        </ul>
+
+        <h3>2.2 Âmbito</h3>
+        <p>Esta política aplica-se a:</p>
+        <ul>
+            <li>Todos os colaboradores, incluindo temporários e prestadores de serviços</li>
+            <li>Todos os sistemas de informação da empresa</li>
+            <li>Todas as instalações onde se processa informação</li>
+            <li>Todos os dados, independentemente do suporte (papel ou digital)</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>3. Classificação da Informação</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Classificação</th>
+                    <th>Descrição</th>
+                    <th>Exemplos</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Pública</strong></td>
+                    <td>Informação que pode ser divulgada sem restrições</td>
+                    <td>Website, brochuras comerciais</td>
+                </tr>
+                <tr>
+                    <td><strong>Interna</strong></td>
+                    <td>Informação de uso interno da empresa</td>
+                    <td>Procedimentos internos, organigramas</td>
+                </tr>
+                <tr>
+                    <td><strong>Confidencial</strong></td>
+                    <td>Informação sensível que pode causar danos se divulgada</td>
+                    <td>Dados de clientes, estratégias comerciais</td>
+                </tr>
+                <tr>
+                    <td><strong>Restrita</strong></td>
+                    <td>Informação crítica com acesso muito limitado</td>
+                    <td>Dados financeiros críticos, informação legal sensível</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>4. Controlos de Acesso</h2>
+
+        <h3>4.1 Princípios Gerais</h3>
+        <ul>
+            <li><strong>Menor privilégio:</strong> Utilizadores têm apenas os acessos necessários para as suas funções</li>
+            <li><strong>Segregação de funções:</strong> Funções críticas são divididas entre diferentes pessoas</li>
+            <li><strong>Revisão periódica:</strong> Acessos são revistos <span class="placeholder">[FREQUÊNCIA, ex: semestralmente]</span></li>
+        </ul>
+
+        <h3>4.2 Gestão de Utilizadores</h3>
+        <ul>
+            <li>Criação de contas apenas com autorização do <span class="placeholder">[CARGO RESPONSÁVEL]</span></li>
+            <li>Desativação imediata de contas de colaboradores que saem da empresa</li>
+            <li>Contas de utilizador únicas e pessoais (proibidas contas partilhadas)</li>
+        </ul>
+
+        <h3>4.3 Autenticação</h3>
+        <ul>
+            <li>Passwords devem ter pelo menos 12 caracteres</li>
+            <li>Obrigatória autenticação de dois fatores (2FA) para:</li>
+            <ul>
+                <li>Email empresarial</li>
+                <li>Sistemas financeiros</li>
+                <li>Acesso remoto à rede</li>
+                <li><span class="placeholder">[OUTROS SISTEMAS CRÍTICOS]</span></li>
+            </ul>
+            <li>Utilização obrigatória de gestor de passwords empresarial</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>5. Segurança dos Sistemas</h2>
+
+        <h3>5.1 Proteção contra Malware</h3>
+        <ul>
+            <li>Antivírus atualizado obrigatório em todos os dispositivos</li>
+            <li>Atualizações automáticas de definições de vírus</li>
+            <li>Análises completas <span class="placeholder">[FREQUÊNCIA, ex: semanais]</span></li>
+        </ul>
+
+        <h3>5.2 Atualizações de Segurança</h3>
+        <ul>
+            <li>Sistema operativo com atualizações automáticas ativadas</li>
+            <li>Software deve ser atualizado dentro de <span class="placeholder">[PRAZO, ex: 30 dias]</span> após lançamento</li>
+            <li>Atualizações críticas aplicadas dentro de <span class="placeholder">[PRAZO, ex: 72 horas]</span></li>
+        </ul>
+
+        <h3>5.3 Backup e Recuperação</h3>
+        <ul>
+            <li>Backup diário de dados críticos</li>
+            <li>Cópia offsite em localização segura</li>
+            <li>Testes de recuperação <span class="placeholder">[FREQUÊNCIA, ex: trimestrais]</span></li>
+            <li>Retenção de <span class="placeholder">[PERÍODO, ex: 12 meses]</span></li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>6. Segurança da Rede</h2>
+
+        <h3>6.1 Proteção Perimetral</h3>
+        <ul>
+            <li>Firewall configurado para bloquear tráfego não autorizado</li>
+            <li>Rede Wi-Fi protegida com WPA3 ou superior</li>
+            <li>Rede separada para visitantes</li>
+            <li>Desativação de serviços desnecessários</li>
+        </ul>
+
+        <h3>6.2 Acesso Remoto</h3>
+        <ul>
+            <li>VPN empresarial obrigatória para acesso remoto</li>
+            <li>Proibição de software de acesso remoto não autorizado</li>
+            <li>Autenticação forte para todas as conexões remotas</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>7. Proteção de Dados Pessoais (RGPD)</h2>
+
+        <h3>7.1 Princípios</h3>
+        <ul>
+            <li>Licitude, lealdade e transparência no tratamento</li>
+            <li>Limitação das finalidades</li>
+            <li>Minimização dos dados</li>
+            <li>Exatidão</li>
+            <li>Limitação da conservação</li>
+            <li>Integridade e confidencialidade</li>
+        </ul>
+
+        <h3>7.2 Direitos dos Titulares</h3>
+        <p>Garantia dos direitos de:</p>
+        <ul>
+            <li>Informação e acesso</li>
+            <li>Retificação e apagamento</li>
+            <li>Limitação do tratamento</li>
+            <li>Portabilidade</li>
+            <li>Oposição</li>
+        </ul>
+
+        <h3>7.3 Violações de Dados</h3>
+        <ul>
+            <li>Notificação à CNPD dentro de 72 horas</li>
+            <li>Comunicação aos titulares em caso de alto risco</li>
+            <li>Registo de todas as violações</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>8. Segurança Física</h2>
+
+        <ul>
+            <li>Acesso físico aos servidores/equipamentos críticos restrito e controlado</li>
+            <li>Ecrãs bloqueados quando não utilizados</li>
+            <li>Documentos confidenciais guardados em local seguro</li>
+            <li>Destruição segura de documentos e suportes</li>
+            <li><span class="placeholder">[OUTROS CONTROLOS ESPECÍFICOS DA EMPRESA]</span></li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>9. Formação e Sensibilização</h2>
+
+        <ul>
+            <li>Formação obrigatória em cibersegurança para novos colaboradores</li>
+            <li>Formação de reciclagem <span class="placeholder">[FREQUÊNCIA, ex: anual]</span></li>
+            <li>Testes de phishing periódicos</li>
+            <li>Comunicação regular sobre novas ameaças</li>
+            <li>Procedimento de reporte de incidentes conhecido por todos</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>10. Gestão de Incidentes</h2>
+
+        <h3>10.1 Equipa de Resposta</h3>
+        <ul>
+            <li><strong>Responsável principal:</strong> <span class="placeholder">[NOME E CONTACTO]</span></li>
+            <li><strong>Responsável técnico:</strong> <span class="placeholder">[NOME E CONTACTO]</span></li>
+            <li><strong>Responsável legal:</strong> <span class="placeholder">[NOME E CONTACTO]</span></li>
+        </ul>
+
+        <h3>10.2 Procedimento</h3>
+        <ol>
+            <li><strong>Deteção e reporte</strong> - Qualquer colaborador pode reportar</li>
+            <li><strong>Avaliação inicial</strong> - Análise da gravidade em <span class="placeholder">[PRAZO, ex: 2 horas]</span></li>
+            <li><strong>Contenção</strong> - Medidas imediatas para limitar o impacto</li>
+            <li><strong>Investigação</strong> - Análise das causas e extensão</li>
+            <li><strong>Recuperação</strong> - Restauro dos sistemas e dados</li>
+            <li><strong>Lições aprendidas</strong> - Revisão e melhoria dos procedimentos</li>
+        </ol>
+
+        <h3>10.3 Contactos de Emergência</h3>
+        <ul>
+            <li><strong>CNCS (Centro Nacional de Cibersegurança):</strong> incidents@cncs.gov.pt</li>
+            <li><strong>CNPD (violações de dados):</strong> cnpd@cnpd.pt</li>
+            <li><strong>Fornecedor IT:</strong> <span class="placeholder">[CONTACTO]</span></li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>11. Fornecedores e Terceiros</h2>
+
+        <ul>
+            <li>Avaliação de segurança obrigatória antes de contratação</li>
+            <li>Cláusulas de segurança em todos os contratos</li>
+            <li>Acordos de confidencialidade assinados</li>
+            <li>Revisão periódica do cumprimento</li>
+            <li>Acesso limitado ao mínimo necessário</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>12. Monitorização e Revisão</h2>
+
+        <ul>
+            <li>Revisão desta política <span class="placeholder">[FREQUÊNCIA, ex: anualmente]</span></li>
+            <li>Auditorias internas <span class="placeholder">[FREQUÊNCIA, ex: semestrais]</span></li>
+            <li>Medição de indicadores de segurança</li>
+            <li>Relatórios de segurança ao <span class="placeholder">[ÓRGÃO RESPONSÁVEL]</span></li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>13. Não Conformidade</h2>
+
+        <p>O não cumprimento desta política pode resultar em:</p>
+        <ul>
+            <li>Medidas disciplinares de acordo com o regulamento interno</li>
+            <li>Suspensão ou revogação de acessos</li>
+            <li>Ações legais quando aplicável</li>
+        </ul>
+
+        <p>Todos os colaboradores devem reportar violações observadas ao <span class="placeholder">[RESPONSÁVEL]</span>.</p>
+    </div>
+
+    <div class="section">
+        <h2>14. Aprovação e Vigência</h2>
+
+        <p><strong>Esta política foi aprovada por:</strong></p>
+        <br>
+        <p>____________________<br>
+        <span class="placeholder">[NOME DO RESPONSÁVEL]</span><br>
+        <span class="placeholder">[CARGO]</span><br>
+        Data: <span class="placeholder">[DD/MM/AAAA]</span></p>
+
+        <br>
+
+        <p><strong>Próxima revisão prevista:</strong> <span class="placeholder">[DD/MM/AAAA]</span></p>
+    </div>
+
+    <div class="footer">
+        <p><strong>Template de Política de Segurança da Informação para PMEs</strong><br>
+        Gerado por CiberPME | Adaptado à legislação portuguesa e RGPD<br>
+        Para mais recursos visite: <strong>ciberpme.vercel.app</strong></p>
+
+        <p><em>Aviso: Este template é fornecido como material informativo.
+        Recomenda-se consulta com especialistas para adaptação às necessidades específicas da sua empresa.</em></p>
+    </div>
+</body>
+</html>
