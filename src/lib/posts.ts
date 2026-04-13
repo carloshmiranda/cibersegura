@@ -7960,6 +7960,7 @@ O prazo de 4 de maio não é negociável. Cada dia que passa sem ação é um di
     publishedAt: "2026-04-13",
     readingTime: 12,
   },
+  {
     slug: "zero-trust-pme-guia-pratico",
     title: "Zero Trust para PMEs: O Que É e Como Implementar Sem Gastar Uma Fortuna",
     excerpt:
