@@ -6,6 +6,7 @@ export interface Post {
   category: "ameacas" | "legislacao" | "boas-praticas" | "ferramentas" | "formacao";
   categoryLabel: string;
   publishedAt: string;
+  updatedAt?: string;
   readingTime: number;
 }
 
@@ -352,6 +353,7 @@ Com este programa estruturado, a sua PME estará preparada para enfrentar as ame
     category: "formacao",
     categoryLabel: "Formacao",
     publishedAt: "2026-04-11",
+    updatedAt: "2026-04-12",
     readingTime: 18,
   },
   {
@@ -2837,6 +2839,7 @@ Para apoio adicional na implementação das medidas NIS2 após o registo, consul
     category: "legislacao",
     categoryLabel: "Legislacao RGPD",
     publishedAt: "2026-04-05",
+    updatedAt: "2026-04-06",
     readingTime: 15,
   },
   {

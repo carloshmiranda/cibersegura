@@ -130,7 +130,7 @@ export default async function BlogPostPage({
       url: baseUrl,
     },
     datePublished: post.publishedAt,
-    dateModified: post.publishedAt,
+    dateModified: post.updatedAt || post.publishedAt,
     url: articleUrl,
     articleSection: post.categoryLabel,
     inLanguage: "pt-PT",
