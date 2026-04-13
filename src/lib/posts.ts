@@ -6461,6 +6461,569 @@ Para a maioria das PMEs portuguesas que processam dados de clientes e dependem d
     publishedAt: "2026-04-13",
     readingTime: 12,
   },
+  {
+    slug: "seguranca-dispositivos-moveis-pme",
+    title: "Segurança de Dispositivos Móveis para PMEs: Proteja Smartphones e Tablets da Empresa",
+    excerpt:
+      "Smartphones e tablets são o maior ponto cego de segurança nas PMEs portuguesas. Saiba como implementar políticas BYOD, escolher uma solução MDM e proteger os dados da empresa em dispositivos móveis.",
+    content: `Os dispositivos móveis tornaram-se a principal ferramenta de trabalho em muitas PMEs portuguesas — e também o elo mais fraco da segurança empresarial. Um relatório da Verizon de 2025 mostra que **60% das empresas com menos de 500 colaboradores sofreram um incidente de segurança originado num dispositivo móvel** no último ano. A maioria nem sabia que tinha acontecido.
+
+Este guia explica como proteger smartphones e tablets na sua empresa, seja em modelos de equipamentos empresariais ou BYOD (Bring Your Own Device).
+
+## Porque os Dispositivos Móveis são um Risco Elevado
+
+### Dados que importam
+
+- **43%** das PMEs não têm qualquer política de segurança para dispositivos móveis
+- **Um smartphone perdido ou roubado** é a causa mais comum de fuga de dados em empresas com menos de 50 colaboradores
+- **Smishing (SMS phishing)** cresceu 127% em 2024 — e os utilizadores móveis são 3x mais suscetíveis a cair em links fraudulentos do que no desktop
+- **Apps maliciosas** continuam a entrar em lojas oficiais — o Google Play removeu mais de 2,5 milhões de apps em 2024 por violações de segurança
+
+### O problema específico das PMEs
+
+Nas grandes empresas, existe uma equipa de IT que gere dispositivos centralmente. Nas PMEs, o habitual é:
+- Colaboradores usam os seus próprios telemóveis para o trabalho (BYOD sem políticas)
+- Acesso ao email empresarial em apps pessoais como o Gmail
+- WhatsApp como canal de comunicação interno com dados de clientes
+- Sem PIN ou biometria configurados — ou com PINs triviais como "1234"
+- Apps de trabalho e apps pessoais no mesmo dispositivo, sem separação
+
+## Os Principais Vetores de Ataque Móvel
+
+### 1. Smishing (SMS Phishing)
+
+O atacante envia um SMS que imita o banco, os CTT, a AT ou a Segurança Social. O link leva a uma página falsa que captura credenciais. Em ambiente empresarial, os alvos são:
+- Credenciais de acesso ao ERP ou software de gestão
+- Dados de acesso ao homebanking empresarial
+- Credenciais do Microsoft 365 ou Google Workspace
+
+**Como identificar:** SMSs com urgência ("A sua conta foi suspensa"), links encurtados, pedidos de dados que a entidade legítima nunca pede por SMS.
+
+### 2. Apps Maliciosas
+
+Apps aparentemente legítimas que pedem permissões excessivas para aceder a contactos, microfone, câmara ou localização. Algumas simulam apps populares (VPNs gratuitas, ferramentas de produtividade, leitores de PDF).
+
+**Riscos concretos:**
+- Captura de credenciais introduzidas noutras apps
+- Acesso à câmara e microfone durante reuniões
+- Exfiltração de ficheiros armazenados no dispositivo
+- Keylogging para capturar passwords
+
+### 3. Redes WiFi Não Seguras
+
+Colaboradores em trabalho remoto ou deslocações que se ligam a redes abertas (cafés, hotéis, aeroportos) ficam expostos a ataques man-in-the-middle onde o tráfego pode ser intercetado.
+
+### 4. Dispositivos Perdidos ou Roubados
+
+Sem encriptação e bloqueio de ecrã, um telemóvel perdido é um cofre aberto: emails, documentos, passwords guardadas no browser, apps de banca.
+
+### 5. SIM Swapping
+
+O atacante convence a operadora a transferir o número de telefone da vítima para um cartão SIM que controla. Com isso, intercepta todos os SMS — incluindo os códigos 2FA enviados por SMS. Este ataque é especialmente grave para gerentes de PME com acesso a contas bancárias.
+
+## Medidas de Proteção: Por Onde Começar
+
+### Fase 1 — Medidas Básicas (Custo Zero, Alta Eficácia)
+
+**1. Política de bloqueio de ecrã obrigatório**
+Defina como requisito mínimo para aceder a recursos empresariais:
+- PIN de 6 dígitos (mínimo) ou biometria
+- Bloqueio automático após 1 minuto de inatividade
+- Encriptação do dispositivo ativada (padrão em iOS; verificar no Android em Definições > Segurança)
+
+**2. Atualizações obrigatórias**
+- iOS: configurar atualizações automáticas
+- Android: verificar e instalar atualizações de segurança mensalmente
+- Apps: ativar atualizações automáticas na App Store e Google Play
+
+**3. Separação entre apps pessoais e profissionais**
+- Email empresarial em cliente separado (Outlook, não Gmail pessoal)
+- Proibir armazenamento de dados empresariais em apps pessoais (Dropbox pessoal, Google Drive pessoal)
+- Usar o Microsoft Teams ou equivalente para comunicação interna — não WhatsApp
+
+**4. Backup configurado**
+- iCloud ou iTunes para iOS (verificar se está ativo)
+- Google One ou backup local para Android
+- Garantir que o backup inclui dados de apps de trabalho
+
+### Fase 2 — Controlo Básico da Frota (Para Empresas com 5+ Utilizadores Móveis)
+
+**MDM (Mobile Device Management)** é software que permite gerir dispositivos móveis centralmente. As funcionalidades essenciais incluem:
+- Apagar remotamente o dispositivo em caso de perda ou roubo
+- Forçar políticas de segurança (PIN, encriptação, restrição de apps)
+- Distribuir apps empresariais sem intervenção do utilizador
+- Monitorizar conformidade dos dispositivos
+
+**Soluções MDM para PMEs:**
+
+| Solução | Custo aproximado | Ideal para |
+|---------|-----------------|------------|
+| **Microsoft Intune** | Incluído no Microsoft 365 Business Premium | PMEs já no ecossistema Microsoft |
+| **Jamf Now** | ~€2/mês por dispositivo | PMEs com Macs e iPhones |
+| **Mosyle** | ~€1/mês por dispositivo | Empresas com dispositivos Apple |
+| **Miradore** | Plano gratuito disponível | PMEs que querem começar sem custo |
+| **ManageEngine Mobile Manager** | A partir de €1.28/dispositivo/mês | Ambiente misto iOS/Android |
+
+Se a sua empresa já usa o **Microsoft 365 Business Premium**, o Intune está incluído na subscrição — é o ponto de partida natural.
+
+**O que configurar no MDM:**
+- Perfis de configuração: forçar PIN, desativar câmara em contextos sensíveis, bloquear apps não aprovadas
+- Listas de apps aprovadas (allowlist) para dispositivos empresariais
+- Apagamento remoto para casos de perda ou saída de colaborador
+- Relatórios de conformidade semanais
+
+### Fase 3 — Política BYOD Formal
+
+Se os colaboradores usam os seus próprios dispositivos para trabalhar (o que é comum nas PMEs), é essencial uma política BYOD escrita que defina:
+
+**O que a empresa pode e não pode fazer no dispositivo pessoal:**
+- Pode: instalar apps de trabalho, configurar email empresarial, apagar dados corporativos em caso de saída
+- Não pode: aceder a dados pessoais, monitorizar uso pessoal, apagar dados pessoais
+
+**O que o colaborador se compromete a fazer:**
+- Manter o sistema operativo atualizado
+- Não instalar apps de lojas não oficiais
+- Reportar imediatamente perda ou roubo
+- Aceitar a configuração de gestão do container de trabalho
+
+**Solução técnica para BYOD:** containerização — o Microsoft Intune com perfis de trabalho Android ou Apple Business Manager permite criar um "container" separado no dispositivo pessoal que a empresa gere, sem aceder à área pessoal.
+
+## Formação dos Colaboradores
+
+As medidas técnicas só funcionam se os colaboradores souberem o que fazer. Pontos essenciais para comunicar:
+
+**O que nunca fazer num dispositivo que acede a recursos empresariais:**
+- Ligar a redes WiFi abertas sem VPN ativa
+- Instalar apps de fontes desconhecidas ou fora das lojas oficiais
+- Partilhar o telemóvel com familiares quando tem apps de trabalho
+- Clicar em links recebidos por SMS sem verificar o remetente
+- Guardar passwords de trabalho no browser pessoal
+
+**O que fazer imediatamente em caso de:**
+- **Perda ou roubo:** Reportar ao responsável de IT ou gerência nas primeiras 2 horas — o apagamento remoto tem janela de tempo
+- **SMS suspeito:** Não clicar, reencaminhar para o responsável, bloquear o número
+- **App suspeita instalada:** Desinstalar, reportar, alterar passwords de contas acedidas nesse dispositivo
+
+## Lista de Verificação Móvel para PMEs
+
+**Imediato (esta semana):**
+- [ ] Verificar se todos os dispositivos com acesso a email empresarial têm PIN ativo
+- [ ] Ativar encriptação em dispositivos Android (Definições > Segurança)
+- [ ] Comunicar aos colaboradores a política de bloqueio de ecrã obrigatório
+- [ ] Ativar "Encontrar o meu dispositivo" (Find My iPhone / Find My Device no Android)
+
+**Curto prazo (este mês):**
+- [ ] Avaliar se a empresa tem Microsoft 365 Business Premium (inclui Intune)
+- [ ] Criar lista de apps aprovadas para uso profissional
+- [ ] Redigir política BYOD básica (1-2 páginas)
+- [ ] Fazer sessão de formação de 30 minutos sobre smishing e segurança móvel
+
+**Médio prazo (próximo trimestre):**
+- [ ] Implementar MDM (Intune, Miradore, ou equivalente)
+- [ ] Ativar containerização em dispositivos BYOD
+- [ ] Integrar segurança móvel nas políticas gerais de segurança da empresa
+- [ ] Testar apagamento remoto num dispositivo de teste
+
+## Conclusão
+
+A segurança dos dispositivos móveis não exige um orçamento elevado — exige consistência. Começar com as medidas básicas (PIN obrigatório, atualizações, separação de apps de trabalho e pessoais) já elimina a maioria dos riscos. Para empresas com mais de 5 utilizadores móveis, um MDM como o Intune ou o Miradore torna a gestão centralizada e o apagamento remoto possíveis sem dependência de cada colaborador individualmente.
+
+Num ambiente onde o telemóvel é o escritório, protegê-lo com o mesmo rigor que protege os servidores deixou de ser opcional.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Práticas",
+    publishedAt: "2026-04-13",
+    readingTime: 11,
+  },
+  {
+    slug: "gestao-patches-atualizacoes-software-pme",
+    title: "Gestão de Patches e Atualizações de Software: Como Manter os Sistemas da sua PME Seguros",
+    excerpt:
+      "A maioria dos ataques bem-sucedidos a PMEs exploram vulnerabilidades com correções disponíveis há meses. Saiba como implementar um processo de patch management eficaz sem uma equipa de IT dedicada.",
+    content: `Em maio de 2017, o ransomware WannaCry paralisou 200.000 organizações em 150 países — incluindo hospitais, bancos e empresas de todos os tamanhos. A Microsoft tinha lançado a correção para a vulnerabilidade explorada **dois meses antes**. Quem atualizou os sistemas ficou imune. Quem não atualizou perdeu dados e dinheiro.
+
+Quase uma década depois, o cenário repete-se: **a maioria dos ataques bem-sucedidos a PMEs explora vulnerabilidades para as quais já existia patch disponível**. O Verizon Data Breach Investigations Report de 2025 confirma que 60% das violações exploraram vulnerabilidades com correção disponível há mais de 30 dias.
+
+A gestão de patches — o processo de identificar, testar e aplicar atualizações de segurança — é uma das medidas com melhor relação custo-benefício que uma PME pode implementar.
+
+## O Que São Patches e Porque São Críticos
+
+### Tipos de atualizações
+
+**Patches de segurança:** Corrigem vulnerabilidades específicas que podem ser exploradas por atacantes. São os mais urgentes.
+
+**Patches de funcionalidade:** Adicionam ou modificam funcionalidades. Menos urgentes do ponto de vista de segurança.
+
+**Atualizações de versão major:** Novas versões do sistema operativo ou software. Requerem planeamento adicional.
+
+### O ciclo de exploração é rápido
+
+Quando uma vulnerabilidade é tornada pública (CVE — Common Vulnerabilities and Exposures), o relógio começa:
+- **Dia 0:** Vulnerabilidade anunciada, patch lançado
+- **Dias 1-7:** Grupos de ciberatacantes analisam a vulnerabilidade e desenvolvem exploits
+- **Semana 2:** Ferramentas de exploração automatizadas aparecem em fóruns criminosos
+- **Semana 3-4:** Ataques em larga escala contra sistemas não atualizados
+
+Para as PMEs, a janela de segurança é de **7 a 14 dias** para vulnerabilidades críticas — depois disso, o risco de ser atacado sobe exponencialmente.
+
+## O Que Precisa de Ser Atualizado (e Muitas PMEs Ignoram)
+
+### Sistemas operativos
+
+**Windows:** As atualizações mensais de segurança (Patch Tuesday, segunda terça-feira de cada mês) são obrigatórias. Windows 10 chega ao fim de suporte em outubro de 2025 — sistemas não atualizados para Windows 11 ficam sem patches de segurança.
+
+**macOS:** As atualizações de segurança são separadas das atualizações de versão. Não é necessário atualizar para a versão mais recente do macOS para receber patches — mas é necessário estar numa versão suportada (Apple suporta tipicamente as últimas 3 versões).
+
+**Linux:** Em servidores Linux, as atualizações de segurança devem ser aplicadas com \`unattended-upgrades\` ou equivalente. Muitas PMEs têm servidores Linux que ninguém atualiza há anos.
+
+### Software de terceiros (frequentemente esquecido)
+
+Este é o maior ponto cego nas PMEs. Os sistemas operativos são atualizados (às vezes), mas o software de terceiros fica para trás:
+
+- **Browsers:** Chrome, Firefox, Edge — vectores de ataque comuns. Devem ser atualizados automaticamente.
+- **Plugins do browser:** Adobe Reader, Java — frequentemente explorados. Remover o que não é necessário.
+- **Software de escritório:** Microsoft Office, LibreOffice — macros maliciosas exploram versões desatualizadas.
+- **Aplicações de gestão:** ERP, CRM, software de contabilidade — actualizações de segurança frequentemente ignoradas.
+- **Software de servidor:** Apache, Nginx, PHP, MySQL — críticos em ambientes web e de e-commerce.
+- **Firmware de rede:** Routers, switches, firewalls — o firmware desatualizado é uma porta de entrada frequente.
+- **Impressoras e dispositivos IoT:** Frequentemente ignorados, têm vulnerabilidades exploráveis.
+
+### Bibliotecas e dependências (para empresas com software próprio)
+
+Se a sua empresa desenvolve software internamente ou usa aplicações web, as bibliotecas e frameworks também precisam de ser atualizadas. Vulnerabilidades em bibliotecas como Log4j (2021) afetaram milhares de aplicações que usavam esta dependência.
+
+## Como Implementar Patch Management numa PME
+
+### Inventário: Saber o Que Existe
+
+Não é possível atualizar o que não se conhece. O primeiro passo é criar um inventário de ativos:
+
+**Para cada dispositivo e servidor, documentar:**
+- Hardware (fabricante, modelo)
+- Sistema operativo e versão
+- Software instalado e versões
+- Responsável pelo dispositivo
+- Criticidade (crítico, importante, baixo impacto)
+
+**Ferramentas gratuitas para inventário:**
+- **Lansweeper Free:** Até 100 ativos, inventário automático da rede
+- **OCS Inventory:** Open source, auto-hospedado
+- **Belarc Advisor:** Para inventário de um único PC
+- **Windows Admin Center:** Para ambientes Windows sem custo adicional
+
+### Classificação de Criticidade
+
+Nem todas as atualizações têm a mesma urgência. Use o sistema CVSS (Common Vulnerability Scoring System):
+
+| Pontuação CVSS | Classificação | Prazo para aplicar |
+|----------------|---------------|-------------------|
+| 9.0 – 10.0 | Crítico | 24 a 72 horas |
+| 7.0 – 8.9 | Alto | 7 dias |
+| 4.0 – 6.9 | Médio | 30 dias |
+| 0.1 – 3.9 | Baixo | Próximo ciclo de manutenção |
+
+Para a maioria das PMEs, simplificar para dois níveis funciona bem:
+- **Urgente:** Patches de segurança críticos e altos → aplicar na semana seguinte
+- **Routine:** Outros patches → aplicar no ciclo mensal de manutenção
+
+### O Processo em 4 Passos
+
+**Passo 1: Deteção (contínua)**
+
+Configure alertas para vulnerabilidades relevantes:
+- **Microsoft Security Update Guide:** Para produtos Microsoft
+- **CVE News via RSS/email:** Subscrever feeds de CVE para software que usa
+- **CNCS (Centro Nacional de Cibersegurança):** Publica alertas para vulnerabilidades críticas em português
+- Ferramentas de gestão de patches enviam alertas automaticamente quando patches são lançados
+
+**Passo 2: Avaliação (1-2 dias após deteção)**
+
+Para cada patch identificado:
+- Que sistema/software afeta?
+- Qual é a criticidade (CVSS)?
+- Há exploits conhecidos em circulação?
+- Que impacto tem na operação aplicar o patch?
+- Há dependências que podem quebrar?
+
+**Passo 3: Teste (para patches não críticos)**
+
+Em ambientes de produção sem ambiente de teste, aplique primeiro a um sistema não crítico e aguarde 24-48 horas para confirmar estabilidade antes de aplicar à restante frota.
+
+Para patches críticos com exploits ativos, a equação muda: o risco de não aplicar supera o risco de instabilidade.
+
+**Passo 4: Implementação e Verificação**
+
+- Comunicar manutenção planeada (evitar surpresas aos utilizadores)
+- Fazer backup antes de aplicar patches a servidores críticos
+- Aplicar e reiniciar quando necessário
+- Verificar funcionamento dos sistemas após aplicação
+- Documentar o que foi aplicado e quando
+
+### Automação: Reduzir o Trabalho Manual
+
+Para workstations Windows, o Windows Update pode ser configurado para instalar atualizações automaticamente fora do horário de trabalho. Esta é a configuração recomendada para PMEs sem IT dedicado:
+
+**Via Group Policy (para ambientes com Active Directory):**
+- Atualizações automáticas em horário pré-definido (ex: sexta-feira às 23h)
+- Reinicialização automática quando necessário
+- Relatório de conformidade disponível
+
+**Via Microsoft Intune (Microsoft 365 Business Premium):**
+- Rings de atualização — grupos de dispositivos que recebem patches escalonados
+- Relatórios de conformidade por dispositivo
+- Forçar atualizações em dispositivos em falta
+
+**Ferramentas de patch management para PMEs:**
+
+| Ferramenta | Custo | Funcionalidades |
+|------------|-------|-----------------|
+| **Patch My PC** | Gratuito (básico) / pago | Automatiza software de terceiros no Windows |
+| **ManageEngine Patch Manager Plus** | A partir de €345/ano (25 PCs) | Multi-plataforma, software de terceiros |
+| **NinjaRMM** | ~€3/dispositivo/mês | Gestão remota completa com patch management |
+| **Action1** | Gratuito até 100 dispositivos | Patch management cloud para Windows |
+| **PDQ Deploy** | A partir de $700/ano | Software deployment e patch management |
+
+Para PMEs com menos de 25 PCs, o **Action1** na versão gratuita é uma opção sólida para começar.
+
+### Servidores: Processo Mais Cuidadoso
+
+Servidores requerem mais cuidado do que workstations — uma reinicialização inesperada pode causar indisponibilidade. Recomendações:
+
+**Janela de manutenção definida:** Reserve uma janela mensal (ex: primeiro sábado do mês, 2h-6h) para aplicar patches em servidores.
+
+**Backup verificado antes de patching:** Não aplique patches a servidores sem confirmar que o backup mais recente está válido e recuperável.
+
+**Lista de verificação pós-patch:**
+- Serviços a correr corretamente?
+- Aplicações a responder?
+- Logs sem erros críticos?
+- Performance dentro do normal?
+
+**Para servidores na cloud (AWS, Azure, Hetzner):** Configure snapshots automáticos antes da janela de manutenção. Permitem reversão rápida em caso de problema.
+
+## Gestão de Software Fim de Vida (EOL)
+
+Software em fim de vida não recebe patches de segurança — independentemente da gravidade das vulnerabilidades descobertas.
+
+**Situações de EOL comuns nas PMEs:**
+- Windows 7/8/10 (fim de suporte em 2025)
+- Windows Server 2012/2016 (já em EOL extendido)
+- PHP 7.x (versões mais antigas sem suporte)
+- MySQL 5.7 (EOL em outubro 2023)
+- Versões antigas de WordPress, Joomla, Magento
+
+**O que fazer:**
+1. Identificar todo o software EOL no inventário
+2. Isolar da rede (se não for possível atualizar imediatamente)
+3. Planear migração/atualização com prazo definido
+4. Enquanto aguarda migração, implementar controlos compensatórios (firewall restritiva, monitorização extra)
+
+## Métricas para Acompanhar
+
+Para saber se o patch management está a funcionar, monitore:
+
+- **Mean Time to Patch (MTTP):** Tempo médio entre lançamento do patch e aplicação. Objetivo: < 7 dias para críticos.
+- **Taxa de conformidade:** % de dispositivos com todos os patches aplicados. Objetivo: > 95%.
+- **Patches em atraso:** Número de patches críticos não aplicados com mais de 30 dias.
+
+## Conclusão
+
+Patch management não é glamoroso — não há demonstração visível de que funcionou quando funciona bem. O seu valor é nas catástrofes que nunca aconteceram.
+
+Para uma PME, o mínimo viável é: atualizações automáticas ativas nos sistemas Windows, controlo mensal dos servidores, inventário atualizado do software, e um processo para lidar com vulnerabilidades críticas em menos de 72 horas.
+
+A maioria das PMEs que foram comprometidas por ransomware ou violações de dados tinha a correção disponível. Faltou o processo para a aplicar a tempo.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Práticas",
+    publishedAt: "2026-04-13",
+    readingTime: 13,
+  },
+  {
+    slug: "fraude-ceo-bec-pme-portugal",
+    title: "Fraude CEO e BEC em PMEs Portuguesas: Como Reconhecer e Evitar Transferências Fraudulentas",
+    excerpt:
+      "O Business Email Compromise custou €2,9 mil milhões a empresas em 2023. As PMEs são os alvos preferidos. Saiba como funciona a fraude CEO, quais os sinais de alerta e como implementar controlos que previnem transferências fraudulentas.",
+    content: `No verão de 2023, uma empresa de construção no Porto recebeu um email do seu fornecedor habitual de materiais a informar que os dados bancários tinham mudado e que as próximas faturas deviam ser pagas para uma nova conta. O diretor financeiro processou três pagamentos num total de €87.000 antes de perceber que o fornecedor nunca tinha enviado esse email. A conta era de criminosos.
+
+Este tipo de ataque tem nome: **Business Email Compromise (BEC)**, também conhecido como fraude CEO, fraude do fornecedor, ou Man-in-the-Email. O FBI classifica-o como o cibercrime mais lucrativo do mundo — causou **€2,9 mil milhões em perdas em 2023** apenas nos EUA. Na Europa, os números são proporcionais e crescentes.
+
+As PMEs são os alvos preferidos porque têm processos financeiros menos formalizados, maior confiança interpessoal nas equipas, e menor formação em engenharia social.
+
+## Como Funciona o BEC
+
+### Os 5 cenários mais comuns
+
+**1. Fraude CEO / Fraude do Diretor**
+
+O atacante compromete ou falsifica o email do CEO, diretor-geral ou outro executivo de topo. Envia uma mensagem urgente e confidencial a um colaborador financeiro pedindo uma transferência imediata:
+
+*"[Colaborador], preciso que faças uma transferência urgente de €45.000 para fechar uma aquisição confidencial. Não podes falar com ninguém sobre isto — avisa-me quando for feito. Vou estar em reunião."*
+
+A urgência e confidencialidade são projetadas para impedir que o colaborador verifique com outros.
+
+**2. Fraude do Fornecedor**
+
+O atacante compromete o email de um fornecedor legítimo (ou cria um endereço muito semelhante) e notifica a empresa-alvo que os dados bancários mudaram. Os próximos pagamentos de faturas reais vão para a conta dos criminosos.
+
+**3. Fraude do Advogado / Serviços Jurídicos**
+
+O atacante faz-se passar por um advogado ou ROC que gere uma transação sensível (fusão, aquisição, litígio). Solicita transferência urgente com argumento de confidencialidade legal.
+
+**4. Comprometimento de Conta Real (Account Takeover)**
+
+Em vez de falsificar um email, o atacante compromete uma conta real — do CEO, CFO, ou fornecedor — e envia pedidos de dentro de caixas de correio legítimas. Mais difícil de detetar porque o email é genuíno.
+
+**5. Fraude de Payroll**
+
+O atacante envia email ao RH ou departamento financeiro, fazendo-se passar por um colaborador, a pedir alteração dos dados bancários para o pagamento do salário.
+
+### A anatomia de um ataque bem-sucedido
+
+**Fase 1: Reconhecimento**
+O atacante estuda a empresa durante semanas. Usa LinkedIn para mapear a estrutura organizacional, o website para perceber nomes e funções, redes sociais para saber quando o CEO está em viagem.
+
+**Fase 2: Preparação**
+Regista um domínio semelhante ao da empresa-alvo ou do fornecedor (ex: empresa-sa.pt → empresa-sa.com, empressa.pt, empresa-sa-info.pt). Estuda o estilo de escrita do executivo que vai imitar usando emails anteriores ou comunicações públicas.
+
+**Fase 3: Execução**
+Escolhe o momento certo: quando o CEO está em viagem internacional, quando há pressão financeira conhecida (final do trimestre, aquisição pendente), quando o responsável financeiro habitual está de férias e o substituto tem menos experiência.
+
+**Fase 4: Urgência e Pressão**
+O pedido é sempre urgente, frequentemente confidencial, e projetado para impedir verificações. "Não fales com mais ninguém sobre isto" é uma bandeira vermelha clássica.
+
+## Sinais de Alerta
+
+Treine todos os colaboradores que lidam com finanças a reconhecer:
+
+**No email:**
+- Endereço de email ligeiramente diferente do habitual (empresa.pt vs empresa.com, carlos.silva@empresa.pt vs carlos.silva@empresa-pt.com)
+- Urgência incomum ou pressão para agir sem verificar
+- Pedido de confidencialidade que impede consultar outros
+- Responder a um email que vai para endereço diferente do remetente original
+- Tom ou estilo de escrita diferente do habitual da pessoa
+
+**No pedido:**
+- Alteração de dados bancários sem justificação detalhada e verificação por canal alternativo
+- Transferência para conta em banco ou país incomum
+- Pedido fora dos procedimentos habituais da empresa
+- Montante acima dos limites normais de autorização
+- Pedido para ignorar controlos internos existentes
+
+**No contexto:**
+- CEO ou decisor em viagem e "impossível" de contactar por telefone
+- Prazo impossível ("tem de ser hoje antes das 16h")
+- Referência a transação confidencial que ninguém na empresa conhece
+
+## Controlos Preventivos
+
+### 1. Verificação por Canal Alternativo (Obrigatória para Transferências)
+
+**A regra de ouro do BEC:** Qualquer pedido de transferência ou alteração de dados bancários deve ser verificado por telefone para um número já conhecido, antes de ser processado.
+
+Não use o número de telefone no email suspeito — use o número que já tem nos registos da empresa.
+
+Esta verificação deve ser **obrigatória**, por escrito na política financeira, para:
+- Transferências acima de um valor limite (ex: €2.000)
+- Qualquer alteração de dados bancários de fornecedor
+- Pedidos urgentes que desviam dos procedimentos normais
+- Pedidos de confidencialidade incomum
+
+**Implementação prática:**
+Crie um "whitelist" dos fornecedores e parceiros mais importantes com os números de telefone verificados. Quando receber alteração de dados bancários, ligue para o número do whitelist — não para o número no email.
+
+### 2. Segregação de Funções
+
+Nunca uma única pessoa deve poder autorizar e executar uma transferência significativa. O mínimo:
+- Quem pede a transferência não é quem a autoriza
+- Transferências acima de determinado valor requerem aprovação de dois responsáveis
+- A aprovação deve ser documentada (email, sistema de gestão, não só conversa verbal)
+
+### 3. Autenticação Multi-Fator no Email
+
+Se as contas de email dos executivos e do departamento financeiro tiverem MFA ativo, um atacante que obtenha a password não consegue fazer login e enviar emails de dentro da caixa de correio real.
+
+**Para Microsoft 365:**
+- Ativar MFA para todos os utilizadores (mínimo)
+- Considerar Conditional Access para bloquear logins de países onde a empresa não opera
+- Monitorizar alertas de login suspeito no Microsoft Defender
+
+**Para Google Workspace:**
+- Ativar verificação em dois passos para toda a organização
+- Usar chaves de segurança físicas (YubiKey) para contas de alto risco
+
+### 4. DMARC, DKIM e SPF no Domínio da Empresa
+
+Estes registos DNS impedem que atacantes falsifiquem (spoofem) o domínio da sua empresa para enviar emails que pareçam vir de dentro:
+
+- **SPF:** Define quais servidores podem enviar email pelo domínio
+- **DKIM:** Assina digitalmente os emails para verificar autenticidade
+- **DMARC:** Define o que fazer com emails que falham SPF/DKIM
+
+**Como verificar se o seu domínio tem proteção:**
+Use a ferramenta gratuita em mxtoolbox.com — introduza o seu domínio e verifique SPF, DKIM e DMARC. Se algum faltar ou estiver mal configurado, o seu domínio pode estar a ser usado para falsificar emails.
+
+Configuração mínima de DMARC:
+\`\`\`
+_dmarc.suaempresa.pt TXT "v=DMARC1; p=quarantine; rua=mailto:dmarc@suaempresa.pt"
+\`\`\`
+
+Comece com \`p=none\` (monitorização) antes de avançar para \`p=quarantine\` ou \`p=reject\`.
+
+### 5. Formação Específica para Equipas Financeiras
+
+Os colaboradores que processam pagamentos são os alvos diretos. A formação deve incluir:
+
+**Exercício prático:** Simule um pedido de fraude CEO por email interno — veja quem verifica e quem processa sem questionar. Use o resultado para formação, não para punição.
+
+**Checklist de verificação antes de qualquer transferência:**
+1. O pedido segue os procedimentos normais da empresa?
+2. Se não, por que razão está a ser desviado dos procedimentos?
+3. O endereço de email é exatamente o correto (verificar letra a letra)?
+4. Liguei para confirmar por telefone para número já conhecido?
+5. A aprovação necessária foi dada?
+6. Documentei a autorização?
+
+### 6. Monitorização de Domínios Semelhantes
+
+Serviços como **Doppel**, **Brand Shield**, ou simples alertas do Google para o nome da sua empresa podem detetar quando alguém regista domínios semelhantes ao seu — frequentemente o primeiro sinal de um ataque BEC em preparação.
+
+## O Que Fazer Se For Vítima
+
+Se perceber que foi alvo de fraude BEC, as primeiras horas são críticas:
+
+**Nas primeiras 2 horas:**
+1. **Contactar o banco imediatamente** — se a transferência foi recente, pode ser possível revertê-la ou congelar os fundos antes de chegarem ao destino. Em Portugal, contacte a linha de urgência do seu banco.
+2. **Preservar evidências** — não apagar emails, guardar cabeçalhos completos das mensagens suspeitas.
+3. **Contactar o CNCS** — O Centro Nacional de Cibersegurança tem linha de apoio a incidentes: cert@cncs.gov.pt ou através do portal cncs.gov.pt.
+4. **Apresentar queixa na PJ (Unidade de Cibercrime)** — cybercrimen@pj.pt — necessário para recuperação de fundos e eventual investigação.
+
+**Nas primeiras 24 horas:**
+- Auditar todos os acessos ao email comprometido
+- Alterar passwords de todas as contas relacionadas
+- Rever outros pagamentos recentes para detetar padrões adicionais
+- Notificar o seguro cibernético se tiver
+
+**Recuperação:**
+A taxa de recuperação de fundos em BEC é baixa — mas não é zero, especialmente se for reportado rapidamente. Coordene com o banco e autoridades policiais.
+
+## Impacto no Seguro Cibernético
+
+Muitas apólices de seguro cibernético cobrem perdas por BEC, mas com condições específicas:
+- A empresa deve ter implementado controlos razoáveis (MFA, verificação por canal alternativo)
+- O incidente deve ser reportado dentro do prazo definido na apólice (frequentemente 72 horas)
+- Algumas apólices têm sublimites específicos para fraude social
+
+Antes de comprar seguro cibernético, verifique se a cobertura de BEC/social engineering está incluída e quais os requisitos de segurança que a empresa deve manter para que a cobertura seja válida.
+
+## Conclusão
+
+O BEC é diferente de outros ciberataques porque não depende de malware, ransomware ou exploits técnicos. Depende de enganar pessoas — e pessoas são difíceis de "patching". Por isso, a defesa eficaz combina controlos técnicos (MFA, DMARC) com controlos de processo (verificação por canal alternativo, segregação de funções) e formação humana.
+
+A regra que elimina a maioria dos casos de BEC é simples: **qualquer pedido de transferência ou alteração de dados bancários, independentemente de quem parece ser o remetente, deve ser verificado por telefone para um número já conhecido, antes de ser processado.** Uma chamada de 30 segundos pode poupar dezenas de milhares de euros.`,
+    category: "ameacas",
+    categoryLabel: "Ameacas",
+    publishedAt: "2026-04-13",
+    readingTime: 14,
+  },
 ];
 
 export function getPostBySlug(slug: string): Post | undefined {
