@@ -5280,6 +5280,719 @@ Lembre-se: **o elo mais fraco da segurança é sempre humano, mas também pode s
     publishedAt: "2026-04-13",
     readingTime: 15,
   },
+  {
+    slug: "gestao-passwords-pme-guia-completo",
+    title: "Gestão de Passwords para PMEs: Guia Completo para Proteger os Acessos da sua Empresa",
+    excerpt:
+      "Passwords fracas são a causa de 81% das violações de dados em empresas. Saiba como implementar uma política de passwords robusta e escolher o gestor de passwords certo para a sua PME portuguesa.",
+    content: `A gestão de passwords é uma das medidas de cibersegurança mais simples de implementar — e uma das mais ignoradas. Em Portugal, a maioria das PMEs ainda usa passwords partilhadas por email, post-its no monitor, ou a mesma password em todos os sistemas. Esta negligência custa caro: **81% das violações de dados empresariais envolvem passwords comprometidas**.
+
+Este guia mostra como transformar a gestão de passwords da sua empresa numa vantagem de segurança real, sem gastar uma fortuna.
+
+## Por Que as Passwords da sua Empresa são Provavelmente Inseguras
+
+### Os Padrões Mais Comuns (e Perigosos)
+
+Nas PMEs portuguesas, é comum encontrar:
+
+- **Passwords partilhadas por toda a equipa**: "empresa2024", "admin123", o nome da empresa
+- **Passwords reutilizadas**: a mesma password no email, no ERP, no banco online
+- **Passwords enviadas por WhatsApp ou email** para novos funcionários
+- **Sem processo de revogação**: ex-funcionários mantêm acesso meses depois de sair
+- **Sem rotação**: passwords que nunca mudaram desde que a conta foi criada
+
+### O Custo Real de uma Password Comprometida
+
+Quando uma password corporativa é comprometida:
+
+1. O atacante tem acesso durante semanas ou meses antes de ser detetado
+2. Com uma conta de email, consegue fazer reset das restantes passwords
+3. Com acesso ao email do CEO, consegue autorizar transferências (BEC — Business Email Compromise)
+4. O custo médio de um incidente BEC em PMEs europeias é **€62.000**
+
+## O que é um Gestor de Passwords Empresarial
+
+Um gestor de passwords é uma aplicação que:
+- **Guarda todas as passwords** numa cofre cifrado (AES-256)
+- **Gera passwords fortes automaticamente** (32+ caracteres, aleatórios)
+- **Partilha acessos de forma controlada** entre membros da equipa
+- **Revoga acessos** quando um colaborador sai
+- **Regista quem acedeu a quê** e quando
+
+Não é o mesmo que guardar passwords no browser. Um gestor empresarial tem controlos de administração, auditoria, e funcionamento mesmo que o browser mude.
+
+## Comparação: Melhores Gestores de Passwords para PMEs
+
+### Bitwarden for Business (Recomendado para PMEs)
+
+**Preço**: €3/utilizador/mês (Team) ou €5/utilizador/mês (Enterprise)
+
+**Pontos fortes:**
+- Open source — código auditado publicamente
+- Auto-hospedagem possível (para empresas com requisitos RGPD específicos)
+- Interface simples, curva de aprendizagem baixa
+- Integração com SSO (Azure AD, Okta, Google Workspace)
+- Gratuito para uso pessoal — facilita adoção pelos colaboradores
+
+**Adequado para**: PMEs de 5 a 200 utilizadores que valorizam transparência e custo
+
+---
+
+### 1Password Business
+
+**Preço**: €7,99/utilizador/mês
+
+**Pontos fortes:**
+- Interface mais polida e intuitiva
+- Cofres partilhados por departamento (RH, Financeiro, TI)
+- Travel Mode — esconde dados sensíveis em viagens internacionais
+- Integrações com Slack, Jira, GitHub
+- Relatórios de segurança detalhados
+
+**Adequado para**: PMEs com equipas remotas ou internacionais, utilizadores menos técnicos
+
+---
+
+### Keeper Business
+
+**Preço**: €4,50/utilizador/mês
+
+**Pontos fortes:**
+- Conformidade RGPD e ISO 27001 certificada
+- KeeperPAM para gestão de acessos privilegiados
+- Relatórios de conformidade automatizados
+- Monitorização de dark web incluída
+
+**Adequado para**: Empresas em setores regulados (saúde, financeiro, legal)
+
+---
+
+### NordPass Business
+
+**Preço**: €3,59/utilizador/mês
+
+**Pontos fortes:**
+- Simplicidade acima de tudo
+- XChaCha20 encryption (mais moderno que AES-256)
+- Empresa europeia (Panamá — fora da UE mas com compliance RGPD)
+- Importação fácil de passwords existentes
+
+**Adequado para**: PMEs que querem solução simples sem complexidade
+
+## Política de Passwords: O Que Implementar
+
+### Requisitos Mínimos para Passwords
+
+Defina por escrito os requisitos para cada tipo de sistema:
+
+**Contas de utilizador padrão:**
+- Mínimo 14 caracteres
+- Combinação de letras, números e símbolos
+- Não pode conter nome da empresa, data, ou palavras do dicionário
+- Validade: 12 meses (ou quando houver suspeita de comprometimento)
+
+**Contas administrativas e financeiras:**
+- Mínimo 20 caracteres
+- Geradas automaticamente pelo gestor de passwords
+- Validade: 6 meses
+- MFA obrigatório sem exceções
+
+**Contas de serviço e sistemas:**
+- Geradas automaticamente (40+ caracteres)
+- Nunca usadas por humanos diretamente
+- Rotação automatizada se possível
+
+### Autenticação de Dois Fatores (MFA) — Obrigatório
+
+O MFA é a segunda camada que torna uma password comprometida inútil. Prioridade de implementação:
+
+1. **Email corporativo** (acesso a tudo o resto passa pelo email)
+2. **VPN e acesso remoto**
+3. **ERP/CRM/sistemas financeiros**
+4. **Gestor de passwords em si**
+5. **Redes sociais corporativas**
+
+Apps recomendadas: **Microsoft Authenticator**, **Google Authenticator**, ou **Authy** (permite backup).
+
+**Evite SMS como segundo fator** — vulnerável a ataques de SIM swap. Use apps de autenticação.
+
+### Processo de Onboarding e Offboarding
+
+**Novo colaborador:**
+1. Criar conta no gestor de passwords no primeiro dia
+2. Gerar password temporária para o email corporativo
+3. Forçar mudança de password no primeiro login
+4. Conceder acesso apenas aos cofres necessários para a função
+5. Rever acessos ao fim de 30 dias (ajustar ao que realmente usa)
+
+**Saída de colaborador:**
+1. Revogar acesso ao gestor de passwords **no momento da saída**
+2. Mudar todas as passwords partilhadas a que teve acesso
+3. Revogar sessões ativas (Microsoft 365, Google Workspace, etc.)
+4. Verificar se tinha acesso a contas de serviços externos (redes sociais, AWS, etc.)
+
+Este processo deve ser um checklist formal em RH — não algo deixado ao critério do gestor.
+
+## Implementação em 5 Fases
+
+### Fase 1: Auditoria (Semana 1)
+
+Antes de instalar qualquer ferramenta, avalie o estado atual:
+
+- Liste todos os sistemas com acesso por password (email, ERP, banca, redes sociais, hosting, fornecedores)
+- Identifique passwords partilhadas atualmente
+- Mapeie quem tem acesso a quê
+- Documente ex-funcionários que podem ainda ter acessos
+
+Esta auditoria costuma revelar problemas inesperados — contas de serviços esquecidas, acessos excessivos, passwords que nunca mudaram.
+
+### Fase 2: Escolha e Setup (Semana 2)
+
+1. Escolha o gestor (Bitwarden é o ponto de partida recomendado para PMEs)
+2. Crie a conta de organização
+3. Configure políticas: força mínima de password, timeout de sessão, MFA obrigatório
+4. Crie a estrutura de cofres (por departamento ou tipo de sistema)
+5. Atribua o papel de administrador a mais do que uma pessoa
+
+### Fase 3: Migração (Semanas 3-4)
+
+1. Comece pelos sistemas críticos: email, ERP, banca
+2. Importe passwords existentes (a maioria dos gestores suporta importação de CSV ou de outros gestores)
+3. Gere novas passwords para os sistemas mais críticos
+4. Valide que todos os membros da equipa conseguem aceder ao que precisam
+
+### Fase 4: Formação (Semana 4)
+
+30 minutos são suficientes para formar a equipa:
+
+- Como instalar a extensão de browser
+- Como guardar uma nova password
+- Como usar a geração automática
+- Como aceder a passwords partilhadas
+- O que fazer se esquecer a master password
+
+Documente num guia interno de 1 página. Mantenha simples.
+
+### Fase 5: Rotina (Mês 2 em diante)
+
+- Reveja acessos trimestralmente (quem tem acesso a quê)
+- Mude passwords de sistemas críticos semestralmente
+- Verifique o relatório de saúde do gestor (passwords duplicadas, fracas, antigas)
+- Inclua a gestão de passwords na formação de novos colaboradores
+
+## Erros Comuns a Evitar
+
+**Usar a mesma master password em tudo:** A master password do gestor é a única que memoriza — deve ser única, longa, e jamais usada noutro sítio. 4-5 palavras aleatórias funcionam bem: "cavaleiro-janela-chuva-fatura".
+
+**Não ativar MFA no próprio gestor:** Sem MFA, quem obtiver a master password tem acesso a tudo. É o primeiro passo após configurar o gestor.
+
+**Partilhar passwords fora do gestor:** "Envio por WhatsApp desta vez" cria exceções que se tornam hábitos. Use a partilha interna do gestor.
+
+**Administrador único:** Se o administrador do gestor sair ou ficar indisponível, a empresa pode ficar sem acesso. Mantenha sempre dois administradores.
+
+**Não testar a recuperação:** Simule a recuperação da master password antes de precisar. Os procedimentos de emergency access do gestor devem ser conhecidos.
+
+## Conformidade e RGPD
+
+Uma política de passwords documentada e implementada através de um gestor empresarial contribui diretamente para:
+
+- **RGPD**: Artigo 32 exige "medidas técnicas e organizativas adequadas" — passwords fortes e gestão de acessos são medidas obrigatórias
+- **NIS2**: Requisitos de controlo de acessos e autenticação forte
+- **ISO 27001**: Controlo A.9 (Controlo de Acessos) exige políticas documentadas
+
+Guarde os registos de configuração da política e os logs de auditoria do gestor — podem ser necessários em caso de auditoria ou incidente.
+
+## Quanto Custa Não Fazer Nada
+
+Bitwarden Teams para 10 utilizadores: **€360/ano**.
+
+Custo médio de um incidente de compromisso de credenciais numa PME europeia: **€62.000** (sem contar paragem de negócio, danos reputacionais, ou coimas RGPD).
+
+O ROI de implementar um gestor de passwords é imediato e mensurável. É uma das poucas medidas de cibersegurança onde o custo de implementação é irrelevante face ao risco que mitiga.
+
+## Conclusão
+
+A gestão de passwords não é um problema técnico — é um problema de processo. As ferramentas são simples, baratas, e fáceis de usar. O que falta, na maioria das PMEs, é a decisão de implementar um sistema e segui-lo consistentemente.
+
+Comece esta semana: escolha um gestor, migre as 5 passwords mais críticas da empresa, e ative MFA no email corporativo. Estes três passos reduzem o risco de comprometimento de credenciais em mais de 90%.
+
+O resto pode ser feito gradualmente — mas o início tem de acontecer agora.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-13",
+    readingTime: 12,
+  },
+  {
+    slug: "backup-dados-pme-regra-3-2-1",
+    title: "Backup de Dados para PMEs: Guia Prático com a Regra 3-2-1",
+    excerpt:
+      "70% das PMEs que perdem dados críticos fecham dentro de 1 ano. Aprenda a implementar a regra 3-2-1 de backup e proteger a sua empresa contra ransomware, falhas de hardware e erros humanos.",
+    content: `Imagina chegar ao escritório segunda-feira de manhã e descobrir que todos os dados da empresa — clientes, faturas, contratos, emails — desapareceram. Ou que estão encriptados por ransomware e o atacante pede €15.000 para os devolver.
+
+Não é ficção científica. Acontece em Portugal todas as semanas. E na maioria dos casos, a empresa não tinha backups adequados — ou nunca tinha testado se funcionavam.
+
+**70% das PMEs que sofrem perda de dados críticos fecham dentro de 12 meses.** A boa notícia: proteger-se é mais simples e barato do que pensa.
+
+## O que Pode Destruir os Dados da sua Empresa
+
+Antes de falar de soluções, perceba as ameaças reais:
+
+**Ransomware (ameaça crescente):** Software malicioso que encripta todos os ficheiros e exige resgate. Em 2025, o resgate médio pedido a PMEs europeias foi €18.000 — sem garantia de recuperação. E se tiver backups na mesma rede, o ransomware encripta-os também.
+
+**Falha de hardware:** Discos rígidos têm vida útil limitada. A taxa de falha de um disco típico de 3 anos é de 12% ao ano. Em empresas com 10+ computadores, é quase certo que um disco falha por ano.
+
+**Erro humano:** Apagar por engano, sobrescrever o ficheiro errado, formatar o servidor por confusão — são as causas mais comuns de perda de dados e as mais difíceis de detetar a tempo.
+
+**Desastre físico:** Incêndio, inundação, roubo. Se os backups estão na mesma divisão que os servidores, perdem-se juntos.
+
+**Falha de fornecedor cloud:** Contas Microsoft 365 ou Google Workspace eliminadas por engano, ou dados perdidos em migrações. Os fornecedores cloud não são responsáveis pelos seus dados — o utilizador é.
+
+## A Regra 3-2-1: O Padrão da Indústria
+
+A regra 3-2-1 é o princípio fundamental de backup. É simples de memorizar e de implementar:
+
+- **3 cópias** dos dados (o original + 2 backups)
+- **2 tipos de suporte diferentes** (ex: disco externo + cloud)
+- **1 cópia offsite** (fora das instalações, ou na cloud)
+
+Esta combinação garante que nenhuma falha isolada — hardware, ransomware, desastre físico — destrói todos os dados.
+
+### Exemplo Concreto para uma PME
+
+**Cópia 1 (original):** Dados no servidor ou computadores da empresa
+
+**Cópia 2 (backup local):** NAS (Network Attached Storage) no escritório — backup automático diário, acesso rápido para recuperação
+
+**Cópia 3 (backup offsite):** Cloud (Backblaze B2, Azure Backup, ou equivalente) — backup automático para fora do escritório, protege contra desastre físico e ransomware
+
+Esta configuração cobre 99% dos cenários de perda de dados.
+
+## Backups Imutáveis: A Defesa Contra Ransomware
+
+O ransomware moderno é inteligente: quando infeta um sistema, procura e encripta backups locais antes de atacar os dados principais. Se o seu backup está na mesma rede, está em risco.
+
+A solução são **backups imutáveis** — cópias que não podem ser alteradas ou eliminadas durante um período definido, nem pelo próprio utilizador, nem pelo ransomware.
+
+Características de um backup imutável:
+- **WORM (Write Once Read Many)**: dados escritos uma vez, não podem ser modificados
+- **Object Lock** na cloud (AWS S3, Azure Blob Storage, Backblaze B2)
+- **Período de retenção configurável**: ex. 30 dias — nenhum ransomware pode apagar cópias mais antigas
+- **Air gap**: backup completamente isolado da rede principal
+
+Para PMEs, a opção mais prática é usar um serviço cloud com Object Lock ativado. Backblaze B2 com Object Lock custa aproximadamente €6/TB/mês e é tecnicamente simples de configurar.
+
+## Ferramentas Recomendadas por Cenário
+
+### PME com Servidores Windows (5-50 utilizadores)
+
+**Veeam Backup & Replication Community Edition (gratuito até 10 workloads):**
+- Backup de VMs, servidores físicos, e workstations Windows
+- Backup imutável para repositórios compatíveis
+- Recuperação granular (ficheiro individual ou sistema completo)
+- Interface visual, sem linha de comandos
+
+**Para backups em cloud:** Backblaze B2 (mais barato) ou Azure Backup (melhor integração com Microsoft)
+
+**Investimento estimado:** €0-200/ano para software + €10-30/mês para cloud storage
+
+---
+
+### PME com Microsoft 365 / Google Workspace
+
+**Atenção crítica:** Microsoft e Google não fazem backup dos seus dados. Os seus emails, ficheiros OneDrive/Drive, e dados Teams/Gmail são da sua responsabilidade.
+
+**Soluções específicas para Microsoft 365:**
+- **Veeam Backup for Microsoft 365**: líder de mercado, €1,50/utilizador/mês
+- **Acronis Cyber Protect**: backup + proteção antivírus, €4/utilizador/mês
+- **Rewind** (mais simples, adequado para PMEs pequenas): €3/utilizador/mês
+
+**O que deve ser incluído no backup do Microsoft 365:**
+- Exchange Online (emails)
+- SharePoint Online (ficheiros partilhados)
+- OneDrive for Business (ficheiros pessoais)
+- Microsoft Teams (conversas e ficheiros)
+
+---
+
+### PME Pequena (1-10 pessoas, orçamento mínimo)
+
+Se não tem servidor dedicado e trabalha maioritariamente em portáteis:
+
+**Opção simples e eficaz:**
+1. **Backblaze Personal Backup**: €99/ano por computador, backup contínuo automático para cloud
+2. **Disco externo USB** para backup semanal local (keep it simple)
+3. Para ficheiros críticos: sincronização com OneDrive ou Google Drive com versioning ativado
+
+**Custo total:** €100-200/ano para toda a equipa
+
+---
+
+### NAS (Armazenamento em Rede) para Escritório
+
+Um NAS é um servidor de armazenamento dedicado, ideal como segundo nível de backup:
+
+**QNAP ou Synology** (marcas mais comuns):
+- Capacidade: 2-20TB
+- RAID incorporado (redundância de disco)
+- Software de backup automático incluído
+- Preço: €300-800 (hardware) + discos
+
+Um NAS de 4 bays com 2 discos de 4TB em RAID 1 custa cerca de €600-800 e serve a maioria das PMEs por 5-7 anos.
+
+## Frequência de Backup: Quanto Pode Perder?
+
+O conceito chave é o **RPO (Recovery Point Objective)** — quantas horas/dias de dados pode perder sem dano grave para o negócio?
+
+| Tipo de empresa | RPO recomendado | Frequência de backup |
+|---|---|---|
+| Comércio/retail | 24 horas | Diário |
+| Escritório/serviços | 4-8 horas | A cada 4 horas |
+| E-commerce com transações | 1 hora | A cada hora |
+| Clínica/hospital | 15 minutos | Contínuo |
+
+Para a maioria das PMEs portuguesas, um backup diário automático para cloud + backup semanal para disco externo é suficiente.
+
+## Como Testar os seus Backups
+
+Um backup não testado não é um backup — é esperança.
+
+**Teste mensal simples:**
+1. Escolha um ficheiro ou pasta aleatória
+2. Delete ou mova do sistema original
+3. Restaure a partir do backup
+4. Verifique que o ficheiro está íntegro
+
+**Teste trimestral completo:**
+1. Simule uma recuperação de desastre: "Se o servidor principal falhou, consigo recuperar os dados críticos em menos de 4 horas?"
+2. Teste o processo de restauro completo num ambiente de teste
+3. Documente o tempo de recuperação real vs. o esperado
+
+**Teste de ransomware (anual):**
+1. Isole uma máquina de teste da rede
+2. Simule uma encriptação de ficheiros
+3. Verifique que os backups imutáveis na cloud não foram afetados
+4. Teste o processo de recuperação completo
+
+Documente os resultados de cada teste. Se o backup falhou, corrija antes de precisar dele a sério.
+
+## Quanto Tempo Demora a Recuperar? (RTO)
+
+O **RTO (Recovery Time Objective)** é quanto tempo pode estar sem sistemas antes de o negócio ser seriamente afetado.
+
+Perguntas para definir o seu RTO:
+- Quanto custa por hora sem acesso ao email?
+- Quanto custa por hora sem acesso ao software de faturação?
+- Qual é o impacto de 1 dia sem sistema nos clientes?
+
+Para a maioria das PMEs, RTO de 4-8 horas é aceitável. Para atingir este objetivo:
+
+1. O backup deve estar em cloud (acesso a partir de qualquer lugar)
+2. Os procedimentos de recuperação devem estar documentados
+3. Pelo menos 2 pessoas devem saber executar a recuperação
+
+Nunca descobrir o processo de recuperação durante uma crise real.
+
+## Conformidade: Backup e RGPD
+
+O RGPD exige que os dados pessoais que trata sejam protegidos. Backups são parte obrigatória dessa proteção.
+
+**Requisitos relacionados com backup:**
+- Os backups devem estar encriptados (AES-256 no mínimo)
+- Acesso aos backups deve ser controlado e registado
+- Deve saber onde estão armazenados geograficamente (relevante para dados fora da UE)
+- Deve ter política de retenção — backups não devem guardar dados para além do necessário
+
+**Serviços cloud europeus recomendados (dados ficam na UE):**
+- Azure Backup com região Europe West
+- Google Cloud Storage com região europe-west
+- Backblaze B2 com região EU Central
+
+## Plano de Backup em 1 Página
+
+Crie um documento simples com:
+
+**O que fazemos backup:**
+- [Lista de sistemas e dados críticos]
+
+**Ferramentas utilizadas:**
+- [Software + destinos de backup]
+
+**Frequência:**
+- [Diário/semanal/em tempo real por tipo de dado]
+
+**Retenção:**
+- [Quanto tempo guardamos cada backup]
+
+**Como recuperar:**
+- [Passos numerados para recuperação de emergência]
+
+**Responsável:**
+- [Nome + contacto alternativo]
+
+**Último teste realizado:**
+- [Data + resultado]
+
+Este documento deve estar acessível mesmo se os sistemas principais estiverem em baixo — guarde uma cópia impressa e num email pessoal.
+
+## Resumo: O Mínimo Viável para Começar Hoje
+
+Se não tem nada implementado e quer começar esta semana:
+
+1. **Instale Backblaze** nos computadores críticos (€99/ano/máquina) — backup automático para cloud começa imediatamente
+2. **Ative versioning** no OneDrive ou Google Drive — protege contra apagamentos acidentais
+3. **Compre um disco externo** e faça um backup manual hoje — já tem uma cópia física
+
+Estes três passos levam menos de 2 horas a implementar e cobrem os cenários mais comuns de perda de dados.
+
+A semana seguinte, avalie soluções mais robustas baseadas no volume de dados e criticidade do seu negócio.
+
+**O melhor backup é o que existe. O pior é o que estava planeado para "depois".**`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-14",
+    readingTime: 14,
+  },
+  {
+    slug: "seguranca-microsoft-365-pme",
+    title: "Segurança no Microsoft 365 para PMEs: 10 Configurações que Deve Ativar Hoje",
+    excerpt:
+      "Microsoft 365 é usado por 78% das PMEs portuguesas, mas a maioria tem configurações de segurança por defeito — que não chegam. Saiba quais as 10 configurações críticas a ativar no seu tenant.",
+    content: `O Microsoft 365 é provavelmente a ferramenta mais crítica da sua empresa — email, ficheiros, reuniões, e colaboração num só lugar. E é também um dos alvos mais atacados. Em 2025, mais de **60% dos ataques a PMEs europeias** começaram por credenciais Microsoft 365 comprometidas.
+
+O problema não é o produto — a Microsoft investe milhares de milhões em segurança. O problema são as **configurações por defeito**, pensadas para facilitar a adoção e não para maximizar a segurança. Esta lista mostra-lhe o que mudar.
+
+Precisa de acesso ao **Microsoft 365 Admin Center** (admin.microsoft.com) com permissões de Administrador Global.
+
+## 1. Ativar MFA para Todos os Utilizadores
+
+Esta é a medida mais importante desta lista. **MFA (Multi-Factor Authentication) bloqueia 99,9% dos ataques de compromisso de conta**, mesmo que a password seja conhecida pelo atacante.
+
+**Como ativar:**
+
+1. Vá a **Microsoft Entra Admin Center** → Identity → Overview → Properties
+2. Ative **Security Defaults** (opção mais simples para PMEs sem Entra ID P1/P2)
+
+Ou, com mais controlo (requer Entra ID P1):
+1. **Entra ID** → Security → Conditional Access → New Policy
+2. Target: All users
+3. Condition: Any location
+4. Grant: Require multifactor authentication
+
+**Para os utilizadores:** No primeiro login após ativação, serão pedidos para configurar o Microsoft Authenticator (app no telemóvel).
+
+**Atenção às contas de serviço** (contas que fazem integração com outros sistemas): estas muitas vezes não suportam MFA. Crie-as como Service Principals em vez de utilizadores normais.
+
+## 2. Proteger as Contas de Administrador
+
+As contas de administrador são o prémio máximo para um atacante. Uma conta de Global Admin comprometida pode eliminar toda a organização em minutos.
+
+**Regra fundamental: nunca use a conta de administrador para email ou trabalho do dia-a-dia.**
+
+**Implementação:**
+
+1. Crie contas de admin separadas das contas de trabalho diário (ex: admin@empresa.pt vs joao@empresa.pt)
+2. As contas de admin não devem ter licença de Exchange (sem email — menos superfície de ataque)
+3. Ative MFA obrigatório nas contas de admin via Conditional Access
+4. Ative **Privileged Identity Management (PIM)** se tiver Entra ID P2 — roles de admin ficam ativos apenas quando necessário
+
+**Número de Global Admins:** Mínimo 2 (para redundância), máximo 4. Mais do que isso é superfície de ataque desnecessária.
+
+## 3. Configurar Microsoft Defender for Office 365
+
+O Defender for Office 365 (incluído nos planos Business Premium e superiores) adiciona camadas de proteção contra phishing, malware em anexos e links maliciosos.
+
+**Safe Links — protege contra URLs maliciosos:**
+
+1. **Microsoft 365 Defender portal** → Email & collaboration → Policies & rules → Threat policies → Safe Links
+2. Crie uma policy para todos os utilizadores
+3. Ative: "On — URLs will be rewritten and checked against a list of known malicious links"
+4. Ative: "Apply real-time URL scanning for suspicious links and links that point to files"
+5. Ative: "Apply Safe Links to email messages sent within the organization"
+
+**Safe Attachments — sandboxing de anexos:**
+
+1. **Threat policies** → Safe Attachments
+2. Crie uma policy para todos os utilizadores
+3. Action: **Dynamic Delivery** (entrega o email imediatamente mas mantém o anexo em análise)
+4. Ative: "Enable Safe Attachments for SharePoint, OneDrive, and Microsoft Teams"
+
+## 4. Configurar Anti-Phishing
+
+Os ataques de phishing sofisticados usam domínios parecidos com os seus fornecedores. O Defender tem proteção específica para isto.
+
+**Anti-phishing policy:**
+
+1. **Threat policies** → Anti-phishing → Edit default policy
+2. **Impersonation protection** — adicione os seus domínios e executivos da empresa como alvos protegidos
+3. **Mailbox intelligence**: Enable (usa padrões históricos de email para detetar anomalias)
+4. **Spoof intelligence**: Enable com "Honor DMARC policy"
+
+**Ação recomendada para emails suspeitos:** Mover para Junk (não rejeitar — pode ter falsos positivos) e notificar o utilizador.
+
+## 5. Implementar SPF, DKIM e DMARC
+
+Estes três registos DNS protegem o seu domínio de ser usado em ataques de phishing — e melhoram a deliverability dos seus emails.
+
+**SPF (Sender Policy Framework):**
+Diz ao mundo quais servidores podem enviar email em nome do seu domínio.
+
+Registo DNS (tipo TXT, nome: @):
+\`\`\`
+v=spf1 include:spf.protection.outlook.com -all
+\`\`\`
+
+**DKIM (DomainKeys Identified Mail):**
+Assina criptograficamente cada email enviado.
+
+1. **Microsoft 365 Admin Center** → Settings → Domains
+2. Selecione o seu domínio → DNS records
+3. Active DKIM e copie os registos CNAME para o seu DNS
+
+**DMARC (Domain-based Message Authentication):**
+Define o que fazer quando SPF ou DKIM falham.
+
+Registo DNS (tipo TXT, nome: _dmarc):
+\`\`\`
+v=DMARC1; p=quarantine; rua=mailto:dmarc-reports@suaempresa.pt; pct=100
+\`\`\`
+
+Comece com \`p=quarantine\` (emails suspeitos vão para spam). Quando tiver 2-3 semanas de relatórios sem falsos positivos, mude para \`p=reject\`.
+
+## 6. Desativar Autenticação Básica (Legacy Auth)
+
+A autenticação básica (Basic Auth) envia credenciais sem encriptação e não suporta MFA. É explorada ativamente por atacantes.
+
+**Verificar se está ativa:**
+
+1. **Microsoft Entra Admin Center** → Identity → Monitoring & health → Sign-in logs
+2. Filtre por "Client app" → procure "Other clients", "Exchange ActiveSync", "IMAP", "POP3", "SMTP Auth"
+
+**Bloquear via Conditional Access:**
+
+1. Novo policy → Target: All users
+2. Condition → Client apps → selecione todos os Legacy Authentication clients
+3. Grant → Block access
+
+**Atenção:** Verifique primeiro se algum sistema (impressoras, scanners, software antigo de email) usa SMTP Auth — esses precisam de ser migrados ou excluídos da política antes de bloquear.
+
+## 7. Configurar Alerts de Segurança
+
+Não saber que algo correu mal é tão mau como não ter proteção. Configure alertas para atividade suspeita.
+
+**Microsoft 365 Defender — Alert policies:**
+
+1. **Microsoft 365 Defender** → Policies & rules → Alert policy
+2. Ative (ou crie) alertas para:
+   - **Unusual volume of file deletion** — pode indicar ransomware
+   - **Mass download activity** — exfiltração de dados
+   - **Forwarding/redirect rules created in Exchange** — comum em contas comprometidas
+   - **Phishing campaign detected**
+   - **Admin permissions granted** — monitorizar elevação de privilégios
+
+**Destination:** Email para o responsável de TI. Se não tem, envie para o proprietário da empresa.
+
+## 8. Gerir Aplicações de Terceiros com Acesso ao Microsoft 365
+
+Muitas aplicações SaaS pedem permissões de acesso ao Microsoft 365 (acesso ao email, calendário, ficheiros). Algumas têm acesso excessivo ou são abandonadas mas mantêm acesso.
+
+**Auditoria de aplicações:**
+
+1. **Microsoft Entra Admin Center** → Applications → Enterprise applications
+2. Filtre por "User assigned" — veja todas as apps com acesso
+3. Identifique apps que já não são usadas → remova o acesso
+
+**Restringir quem pode dar permissões:**
+
+1. **Entra ID** → User settings → Enterprise applications
+2. "Users can consent to apps accessing company data": **No**
+3. "Users can consent to apps accessing company data for the groups they own": **No**
+
+Com isto, apenas admins podem autorizar novas integrações — evita que utilizadores aceitem apps maliciosas inadvertidamente.
+
+## 9. Ativar Audit Logging e Configurar Retenção
+
+Os logs de auditoria registam tudo o que acontece no Microsoft 365. São essenciais para investigar incidentes — mas têm de estar ativos.
+
+**Verificar e ativar:**
+
+1. **Microsoft Purview compliance portal** → Audit
+2. Se aparecer "Start recording user and admin activity" → clique para ativar
+
+**Retenção:** Por defeito, logs são guardados 90 dias (Microsoft 365 Business) ou 180 dias (E3/E5). Para PMEs, 90 dias é geralmente suficiente.
+
+**O que procurar periodicamente:**
+- Logins de países onde não opera
+- Logins fora de horas (madrugada)
+- Volume anormal de email eliminado
+- Regras de encaminhamento criadas
+
+Pode pesquisar estas atividades em Audit → Search.
+
+## 10. Configurar Backup do Microsoft 365
+
+Como mencionado noutro artigo, a Microsoft **não faz backup dos seus dados**. Os termos de serviço são explícitos: a responsabilidade pelos dados é do cliente.
+
+**O que está em risco sem backup:**
+- Emails eliminados após o período de recuperação (30 dias)
+- Ficheiros OneDrive/SharePoint eliminados após 93 dias
+- Dados de Teams
+- Conteúdo de mailboxes de utilizadores que saíram
+
+**Soluções para Microsoft 365:**
+- **Veeam Backup for Microsoft 365** — líder de mercado, €1,50/utilizador/mês
+- **Acronis Cyber Protect** — backup + segurança, €4/utilizador/mês
+- **MSP360** (antigo CloudBerry) — solução económica para PMEs
+
+Configure backup diário para armazenamento externo (não dentro do próprio Microsoft 365).
+
+## Verificação Rápida: Está Seguro?
+
+Use esta checklist para avaliar o estado atual do seu tenant:
+
+- [ ] MFA ativo para todos os utilizadores (incluindo admins)
+- [ ] Contas de administrador separadas das contas de trabalho
+- [ ] Safe Links e Safe Attachments configurados
+- [ ] SPF, DKIM e DMARC configurados e validados
+- [ ] Basic Auth bloqueado
+- [ ] Alertas de segurança configurados
+- [ ] Auditoria de aplicações de terceiros realizada
+- [ ] Audit logging ativo
+- [ ] Backup externo do Microsoft 365 configurado
+
+Se tem menos de 6 itens marcados, a sua instalação Microsoft 365 tem vulnerabilidades ativas que um atacante pode explorar.
+
+## Por Onde Começar se Está a Partir do Zero
+
+**Esta semana (2-3 horas):**
+1. Ative Security Defaults (ativa MFA para todos automaticamente)
+2. Crie contas de admin separadas
+3. Adicione SPF ao DNS do domínio
+
+**Próximas 2 semanas (4-6 horas):**
+4. Configure Safe Links e Safe Attachments
+5. Adicione DKIM e DMARC
+6. Ative audit logging
+
+**Próximo mês:**
+7. Configure alertas
+8. Audite aplicações de terceiros
+9. Implemente backup externo
+10. Bloqueie Basic Auth (verifique primeiro os sistemas dependentes)
+
+Cada item nesta lista reduz o risco de um incidente. A ordem importa — MFA primeiro, porque bloqueia a maioria dos ataques simples que exploram credenciais roubadas.
+
+## Recursos Adicionais
+
+**Microsoft Secure Score:** Aceda ao **Microsoft 365 Defender** → Secure Score para ver uma pontuação de segurança do seu tenant e recomendações personalizadas ordenadas por impacto. É o melhor ponto de partida para priorizar melhorias.
+
+**Microsoft Security Documentation:** A documentação oficial da Microsoft é completa e gratuita — procure "Microsoft 365 security best practices" para detalhes de implementação de cada configuração.
+
+A segurança do Microsoft 365 é um processo contínuo, não uma configuração única. Reveja as configurações trimestralmente e fique atento às notificações de segurança que a Microsoft envia para os administradores do tenant.`,
+    category: "ferramentas",
+    categoryLabel: "Ferramentas",
+    publishedAt: "2026-04-14",
+    readingTime: 16,
+  },
 ];
 
 export function getPostBySlug(slug: string): Post | undefined {
