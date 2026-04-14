@@ -7041,8 +7041,8 @@ Este guia explica o que são, porque são críticos, e como os configurar, mesmo
 Por omissão, o protocolo de email (SMTP) não verifica se quem envia é realmente quem diz ser. Um criminoso pode enviar um email com o remetente **pagamentos@suaempresa.pt** sem ter acesso ao seu servidor — basta configurar um servidor de email e definir esse endereço como remetente.
 
 Este tipo de ataque chama-se **email spoofing** e está na base de:
-- Fraude CEO/BEC (Business Email Compromise)
-- Phishing direcionado a clientes e fornecedores
+- [Fraude CEO/BEC (Business Email Compromise)](/blog/fraude-ceo-bec-pme-portugal)
+- [Phishing direcionado](/blog/proteger-empresa-contra-phishing) a clientes e fornecedores
 - Ataques a parceiros que confiam nos emails da sua empresa
 
 O impacto é duplo: a sua empresa é usada como vetor de ataque, e a reputação do domínio degrada-se rapidamente quando os emails falsificados são marcados como spam.
@@ -7290,10 +7290,10 @@ O erro mais comum das PMEs na cloud é assumir que o fornecedor (Microsoft, Goog
 - Gestão de identidades e acessos (quem acede ao quê)
 - Configuração de segurança dos serviços contratados
 - Dados que coloca na cloud
-- Dispositivos que acedem à cloud
+- [Dispositivos que acedem à cloud](/blog/seguranca-trabalho-remoto-pme)
 - Deteção e resposta a incidentes na sua conta
 
-Uma violação de dados que resulta de uma configuração incorreta da sua parte não é responsabilidade da Microsoft nem do Google. E acontece frequentemente — a maioria das violações em cloud resulta de má configuração, não de falhas do fornecedor.
+Uma violação de dados que resulta de uma configuração incorreta da sua parte não é responsabilidade da Microsoft nem do Google. E acontece frequentemente — a maioria das violações em cloud resulta de má configuração, não de falhas do fornecedor. Considere implementar uma abordagem [Zero Trust](/blog/zero-trust-pme-guia-pratico) para reforçar a segurança dos seus serviços cloud.
 
 ## Microsoft 365: Configurações Essenciais de Segurança
 
@@ -7538,6 +7538,8 @@ Muitas empresas optam por não reportar incidentes por receio de exposição ou 
 ## As Quatro Entidades a Contactar
 
 ### 1. CNCS — Centro Nacional de Cibersegurança
+
+O [CNCS e CERT.PT](/blog/cncs-cert-pt-o-que-sao-como-ajudam-pme) são as principais entidades de cibersegurança em Portugal.
 
 **Quando reportar ao CNCS:**
 - Sempre que houver um incidente de cibersegurança significativo
@@ -8003,7 +8005,7 @@ Este é o primeiro e mais importante passo. Se só fizer uma coisa desta lista, 
 - Painel de administração do site e hosting
 - Qualquer sistema com dados de clientes
 
-O MFA por si só elimina **99% dos ataques de credenciais comprometidas**, segundo a Microsoft. Uma password roubada sem o segundo fator não serve de nada.
+O MFA por si só elimina **99% dos ataques de credenciais comprometidas**, segundo a Microsoft. Uma password roubada sem o segundo fator não serve de nada. Consulte o nosso [guia completo de autenticação de dois fatores](/blog/autenticacao-dois-fatores-2fa-pme) para implementação detalhada.
 
 **Ferramentas gratuitas/baratas:**
 - Microsoft Authenticator (grátis, incluído no Microsoft 365)
@@ -8024,6 +8026,7 @@ Cada colaborador deve ter acesso apenas ao que precisa para o seu trabalho — n
 - Quando um colaborador muda de função ou sai, altere os acessos imediatamente
 - Use grupos de segurança para gerir permissões em vez de as atribuir individualmente
 - Crie contas de administrador separadas para tarefas administrativas — os administradores não devem usar a conta admin no dia-a-dia
+- Implemente uma [estratégia robusta de gestão de passwords](/blog/gestao-passwords-pme-guia-completo) para todas as contas
 
 **No Microsoft 365:** vá a admin.microsoft.com → Utilizadores → selecione cada utilizador e reveja as funções atribuídas. A maioria dos colaboradores deve ter apenas a função "Utilizador".
 
@@ -8049,7 +8052,7 @@ Em vez de "tens a password, tens acesso", o acesso condicionado adiciona context
 - Bloquear acesso de dispositivos não geridos (pessoais) a dados sensíveis
 - Alertar para logins em horários incomuns (ex: às 3h da manhã)
 
-No Microsoft 365 Business Premium, estas regras estão disponíveis no Azure Active Directory (Entra ID). No plano Business Standard, as funcionalidades são mais limitadas mas ainda é possível configurar políticas básicas.
+No Microsoft 365 Business Premium, estas regras estão disponíveis no Azure Active Directory (Entra ID). No plano Business Standard, as funcionalidades são mais limitadas mas ainda é possível configurar políticas básicas. Consulte o nosso [guia de segurança Microsoft 365](/blog/seguranca-microsoft-365-pme) para configurações detalhadas.
 
 ### 5. Monitorização e Deteção de Anomalias
 
@@ -8163,7 +8166,7 @@ Guias técnicos gratuitos em português sobre temas como:
 - Segurança de passwords
 - Proteção contra phishing
 - Configuração segura de redes Wi-Fi
-- Resposta a incidentes
+- [Resposta a incidentes](/blog/plano-resposta-incidentes-ciberseguranca-pme)
 
 **Quadro Nacional de Referência para a Cibersegurança (QNRCS)**
 Um referencial adaptado para empresas portuguesas, baseado no NIST Cybersecurity Framework. Permite avaliar a maturidade de segurança e identificar lacunas. Acesso gratuito, mas requer algum conhecimento técnico para aplicar.
@@ -8183,7 +8186,7 @@ Com a entrada em vigor da NIS2 em Portugal, o CNCS é a entidade onde as empresa
 
 O **CERT.PT** (Computer Emergency Response Team) é a equipa operacional de resposta a incidentes de cibersegurança, integrada no CNCS. É o equivalente português de organizações como o CERT-EU ou o US-CERT.
 
-Enquanto o CNCS define políticas, o CERT.PT **responde a incidentes em tempo real**.
+Enquanto o CNCS define políticas, o CERT.PT **responde a incidentes em tempo real**. Consulte o nosso [guia completo sobre como reportar um ciberataque](/blog/como-reportar-ciberataque-portugal-pme) para saber quando e como contactar cada entidade.
 
 ### O Que Faz
 
@@ -8298,7 +8301,7 @@ Para um plano completo de como responder a um ciberataque, leia o nosso guia sob
 
 Este cenário — que teria parecido ficção científica há três anos — é hoje uma técnica de fraude ativa em Portugal. A inteligência artificial democratizou ferramentas que antes exigiam recursos de serviços secretos. Qualquer grupo criminoso com alguma organização consegue agora criar phishing personalizado, vozes sintéticas e vídeos falsos convincentes.
 
-Para as PMEs, que dependem de confiança pessoal e têm menos camadas de verificação do que grandes empresas, estas ameaças são particularmente perigosas.
+Para as PMEs, que dependem de confiança pessoal e têm menos camadas de verificação do que grandes empresas, estas ameaças são particularmente perigosas. É essencial implementar [formação adequada em cibersegurança](/blog/formacao-ciberseguranca-colaboradores-pme) para que os colaboradores reconheçam estas novas ameaças.
 
 ## Como a IA Mudou o Phishing
 
@@ -8318,7 +8321,7 @@ O phishing com IA em 2026 é diferente:
 
 ### Exemplos Reais Adaptados ao Contexto Português
 
-**Fraude de fatura de fornecedor:** Um email do "fornecedor habitual" informa que mudou de IBAN e pede que a próxima fatura seja paga para a nova conta. O email tem logo correto, assinatura idêntica, e referência a faturas reais anteriores.
+**Fraude de fatura de fornecedor:** Um email do "fornecedor habitual" informa que mudou de IBAN e pede que a próxima fatura seja paga para a nova conta. O email tem logo correto, assinatura idêntica, e referência a faturas reais anteriores. Este tipo de [fraude CEO e BEC](/blog/fraude-ceo-bec-pme-portugal) está a crescer rapidamente em Portugal.
 
 **Phishing de credenciais M365:** Notificação de "documento partilhado" ou "assinatura pendente" que redireciona para uma página de login da Microsoft visualmente idêntica à real, mas em domínio diferente (ex: microsoftonline-pt.com).
 
