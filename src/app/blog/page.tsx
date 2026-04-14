@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { posts, CATEGORIES } from "@/lib/posts";
 import type { Metadata } from "next";
+import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { BlogContent } from "@/components/blog-content";
 
@@ -41,33 +42,7 @@ export default async function BlogPage({
   return (
     <div className="min-h-screen bg-bg">
       {/* Navigation */}
-      <header>
-        <nav className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="text-lg font-bold text-brand">
-            CiberPME
-          </Link>
-          <div className="flex items-center gap-6 text-sm text-text-secondary">
-            <Link href="/avaliacao-seguranca" className="hover:text-brand transition">
-              Avaliação
-            </Link>
-            <Link href="/recursos" className="hover:text-brand transition">
-              Recursos
-            </Link>
-            <Link href="/blog" className="text-brand font-bold" aria-current="page">
-              Blog
-            </Link>
-            <Link href="/ferramentas" className="hover:text-brand transition">
-              Ferramentas
-            </Link>
-            <Link href="/faq" className="hover:text-brand transition">
-              FAQ
-            </Link>
-            <Link href="/#sobre" className="hover:text-brand transition">
-              Sobre
-            </Link>
-          </div>
-        </nav>
-      </header>
+      <Header currentPath="/blog" />
 
       <main id="main-content" className="max-w-4xl mx-auto px-6 py-12">
         <h1 className="text-3xl md:text-4xl font-bold text-brand mb-4 text-balance font-display tracking-tight">Blog</h1>

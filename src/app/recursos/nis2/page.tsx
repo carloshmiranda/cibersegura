@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { posts, CATEGORIES, type Post } from "@/lib/posts";
 
@@ -193,33 +194,7 @@ export default function RecursosNis2Page() {
       />
 
       {/* Navigation */}
-      <header>
-        <nav className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="text-lg font-bold text-brand">
-            CiberPME
-          </Link>
-          <div className="flex items-center gap-6 text-sm text-text-secondary">
-            <Link href="/avaliacao-seguranca" className="hover:text-brand transition">
-              Avaliação
-            </Link>
-            <Link href="/recursos" className="hover:text-brand transition">
-              Recursos
-            </Link>
-            <Link href="/blog" className="hover:text-brand transition">
-              Blog
-            </Link>
-            <Link href="/ferramentas" className="hover:text-brand transition">
-              Ferramentas
-            </Link>
-            <Link href="/faq" className="hover:text-brand transition">
-              FAQ
-            </Link>
-            <Link href="/#sobre" className="hover:text-brand transition">
-              Sobre
-            </Link>
-          </div>
-        </nav>
-      </header>
+      <Header currentPath="/recursos/nis2" />
 
       <main id="main-content" className="max-w-5xl mx-auto px-6 py-12">
         {/* Breadcrumb */}
