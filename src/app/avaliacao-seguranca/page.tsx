@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import type { Metadata } from "next";
+import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { NewsletterForm } from "../newsletter-form";
 
@@ -260,27 +261,7 @@ export default function AvaliacaoSegurancaPage() {
     return (
       <div className="min-h-screen bg-bg">
         {/* Navigation */}
-        <header>
-          <nav className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-            <Link href="/" className="text-lg font-bold text-brand">
-              CiberPME
-            </Link>
-            <div className="flex items-center gap-6 text-sm text-text-secondary">
-              <Link href="/recursos" className="hover:text-brand transition">
-                Recursos
-              </Link>
-              <Link href="/blog" className="hover:text-brand transition">
-                Blog
-              </Link>
-              <Link href="/ferramentas" className="hover:text-brand transition">
-                Ferramentas
-              </Link>
-              <Link href="/faq" className="hover:text-brand transition">
-                FAQ
-              </Link>
-            </div>
-          </nav>
-        </header>
+        <Header currentPath="/avaliacao-seguranca" />
 
         <main id="main-content" className="max-w-3xl mx-auto px-6 py-12">
           {/* Result Header */}
@@ -403,27 +384,7 @@ export default function AvaliacaoSegurancaPage() {
   return (
     <div className="min-h-screen bg-bg">
       {/* Navigation */}
-      <header>
-        <nav className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="text-lg font-bold text-brand">
-            CiberPME
-          </Link>
-          <div className="flex items-center gap-6 text-sm text-text-secondary">
-            <Link href="/recursos" className="hover:text-brand transition">
-              Recursos
-            </Link>
-            <Link href="/blog" className="hover:text-brand transition">
-              Blog
-            </Link>
-            <Link href="/ferramentas" className="hover:text-brand transition">
-              Ferramentas
-            </Link>
-            <Link href="/faq" className="hover:text-brand transition">
-              FAQ
-            </Link>
-          </div>
-        </nav>
-      </header>
+      <Header currentPath="/avaliacao-seguranca" />
 
       <main id="main-content" className="max-w-2xl mx-auto px-6 py-12">
         {/* Header */}

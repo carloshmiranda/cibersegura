@@ -2,6 +2,7 @@ import Link from "next/link";
 import { posts, CATEGORIES } from "@/lib/posts";
 import { NewsletterForm } from "./newsletter-form";
 import { NIS2Banner } from "@/components/nis2-banner";
+import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { neon } from "@neondatabase/serverless";
 import type { Metadata } from "next";
@@ -28,8 +29,6 @@ export const metadata: Metadata = {
   },
 };
 
-const COMPANY_NAME = "CiberPME";
-
 async function getWaitlistCount() {
   try {
     const sql = neon(process.env.DATABASE_URL!);
@@ -47,33 +46,7 @@ export default async function HomePage() {
   return (
     <div className="min-h-screen bg-bg">
       {/* Navigation */}
-      <header>
-        <nav className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="text-lg font-bold text-brand" aria-current="page">
-            {COMPANY_NAME}
-          </Link>
-          <div className="flex items-center gap-6 text-sm text-text-secondary">
-            <Link href="/avaliacao-seguranca" className="hover:text-brand transition">
-              Avaliação
-            </Link>
-            <Link href="/recursos" className="hover:text-brand transition">
-              Recursos
-            </Link>
-            <Link href="/blog" className="hover:text-brand transition">
-              Blog
-            </Link>
-            <Link href="/ferramentas" className="hover:text-brand transition">
-              Ferramentas
-            </Link>
-            <Link href="/faq" className="hover:text-brand transition">
-              FAQ
-            </Link>
-            <Link href="#sobre" className="hover:text-brand transition">
-              Sobre
-            </Link>
-          </div>
-        </nav>
-      </header>
+      <Header currentPath="/" />
 
       {/* NIS2 Urgency Banner */}
       <NIS2Banner />
