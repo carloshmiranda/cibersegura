@@ -205,6 +205,9 @@ export default function RecursosNis2Page() {
             <Link href="/recursos" className="hover:text-brand transition">
               Recursos
             </Link>
+            <Link href="/recursos/nis2" className="text-brand font-bold" aria-current="page">
+              Recursos NIS2
+            </Link>
             <Link href="/blog" className="hover:text-brand transition">
               Blog
             </Link>

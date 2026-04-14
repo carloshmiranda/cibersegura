@@ -364,6 +364,9 @@ export default function FerramentasPage() {
             <Link href="/recursos" className="hover:text-brand transition">
               Recursos
             </Link>
+            <Link href="/recursos/nis2" className="hover:text-brand transition">
+              Recursos NIS2
+            </Link>
             <Link href="/blog" className="hover:text-brand transition">
               Blog
             </Link>

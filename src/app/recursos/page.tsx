@@ -460,6 +460,9 @@ export default function RecursosPage() {
             <Link href="/recursos" className="text-brand font-bold" aria-current="page">
               Recursos
             </Link>
+            <Link href="/recursos/nis2" className="hover:text-brand transition">
+              Recursos NIS2
+            </Link>
             <Link href="/blog" className="hover:text-brand transition">
               Blog
             </Link>

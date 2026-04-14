@@ -269,6 +269,9 @@ export default function AvaliacaoSegurancaPage() {
               <Link href="/recursos" className="hover:text-brand transition">
                 Recursos
               </Link>
+              <Link href="/recursos/nis2" className="hover:text-brand transition">
+                Recursos NIS2
+              </Link>
               <Link href="/blog" className="hover:text-brand transition">
                 Blog
               </Link>
@@ -411,6 +414,9 @@ export default function AvaliacaoSegurancaPage() {
           <div className="flex items-center gap-6 text-sm text-text-secondary">
             <Link href="/recursos" className="hover:text-brand transition">
               Recursos
+            </Link>
+            <Link href="/recursos/nis2" className="hover:text-brand transition">
+              Recursos NIS2
             </Link>
             <Link href="/blog" className="hover:text-brand transition">
               Blog
