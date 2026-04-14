@@ -13,7 +13,6 @@
 ## Up Next
 <!-- Items to tackle in the next cycle -->
 
-- 🟡 **P1 — SEO**: Internal linking pass — new posts (Zero Trust, CNCS/CERT.PT, IA phishing, SPF/DKIM/DMARC, cloud security, incident reporting) should link to each other and to related existing posts; use `/api/admin/internal-linking` endpoint if implemented
 - 🟡 **P1 — Content**: Article on "Segurança de Endpoints para PMEs: EDR vs Antivírus Tradicional" — high-search-volume gap, complements Zero Trust post
 
 ---
@@ -31,6 +30,9 @@
 
 ## Done
 <!-- Completed items with date -->
+
+### 2026-04-14
+- ✅ **internal-linking-pass**: Added strategic internal links to 6 new posts (Zero Trust, CNCS/CERT.PT, AI phishing, SPF/DKIM/DMARC, cloud security, incident reporting) — 10+ contextual links between related content for improved SEO and user experience
 
 ### 2026-04-13
 - ✅ **seo-updated-at**: Add `updatedAt` field to Post interface and expose `dateModified` in Article schema — Implemented optional updatedAt field for posts and updated JSON-LD schema to use it for Google freshness signals
