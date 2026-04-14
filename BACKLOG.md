@@ -13,7 +13,6 @@
 ## Up Next
 <!-- Items to tackle in the next cycle -->
 
-- 🟡 **P1 — Content**: Firewall Empresarial para PMEs: UTM vs NGFW — complementa o artigo EDR e o guia Zero Trust; boa volumetria de pesquisa em PT
 - 🟡 **P1 — SEO**: Submeter novos URLs ao IndexNow após cada deploy com conteúdo novo (endpoint `/api/indexnow-submit` já existe)
 
 ---
@@ -36,6 +35,7 @@
 - ✅ **bugfix**: Fixed duplicate slug `nis2-entrou-em-vigor` — second post (2026-04-09 comprehensive guide) renamed to `nis2-decreto-lei-125-2025-obrigacoes-pme`
 - ✅ **growth**: Article "EDR vs Antivírus Tradicional: O Que a Sua PME Realmente Precisa para Proteger os Endpoints" — `/blog/edr-vs-antivirus-seguranca-endpoints-pme`
 - ✅ **internal-linking-pass**: Added strategic internal links to 6 new posts (Zero Trust, CNCS/CERT.PT, AI phishing, SPF/DKIM/DMARC, cloud security, incident reporting) — 10+ contextual links between related content for improved SEO and user experience
+- ✅ **growth**: Article "Firewall Empresarial para PMEs: UTM vs NGFW — Qual Escolher?" — `/blog/firewall-empresarial-utm-ngfw-pme`; back-links added from EDR, Zero Trust, and WiFi posts
 
 ### 2026-04-13
 - ✅ **seo-updated-at**: Add `updatedAt` field to Post interface and expose `dateModified` in Article schema — Implemented optional updatedAt field for posts and updated JSON-LD schema to use it for Google freshness signals
