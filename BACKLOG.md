@@ -13,7 +13,8 @@
 ## Up Next
 <!-- Items to tackle in the next cycle -->
 
-- 🟡 **P1 — Content**: Article on "Segurança de Endpoints para PMEs: EDR vs Antivírus Tradicional" — high-search-volume gap, complements Zero Trust post
+- 🟡 **P1 — Content**: Firewall Empresarial para PMEs: UTM vs NGFW — complementa o artigo EDR e o guia Zero Trust; boa volumetria de pesquisa em PT
+- 🟡 **P1 — SEO**: Submeter novos URLs ao IndexNow após cada deploy com conteúdo novo (endpoint `/api/indexnow-submit` já existe)
 
 ---
 
@@ -32,6 +33,8 @@
 <!-- Completed items with date -->
 
 ### 2026-04-14
+- ✅ **bugfix**: Fixed duplicate slug `nis2-entrou-em-vigor` — second post (2026-04-09 comprehensive guide) renamed to `nis2-decreto-lei-125-2025-obrigacoes-pme`
+- ✅ **growth**: Article "EDR vs Antivírus Tradicional: O Que a Sua PME Realmente Precisa para Proteger os Endpoints" — `/blog/edr-vs-antivirus-seguranca-endpoints-pme`
 - ✅ **internal-linking-pass**: Added strategic internal links to 6 new posts (Zero Trust, CNCS/CERT.PT, AI phishing, SPF/DKIM/DMARC, cloud security, incident reporting) — 10+ contextual links between related content for improved SEO and user experience
 
 ### 2026-04-13

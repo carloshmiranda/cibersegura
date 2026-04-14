@@ -2843,10 +2843,10 @@ Para apoio adicional na implementação das medidas NIS2 após o registo, consul
     readingTime: 15,
   },
   {
-    slug: "nis2-entrou-em-vigor",
-    title: "NIS2 Entrou em Vigor: O Que Mudou Para as PMEs Portuguesas",
+    slug: "nis2-decreto-lei-125-2025-obrigacoes-pme",
+    title: "NIS2 em Portugal: Obrigações Completas para PMEs ao Abrigo do Decreto-Lei 125/2025",
     excerpt:
-      "A diretiva NIS2 entrou oficialmente em vigor em Portugal a 3 de abril de 2026. Conheça as novas obrigações, prazos de conformidade, autoridades competentes e penalizações que afetam milhares de PMEs portuguesas.",
+      "Guia completo das obrigações NIS2 para PMEs portuguesas ao abrigo do Decreto-Lei 125/2025. Prazos, autoridades competentes, setores abrangidos e penalizações explicados de forma clara.",
     content: `A **NIS2 entrou oficialmente em vigor em Portugal** a 3 de abril de 2026, através do Decreto-Lei 125/2025, marcando uma nova era na cibersegurança nacional. Esta transposição da Diretiva (UE) 2022/2555 introduz obrigações vinculativas que afetam milhares de PMEs portuguesas, muito além dos setores tradicionalmente considerados críticos.
 
 Com a entrada em vigor da NIS2, **Portugal passou a ter o regime de cibersegurança mais abrangente da sua história**, expandindo dramaticamente o universo de empresas sujeitas a obrigações legais de cibersegurança. Se a sua PME opera em setores como transportes, saúde, energia, telecomunicações, água, administração pública, setor espacial ou fornece serviços digitais, as novas regras aplicam-se imediatamente.
@@ -8454,6 +8454,283 @@ Para uma avaliação do nível de preparação da sua empresa, utilize a nossa [
     categoryLabel: "Ameacas",
     publishedAt: "2026-04-13",
     readingTime: 13,
+  },
+  {
+    slug: "edr-vs-antivirus-seguranca-endpoints-pme",
+    title: "EDR vs Antivírus Tradicional: O Que a Sua PME Realmente Precisa para Proteger os Endpoints",
+    excerpt:
+      "O antivírus tradicional já não chega para travar ransomware, ataques sem ficheiros e ameaças avançadas. Descubra o que é EDR, as diferenças reais para o antivírus clássico e qual a solução certa para a sua PME portuguesa.",
+    content: `Em 2023, o CNCS registou um aumento de **47% nos ataques bem-sucedidos a PMEs portuguesas** — e a grande maioria contornava antivírus tradicionais sem dificuldade. A razão é simples: o panorama das ameaças mudou radicalmente, mas muitas empresas continuam a confiar em tecnologia desenhada para ameaças dos anos 2000.
+
+Este artigo explica, sem jargão excessivo, o que distingue um EDR (Endpoint Detection and Response) de um antivírus clássico, porque é que a diferença importa para a sua empresa e como escolher a solução certa com um orçamento de PME.
+
+## O Antivírus Tradicional: O Que Faz (e O Que Não Faz)
+
+### Como Funciona a Deteção por Assinatura
+
+Um antivírus clássico funciona como um dicionário de ameaças conhecidas. Quando um ficheiro entra no sistema, o software compara-o contra uma base de dados de assinaturas — padrões únicos de código malicioso identificados pelos investigadores.
+
+**O problema:** este modelo assume que a ameaça já foi vista antes. Um ataque novo — ou uma variante ligeiramente modificada de um ataque antigo — não tem assinatura. Passa sem ser detetado.
+
+### As Limitações Concretas do Antivírus Tradicional
+
+**1. Cego a ataques sem ficheiros (fileless attacks)**
+Muitos ataques modernos nunca escrevem um ficheiro em disco. Injetam código malicioso diretamente na memória RAM ou exploram ferramentas legítimas já instaladas no Windows (PowerShell, WMI, certutil). O antivírus não analisa memória em tempo real — não vê nada.
+
+**2. Ineficaz contra ransomware moderno**
+O ransomware atual usa técnicas de ofuscação, carrega-se em fases e evita padrões conhecidos. Grupos como LockBit 3.0 e BlackCat distribuem variantes novas a cada ataque especificamente para contornar assinaturas existentes.
+
+**3. Sem capacidade de resposta**
+Quando o antivírus deteta algo suspeito — muitas vezes já tarde — a sua resposta limita-se a quarentenar um ficheiro. Não consegue responder a perguntas críticas: como entrou? Que outros sistemas tocou? Que dados foram acedidos?
+
+**4. Telemetria zero**
+Um antivírus tradicional não regista o comportamento dos endpoints ao longo do tempo. Em caso de incidente, é impossível fazer uma análise forense adequada — não há histórico.
+
+## O Que é EDR e Como Funciona
+
+EDR — Endpoint Detection and Response — é uma categoria de solução de segurança que monitoriza continuamente o comportamento de todos os processos num endpoint (computador, portátil, servidor) e responde automaticamente a atividades suspeitas.
+
+### Os Quatro Pilares do EDR
+
+**1. Monitorização contínua de comportamentos**
+
+O agente EDR instalado no endpoint regista permanentemente:
+- Todos os processos iniciados e as suas relações (quem criou quem)
+- Ligações de rede estabelecidas e para onde
+- Ficheiros criados, modificados ou eliminados
+- Chaves de registo alteradas
+- Comandos executados na linha de comandos
+- Injeções de código entre processos
+
+Não procura padrões conhecidos — procura comportamentos anómalos. Um processo do Word a tentar contactar um servidor russo, ou o PowerShell a criar um serviço de sistema após um clique num email, são sinais que o EDR deteta mesmo sem assinatura.
+
+**2. Deteção baseada em IA e análise comportamental**
+
+Sistemas EDR modernos usam modelos de machine learning treinados com milhões de incidentes reais. Constroem uma linha base do comportamento normal da sua organização e alertam quando algo se desvia significativamente.
+
+Esta abordagem deteta:
+- Living-off-the-land attacks (usar ferramentas legítimas para fins maliciosos)
+- Movimentos laterais entre máquinas
+- Escalada de privilégios
+- Exfiltração de dados
+
+**3. Resposta automatizada a incidentes**
+
+Quando o EDR deteta uma ameaça ativa, pode responder imediatamente sem intervenção humana:
+- Isolar o endpoint da rede (enquanto mantém acesso remoto para investigação)
+- Terminar processos maliciosos
+- Reverter alterações feitas por ransomware (em soluções com rollback)
+- Bloquear hashes de ficheiros em toda a organização
+- Notificar os administradores com contexto detalhado
+
+**4. Investigação e forense**
+
+O EDR mantém um histórico completo de toda a atividade do endpoint. Quando ocorre um incidente, é possível responder perguntas como:
+- Qual foi o vetor de entrada?
+- Quanto tempo o atacante esteve na rede antes de ser detetado?
+- Que outros sistemas foram acedidos?
+- Que dados foram exfiltrados ou encriptados?
+
+Esta capacidade forense é cada vez mais exigida pela NIS2 para notificação de incidentes às autoridades.
+
+## EDR vs Antivírus: Comparação Direta
+
+| Capacidade | Antivírus Tradicional | EDR |
+|---|---|---|
+| Deteção de malware conhecido | Sim (assinaturas) | Sim (assinaturas + comportamento) |
+| Deteção de ameaças desconhecidas | Não | Sim (análise comportamental) |
+| Ataques fileless | Não | Sim |
+| Monitorização de comportamentos | Não | Sim, contínua |
+| Resposta automatizada | Quarentena básica | Isolamento, terminação, rollback |
+| Investigação forense | Não | Sim, histórico completo |
+| Visibilidade da rede | Não | Sim |
+| Deteção de movimento lateral | Não | Sim |
+| Conformidade NIS2 (Art. 21) | Parcial | Adequada |
+
+## Porque é que as PMEs Precisam de EDR em 2026
+
+### O Mercado dos Ataques Mudou
+
+Grupos de ransomware como RansomHub, LockBit e ALPHV operam como empresas. Têm equipas de desenvolvimento que criam novas variantes regularmente, testam-nas contra as principais soluções de segurança antes de lançar o ataque e vendem acesso a redes comprometidas a outros grupos.
+
+**A maioria dos ataques bem-sucedidos a PMEs portuguesas em 2025 foi executada por código que contornou antivírus com taxas de deteção abaixo de 20% no momento do ataque.**
+
+### A NIS2 Exige Mais do Que o Antivírus Oferece
+
+O Decreto-Lei 125/2025 (NIS2) especifica no Artigo 21.º que as entidades abrangidas devem implementar:
+
+- Deteção e resposta a incidentes de forma atempada
+- Monitorização contínua de sistemas críticos
+- Capacidade de análise forense pós-incidente
+- Notificação em 24 horas com informação sobre o impacto
+
+Um antivírus tradicional não satisfaz estes requisitos. Um EDR, pelo menos parcialmente, sim.
+
+### O Custo de Um Incidente Supera o Custo do EDR
+
+O custo médio de um ataque de ransomware a uma PME portuguesa, incluindo:
+- Tempo de inatividade (média de 9 dias)
+- Recuperação de dados e sistemas
+- Notificação de clientes e autoridades (RGPD + NIS2)
+- Danos reputacionais
+
+...ultrapassa os **€85.000** por incidente, segundo o relatório de 2025 do CNCS.
+
+Um EDR empresarial para 20 utilizadores custa entre €800 e €2.400 por ano. A diferença é evidente.
+
+## Soluções EDR para PMEs: O Que Existe no Mercado
+
+### Microsoft Defender for Business — A Opção Mais Acessível
+
+Se a sua empresa usa Microsoft 365 Business Premium (€22/utilizador/mês), tem EDR incluído através do **Microsoft Defender for Business**.
+
+**Para PMEs com licenças M365 Business Premium, esta é a escolha óbvia.** Não tem custo adicional, integra-se com o Intune para gestão de dispositivos e tem uma interface de administração simples.
+
+**Pontos fortes:**
+- Incluído no Microsoft 365 Business Premium sem custo extra
+- Integração nativa com Windows, Microsoft 365 e Azure AD
+- Portal centralizado de administração simples
+- Cobre até 300 utilizadores
+
+**Limitações:**
+- Não cobre macOS ou Linux com a mesma profundidade
+- Sem suporte para servidores Windows Server na versão Business
+
+### Bitdefender GravityZone Business Security Enterprise
+
+Solução robusta de EDR desenhada especificamente para PMEs e empresas de médio porte. Suporta Windows, macOS, Linux e servidores.
+
+**Custo aproximado:** €7-12 por endpoint/mês, dependendo do número de licenças.
+
+**Pontos fortes:**
+- Excelente motor de deteção (consistentemente no top dos testes AV-TEST)
+- Interface de administração intuitiva, sem necessidade de formação avançada
+- Suporte para ambientes mistos (Windows + Mac + Linux)
+- Risk Analytics integrado para priorização de vulnerabilidades
+
+**Adequado para:** PMEs de 10-200 utilizadores sem equipa de segurança dedicada.
+
+### ESET Protect Advanced
+
+Solução checa com forte presença em Portugal e suporte local. Combina EDR com proteção contra ameaças de rede e sandbox em cloud.
+
+**Custo aproximado:** €5-9 por endpoint/mês.
+
+**Pontos fortes:**
+- Legado forte em deteção com baixo impacto no desempenho
+- Cloud Sandbox para análise de ficheiros suspeitos
+- Módulo XDR integrado para correlação de eventos
+- Suporte técnico disponível em Portugal
+
+**Adequado para:** PMEs conservadoras que valorizam estabilidade e suporte local.
+
+### Sophos Intercept X Advanced with EDR
+
+Solução britânica com forte foco em prevenção de ransomware, incluindo CryptoGuard (reverter encriptação de ransomware) e WipeGuard (proteção do MBR).
+
+**Custo aproximado:** €8-14 por endpoint/mês.
+
+**Pontos fortes:**
+- CryptoGuard deteta e reverte ataques de ransomware em curso
+- Managed Threat Response disponível como add-on (SOC gerido)
+- Excelente para empresas sem equipa interna de segurança
+- Integração com firewalls Sophos para resposta coordenada
+
+**Adequado para:** PMEs com alto risco de ransomware (saúde, jurídico, contabilidade).
+
+### SentinelOne Singularity Business
+
+Plataforma de EDR/XDR enterprise com escalabilidade para PMEs através do programa SentinelOne Business.
+
+**Custo aproximado:** €6-10 por endpoint/mês.
+
+**Pontos fortes:**
+- Rollback automático de alterações causadas por ransomware
+- Análise forense autónoma sem analista humano
+- Modo de operação offline (proteção mesmo sem ligação à internet)
+- API aberta para integração com SIEMs e outras ferramentas
+
+**Adequado para:** PMEs com alguma maturidade técnica interna.
+
+## Como Escolher: Matriz de Decisão para PMEs
+
+### Cenário 1: Já usa Microsoft 365 Business Premium
+**Recomendação:** Microsoft Defender for Business
+
+Não precisa de gastar mais. Ative o Defender for Business no portal M365 Admin Center, configure as políticas base e active o onboarding automático via Intune. Cobre o essencial para a maioria das PMEs.
+
+### Cenário 2: Ambiente misto (Windows + Mac) ou sem M365
+**Recomendação:** Bitdefender GravityZone Business Security Enterprise ou ESET Protect Advanced
+
+Ambas oferecem excelente cobertura multi-plataforma, interface acessível para administradores sem formação avançada em segurança e preços competitivos.
+
+### Cenário 3: Setor de alto risco (saúde, jurídico, financeiro)
+**Recomendação:** Sophos Intercept X Advanced + Managed Threat Response
+
+O CryptoGuard é diferenciador para setores com dados sensíveis. O serviço gerido de resposta a ameaças elimina a necessidade de analistas internos.
+
+### Cenário 4: Equipa técnica interna, maior maturidade
+**Recomendação:** SentinelOne Singularity ou CrowdStrike Falcon Go
+
+Mais funcionalidades de investigação e resposta, mas requerem alguma competência técnica para aproveitar o potencial completo.
+
+## Implementação Prática: O Que Esperar
+
+### Fase 1: Onboarding (semana 1-2)
+
+A maioria das soluções EDR tem um instalador simples que pode ser distribuído via Group Policy (GPO) ou Microsoft Intune. O agente instala-se em minuto e meio e começa a recolher telemetria imediatamente.
+
+**O que acontece nas primeiras 48 horas:**
+- O EDR estabelece a linha base comportamental dos seus endpoints
+- Podem surgir alertas de "false positives" para software legítimo pouco comum
+- Recomenda-se rever e aprovar/ignorar alertas durante este período de "aprendizagem"
+
+### Fase 2: Ajuste de políticas (semana 2-4)
+
+Configure as políticas de resposta automática com cuidado:
+- **Modo de auditoria primeiro:** deteta mas não bloqueia, para avaliar o impacto
+- **Modo de prevenção depois:** bloqueia e isola automaticamente após validar as políticas
+
+### Fase 3: Operação contínua
+
+Com um EDR bem configurado, a gestão diária resume-se a:
+- Rever alertas (10-20 minutos por dia em PMEs normais)
+- Responder a incidentes quando surgem (raro, mas com ferramentas adequadas)
+- Atualizar políticas quando adiciona novo software ou muda processos
+
+Se não tiver tempo para isto, considere um serviço de **MDR (Managed Detection and Response)** — externalização da monitorização a uma equipa de especialistas por €15-30/endpoint/mês.
+
+## Perguntas Frequentes
+
+**"O EDR substitui o antivírus ou complementa?"**
+A maioria das soluções EDR modernas inclui capacidades de antivírus de nova geração (NGAV). Instala uma solução, não duas. No entanto, se já tem um contrato de antivírus ativo, muitos EDRs podem coexistir — consulte o fornecedor.
+
+**"Impacta o desempenho dos computadores?"**
+O impacto é geralmente entre 2-5% de CPU em utilização normal. Soluções bem otimizadas como o ESET e o Microsoft Defender são praticamente impercetíveis. Evite soluções que exigem análise contínua em disco — estas sim podem ser perceptíveis em máquinas mais antigas.
+
+**"Preciso de um analista de segurança para gerir o EDR?"**
+Para a maioria das PMEs, não. As soluções mencionadas têm interfaces desenhadas para generalistas. Se preferir não gerir, os serviços MDR exteriorizam essa função a um custo razoável.
+
+**"O EDR resolve o problema do ransomware completamente?"**
+Reduz drasticamente o risco, mas nenhuma solução oferece 100% de garantia. O EDR deve ser combinado com [backups regulares testados (regra 3-2-1)](/blog/backup-dados-pme-regra-3-2-1), [autenticação multifator](/blog/autenticacao-dois-fatores-2fa-pme) e [formação dos colaboradores](/blog/formacao-ciberseguranca-colaboradores-pme) para uma postura de segurança robusta.
+
+## Conclusão: O Antivírus Não Chegou Para Este Panorama de Ameaças
+
+A pergunta já não é "precisamos de EDR?" mas "qual EDR se adequa ao nosso contexto e orçamento?". As ameaças de 2026 — ransomware operado por humanos, ataques fileless, living-off-the-land — foram projetadas especificamente para contornar antivírus tradicionais.
+
+Para a maioria das PMEs portuguesas, a recomendação prática é:
+
+1. **Se tem M365 Business Premium** — ative o Microsoft Defender for Business hoje
+2. **Se não tem** — avalie o Bitdefender GravityZone ou ESET Protect Advanced
+3. **Se opera em setor de alto risco** — considere Sophos com MDR
+
+A conformidade NIS2 exige capacidades de deteção, resposta e investigação forense que apenas o EDR proporciona. Tratar esta tecnologia como um custo é um erro — é uma apólice de seguro com retorno mensurável.
+
+Para mais contexto sobre proteção holística dos seus sistemas, leia o nosso guia sobre [Zero Trust para PMEs](/blog/zero-trust-pme-guia-pratico) e consulte as [ferramentas de cibersegurança recomendadas para 2026](/blog/melhores-ferramentas-ciberseguranca-pmes-2026).`,
+    category: "ferramentas",
+    categoryLabel: "Ferramentas",
+    publishedAt: "2026-04-14",
+    readingTime: 14,
   },
 ];
 
