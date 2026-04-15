@@ -32,6 +32,9 @@
 <!-- Completed items with date -->
 
 ### 2026-04-15
+- ✅ **growth**: Article "Gestão de Identidade e Acessos para PMEs: Controlar Quem Acede ao Quê (e Porquê)" — `/blog/gestao-identidade-acessos-iam-pme`; RBAC, onboarding/offboarding, contas privilegiadas, PIM Entra ID, plano de implementação por fases
+- ✅ **growth**: Article "Segurança em IoT para PMEs: Como Gerir Dispositivos Inteligentes Sem Criar Brechas" — `/blog/seguranca-iot-dispositivos-inteligentes-pme`; câmaras IP, impressoras, NAS, VLANs de segmentação, firmware, RGPD videovigilância
+- ✅ **growth**: Article "Política de Cibersegurança para PMEs: Como Criar do Zero (com Estrutura Completa)" — `/blog/politica-ciberseguranca-pme-template`; PSI estrutura secção a secção, template de índice, plano de implementação faseado
 - ✅ **growth**: Article "BYOD: Como Gerir Dispositivos Pessoais no Trabalho Sem Comprometer a Segurança da Empresa" — `/blog/byod-politica-dispositivos-pessoais-trabalho-pme`; BYOD vs COPE, MDM vs MAM, Intune MAM config, RGPD implications, offboarding process
 - ✅ **growth**: Article "Teste de Penetração para PMEs: Quando Contratar, O Que Esperar e Quanto Custa" — `/blog/teste-penetracao-pentest-pme-quando-contratar`; pentest types, black/grey/white box, scoping, Portugal pricing guide, provider selection criteria
 - ✅ **growth**: Article "Segurança em Videoconferências: Como Proteger as Reuniões Online da Sua Empresa" — `/blog/seguranca-videoconferencias-teams-zoom-meet-pme`; Teams/Zoom/Meet admin hardening, meeting classification policy, RGPD recording consent
