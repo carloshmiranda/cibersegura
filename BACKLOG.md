@@ -31,6 +31,11 @@
 ## Done
 <!-- Completed items with date -->
 
+### 2026-04-15 (session 2)
+- ✅ **growth**: Article "Plano de Continuidade de Negócio para PMEs: Como Manter a Empresa a Funcionar Após um Ciberataque" — `/blog/plano-continuidade-negocio-bcp-ciberataque-pme`; BCP vs DRP, RTO/RPO, crisis team, communication plan, CNPD/CNCS notifications, recovery checklist
+- ✅ **growth**: Article "Segurança WordPress para PMEs: Guia Completo para Proteger o Seu Site em 2026" — `/blog/seguranca-wordpress-pme-portugal`; credential hardening, auto-updates, file permissions, Wordfence, SSL/HTTPS, malware monitoring, incident response
+- ✅ **growth**: Article "Gestão de Risco de Fornecedores para PMEs: Como Avaliar e Controlar Terceiros" — `/blog/gestao-risco-fornecedores-terceiros-pme`; TPRM, 3-tier vendor classification, 15-question security questionnaire, contract clauses, access management, NIS2/RGPD context
+
 ### 2026-04-15
 - ✅ **growth**: Article "Gestão de Identidade e Acessos para PMEs: Controlar Quem Acede ao Quê (e Porquê)" — `/blog/gestao-identidade-acessos-iam-pme`; RBAC, onboarding/offboarding, contas privilegiadas, PIM Entra ID, plano de implementação por fases
 - ✅ **growth**: Article "Segurança em IoT para PMEs: Como Gerir Dispositivos Inteligentes Sem Criar Brechas" — `/blog/seguranca-iot-dispositivos-inteligentes-pme`; câmaras IP, impressoras, NAS, VLANs de segmentação, firmware, RGPD videovigilância
