@@ -31,6 +31,11 @@
 ## Done
 <!-- Completed items with date -->
 
+### 2026-04-15
+- ✅ **growth**: Article "BYOD: Como Gerir Dispositivos Pessoais no Trabalho Sem Comprometer a Segurança da Empresa" — `/blog/byod-politica-dispositivos-pessoais-trabalho-pme`; BYOD vs COPE, MDM vs MAM, Intune MAM config, RGPD implications, offboarding process
+- ✅ **growth**: Article "Teste de Penetração para PMEs: Quando Contratar, O Que Esperar e Quanto Custa" — `/blog/teste-penetracao-pentest-pme-quando-contratar`; pentest types, black/grey/white box, scoping, Portugal pricing guide, provider selection criteria
+- ✅ **growth**: Article "Segurança em Videoconferências: Como Proteger as Reuniões Online da Sua Empresa" — `/blog/seguranca-videoconferencias-teams-zoom-meet-pme`; Teams/Zoom/Meet admin hardening, meeting classification policy, RGPD recording consent
+
 ### 2026-04-14
 - ✅ **growth**: Article "ISO 27001 para PMEs Portuguesas: Vale a Pena Certificar a Empresa?" — `/blog/iso-27001-pme-portugal-vale-pena-certificar`; covers costs, NIS2 link, and decision framework
 - ✅ **growth**: Article "Dark Web e a Sua Empresa: Como Saber se os Seus Dados Foram Expostos" — `/blog/monitorizar-dark-web-empresa-dados-expostos-pme`; HIBP, infostealers, 6-step response protocol
