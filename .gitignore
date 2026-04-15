@@ -21,6 +21,9 @@ npm-debug.log*
 # vercel
 .vercel
 
+# IndexNow state (handled by GitHub Actions cache)
+.indexnow-state.json
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

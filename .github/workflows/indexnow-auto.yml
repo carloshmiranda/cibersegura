@@ -1,0 +1,146 @@
+name: IndexNow Auto-Submit
+run-name: "IndexNow: Submit new/updated URLs after deployment"
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'app/**'
+      - 'scripts/**'
+      - 'package.json'
+      - 'package-lock.json'
+
+  # Allow manual triggering
+  workflow_dispatch:
+    inputs:
+      force_all:
+        description: 'Force submit all URLs (ignore state)'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'false'
+          - 'true'
+
+permissions:
+  contents: read
+
+# Wait for Vercel deployment to complete before submitting URLs
+concurrency:
+  group: indexnow-submit
+  cancel-in-progress: false
+
+jobs:
+  wait-for-deployment:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      deployment-ready: ${{ steps.wait.outputs.ready }}
+
+    steps:
+      - name: Wait for Vercel deployment
+        id: wait
+        run: |
+          echo "⏳ Waiting 60 seconds for Vercel deployment to complete..."
+          sleep 60
+          echo "✅ Deployment wait period completed"
+          echo "ready=true" >> $GITHUB_OUTPUT
+
+  submit-urls:
+    runs-on: ubuntu-latest
+    needs: wait-for-deployment
+    if: needs.wait-for-deployment.outputs.deployment-ready == 'true'
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # Fetch recent history to detect changes
+          fetch-depth: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          # Only install production dependencies needed for the script
+          npm ci --only=production --ignore-scripts
+
+      - name: Load previous state from cache
+        id: cache-state
+        uses: actions/cache@v3
+        with:
+          path: .indexnow-state.json
+          key: indexnow-state-${{ github.sha }}
+          restore-keys: |
+            indexnow-state-
+
+      - name: Check for content changes
+        id: changes
+        run: |
+          # Check if this push contains content changes
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "Manual trigger detected"
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "trigger_reason=manual" >> $GITHUB_OUTPUT
+          else
+            # Check if posts.ts or other content files were modified
+            CONTENT_CHANGES=$(git diff --name-only ${{ github.event.before }}..${{ github.sha }} | grep -E "(src/lib/posts\.ts|src/app/.*\.tsx?|public/.*)" | wc -l || echo "0")
+
+            if [ "$CONTENT_CHANGES" -gt 0 ]; then
+              echo "Content changes detected in $CONTENT_CHANGES files"
+              echo "has_changes=true" >> $GITHUB_OUTPUT
+              echo "trigger_reason=content_changes" >> $GITHUB_OUTPUT
+            else
+              echo "No content changes detected"
+              echo "has_changes=false" >> $GITHUB_OUTPUT
+              echo "trigger_reason=no_changes" >> $GITHUB_OUTPUT
+            fi
+          fi
+
+      - name: Run incremental IndexNow submission
+        if: steps.changes.outputs.has_changes == 'true' || github.event.inputs.force_all == 'true'
+        env:
+          SITE_URL: https://ciberpme.vercel.app
+        run: |
+          # Force all URLs if manual trigger with force_all
+          if [ "${{ github.event.inputs.force_all }}" = "true" ]; then
+            echo "🔄 Force mode: Removing state file to submit all URLs"
+            rm -f .indexnow-state.json
+          fi
+
+          echo "🚀 Running IndexNow incremental submission..."
+          echo "📋 Trigger reason: ${{ steps.changes.outputs.trigger_reason }}"
+
+          # Run the incremental script
+          node scripts/indexnow-incremental.js
+
+      - name: Save state to cache
+        if: steps.changes.outputs.has_changes == 'true' || github.event.inputs.force_all == 'true'
+        run: |
+          # The state file should now be updated by the script
+          if [ -f ".indexnow-state.json" ]; then
+            echo "📁 State file updated and will be cached for next run"
+            echo "🕐 Last run: $(jq -r '.lastRun' .indexnow-state.json 2>/dev/null || echo 'Unknown')"
+            echo "🔢 URLs tracked: $(jq -r '.submittedUrls | length' .indexnow-state.json 2>/dev/null || echo 'Unknown')"
+          else
+            echo "⚠️  No state file found after script execution"
+          fi
+
+      - name: Log results
+        if: always()
+        run: |
+          if [ "${{ steps.changes.outputs.has_changes }}" = "false" ] && [ "${{ github.event.inputs.force_all }}" != "true" ]; then
+            echo "ℹ️  Skipped IndexNow submission - no content changes detected"
+          elif [ "${{ job.status }}" = "success" ]; then
+            echo "✅ IndexNow submission completed successfully"
+          else
+            echo "❌ IndexNow submission failed - check logs above"
+          fi
