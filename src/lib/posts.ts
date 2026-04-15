@@ -11536,6 +11536,556 @@ A gestão de risco de terceiros não elimina o risco — elimina o risco surpres
     publishedAt: "2026-04-15",
     readingTime: 13,
   },
+  {
+    slug: "criptografia-dados-pme-guia-completo",
+    title: "Criptografia de Dados para PMEs: Como Proteger Informação em Portáteis, Discos e Email",
+    excerpt:
+      "Um portátil roubado sem encriptação é uma violação de dados imediata. Guia prático de criptografia para PMEs: BitLocker, FileVault, VeraCrypt, email encriptado e gestão de chaves sem complexidade excessiva.",
+    content: `Um portátil esquecido num avião, um disco externo perdido numa viagem de negócios, um funcionário que sai da empresa e leva dados consigo. Estes cenários têm algo em comum: sem criptografia, os dados estão acessíveis a quem os encontrar.
+
+Para uma PME, uma violação de dados deste tipo tem consequências imediatas: notificação obrigatória à CNPD em 72 horas (RGPD, Artigo 33.º), potencial notificação a clientes afectados, custos legais, e danos de reputação difíceis de reverter. A criptografia não é uma medida técnica complexa reservada a grandes organizações — é uma camada de protecção fundamental que qualquer empresa pode implementar, muitas vezes com ferramentas já disponíveis no sistema operativo.
+
+Este guia cobre o essencial: o que encriptar, com que ferramentas, e como gerir as chaves sem criar novos problemas.
+
+## O Que É Criptografia e Por Que Importa para PMEs
+
+Criptografia transforma dados legíveis em dados ilegíveis para qualquer pessoa que não tenha a chave de desencriptação correcta. Na prática, para uma PME, isto significa dois contextos distintos:
+
+**Dados em repouso (at rest):** ficheiros armazenados — no disco do portátil, num servidor de ficheiros, num disco externo ou pen USB. Se o dispositivo for roubado ou o acesso físico for comprometido, os dados estão protegidos.
+
+**Dados em trânsito (in transit):** dados que viajam pela rede — email, transferências de ficheiros, acesso a aplicações web, VPN. A criptografia em trânsito protege contra intercepção nas comunicações.
+
+Ambos são necessários, mas os vetores de risco são diferentes. Em repouso, o risco principal é perda ou roubo de hardware. Em trânsito, o risco é intercepção ou ataque man-in-the-middle.
+
+### O Impacto Real do Roubo de Hardware Sem Criptografia
+
+O relatório anual da IBM sobre custo de violações de dados mostra consistentemente que o custo médio de um incidente envolvendo dispositivos perdidos ou roubados é superior a 1 milhão de euros. Para uma PME, mesmo uma fracção desse valor pode ser catastrófico.
+
+Mais concretamente: se um portátil sem criptografia for roubado e contiver dados pessoais de clientes (nomes, emails, moradas, dados de pagamento), a empresa está obrigada a notificar a CNPD e, se o risco para os titulares for elevado, também a notificá-los individualmente. A ausência de criptografia é um agravante directo nessa avaliação — demonstra falta de medidas técnicas adequadas, o que pode resultar em sanções.
+
+## Criptografia de Discos: BitLocker, FileVault e VeraCrypt
+
+### BitLocker (Windows)
+
+O BitLocker é a solução nativa de encriptação de disco completo do Windows. Está disponível em:
+- Windows 10/11 Pro, Enterprise, Education
+- Não está disponível na edição Home (mas o Windows 11 Home suporta "Encriptação de Dispositivo" numa forma simplificada)
+
+**Como activar o BitLocker:**
+1. Abra o **Painel de Controlo** → Segurança → Encriptação de Unidade BitLocker
+2. Seleccione a unidade a encriptar (geralmente C:)
+3. Escolha como desbloquear: palavra-passe ou PIN no arranque (recomendado para portáteis) ou automático via TPM (mais simples, menos seguro se alguém arrancar o portátil)
+4. Guarde a chave de recuperação — grave-a numa conta Microsoft, imprima-a, ou guarde num ficheiro numa localização separada (não no mesmo disco)
+5. Escolha encriptar apenas o espaço usado (mais rápido para discos novos) ou o disco completo (mais seguro para discos com dados anteriores)
+6. O processo demora de minutos a horas dependendo do tamanho do disco
+
+**Configuração recomendada para PMEs:**
+- Activar BitLocker em todos os portáteis e computadores fixos com dados sensíveis
+- Usar PIN de arranque em portáteis (protege mesmo contra ataque directo ao hardware)
+- Guardar as chaves de recuperação de forma centralizada — idealmente no Active Directory ou Microsoft Entra ID para administração facilitada
+- Verificar regularmente que o BitLocker está activo (pode ser desactivado por actualizações de Windows em alguns casos)
+
+**BitLocker no Microsoft Entra ID:**
+Se a empresa usa Microsoft 365 Business Premium ou Azure AD, as chaves de recuperação BitLocker podem ser guardadas automaticamente no Entra ID, permitindo que o administrador as recupere em caso de necessidade. Esta é a abordagem correcta para PMEs com múltiplos dispositivos.
+
+### FileVault (macOS)
+
+O equivalente do BitLocker em macOS é o FileVault. Está disponível em todos os Macs modernos e é simples de activar:
+
+1. **Preferências do Sistema** (ou Definições do Sistema no macOS Ventura+) → Segurança e Privacidade → FileVault
+2. Clique em "Activar FileVault"
+3. Escolha como recuperar o acesso: via conta iCloud (prático para utilizadores individuais) ou através de chave de recuperação local (guarde-a num local seguro)
+4. O Mac continua a funcionar normalmente durante a encriptação em background
+
+Em Macs com processadores Apple Silicon (M1/M2/M3), a encriptação é nativa e muito eficiente — o impacto no desempenho é negligenciável.
+
+### VeraCrypt (Cross-Platform, Volumes Encriptados)
+
+O VeraCrypt é uma solução open-source que funciona em Windows, macOS e Linux. É útil quando:
+- Precisa de encriptar apenas uma pasta ou conjunto de ficheiros (não o disco completo)
+- Quer criar um volume encriptado portátil (num disco externo ou pen)
+- Precisa de partilhar um volume encriptado com alguém numa plataforma diferente
+
+**Casos de uso práticos para PMEs:**
+- Volume encriptado num disco externo para backups — mesmo que o disco seja perdido, os dados estão protegidos
+- Ficheiro encriptado com documentos sensíveis (contratos, dados de RH) que pode ser partilhado de forma segura
+- Contentor encriptado para dados que precisam de acesso ocasional mas não justificam encriptação de disco completo
+
+O VeraCrypt usa AES-256 por defeito, que é considerado suficientemente seguro para uso empresarial.
+
+## Pens USB e Discos Externos: Uma Ameaça Subestimada
+
+As pens USB são um vector de risco frequentemente ignorado. Uma pen com dados de clientes esquecida num bolso de calças ou perdida numa conferência é uma violação de dados potencialmente notificável.
+
+**Opção 1 — Pens com encriptação por hardware:**
+Modelos como Kingston IronKey ou Apricorn Aegis têm teclado numérico integrado e encriptação AES-256 por hardware. São mais caras (50-150€) mas mais robustas e não dependem de software específico no computador destino.
+
+**Opção 2 — Encriptação por software (VeraCrypt):**
+Crie um volume VeraCrypt numa pen normal. A desvantagem: o computador de destino precisa de ter o VeraCrypt instalado (ou usar o modo portátil em Windows).
+
+**Opção 3 — Política de proibição:**
+Para muitas PMEs, a solução mais simples é a política correcta: proibir armazenamento de dados sensíveis em pens USB não encriptadas, e usar em alternativa SharePoint/OneDrive ou partilha segura via link temporário.
+
+## Dados em Trânsito: HTTPS, VPN e Email
+
+### HTTPS — O Mínimo
+
+Qualquer site ou aplicação web que a empresa opera deve usar HTTPS. Em 2026, isto é básico — certificados gratuitos via Let's Encrypt tornaram o HTTPS acessível a todos. Se a empresa tem um site em HTTP (sem o "S"), está a colocar em risco qualquer dado submetido através do mesmo e a prejudicar o SEO.
+
+Para verificar: aceda ao site da empresa e confirme que o cadeado aparece na barra do browser. Se não aparecer, contacte o prestador de alojamento.
+
+### VPN — Para Acesso Remoto e Redes Públicas
+
+Uma VPN encripta o tráfego de rede entre o dispositivo do utilizador e a rede da empresa (ou a internet). É essencial quando os colaboradores acedem a redes públicas (cafés, hotéis, aeroportos). Ver o [guia de VPN para PMEs](/blog/vpn-empresarial-pme-guia-completo) para opções específicas.
+
+Nota importante: uma VPN não encripta os dados em repouso no seu dispositivo. São camadas de protecção complementares, não substitutas.
+
+### Encriptação de Email
+
+O email é o canal de comunicação mais utilizado em contexto empresarial e um dos menos protegidos. Por defeito, a maioria do email é enviado e armazenado sem encriptação de conteúdo — os servidores de email têm acesso ao conteúdo das mensagens.
+
+**TLS no transporte:**
+A maioria dos servidores de email modernos (Gmail, Microsoft 365, Outlook.com) usa TLS para encriptar o email em trânsito entre servidores. Isso protege contra intercepção na rede, mas não protege o conteúdo em repouso nos servidores.
+
+**S/MIME — Encriptação de ponta a ponta:**
+S/MIME (Secure/Multipurpose Internet Mail Extensions) encripta o conteúdo do email de ponta a ponta — apenas o remetente e o destinatário podem ler. O Microsoft 365 Business suporta S/MIME nativamente. Exige certificados para remetente e destinatário, o que cria complexidade na adopção.
+
+**Para que tipo de email usar encriptação de conteúdo:**
+- Documentos de natureza legal ou contratual
+- Dados pessoais sensíveis de clientes (saúde, financeiros)
+- Propriedade intelectual crítica
+- Comunicações com advogados ou auditores
+
+Para a maioria do email empresarial corrente, o TLS em transporte é suficiente. Reserve a encriptação de conteúdo para comunicações genuinamente sensíveis — tentar encriptar todo o email cria fricção que as pessoas contornam.
+
+### Microsoft 365: Encriptação Nativa
+
+Se a empresa usa Microsoft 365, a Microsoft encripta os dados em repouso nos servidores (SharePoint, Exchange Online, OneDrive) usando chaves geridas pela Microsoft por defeito. Para empresas com requisitos mais elevados, o Microsoft 365 Business Premium suporta chaves geridas pelo cliente (Customer Key).
+
+A encriptação de mensagens do Microsoft 365 (OME — Office Message Encryption) permite enviar emails encriptados para destinatários externos que nem sequer precisam de ter Microsoft 365 — acedem através de um portal web.
+
+## Gestão de Chaves: O Elo Mais Fraco
+
+A criptografia é tão forte quanto a gestão das chaves. Um disco encriptado com BitLocker cuja chave de recuperação foi apagada é dados permanentemente perdidos. Uma pen com VeraCrypt cuja palavra-passe foi esquecida é equivalente a um disco partido.
+
+**Boas práticas de gestão de chaves para PMEs:**
+
+**Centralizar as chaves de recuperação BitLocker:**
+Use o Microsoft Entra ID para guardar automaticamente as chaves de todos os dispositivos da empresa. O administrador pode recuperar a chave de qualquer dispositivo a partir do portal do Entra. Sem isto, cada portátil encriptado é uma bomba-relógio se o utilizador se esquecer do PIN.
+
+**Palavras-passe fortes e únicas:**
+Cada volume VeraCrypt ou disco encriptado deve ter uma palavra-passe forte e única. Use um gestor de palavras-passe (ver [guia de gestão de passwords para PMEs](/blog/gestao-passwords-pme-guia-completo)) para guardar estas credenciais — nunca em notas soltas ou documentos não protegidos.
+
+**Procedimento de saída de colaboradores:**
+Quando um colaborador sai, certifique-se de que:
+- As chaves de recuperação de dispositivos que usava estão no sistema centralizado (não apenas na sua cabeça)
+- Os volumes encriptados partilhados aos quais tinha acesso são reencriptados com novas chaves
+- As credenciais de acesso são revogadas e alteradas
+
+**Backups das chaves:**
+Guarde cópias das chaves de recuperação em pelo menos dois locais seguros distintos — por exemplo, no Entra ID e num cofre físico. Uma única cópia é ponto único de falha.
+
+## O Que a Criptografia Não Faz
+
+É importante ter expectativas correctas. A criptografia:
+
+- **Não protege contra malware em execução:** se um ransomware corre no seu sistema, encripta por cima da sua encriptação — os seus dados ficam duplamente encriptados e inacessíveis. A criptografia de disco protege o hardware em repouso, não contra ameaças activas.
+- **Não protege contra utilizadores legítimos mal-intencionados:** um colaborador com acesso legítimo ao sistema pode copiar ou exfiltrar dados — a criptografia está desactivada para utilizadores autenticados. Para este vector, o controlo de acessos e as ferramentas de DLP são mais relevantes.
+- **Não substitui backups:** um disco encriptado também pode falhar. A criptografia não é backup. Ver a [regra 3-2-1 de backups para PMEs](/blog/backup-dados-pme-regra-3-2-1).
+- **Não garante segurança de passwords fracas:** se o BitLocker usa um PIN "1234", a encriptação é inútil. A força da criptografia é a força da chave/password que a protege.
+
+## Plano de Implementação por Fases
+
+**Fase 1 — 2 semanas (impacto imediato):**
+- Activar BitLocker em todos os portáteis da empresa (prioridade máxima — são os dispositivos que mais facilmente são perdidos/roubados)
+- Verificar que FileVault está activo em todos os Macs
+- Configurar centralização de chaves de recuperação no Entra ID ou equivalente
+- Política: proibir dados sensíveis em pens USB não encriptadas
+
+**Fase 2 — 1 mês:**
+- Encriptar discos externos e pens que contenham dados sensíveis (VeraCrypt ou substituir por hardware encriptado)
+- Verificar que todos os sites da empresa usam HTTPS
+- Activar Microsoft 365 Message Encryption para dados sensíveis
+
+**Fase 3 — 3 meses:**
+- Avaliar necessidade de S/MIME para comunicações críticas
+- Rever procedimento de offboarding para incluir gestão de chaves
+- Documentar política de criptografia da empresa (obrigatório para conformidade RGPD e NIS2)
+
+A criptografia não é uma solução que se implementa uma vez e se esquece — precisa de manutenção (gestão de chaves, offboarding, verificações periódicas de que está activa). Mas o esforço inicial de configuração é modesto, e a protecção que oferece — especialmente contra o risco de hardware perdido ou roubado — justifica amplamente esse investimento.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-15",
+    readingTime: 14,
+  },
+  {
+    slug: "filtragem-dns-seguranca-pme",
+    title: "Filtragem de DNS para PMEs: Bloqueie Malware e Phishing Antes de Chegarem aos Dispositivos",
+    excerpt:
+      "A filtragem de DNS bloqueia domínios maliciosos na camada de rede — antes que qualquer dispositivo carregue a ameaça. Guia prático com opções gratuitas (Cloudflare, NextDNS) e pagas, e como configurar em 30 minutos.",
+    content: `Quando um colaborador clica num link de phishing ou um dispositivo tenta contactar o servidor de comando de um malware, há um momento antes do pior acontecer: a resolução de DNS. O dispositivo pergunta "qual é o endereço IP de este-site-malicioso.com?" — e se houver um sistema que responda "este domínio está bloqueado", a ameaça é neutralizada antes de qualquer código malicioso ser executado ou qualquer ligação ser estabelecida.
+
+É isso que a filtragem de DNS faz. E é uma das medidas de segurança com melhor relação custo-benefício disponíveis para PMEs — porque várias soluções funcionais são gratuitas, funciona em toda a rede sem necessidade de instalar software em cada dispositivo, e bloqueia ameaças antes que cheguem a qualquer endpoint.
+
+## Como Funciona o DNS e Por Que É um Ponto de Controlo
+
+O DNS (Domain Name System) é o sistema que traduz nomes de domínio (ciberpme.pt) em endereços IP (192.0.2.1). Sempre que um dispositivo acede à internet — um browser que carrega um site, um email que contacta um servidor, um malware que tenta contactar o seu C2 (command and control) — começa por fazer uma consulta DNS.
+
+**A filtragem de DNS intercede neste momento:** quando um dispositivo faz uma consulta DNS para um domínio classificado como malicioso, de phishing, ou noutra categoria bloqueada, o servidor de DNS filtrante responde com um erro ou redireccionamento em vez do endereço real. O dispositivo nunca chega a comunicar com o destino malicioso.
+
+**O que torna isto particularmente útil:**
+- Bloqueia ameaças a nível de rede — funciona independentemente do browser, sistema operativo ou aplicação que inicia a ligação
+- Intercepta comunicações de malware já instalado que tenta contactar servidores de C2
+- Cobre todos os dispositivos da rede sem configuração individual (quando feito a nível do router/DHCP)
+- Proporciona logs de DNS que são uma fonte valiosa de threat intelligence para a rede
+
+## O Que a Filtragem de DNS Bloqueia (e Não Bloqueia)
+
+**Bloqueia:**
+- Domínios de phishing conhecidos — domínios criados para imitar sites legítimos (microsofft.com, paypa1.com)
+- Domínios de distribuição de malware — onde ficheiros maliciosos são alojados e descarregados
+- Servidores de C2 — onde malware já instalado reporta e recebe instruções
+- Domínios associados a ransomware — infraestrutura de grupos conhecidos de ransomware
+- Conteúdo por categoria (opcional) — adultos, jogos, redes sociais, para filtragem de conteúdo corporativa
+
+**Não bloqueia (limitações importantes):**
+- Malware que usa IPs directos em vez de domínios (menos comum, mas existe)
+- Ameaças em tráfego já encriptado que não passa pela resolução DNS configurada
+- Dispositivos que ignoram o servidor DNS da rede e usam DNS over HTTPS (DoH) hardcoded para servidores externos — os browsers modernos podem fazer isto se não for configurado de outra forma
+- Phishing em domínios legítimos (um site comprometido em domínio legítimo não é bloqueado por DNS)
+
+A filtragem de DNS não substitui um antivírus/EDR nem um firewall — é uma camada complementar que bloqueia uma categoria significativa de ameaças de forma eficiente. Ver [EDR vs Antivírus para PMEs](/blog/edr-vs-antivirus-seguranca-endpoints-pme) para a perspectiva de protecção de endpoint.
+
+## Opções de Filtragem de DNS para PMEs
+
+### Cloudflare Gateway (Gratuito até 50 utilizadores)
+
+O **Cloudflare Zero Trust** inclui o Gateway, um serviço de DNS filtrante que:
+- É gratuito para equipas até 50 utilizadores
+- Bloqueia malware, phishing e ransomware por defeito
+- Permite criar políticas personalizadas de filtragem por categoria
+- Proporciona logs detalhados de queries DNS
+- Suporta DNS over HTTPS (DoH) e DNS over TLS (DoT) para resistência a ataques de intercepção DNS
+
+**Como configurar:**
+1. Crie conta em dash.cloudflare.com/zero-trust (gratuito)
+2. Em Gateway → DNS Locations, crie uma localização para a rede da empresa
+3. O sistema gera endereços de DNS específicos para a sua organização
+4. Configure esses endereços como DNS nos routers da empresa ou via DHCP
+5. Em Gateway → Policies → DNS, configure políticas — por defeito o plano gratuito bloqueia malware, phishing e ransomware
+
+O plano gratuito é suficiente para a maioria das PMEs. O plano pago (a partir de 7$/utilizador/mês) adiciona filtragem HTTP, inspeção de tráfego e funcionalidades de ZTNA.
+
+### NextDNS (Gratuito com limites, pago a partir de 1,99€/mês)
+
+O NextDNS é uma alternativa popular, especialmente para configurações mais granulares:
+- Plano gratuito: 300.000 queries/mês (suficiente para pequenas equipas)
+- Plano Pro: 1,99€/mês para queries ilimitadas (recomendado se o free tier for excedido)
+- Interface muito intuitiva para configuração de políticas
+- Múltiplas listas de bloqueio pré-configuradas (pode activar com um clique)
+- Funcionalidade de analytics detalhada — veja exatamente o que está a ser bloqueado e por quem
+
+**Listas recomendadas para activar no NextDNS:**
+- NextDNS Ads & Trackers Blocklist
+- OISD (bloqueia publicidade e trackers)
+- Threat Intelligence Feeds
+- PolySwarm
+- Abuse.ch (malware e botnets)
+
+**Configuração básica no NextDNS:**
+1. Registe-se em nextdns.io (gratuito)
+2. Crie um perfil para a empresa
+3. Adicione as listas de bloqueio recomendadas
+4. Configure políticas de segurança (bloquear malware, phishing, typosquatting)
+5. Anote os endereços DNS gerados (ex: 45.90.28.xxx / 45.90.30.xxx)
+6. Configure no router ou DHCP da empresa
+
+### Cisco Umbrella (Empresarial)
+
+Para empresas com requisitos mais elevados ou múltiplos escritórios:
+- Preço: a partir de ~2,5-4€/utilizador/mês no tier DNS Essentials
+- DNS filtering com threat intelligence da Talos (uma das maiores organizações de CTI do mundo)
+- Integração com sistemas SIEM e ferramentas de segurança empresariais
+- Funcionalidades de filtragem de conteúdo e relatórios avançados
+- Suporte multi-site nativo
+
+**Outros concorrentes notáveis:**
+- **DNSFilter:** interface moderna, bom para PMEs, a partir de ~1$/utilizador/mês
+- **Webroot DNS Protection:** integração com a suite Webroot, preços competitivos
+- **Protective DNS do NCSC UK:** gratuito para organizações do sector público britânico (não aplicável em Portugal, mas equivalente pode existir via CNCS)
+
+### DNS Público Seguro (Solução Mínima)
+
+Se a configuração de uma solução dedicada for complexa de momento, mudar os servidores DNS para um resolver com alguma filtragem de segurança é um passo simples:
+
+- **Cloudflare 1.1.1.2** (com malware blocking) e **1.0.0.2** — bloqueia malware e phishing, gratuito
+- **Cloudflare 1.1.1.3** e **1.0.0.3** — bloqueia malware, phishing e conteúdo adulto
+- **Quad9 9.9.9.9** — bloqueia domínios maliciosos conhecidos, focado em privacidade, gratuito
+
+Estes não têm painel de gestão nem logs — são um nível básico de protecção sem visibilidade. Úteis como primeiro passo, mas para uma PME com necessidades de conformidade ou auditoria, uma solução com logs é necessária.
+
+## Como Implementar na Rede da Empresa
+
+### Opção 1: Configuração no Router (Cobre toda a rede)
+
+Esta é a abordagem mais simples para proteger todos os dispositivos de uma rede local sem configuração individual.
+
+1. Aceda à interface de administração do router (tipicamente 192.168.1.1 ou 192.168.0.1)
+2. Localize a configuração de DNS — pode estar em "Internet", "WAN", "DNS" dependendo do modelo
+3. Substitua os servidores DNS do ISP pelos da solução escolhida (primário e secundário)
+4. Guarde e reinicie o router
+
+Limitação: dispositivos que usem DNS estático configurado manualmente ou que activem DNS-over-HTTPS no browser (Firefox e Chrome podem fazer isto) contornam este bloqueio.
+
+### Opção 2: Configuração via DHCP (Mais Controlada)
+
+Se a rede usa um servidor DHCP dedicado (Active Directory, pfSense, etc.):
+1. Configure o servidor DHCP para distribuir os servidores DNS da solução de filtragem como DNS primário
+2. Mantenha um servidor DNS interno como alternativa se necessário para resolução de nomes internos
+
+### Opção 3: Por Dispositivo (Para Portáteis em Mobilidade)
+
+Para portáteis que saem da rede da empresa e se ligam a redes externas (hotel, casa), a filtragem DNS a nível de router não é suficiente. Opções:
+- **Cloudflare WARP:** cliente que força o uso do Cloudflare Gateway mesmo fora da rede corporativa, gratuito para o plano básico
+- **Agentes dos fornecedores:** Cisco Umbrella, DNSFilter e outros têm clientes para dispositivos que funcionam em qualquer rede
+
+### Bloquear DNS-over-HTTPS nos Browsers
+
+Os browsers modernos podem contornar a filtragem DNS ao usar DoH directamente para servidores externos (como 1.1.1.1 ou 8.8.8.8). Para garantir que a filtragem é efectiva:
+
+**No Microsoft Edge/Chrome via Group Policy (Windows):**
+Configure a política **DnsOverHttpsMode** para **off** ou force o uso do servidor DoH da sua solução de filtragem. Isto pode ser feito via Group Policy Object (GPO) num ambiente com Active Directory ou via Microsoft Intune.
+
+**No Firefox:**
+O Firefox tem uma configuração específica para desactivar DoH em ambientes corporativos — activar o "canary domain" da organização ou configurar via Group Policy.
+
+## Análise de Logs DNS: Threat Intelligence Gratuita
+
+Um benefício subestimado da filtragem DNS com logging é a visibilidade que proporciona. Os logs DNS mostram:
+
+- Que domínios todos os dispositivos da rede estão a tentar aceder
+- Tentativas de comunicação com domínios maliciosos (mesmo que bloqueadas) — o que pode indicar dispositivo comprometido
+- Padrões anómalos — um dispositivo que faz centenas de queries DNS por segundo pode ter malware activo
+- Aplicações shadow IT — serviços cloud não autorizados sendo usados na rede
+
+No Cloudflare Gateway e NextDNS, estes logs estão disponíveis directamente no painel de gestão. Reveja-os periodicamente — as queries bloqueadas são particularmente informativas.
+
+**Sinal de alerta:** se um dispositivo específico aparece repetidamente a tentar contactar domínios de malware ou C2 conhecidos (mesmo estando bloqueado), esse dispositivo deve ser investigado imediatamente — pode já estar comprometido.
+
+## Integração com Outras Camadas de Segurança
+
+A filtragem DNS encaixa numa estratégia de defesa em profundidade:
+
+**DNS + Firewall:** O [firewall empresarial](/blog/firewall-empresarial-utm-ngfw-pme) bloqueia tráfego não autorizado por porta/protocolo; o DNS bloqueia por destino/reputação. São complementares.
+
+**DNS + EDR:** Se um malware contornar o DNS (usando IPs directos), o EDR no endpoint deve detectar o comportamento malicioso. Se o DNS bloqueia o C2 mas o malware já está instalado, o EDR deve detectá-lo por comportamento. Ver [EDR para PMEs](/blog/edr-vs-antivirus-seguranca-endpoints-pme).
+
+**DNS + Zero Trust:** O modelo Zero Trust verifica identidade e contexto antes de permitir acesso a recursos; a filtragem DNS acrescenta verificação de reputação do destino. Ver [Zero Trust para PMEs](/blog/zero-trust-pme-guia-pratico).
+
+## Por Onde Começar (Esta Semana)
+
+**Passo 1 (30 minutos):** Crie conta no Cloudflare Zero Trust (gratuito). Configure o DNS Gateway com as políticas de segurança por defeito. Anote os servidores DNS gerados.
+
+**Passo 2 (15 minutos):** Aceda ao router da empresa. Substitua os servidores DNS pelo Cloudflare Gateway. Todos os dispositivos da rede passam imediatamente a beneficiar da filtragem.
+
+**Passo 3 (30 minutos nas próximas semanas):** Instale o cliente Cloudflare WARP nos portáteis que saem da rede. Configure o agente para usar o perfil do Gateway da empresa — a filtragem segue o portátil independentemente da rede.
+
+**Passo 4 (contínuo):** Reveja os logs DNS mensalmente. Investigue qualquer dispositivo que apareça com queries bloqueadas repetidas para domínios de malware.
+
+A filtragem de DNS é uma das medidas de segurança com maior impacto para o investimento de tempo que exige. Em menos de uma hora, uma PME pode ter uma camada adicional de protecção que bloqueia automaticamente uma fracção significativa das ameaças que chegam via internet — sem instalar nada nos endpoints, sem interromper a produtividade dos utilizadores, e sem custos directos na maioria dos casos.`,
+    category: "ferramentas",
+    categoryLabel: "Ferramentas",
+    publishedAt: "2026-04-15",
+    readingTime: 13,
+  },
+  {
+    slug: "dora-regulamento-resiliencia-digital-pme-financeiro",
+    title: "DORA: O Que as PMEs do Setor Financeiro Precisam de Saber em 2026",
+    excerpt:
+      "O Regulamento DORA (Resiliência Operacional Digital) está em vigor desde janeiro de 2025 e afecta bancos, seguradoras, gestoras e os seus fornecedores de TI. Guia prático para PMEs do sector financeiro e prestadores de serviços ICT.",
+    content: `Desde 17 de janeiro de 2025, o Regulamento DORA (Digital Operational Resilience Act — Regulamento UE 2022/2554) é lei aplicável em toda a União Europeia, incluindo Portugal. Não precisa de transposição — aplica-se directamente, tal como o RGPD.
+
+Se a sua empresa actua no sector financeiro — banco, seguradora, corretora, gestor de activos, prestador de serviços de pagamento, empresa de criptoactivos — ou se presta serviços de tecnologia de informação a entidades financeiras, o DORA é relevante para si. Este guia explica o que o regulamento exige, a quem se aplica, e por onde começar se a empresa ainda não iniciou a conformidade.
+
+## O Que É o DORA e Por Que Existe
+
+O DORA foi criado pelo Parlamento Europeu para responder a uma realidade: o sector financeiro europeu depende cada vez mais de sistemas digitais e de fornecedores externos de tecnologia, mas a regulamentação de resiliência operacional estava fragmentada — cada país tinha regras diferentes, cada tipo de instituição tinha requisitos distintos.
+
+O regulamento cria um quadro unificado para a gestão do risco de TIC (Tecnologias de Informação e Comunicação) no sector financeiro europeu. A lógica central é simples: uma instituição financeira que não consiga recuperar de uma falha tecnológica em tempo útil representa um risco para a estabilidade financeira e para os consumidores que dependem dos seus serviços.
+
+**Por que importa para PMEs:**
+As PMEs do sector financeiro são entidades abrangidas pelo DORA. E os prestadores de serviços ICT — incluindo pequenas e médias empresas de tecnologia que servem instituições financeiras — entram no âmbito do regulamento como "terceiros prestadores de serviços ICT", com requisitos específicos quando classificados como críticos.
+
+## Quem Está Abrangido pelo DORA
+
+O artigo 2.º do DORA lista as entidades abrangidas. Em Portugal, sob supervisão do Banco de Portugal e da CMVM, incluem:
+
+**Entidades directamente abrangidas (selecção relevante para PMEs):**
+- Instituições de crédito (bancos, incluindo pequenos bancos de poupança)
+- Empresas de seguros e resseguros (incluindo corretores de seguros acima de um certo volume)
+- Empresas de investimento
+- Gestoras de fundos de investimento alternativo (GFIA) e UCITS
+- Prestadores de serviços de pagamento (PSP) — incluindo fintechs de pagamentos
+- Emissores de moeda eletrónica (EMI)
+- Prestadores de serviços de criptoactivos (CASP) — regulados pelo MiCA
+- Contraparte centrais e depositários centrais de valores mobiliários
+- Plataformas de financiamento participativo (crowdfunding)
+- Agências de rating de crédito
+
+**Quem está excluído (artigo 2.º, n.º 3):**
+Existe um regime simplificado ou exclusão para microempresas em algumas categorias. Corretores de seguros, corretores de resseguros e corretores de serviços auxiliares de seguros que sejam microempresas ou pequenas empresas podem ser excluídos pelo Estado-Membro. Portugal transpôs estas excepções via legislação complementar — verifique com o Banco de Portugal ou CMVM se a sua entidade beneficia de excepção.
+
+**Terceiros prestadores de serviços ICT:**
+Se a sua empresa de tecnologia presta serviços ICT a entidades financeiras — desenvolvimento de software, cloud computing, processamento de dados, cibersegurança gerida — não está directamente abrangida pelo DORA. No entanto, as entidades financeiras que contratam os seus serviços estão obrigadas a incluir requisitos DORA nos contratos com fornecedores ICT. Na prática, isso significa que os fornecedores ICT de entidades financeiras irão receber pedidos de conformidade e requisitos contratuais derivados do DORA.
+
+Os "terceiros prestadores de serviços ICT críticos" (identificados pelo ESAs — Autoridades Europeias de Supervisão) ficam sujeitos a supervisão directa da UE. Esta classificação aplica-se principalmente a grandes fornecedores de cloud (AWS, Azure, Google Cloud) e não tipicamente a PMEs.
+
+## Os 5 Pilares do DORA
+
+### 1. Gestão do Risco de TIC
+
+As entidades abrangidas devem implementar um quadro abrangente de gestão do risco de TIC que inclua:
+- Identificação de todos os sistemas e activos de informação (inventário)
+- Avaliação e classificação de riscos de TIC por criticidade
+- Estratégias de protecção e prevenção
+- Detecção de anomalias e incidentes
+- Planos de resposta e recuperação com RTO (Recovery Time Objective) e RPO (Recovery Point Objective) definidos
+- Relatórios periódicos ao órgão de gestão
+
+**Para PMEs do sector financeiro:** Isto traduz-se na necessidade de documentação formal de riscos de TIC — não pode ser apenas conhecimento implícito do responsável de IT. Ver o [guia de plano de continuidade de negócio](/blog/plano-continuidade-negocio-bcp-ciberataque-pme) para uma base de trabalho.
+
+### 2. Gestão, Classificação e Reporte de Incidentes
+
+O DORA estabelece requisitos específicos para como os incidentes de TIC são geridos e reportados:
+
+**Classificação de incidentes:**
+As entidades devem estabelecer critérios para classificar incidentes por severidade. Incidentes "graves" (major ICT-related incidents) têm obrigação de reporte.
+
+**Limiares para reporte de incidentes graves:**
+Um incidente é classificado como grave se cumprir critérios como:
+- Número de clientes afectados (limiar a ser definido pelas autoridades de supervisão)
+- Duração do incidente acima de um determinado período
+- Impacto geográfico (afecta mais do que um país)
+- Perdas de dados ou impacto financeiro acima de limiares definidos
+- Impacto na reputação da entidade
+
+**Prazos de reporte:**
+Para incidentes graves, o DORA exige:
+- **Notificação inicial:** dentro de 4 horas após classificação como grave (máximo 24 horas após detecção)
+- **Relatório intermédio:** dentro de 72 horas da notificação inicial
+- **Relatório final:** dentro de 1 mês após resolução
+
+As notificações são feitas à autoridade competente (Banco de Portugal para entidades bancárias, CMVM para entidades de investimento, ASF para seguros). Estas autoridades reportam por sua vez às autoridades europeias (EBA, EIOPA, ESMA).
+
+**Para PMEs:** Este é um dos requisitos mais impactantes operacionalmente. Exige um processo documentado de gestão de incidentes, com critérios claros de classificação e responsáveis designados para cada fase do processo de reporte. Ver o [plano de resposta a incidentes de cibersegurança](/blog/plano-resposta-incidentes-ciberseguranca-pme) como base.
+
+### 3. Testes de Resiliência Operacional Digital
+
+O DORA exige que as entidades testem regularmente a resiliência dos seus sistemas de TIC. Os requisitos variam por tipo de entidade:
+
+**Testes básicos (todos os anos, todas as entidades abrangidas):**
+- Testes de vulnerabilidade e varredura
+- Testes de resiliência de rede
+- Revisão de logs e mecanismos de detecção
+- Testes de continuidade de negócio (recuperação de backups, failover)
+
+**TLPT — Threat-Led Penetration Testing (cada 3 anos, entidades identificadas):**
+O TLPT é um teste de penetração avançado baseado em cenários reais de ameaça (metodologia TIBER-EU), obrigatório para entidades consideradas críticas pelas autoridades de supervisão. Tipicamente aplica-se a grandes instituições, não a PMEs — mas verifique com o supervisor se a sua entidade está na lista.
+
+**Para PMEs:** O requisito mínimo — testes de vulnerabilidade anuais e testes de continuidade — está ao alcance da maioria. Ver [pentest para PMEs](/blog/teste-penetracao-pentest-pme-quando-contratar) para orientação sobre como contratar e o que esperar.
+
+### 4. Gestão do Risco de Terceiros ICT
+
+Este é o pilar com maior impacto para a cadeia de fornecimento. As entidades abrangidas devem:
+
+**Registo de contratos ICT:**
+Manter um registo actualizado de todos os contratos com prestadores de serviços ICT, incluindo:
+- Identificação do prestador
+- Serviços contratados e sistemas abrangidos
+- Classificação da criticalidade
+- Localizações onde os dados são processados
+- Datas e condições de renovação
+
+**Requisitos contratuais obrigatórios:**
+O DORA especifica cláusulas que devem constar em todos os contratos com prestadores ICT. As mais relevantes:
+- Descrição completa dos serviços e SLAs de disponibilidade
+- Localização(ões) onde dados são processados e condições para alteração
+- Disposições sobre portabilidade de dados e transição de saída
+- Direito de auditoria pela entidade financeira e supervisores
+- Planos de continuidade do prestador e obrigações de reporte de incidentes
+- Cooperação com autoridades de supervisão
+- Direito de rescisão em caso de violação grave de segurança ou incidente
+
+**Concentração de risco:**
+As autoridades de supervisão vão monitorizar a concentração de risco — quando muitas entidades financeiras dependem do mesmo prestador ICT. Como PME prestadora de serviços ICT, pode ser solicitada a fornecer informação às autoridades sobre o número e tipo de clientes financeiros.
+
+### 5. Partilha de Informação sobre Ameaças
+
+O DORA incentiva — não obriga — as entidades a partilhar informação sobre ameaças e incidentes cibernéticos com outras entidades do sector. Em Portugal, este tipo de partilha pode ocorrer através de organismos sectoriais ou do CERT.PT.
+
+Para PMEs, este é o pilar com menos impacto operacional imediato.
+
+## O Que Mudou Face ao Regime Anterior
+
+Antes do DORA, as entidades financeiras em Portugal estavam sujeitas a orientações do Banco de Portugal (como a Instrução 5/2019 sobre continuidade do negócio e a Instrução 8/2020 sobre outsourcing). O DORA:
+- Unifica esses requisitos num regulamento europeu directamente aplicável
+- Estabelece requisitos mais específicos e detalhados
+- Alarga o âmbito a entidades anteriormente não abrangidas (ex: prestadores de criptoactivos)
+- Cria um regime de supervisão directa para fornecedores ICT críticos
+- Harmoniza os prazos e formatos de reporte de incidentes a nível europeu
+
+## O Papel do Banco de Portugal e da CMVM
+
+Em Portugal, as autoridades de supervisão responsáveis pela implementação do DORA são:
+- **Banco de Portugal:** supervisiona instituições de crédito, prestadores de serviços de pagamento, emissores de moeda electrónica
+- **CMVM (Comissão do Mercado de Valores Mobiliários):** supervisiona empresas de investimento, gestoras de fundos, prestadores de criptoactivos
+- **ASF (Autoridade de Supervisão de Seguros e Fundos de Pensões):** supervisiona seguradoras e resseguradoras
+
+Os supervisores têm poderes para: solicitar informação e documentação, realizar inspecções in loco, aplicar medidas correctivas e sanções administrativas.
+
+## Sobreposição com NIS2 e RGPD
+
+**DORA vs NIS2:**
+O DORA é lei especial para o sector financeiro; a NIS2 é de âmbito geral. O artigo 1.º, n.º 2, do DORA estabelece que as entidades abrangidas que cumpram o DORA se consideram em conformidade com os requisitos de segurança de rede e sistemas de informação aplicáveis no âmbito da NIS2 — há uma regra de especialidade que evita duplicação. Ver [NIS2 para PMEs portuguesas](/blog/nis2-portugal-guia-pme).
+
+**DORA vs RGPD:**
+O DORA centra-se na resiliência operacional e riscos de TIC; o RGPD centra-se na protecção de dados pessoais. São complementares, não sobrepostos. Uma entidade financeira deve cumprir ambos. Em caso de incidente que afecte dados pessoais, as obrigações de notificação do RGPD (72 horas à CNPD) aplicam-se em paralelo com as do DORA — com prazos diferentes e destinatários diferentes.
+
+## Por Onde Começar: Plano de 3 Meses para PMEs
+
+Se a empresa ainda não começou a abordar o DORA (estando em vigor desde janeiro de 2025), está em incumprimento. Os supervisores ainda estão na fase de orientação e primeiras inspecções, mas isso vai mudar.
+
+**Mês 1 — Diagnóstico:**
+1. Confirme se a entidade está abrangida (consulte o artigo 2.º do DORA e, se necessário, o supervisor)
+2. Nomeie um responsável interno pela conformidade DORA (pode ser o mesmo responsável pela segurança da informação)
+3. Faça inventário dos sistemas de TIC críticos para a operação — quais sistemas, se ficarem indisponíveis, param a empresa?
+4. Liste todos os contratos com prestadores de serviços ICT — incluindo cloud (Microsoft 365, AWS, etc.)
+
+**Mês 2 — Lacunas e Prioridades:**
+5. Compare o inventário e contratos actuais com os requisitos do DORA — que lacunas existem nos contratos? Que sistemas não têm RTO/RPO definido?
+6. Revise o processo de gestão de incidentes — existe um processo documentado? Quem decide que um incidente é "grave"? Quem notifica o supervisor?
+7. Agende testes de resiliência (testes de vulnerabilidade, testes de recuperação de backup) se ainda não são feitos regularmente
+
+**Mês 3 — Remediação Prioritária:**
+8. Actualize os contratos com prestadores ICT críticos para incluir as cláusulas obrigatórias do DORA
+9. Documente o quadro de gestão do risco de TIC — pode ser simples para PMEs, mas tem de existir
+10. Teste o plano de recuperação — execute uma simulação de incidente e documente o resultado
+
+**Apoio externo:** O DORA é suficientemente específico para justificar consulta jurídica especializada em regulação financeira e possivelmente apoio de consultora de cibersegurança com experiência no sector financeiro. A implementação DIY sem conhecimento do regulamento é arriscada — o custo de uma não-conformidade detectada em inspecção é superior ao custo da consultoria.
+
+## Recursos Oficiais
+
+- Texto completo do Regulamento DORA: EUR-Lex, Regulamento (UE) 2022/2554
+- Normas técnicas de regulamentação (RTS) e orientações (ITS): publicadas pelas ESAs (EBA, EIOPA, ESMA)
+- Página DORA no site do Banco de Portugal: informação sobre supervisão em Portugal
+- FAQ DORA da EBA: clarificações sobre questões específicas de interpretação
+
+O DORA representa uma mudança significativa para o sector financeiro europeu — mas os seus pilares (gestão de risco de TIC, continuidade de negócio, gestão de terceiros, testes de resiliência) são boas práticas que qualquer empresa responsável devia ter independentemente da obrigação legal. Para PMEs no sector financeiro, o prazo passou — a conformidade é agora urgente, não opcional.`,
+    category: "legislacao",
+    categoryLabel: "Legislacao RGPD",
+    publishedAt: "2026-04-15",
+    readingTime: 15,
+  },
 ];
 
 export function getPostBySlug(slug: string): Post | undefined {
