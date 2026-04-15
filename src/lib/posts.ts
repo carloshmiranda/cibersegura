@@ -9546,6 +9546,647 @@ Para proteção completa da infraestrutura empresarial, complemente com [seguran
     publishedAt: "2026-04-14",
     readingTime: 15,
   },
+  {
+    slug: "byod-politica-dispositivos-pessoais-trabalho-pme",
+    title: "BYOD: Como Gerir Dispositivos Pessoais no Trabalho Sem Comprometer a Segurança da Empresa",
+    excerpt:
+      "Colaboradores que usam o telemóvel ou portátil pessoal para trabalho é norma em PMEs portuguesas — mas sem política clara é uma porta aberta a fugas de dados. Guia prático para implementar BYOD de forma segura.",
+    content: `Em Portugal, estima-se que mais de 60% dos colaboradores de PMEs acedem a email de trabalho ou aplicações empresariais a partir de dispositivos pessoais. É cómodo, reduz custos de hardware e os colaboradores preferem o seu próprio equipamento. Mas cada smartphone pessoal com acesso ao email da empresa é, do ponto de vista de segurança, um endpoint não gerido fora do seu controlo.
+
+Sem uma política de BYOD (Bring Your Own Device) clara e controlos técnicos adequados, está a aceitar riscos que podem custar caro: fuga de dados de clientes, ransomware que entra pelo telemóvel de um colaborador, ou dados empresariais que ficam no dispositivo pessoal quando o colaborador sai da empresa.
+
+Este guia explica como implementar BYOD de forma estruturada e segura, mesmo sem uma equipa de IT dedicada.
+
+## Porque o BYOD É Um Risco Real para PMEs
+
+### O Problema Não É o Dispositivo — É a Mistura
+
+Um colaborador que usa o telemóvel pessoal para trabalho tem, no mesmo aparelho:
+- Email e contactos pessoais e profissionais
+- Aplicações de trabalho ao lado de jogos e redes sociais
+- Dados de clientes e fotos das férias
+- Credenciais de acesso empresariais numa app que não tem autenticação biométrica ativa
+
+Quando esse dispositivo é perdido, roubado, infetado por malware ou simplesmente dado a um familiar quando compra um novo, os dados empresariais vão com ele.
+
+### Os Riscos Mais Frequentes
+
+**Malware móvel**
+Aplicações maliciosas em lojas não oficiais (ou mal triadas nas oficiais) podem capturar credenciais, intercetar SMS de 2FA e exfiltrar dados. Android é o principal alvo, mas iOS não é imune.
+
+**Redes Wi-Fi inseguras**
+Um colaborador que acede ao email da empresa numa rede Wi-Fi pública sem VPN está a expor credenciais e dados em trânsito. Em redes comprometidas (evil twin attacks), o atacante vê todo o tráfego não cifrado.
+
+**Saída de colaboradores**
+Quando um colaborador se despede, o que acontece aos dados da empresa no seu telemóvel pessoal? Sem controlos técnicos, nada — a menos que confie que ele apaga tudo.
+
+**Atualizações em atraso**
+Dispositivos pessoais são atualizados quando o utilizador quer, não quando a empresa precisa. Um Android com três anos sem updates tem dezenas de vulnerabilidades conhecidas.
+
+**Contas comprometidas na esfera pessoal**
+Se o colaborador usa a mesma password no Instagram (comprometido) e no email de trabalho, e não tem 2FA ativo, a empresa fica exposta por um incidente que aconteceu na vida pessoal dele.
+
+## O Que Deve Conter Uma Política BYOD
+
+Uma política BYOD não tem de ser um documento de 30 páginas. Para uma PME, um documento claro de 2 a 3 páginas que os colaboradores entendem e assinam é mais eficaz do que um manual jurídico que ninguém lê.
+
+### Elementos Essenciais
+
+**1. Dispositivos permitidos**
+Defina quais os tipos de dispositivos aceites (smartphones, tablets, portáteis) e os requisitos mínimos — versão de OS, estado de atualização, sem root/jailbreak.
+
+**2. Aplicações obrigatórias**
+Liste as apps que o colaborador deve instalar para aceder a recursos da empresa: VPN, MDM agent, authenticator app. Seja claro sobre o que será instalado e o que não será.
+
+**3. O que a empresa pode e não pode aceder**
+Este ponto é crítico para a aceitação dos colaboradores. Seja explícito: a empresa não acede a fotos pessoais, mensagens privadas ou histórico do browser. O que monitoriza são apenas as aplicações de trabalho e, em caso de incidente, pode apagar remotamente apenas os dados empresariais (não o dispositivo inteiro, se usar MAM em vez de MDM completo).
+
+**4. Obrigações do colaborador**
+- Manter o OS atualizado
+- Não fazer root/jailbreak
+- Bloquear o ecrã com PIN, password ou biometria
+- Não instalar apps de fontes não oficiais
+- Reportar imediatamente perda ou roubo
+
+**5. Saída da empresa**
+Processo claro para o que acontece quando o colaborador sai: remoção remota dos dados empresariais, revogação de acessos, devolução de quaisquer credenciais.
+
+**6. Consequências do incumprimento**
+Não precisa de ser draconiano, mas a política tem de ter consequências definidas para ser levada a sério.
+
+## Controlos Técnicos: MDM vs MAM
+
+Existem duas abordagens técnicas para gerir dispositivos pessoais com acesso empresarial, com filosofias muito diferentes.
+
+### MDM — Mobile Device Management (Gestão do Dispositivo)
+
+O MDM instala um perfil de gestão no dispositivo que dá à empresa controlo total sobre o aparelho:
+- Aplicar políticas de segurança (PIN obrigatório, encriptação)
+- Ver a lista de apps instaladas
+- Apagar o dispositivo remotamente (wipe total)
+- Bloquear funcionalidades (câmara, Bluetooth, etc.)
+
+**Vantagem:** controlo máximo sobre segurança.
+**Problema:** os colaboradores resistem. Ninguém quer que a empresa tenha controlo total sobre o seu telemóvel pessoal — e têm razão em resistir. Do ponto de vista RGPD, MDM completo em dispositivos pessoais levanta questões sérias de proporcionalidade.
+
+**Recomendação para BYOD:** MDM é mais adequado para dispositivos **fornecidos pela empresa** (COPE — Corporate Owned, Personally Enabled), não para BYOD puro.
+
+### MAM — Mobile Application Management (Gestão de Aplicações)
+
+O MAM não gere o dispositivo — gere apenas as aplicações de trabalho. Cria um "container" separado no dispositivo onde vivem as apps e dados empresariais, completamente isolado da esfera pessoal.
+
+Com MAM:
+- A empresa controla apenas as apps de trabalho
+- Pode apagar remotamente apenas os dados empresariais (sem tocar em fotos, apps pessoais, etc.)
+- O colaborador mantém total privacidade na esfera pessoal
+- Pode aplicar políticas dentro do container (PIN separado, bloqueio de copiar/colar para apps pessoais)
+
+**Recomendação para BYOD:** MAM é a abordagem correta. O colaborador aceita mais facilmente, e a empresa tem os controlos que realmente importam.
+
+### Soluções Práticas para PMEs
+
+**Microsoft Intune (MAM)**
+Se usa Microsoft 365, tem Intune disponível. Com políticas de proteção de aplicações (APP), pode proteger dados no Outlook, Teams e OneDrive no dispositivo pessoal do colaborador sem instalar um perfil MDM. É a opção mais prática para PMEs no ecossistema Microsoft.
+
+Custo: incluído em Microsoft 365 Business Premium (€22/utilizador/mês).
+
+**Google Endpoint Management**
+Para ambientes Google Workspace, o Google Endpoint Management oferece funcionalidades similares de gestão de aplicações Android e iOS.
+
+Custo: incluído nos planos Google Workspace Business.
+
+**Jamf (para iOS/macOS)**
+Para empresas com muitos dispositivos Apple, o Jamf é a referência em gestão. Tem versão gratuita para até 3 dispositivos (Jamf Now).
+
+**Solução mínima para PMEs sem M365 Premium**
+Se não quer investir em MDM/MAM agora, o mínimo aceitável é:
+1. Exigir [autenticação de dois fatores](/blog/autenticacao-dois-fatores-2fa-pme) em todas as contas de trabalho
+2. Usar email e documentos apenas através de browser com sessão separada
+3. Exigir VPN para acesso a recursos internos
+4. Ter um processo claro de revogação de acessos na saída
+
+## Implementação Passo a Passo
+
+### Fase 1: Decisão e Política (Semana 1-2)
+
+1. **Defina o âmbito**: que recursos empresariais podem ser acedidos via dispositivos pessoais? Email só? Também sistemas de gestão? VPN à rede interna?
+
+2. **Escolha a abordagem técnica**: MAM via Intune se tem M365, browser-only se quer a opção mais simples.
+
+3. **Elabore a política**: use um modelo simples, linguagem clara. Envolva o responsável de RGPD se existir — a política BYOD é um tratamento de dados pessoais dos colaboradores.
+
+4. **Consulte juridicamente**: para PMEs com mais de 20 colaboradores, valide a política com advogado laboral. O acesso a dispositivos pessoais pode ter implicações no contrato de trabalho.
+
+### Fase 2: Comunicação (Semana 3)
+
+5. **Apresente a política aos colaboradores** antes de implementar qualquer controlo técnico. Explique o que muda, o que a empresa pode e não pode ver, e porque é necessário.
+
+6. **Responda às dúvidas** — especialmente sobre privacidade. A transparência aqui é fundamental para a aceitação.
+
+7. **Obtenha consentimento por escrito** — não apenas para cumprimento legal, mas para que haja clareza de ambas as partes.
+
+### Fase 3: Implementação Técnica (Semana 4)
+
+8. **Configure as políticas de proteção de aplicações** no Intune ou ferramenta escolhida.
+
+9. **Ative 2FA em todas as contas de trabalho** — este passo é não negociável e independente do BYOD.
+
+10. **Configure o processo de offboarding**: teste o wipe seletivo de dados empresariais antes de precisar de o usar numa situação real.
+
+### Fase 4: Revisão Contínua
+
+11. **Reveja a política anualmente** ou quando há mudanças significativas na forma de trabalhar.
+
+12. **Inclua BYOD no onboarding** de novos colaboradores — é mais fácil estabelecer expectativas desde o início.
+
+## Implicações RGPD do BYOD
+
+O BYOD é um tema sensível sob o RGPD porque envolve dois titulares de dados: a empresa (cujos dados estão no dispositivo do colaborador) e o colaborador (cujos dados pessoais estão no mesmo dispositivo).
+
+**O que deve ter em atenção:**
+
+**Base legal para o tratamento**: o acesso a dados de localização ou apps instaladas requer base legal clara. Para BYOD, a base mais robusta é o contrato de trabalho (necessidade para execução do contrato), mas apenas para o que for estritamente necessário.
+
+**Minimização de dados**: a empresa não deve monitorizar mais do que o necessário para fins de segurança. MDM completo que reporta localização em tempo real de dispositivos pessoais é difícil de justificar sob o princípio da minimização.
+
+**Registo de atividades de tratamento**: se processa dados pessoais dos colaboradores através do BYOD (mesmo que indiretamente), deve documentar isso no registo do Artigo 30.º do RGPD.
+
+**DPIA**: para grandes volumes de colaboradores ou acesso a dados sensíveis, pode ser necessária uma Avaliação de Impacto sobre a Proteção de Dados.
+
+## BYOD vs COPE: Quando Faz Sentido Cada Opção
+
+**BYOD (Bring Your Own Device)** — o colaborador usa o seu dispositivo pessoal para trabalho.
+- Pros: zero custo de hardware, colaboradores preferem o seu equipamento
+- Contras: menor controlo, complexidade RGPD, heterogeneidade de dispositivos
+
+**COPE (Corporate Owned, Personally Enabled)** — a empresa fornece o dispositivo mas permite uso pessoal limitado.
+- Pros: controlo total, políticas uniformes, mais simples legalmente
+- Contras: custo de hardware, gestão de inventário, colaboradores menos satisfeitos com restrições
+
+**COBO (Corporate Owned, Business Only)** — dispositivo da empresa, apenas uso profissional.
+- Pros: máximo controlo, simplicidade
+- Contras: custo elevado, colaboradores resistem a carregar dois telemóveis
+
+Para a maioria das PMEs portuguesas, a realidade é BYOD de facto (acontece mesmo sem política), pelo que formalizar com MAM e uma política clara é o próximo passo imediato, enquanto se avalia se o investimento em COPE faz sentido a médio prazo.
+
+## Lista de Verificação BYOD
+
+**Política**
+- [ ] Política BYOD escrita e aprovada pela gestão
+- [ ] Tipos de dispositivos e OS mínimos definidos
+- [ ] Âmbito de acesso (que recursos) clarificado
+- [ ] O que a empresa monitorizará (e não monitorizará) explicado
+- [ ] Processo de saída/offboarding definido
+- [ ] Colaboradores informados e assinaram
+
+**Técnico**
+- [ ] 2FA ativo em todas as contas de trabalho
+- [ ] MAM configurado (Intune, Google Endpoint, ou equivalente)
+- [ ] Wipe seletivo testado
+- [ ] VPN disponível para acesso a recursos internos
+- [ ] Processo de revogação de acessos documentado e testado
+
+**Legal/RGPD**
+- [ ] Base legal para tratamento documentada
+- [ ] Registos do Artigo 30.º atualizados
+- [ ] Validação jurídica obtida (para equipas >20 pessoas)
+
+O BYOD bem implementado não é uma ameaça — é uma realidade que pode ser gerida de forma segura. O risco não está nos dispositivos pessoais em si, mas na falta de regras claras e controlos mínimos.
+
+Para complementar a sua estratégia de segurança de endpoints, leia também sobre [EDR vs Antivírus](/blog/edr-vs-antivirus-seguranca-endpoints-pme) para os dispositivos que a empresa gere diretamente, e sobre [segurança no trabalho remoto](/blog/seguranca-trabalho-remoto-pme) para uma abordagem integrada à força de trabalho fora do escritório.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-15",
+    readingTime: 13,
+  },
+  {
+    slug: "teste-penetracao-pentest-pme-quando-contratar",
+    title: "Teste de Penetração para PMEs: Quando Contratar, O Que Esperar e Quanto Custa",
+    excerpt:
+      "Um pentest não é para grandes empresas apenas — PMEs com dados de clientes, sistemas web ou conformidade NIS2 têm razões concretas para contratar um. Guia prático sobre quando faz sentido, o que acontece e quanto custa em Portugal.",
+    content: `Existe uma ideia errada muito comum nas PMEs portuguesas: que os testes de penetração são para bancos e multinacionais. A realidade é que uma loja online com 500 clientes registados, um escritório de contabilidade com acesso a dados financeiros de terceiros, ou um gestor de frotas com API exposta na internet têm a mesma necessidade de validar a sua segurança — apenas com um âmbito e orçamento diferentes.
+
+Este guia explica o que é um teste de penetração, quando faz sentido para uma PME, o que acontece durante um pentest e quanto pode esperar pagar em Portugal.
+
+## O Que É (e Não É) um Teste de Penetração
+
+### Definição Prática
+
+Um teste de penetração (pentest) é um ataque simulado e autorizado aos sistemas de uma organização, executado por especialistas de segurança, com o objetivo de identificar vulnerabilidades exploráveis antes que um atacante real o faça.
+
+O pentest responde à pergunta: **"Conseguiria um atacante comprometer os meus sistemas da forma que está hoje?"**
+
+É diferente de:
+
+**Vulnerability scan (análise de vulnerabilidades)**: ferramentas automatizadas que identificam vulnerabilidades conhecidas nos seus sistemas. Rápido, barato, mas sem inteligência humana — não valida se as vulnerabilidades são realmente exploráveis nem como um atacante as encadearia.
+
+**Auditoria de segurança**: análise de configurações, políticas e procedimentos contra um standard (ISO 27001, NIS2). Diz-lhe se segue as melhores práticas; não valida se é resistente a um atacante real.
+
+**Red team**: exercício mais alargado que simula um adversário persistente (APT) durante semanas ou meses, testando também ameaças internas, engenharia social e segurança física. Geralmente fora do orçamento de PMEs.
+
+### O Que Um Pentest Encontra
+
+Em PMEs portuguesas, os pentests encontram tipicamente:
+
+- Passwords fracas ou padrão em sistemas expostos (VPN, RDP, painéis de administração)
+- Aplicações web com vulnerabilidades de injeção SQL, XSS ou autenticação quebrada
+- Serviços desnecessariamente expostos na internet (RDP, SMB, bases de dados)
+- Software desatualizado com CVEs (vulnerabilidades) conhecidas e exploits públicos
+- Configurações de cloud mal definidas (buckets S3 públicos, permissões excessivas)
+- Subdominios esquecidos com aplicações legadas vulneráveis
+- Certificados SSL expirados ou configurações fracas (TLS 1.0, ciphers fracos)
+
+## Tipos de Pentest: Qual Escolher
+
+### Por Âmbito
+
+**Pentest de aplicação web**
+Testa uma ou mais aplicações web (site, loja online, portal de clientes, API). É o tipo mais comum para PMEs porque é onde está a maior superfície de ataque exposta publicamente.
+
+Inclui: OWASP Top 10, lógica de negócio, autenticação, autorização, gestão de sessões, injeções.
+
+**Pentest de infraestrutura externa**
+Testa todos os ativos expostos na internet — servidores, serviços, IPs, subdomínios — como um atacante externo sem acesso prévio.
+
+**Pentest de infraestrutura interna**
+Testa a rede interna, simulando um atacante que já entrou (por exemplo, via phishing). Avalia movimento lateral, escalada de privilégios, acesso a dados sensíveis.
+
+**Pentest de rede Wi-Fi**
+Testa a segurança das redes sem fio da empresa — força de autenticação, segmentação, vulnerabilidades de protocolo.
+
+**Pentest de dispositivos móveis**
+Testa aplicações móveis (iOS/Android) e a sua comunicação com backends.
+
+### Por Metodologia (Caixas)
+
+**Black box** — o pentester não tem informação prévia. Simula um atacante externo sem conhecimento da infraestrutura. Mais realista, mas menos eficiente em termos de custo — muito tempo é gasto em reconhecimento.
+
+**Grey box** — o pentester tem informação parcial (credenciais de utilizador normal, documentação básica de arquitetura). Bom equilíbrio entre realismo e eficiência. **Recomendado para a maioria das PMEs.**
+
+**White box** — o pentester tem acesso total a código fonte, documentação, credenciais. Mais abrangente, encontra mais vulnerabilidades por hora de trabalho. Ideal para auditorias de software desenvolvido internamente.
+
+## Quando Faz Sentido Um Pentest para a Sua PME
+
+### Critérios para Priorizar
+
+**1. Tem uma aplicação web com dados de clientes**
+Qualquer loja online, portal, ou aplicação SaaS que armazena dados pessoais, financeiros ou de saúde de clientes é candidata a pentest regular. O custo de um incidente (RGPD + reputação + NIS2) supera facilmente o custo do teste.
+
+**2. Conformidade NIS2 ou contratual**
+O Decreto-Lei 125/2025 (NIS2) exige que entidades abrangidas implementem medidas de gestão de risco "baseadas em evidências". Um pentest é a forma mais direta de gerar essa evidência. Adicionalmente, clientes de grande dimensão ou contratos públicos exigem cada vez mais pentest como requisito de fornecedor.
+
+**3. Mudança significativa na infraestrutura**
+Migração para cloud, lançamento de novo produto digital, aquisição de empresa, nova integração com terceiros — qualquer mudança substancial que aumente a superfície de ataque justifica validação.
+
+**4. Incidente recente ou suspeita de comprometimento**
+Se já foi atacado, um pentest pós-incidente (combinado com análise forense) ajuda a perceber como entraram e se existem outras portas de entrada não detetadas.
+
+**5. Nenhum teste nos últimos 2 anos**
+Para sistemas expostos na internet que nunca foram testados, um pentest inicial é o ponto de partida para qualquer programa de segurança sério.
+
+### Quando Esperar
+
+Se o seu site é brochura estática sem autenticação, não tem dados de clientes, e não tem sistemas expostos além de email, um pentest de aplicação web tem pouco retorno imediato. Comece por vulnerability scanning automatizado e hardening de configurações.
+
+## O Que Acontece Durante Um Pentest
+
+### Fase 1: Definição de Âmbito (Scoping)
+
+Antes de começar, assina-se um documento de autorização (Statement of Work + Rules of Engagement) que define:
+- Sistemas autorizados para teste
+- Horário do teste (durante ou fora do horário laboral)
+- O que está fora de âmbito (sistemas de terceiros partilhados, por exemplo)
+- Como comunicar vulnerabilidades críticas em tempo real
+- Tratamento de dados sensíveis encontrados durante o teste
+
+**Este documento é essencial.** Sem autorização escrita, um pentest é tecnicamente ilegal mesmo que tenha dado consentimento verbal.
+
+### Fase 2: Reconhecimento (Reconnaissance)
+
+O pentester identifica todos os ativos do cliente — IPs, domínios, subdomínios, tecnologias usadas, informações públicas. Parte deste trabalho usa apenas fontes abertas (OSINT): registos DNS, certificados SSL, LinkedIn, Shodan.
+
+### Fase 3: Identificação de Vulnerabilidades
+
+Combinando ferramentas automatizadas (Nmap, Burp Suite, Nuclei, Nessus) com análise manual, o pentester mapeia potenciais vulnerabilidades — versões desatualizadas, configurações incorretas, lógica de negócio suspeita.
+
+### Fase 4: Exploração
+
+A parte que diferencia um pentest de um scan: o pentester tenta explorar as vulnerabilidades identificadas para demonstrar impacto real. Não basta dizer "existe XSS aqui" — precisa de demonstrar o que um atacante conseguiria fazer com ele (roubo de sessão, acesso a contas de outros utilizadores, etc.).
+
+Para vulnerabilidades críticas, o pentester contacta imediatamente o cliente para comunicar — não espera pelo relatório final.
+
+### Fase 5: Pós-Exploração (em âmbitos internos)
+
+Para pentests de infraestrutura interna, após comprometer um sistema, o pentester avalia o que consegue alcançar a partir daí: movimento lateral, escalada de privilégios, acesso a Active Directory, dados sensíveis.
+
+### Fase 6: Relatório
+
+O relatório final inclui:
+
+**Executive summary** — 1 a 2 páginas em linguagem acessível para gestão: o que foi testado, o nível de risco global, as 3-5 descobertas mais críticas, recomendação geral.
+
+**Findings detalhados** — para cada vulnerabilidade: descrição técnica, passos para reproduzir, evidências (screenshots), impacto potencial, nível de risco (crítico/alto/médio/baixo), recomendação de correção específica, referências (CVE, CWE, OWASP).
+
+**Apêndice técnico** — comandos utilizados, ferramentas, timestamps.
+
+**Um bom relatório de pentest é um documento de trabalho**, não um troféu para a prateleira. Deve conseguir dar o relatório à sua equipa técnica (ou ao vosso MSP) e eles saberem exatamente o que corrigir.
+
+### Fase 7: Reteste (Retest)
+
+Após corrigir as vulnerabilidades, um reteste valida que as correções foram eficazes. **Exija sempre reteste incluído no contrato** — pagar pentest sem reteste é como fazer análises médicas e não verificar se o tratamento funcionou.
+
+## Quanto Custa um Pentest em Portugal
+
+Os preços variam significativamente consoante o âmbito, a metodologia e a reputação da empresa. Valores indicativos para 2026:
+
+**Pentest de aplicação web (grey box)**
+- Aplicação simples (10-20 endpoints, autenticação básica): €1.500 — €3.500
+- Aplicação média (50-100 endpoints, múltiplos perfis de utilizador): €3.500 — €7.000
+- Aplicação complexa (API + mobile + backend): €7.000 — €15.000+
+
+**Pentest de infraestrutura externa**
+- Âmbito pequeno (<50 IPs): €2.000 — €4.000
+- Âmbito médio (50-200 IPs): €4.000 — €8.000
+
+**Pentest de infraestrutura interna**
+- PME (< 100 hosts): €3.000 — €6.000
+- Empresa média (100-500 hosts): €6.000 — €12.000
+
+**Pentest de rede Wi-Fi**: €800 — €2.500
+
+Estes valores são para empresas estabelecidas com consultores certificados. Freelancers sem certificações relevantes podem oferecer preços mais baixos — veja a secção sobre como escolher fornecedor.
+
+**Reteste**: normalmente incluído ou cobrado a 20-30% do valor do teste inicial.
+
+## Como Escolher um Fornecedor de Pentest
+
+### Certificações a Valorizar
+
+**OSCP (Offensive Security Certified Professional)** — certificação prática (24 horas de hacking num lab real) reconhecida como referência para pentesting. Um pentest manual realizado por um OSCP é um sinal positivo.
+
+**CEH (Certified Ethical Hacker)** — certificação mais teórica, menos valorizada pela comunidade técnica, mas reconhecida por compliance officers e clientes corporativos.
+
+**CREST** — acreditação para empresas de pentest (não indivíduos) com um standard rigoroso de qualidade. Empresas CREST-acreditadas são uma escolha segura para clientes que precisam de garantias formais.
+
+**GPEN, GWAPT (GIAC)** — certificações especializadas do SANS Institute, altamente valorizadas tecnicamente.
+
+### Perguntas a Fazer Antes de Contratar
+
+1. Quais as certificações dos consultores que farão o teste (não apenas da empresa)?
+2. Posso ver um exemplo anonimizado de relatório para entender o nível de detalhe?
+3. O reteste está incluído e quais as condições?
+4. Como comunicam vulnerabilidades críticas descobertas durante o teste?
+5. Que cobertura de seguro (responsabilidade civil) têm para incidentes durante o teste?
+6. Têm experiência com o meu sector/tipo de aplicação?
+
+### Sinais de Alerta
+
+- Preços muito abaixo do mercado sem justificação clara
+- Relatórios que são apenas output de Nessus ou OWASP ZAP sem análise manual
+- Sem contrato formal ou Statement of Work detalhado
+- Recusa em fornecer referências de clientes verificáveis
+- Pentester sem certificações verificáveis
+
+## Preparar a Empresa para o Pentest
+
+### Antes do Teste
+
+- Tenha um ambiente de staging para testar primeiro, se possível — evita riscos ao ambiente de produção
+- Garanta que tem backups atualizados antes do teste começar
+- Informe a equipa de IT/MSP sobre o teste e datas — evita falsos positivos nos sistemas de monitorização
+- Reveja e assine o Statement of Work com atenção aos sistemas autorizados
+
+### Durante o Teste
+
+- Mantenha um canal de comunicação aberto com o pentester para questões urgentes
+- Se houver uma descoberta crítica comunicada durante o teste, avalie se é necessário intervir imediatamente ou aguardar o relatório
+
+### Após o Relatório
+
+- Priorize correções por nível de risco: crítico e alto primeiro
+- Para cada finding, atribua um responsável e prazo
+- Não arquive o relatório — use-o como roteiro de trabalho
+- Agende reteste para validar correções
+- Documente as correções para fins de conformidade NIS2/RGPD
+
+## O Pentest Como Parte de Um Programa de Segurança
+
+Um pentest pontual tem valor limitado. Para ser eficaz, deve ser parte de um ciclo:
+
+**Anualmente**: pentest de infraestrutura externa e aplicações principais
+**A cada release major**: pentest de novas funcionalidades de alto risco
+**Após incidentes**: pentest dirigido para validar o vetor usado e fechar portas similares
+**Para conformidade**: pentest com âmbito definido pelos requisitos (PCI DSS, NIS2, contratos)
+
+Um pentest não substitui outras medidas de segurança — é uma forma de as validar. Se não tem [gestão de patches](/blog/gestao-patches-atualizacoes-software-pme) consistente, [2FA](/blog/autenticacao-dois-fatores-2fa-pme) nos acessos críticos e [backups testados](/blog/backup-dados-pme-regra-3-2-1), comece por aí. O pentest será mais útil quando houver uma base de higiene de segurança já estabelecida — e o relatório focará em vulnerabilidades mais subtis em vez das básicas que já devia ter corrigido.
+
+Para PMEs que querem começar sem o investimento de um pentest completo, o [CNCS oferece apoio e orientação](/blog/cncs-cert-pt-o-que-sao-como-ajudam-pme) para organizações que precisam de melhorar a sua postura de segurança.`,
+    category: "ferramentas",
+    categoryLabel: "Ferramentas",
+    publishedAt: "2026-04-15",
+    readingTime: 14,
+  },
+  {
+    slug: "seguranca-videoconferencias-teams-zoom-meet-pme",
+    title: "Segurança em Videoconferências: Como Proteger as Reuniões Online da Sua Empresa",
+    excerpt:
+      "Reuniões no Teams, Zoom e Google Meet tornaram-se o quotidiano das PMEs — mas partilhar informação sensível em chamadas sem configurar segurança básica é um risco real. Guia prático para administradores e utilizadores.",
+    content: `Desde 2020, as videoconferências passaram de ferramenta ocasional a infraestrutura crítica de negócio. PMEs discutem contratos, estratégia, dados de clientes e informação financeira em reuniões online sem pensar duas vezes na segurança. E os atacantes sabem disso.
+
+O "Zoombombing" — invasão de reuniões não protegidas — foi apenas a manifestação mais visível de um problema mais amplo: reuniões online partilham informação sensível num canal que poucos configuram corretamente.
+
+Este guia cobre as principais plataformas usadas em Portugal — Microsoft Teams, Zoom e Google Meet — com configurações concretas para reduzir o risco sem tornar as reuniões uma experiência penosa.
+
+## Por Que as Videoconferências São Um Risco de Segurança
+
+### Informação Sensível em Canais Não Controlados
+
+Numa reunião típica de PME discutem-se:
+- Dados financeiros (resultados, previsões, propostas comerciais)
+- Dados de clientes e fornecedores
+- Informação estratégica (novos produtos, aquisições, acordos)
+- Credenciais partilhadas no chat ou no ecrã
+- Documentos internos partilhados via ecrã
+
+Tudo isto fica registado em logs de plataforma, gravações (se ativadas), chats exportáveis e ficheiros partilhados — muitas vezes com retenção que vai muito além do que a empresa controla.
+
+### Vetores de Ataque Reais
+
+**Reuniões sem controlo de acesso**
+Links de reunião partilhados por email, Slack ou grupos de WhatsApp são facilmente reencaminhados. Se não há sala de espera ou password, qualquer pessoa com o link pode entrar.
+
+**Gravações mal armazenadas**
+Reuniões gravadas na cloud da plataforma com partilha por link público — ou armazenadas localmente em laptops sem encriptação — são um ponto de fuga de informação.
+
+**Phishing via convites falsos**
+Convites de reunião falsos são um vetor de phishing eficaz. Um email de "Microsoft Teams" com link malicioso é difícil de distinguir do legítimo, especialmente em dispositivos móveis. Veja [como os ataques de phishing modernos funcionam](/blog/ciberataques-ia-phishing-deepfake-pme).
+
+**Partilha acidental de ecrã**
+Mostrar acidentalmente uma janela com passwords, dados financeiros ou conversas internas é mais comum do que parece — especialmente quando a pessoa não percebe que está a partilhar o ecrã inteiro e não apenas a janela pretendida.
+
+**Malware de captura de ecrã ou áudio**
+Dispositivos comprometidos com keyloggers ou RATs (Remote Access Trojans) capturam o que aparece no ecrã e o que é dito perto do microfone, independentemente da segurança da plataforma.
+
+**Man-in-the-Middle em redes não seguras**
+Participar em reuniões sensíveis através de Wi-Fi público sem [VPN](/blog/vpn-empresarial-pme-guia-completo) expõe metadados e, em casos de implementação fraca de TLS, potencialmente conteúdo.
+
+## Microsoft Teams — Configurações Essenciais
+
+O Teams é a plataforma mais usada em empresas portuguesas com Microsoft 365. A maioria das configurações críticas são geridas pelo administrador de IT no Teams Admin Center, mas algumas podem ser controladas por cada utilizador.
+
+### Configurações para Administradores
+
+**Política de reunião: sala de espera**
+Vá a **Teams Admin Center > Meetings > Meeting policies** e configure "Who can bypass the lobby" (sala de espera) de acordo com o seu contexto:
+- Para reuniões internas: "People in my organization"
+- Para reuniões com clientes: "People in my organization and guests"
+- Nunca use "Everyone" para reuniões com informação sensível
+
+**Controlo de gravações**
+Por padrão, qualquer participante pode gravar uma reunião no Teams. Para reuniões sensíveis:
+- "Allow cloud recording" — desative para utilizadores que não precisam de gravar
+- "Allow transcription" — avalie se a transcrição automática é adequada para o tipo de informação discutida
+- Configure onde as gravações são armazenadas — Microsoft Stream/OneDrive com permissões controladas, não partilha pública
+
+**Prevenção de partilha de conteúdo externo**
+Em **External access** e **Guest access**, configure com critério o que utilizadores externos podem ver e fazer — partilhar ficheiros, aceder a chats, ver a lista de membros do canal.
+
+**Políticas de retenção**
+Em **Compliance > Retention policies**, defina por quanto tempo os chats e gravações de reunião são retidos. Para dados sujeitos ao RGPD, documente e justifique os períodos de retenção.
+
+### Boas Práticas por Utilizador
+
+**Antes da reunião**
+- Para reuniões com externos ou com informação sensível, ative sempre a sala de espera
+- Não partilhe links de reunião Teams em grupos públicos ou posts de redes sociais
+- Verifique quem está na lista de participantes antes de começar a partilhar informação sensível
+
+**Durante a reunião**
+- Use "Share window" em vez de "Share screen" — partilha apenas a janela específica, não o ecrã inteiro
+- Antes de partilhar ecrã, feche tabs, emails e janelas com informação não relacionada
+- O chat da reunião Teams pode ser exportado — não partilhe passwords, links de acesso ou informação altamente sensível no chat
+
+**Após a reunião**
+- Se gravou, verifique as permissões da gravação antes de partilhar o link
+- Revogue o acesso de convidados externos após a reunião se não há necessidade de continuidade
+
+## Zoom — Configurações Essenciais
+
+O Zoom tem um historial de problemas de segurança (Zoombombing em 2020, vulnerabilidades de end-to-end encryption em 2020-2021), mas tem melhorado significativamente. Com as configurações corretas, é adequado para uso empresarial.
+
+### Configurações para Administradores (Account Settings)
+
+**Sala de espera — ativar para todas as reuniões**
+Em **Account Settings > Security**, ative "Waiting Room" globalmente. Esta única configuração elimina o Zoombombing. Configure "Who should go in the waiting room" como "Everyone" ou "External users only" dependendo do contexto.
+
+**Password de reunião obrigatória**
+Ative "Require a password when scheduling new meetings". Para reuniões sensíveis, use passwords que não estejam incorporadas no link de convite (Zoom tem opção de enviar link e password separadamente).
+
+**Autenticação para participar**
+Para reuniões internas, ative "Only authenticated users can join meetings" — obriga participantes a ter conta Zoom com email verificado.
+
+**Controlo de gravação**
+- Desative "Local recording" para utilizadores gerais se não necessário
+- Para cloud recording, configure onde ficam armazenadas e as permissões de partilha
+- Ative "Automatic recording" apenas se necessário e com política de retenção definida
+
+**End-to-End Encryption**
+Zoom tem E2EE disponível desde 2020, mas com limitações: não funciona com participantes que ligam por telefone, gravação na cloud, ou o Zoom Web SDK. Para reuniões altamente sensíveis, ative E2EE. Para reuniões normais, o Zoom usa encriptação em trânsito (TLS + AES-256) que é adequada.
+
+### Boas Práticas por Utilizador Zoom
+
+- Ative "Mute participants upon entry" para evitar ruído acidental — e que participantes oiçam o que estava a decorrer antes de entrarem
+- Use "Lock meeting" após todos os participantes entrarem para impedir novas entradas
+- O "Waiting room" não é automático em convites antigos — verifique antes de reuniões recorrentes
+- Restrinja quem pode partilhar ecrã: em "Advanced sharing options" defina "Who can share?" como "Host Only" para webinars ou apresentações formais
+
+## Google Meet — Configurações Essenciais
+
+O Google Meet, incluído no Google Workspace, tem por padrão boas práticas de segurança para utilizadores autenticados do Google Workspace.
+
+### Configurações para Administradores (Google Admin Console)
+
+**Controlo de quem pode criar reuniões**
+Em **Apps > Google Workspace > Meet**, configure quem pode criar reuniões e se utilizadores externos podem participar sem conta Google.
+
+**Acesso de utilizadores externos**
+Por padrão no Google Workspace Business, pessoas externas podem participar se tiverem o link. Para reuniões sensíveis, configure "Allow external participants" como false em políticas de reunião específicas.
+
+**Gravações**
+O Google Meet guarda gravações no Google Drive do organizador. Verifique as políticas de partilha do Drive — uma gravação guardada numa pasta "partilhada com qualquer pessoa com o link" está efetivamente pública.
+
+**Data Loss Prevention (DLP)**
+Planos Google Workspace Enterprise têm DLP que pode detetar partilha de informação sensível no chat do Meet. Avalie se faz sentido para o seu contexto.
+
+### Características de Segurança Nativas do Meet
+
+O Meet tem algumas proteções ativas por padrão que o distinguem:
+- Reuniões criadas por utilizadores do Google Workspace requerem que externos sejam admitidos manualmente pelo organizador
+- Códigos de reunião aleatórios de 10 dígitos são difíceis de descobrir por força bruta
+- Não permite que outros utilizadores re-entrem em reuniões sem aprovação após o organizador sair
+
+## Políticas Organizacionais para Videoconferências
+
+Configurações técnicas são necessárias mas não suficientes. Os colaboradores precisam de saber o que se espera deles.
+
+### Classificação de Reuniões
+
+Defina categorias simples:
+
+**Reunião Normal** — discussões de trabalho sem informação altamente sensível. Sala de espera recomendada mas flexível. Link pode ser partilhado com alguma liberdade.
+
+**Reunião Confidencial** — informação financeira, dados de clientes, contratos, estratégia. Sala de espera obrigatória. Lista de participantes verificada antes de começar. Gravação apenas se necessário e com consentimento explícito. Chat limpo de links e credenciais.
+
+**Reunião Restrita** — negociações M&A, dados de saúde, processos legais. Encriptação end-to-end se disponível. Sem gravação. Sem participantes externos desnecessários. Dispositivos com câmara desativados se há risco de shoulder surfing.
+
+### Consentimento para Gravação
+
+Gravar uma reunião sem informar os participantes é um problema legal sob o RGPD — o tratamento de dados de voz e imagem requer base legal e informação ao titular. Para reuniões com externos:
+- Informe no início que a reunião vai ser gravada
+- Dê a opção de não participar na gravação (ou de não ser gravado)
+- Documente o consentimento
+- Aplique a política de retenção definida
+
+### O Problema das Câmaras e Microfones
+
+Para reuniões com informação altamente sensível realizada fora do escritório (hotel, casa de um cliente, espaço de coworking):
+- Verifique o ambiente visual antes de ligar a câmara — informação em quadros, documentos na secretária, ecrãs ao fundo
+- Use fundos virtuais para ocultar o ambiente quando necessário
+- Em locais públicos, use auscultadores para evitar que outros ouçam a conversa
+
+## Lista de Verificação por Plataforma
+
+**Microsoft Teams**
+- [ ] Sala de espera configurada (Teams Admin Center)
+- [ ] Política de gravação restrita a quem precisa
+- [ ] Permissões de Guest Access revistas
+- [ ] Retenção de chats e gravações definida
+
+**Zoom**
+- [ ] Waiting Room ativo globalmente
+- [ ] Password obrigatória em novas reuniões
+- [ ] Autenticação obrigatória para reuniões internas
+- [ ] Gravação local desativada para utilizadores gerais
+
+**Google Meet**
+- [ ] Política de acesso externo configurada
+- [ ] Partilha de gravações no Drive verificada
+- [ ] Reuniões restritas usam encriptação quando disponível
+
+**Organizacional**
+- [ ] Política de videoconferência documentada e partilhada
+- [ ] Colaboradores sabem distinguir reuniões normais de confidenciais
+- [ ] Processo de consentimento para gravação definido
+- [ ] Formação básica sobre não partilhar credenciais em chat
+
+A segurança das videoconferências não exige grandes investimentos — exige configurações que muitas empresas simplesmente não fizeram. Uma tarde a rever as políticas no admin console da sua plataforma e a comunicar regras básicas à equipa reduz significativamente o risco de fuga de informação por este canal.
+
+Para uma abordagem mais completa à segurança das comunicações da empresa, complemente com a [segurança do email e configuração de SPF/DKIM/DMARC](/blog/spf-dkim-dmarc-seguranca-email-pme) e com as [boas práticas de segurança no trabalho remoto](/blog/seguranca-trabalho-remoto-pme).`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-15",
+    readingTime: 12,
+  },
 ];
 
 export function getPostBySlug(slug: string): Post | undefined {
