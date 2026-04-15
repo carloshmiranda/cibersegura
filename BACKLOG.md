@@ -31,6 +31,11 @@
 ## Done
 <!-- Completed items with date -->
 
+### 2026-04-15 (session 3)
+- ✅ **growth**: Article "Criptografia de Dados para PMEs: Como Proteger Informação em Portáteis, Discos e Email" — `/blog/criptografia-dados-pme-guia-completo`; BitLocker/FileVault/VeraCrypt, encrypted USB drives, email encryption (TLS/S/MIME/M365), key management, phased implementation plan
+- ✅ **growth**: Article "Filtragem de DNS para PMEs: Bloqueie Malware e Phishing Antes de Chegarem aos Dispositivos" — `/blog/filtragem-dns-seguranca-pme`; how DNS filtering works, Cloudflare Gateway (free), NextDNS, Cisco Umbrella, router/DHCP/per-device config, DoH bypass mitigation, log analysis
+- ✅ **growth**: Article "DORA: O Que as PMEs do Setor Financeiro Precisam de Saber em 2026" — `/blog/dora-regulamento-resiliencia-digital-pme-financeiro`; 5 DORA pillars, who is covered (banks, PSPs, fintechs, crypto, ICT providers), incident reporting deadlines (4h/72h/1 month), third-party ICT contract requirements, NIS2/RGPD overlap, 3-month compliance plan
+
 ### 2026-04-15 (session 2)
 - ✅ **growth**: Article "Plano de Continuidade de Negócio para PMEs: Como Manter a Empresa a Funcionar Após um Ciberataque" — `/blog/plano-continuidade-negocio-bcp-ciberataque-pme`; BCP vs DRP, RTO/RPO, crisis team, communication plan, CNPD/CNCS notifications, recovery checklist
 - ✅ **growth**: Article "Segurança WordPress para PMEs: Guia Completo para Proteger o Seu Site em 2026" — `/blog/seguranca-wordpress-pme-portugal`; credential hardening, auto-updates, file permissions, Wordfence, SSL/HTTPS, malware monitoring, incident response
