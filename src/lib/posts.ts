@@ -10917,6 +10917,625 @@ A gestão de acessos complementa directamente a arquitectura de [Zero Trust](/bl
     publishedAt: "2026-04-15",
     readingTime: 15,
   },
+  {
+    slug: "plano-continuidade-negocio-bcp-ciberataque-pme",
+    title: "Plano de Continuidade de Negócio para PMEs: Como Manter a Empresa a Funcionar Após um Ciberataque",
+    excerpt:
+      "Um ciberataque pode paralisar uma PME por dias ou semanas. O Plano de Continuidade de Negócio (BCP) define como a empresa sobrevive e recupera. Guia prático com templates, RTO/RPO e plano de comunicação de crise.",
+    content: `Uma PME sem Plano de Continuidade de Negócio (BCP) que sofre um ciberataque está a improvisar sob pressão máxima: sistemas em baixo, colaboradores à espera, clientes a ligar, e nenhum procedimento definido. O improviso em crise é caro.
+
+**60% das PMEs que sofrem um incidente grave fecham dentro de seis meses** — não necessariamente por causa do ataque em si, mas pela incapacidade de recuperar a operação a tempo. O BCP é o documento que muda essa estatística.
+
+Este guia explica o que é um BCP, como se diferencia de um plano de recuperação técnica, e como criar um adequado para a sua PME — sem precisar de uma equipa de 20 pessoas para o manter.
+
+## BCP vs. DRP: A Distinção que Importa
+
+Os dois termos são frequentemente confundidos. A diferença é prática:
+
+**Plano de Continuidade de Negócio (BCP)** responde à pergunta: *como mantemos o negócio a funcionar enquanto recuperamos?*
+- Foco em operações e pessoas
+- Cobre processos de negócio críticos
+- Define alternativas temporárias para sistemas em baixo
+- Inclui comunicação com clientes, fornecedores e autoridades
+
+**Plano de Recuperação de Desastres (DRP)** responde à pergunta: *como restauramos os sistemas técnicos?*
+- Foco em infraestrutura e dados
+- Cobre backups, restauros, failover
+- Define procedimentos técnicos de recuperação
+- Domínio primário da equipa de IT
+
+Numa PME, a mesma pessoa pode executar ambos — mas são documentos distintos com públicos distintos. O DRP é para o técnico de IT; o BCP é para a gestão e todos os colaboradores.
+
+## Os Dois Números que Definem o Seu BCP
+
+Antes de escrever um plano, precisa de saber dois valores para cada sistema ou processo crítico:
+
+**RTO — Recovery Time Objective (Tempo de Recuperação)**
+Quanto tempo a empresa consegue tolerar que um sistema/processo fique em baixo? Exemplos reais:
+- Sistema de faturação: RTO de 4 horas (passado esse tempo, deixa de receber encomendas)
+- Email: RTO de 2 horas (clientes ficam sem resposta, negócios perdem-se)
+- Loja online: RTO de 1 hora (cada hora parada é receita perdida)
+- Sistema de arquivo interno: RTO de 48 horas (incómodo mas não crítico)
+
+**RPO — Recovery Point Objective (Ponto de Recuperação)**
+Quanto de dados a empresa pode perder sem consequências graves? Exemplos:
+- Base de dados de clientes: RPO de 4 horas (backups a cada 4 horas)
+- Documentos de trabalho partilhados: RPO de 24 horas (backup diário suficiente)
+- Transações financeiras: RPO de 1 hora ou 0 horas (replicação em tempo real)
+
+Estes números determinam os requisitos técnicos do seu DRP e o custo da solução. Um RPO de 0 horas exige replicação em tempo real, que custa mais. Um RTO de 1 hora exige redundância, que também custa. Conhecer os números permite fazer escolhas informadas.
+
+## Inventário de Processos e Sistemas Críticos
+
+O primeiro passo do BCP é identificar o que realmente importa — o que, se parar, para o negócio ou causa dano imediato.
+
+### Como Fazer o Inventário
+
+Para cada processo de negócio, responda:
+1. Quem depende deste processo? (clientes, fornecedores, reguladores)
+2. Qual o impacto financeiro por hora de paragem?
+3. Existe alternativa manual ou temporária?
+4. Qual o sistema técnico que suporta este processo?
+5. Qual o RTO e RPO tolerável?
+
+**Exemplo de inventário simplificado para uma PME de serviços:**
+
+| Processo | Sistema | RTO | RPO | Alternativa Manual |
+|----------|---------|-----|-----|--------------------|
+| Emissão de faturas | ERP/software faturação | 4h | 4h | Fatura em PDF manual |
+| Comunicação com clientes | Email | 2h | 24h | Telemóvel pessoal temporário |
+| Acesso a ficheiros de trabalho | OneDrive/SharePoint | 8h | 24h | Cópias locais em portáteis |
+| Website/loja online | Servidor web | 1h | 24h | Página de manutenção + email |
+| Processamento de pagamentos | TPE/payment gateway | 2h | 0h | Transferência bancária manual |
+
+Este exercício revela dependências ocultas. Muitas PMEs descobrem que o sistema de faturação depende de um único computador de escritório — que não tem backup configurado.
+
+## Estrutura do BCP: O Que o Documento Deve Conter
+
+Um BCP para PME não precisa de ter 200 páginas. Um documento de 15-20 páginas bem estruturado é mais útil do que um volumoso que ninguém lê.
+
+### Secção 1: Activação do Plano
+
+**Quem activa e quando:**
+Define claramente quem tem autoridade para declarar uma situação de crise e activar o BCP. Numa PME, tipicamente o CEO ou director operacional.
+
+**Critérios de activação:**
+- Sistema crítico em baixo há mais de [X horas]
+- Suspeita de violação de dados
+- Indisponibilidade de instalações físicas
+- Incidente de ransomware confirmado
+
+**Primeiros 30 minutos:**
+Lista de acções imediatas — quem ligar, o que isolar, o que preservar. (Veja também o [plano de resposta a incidentes](/blog/plano-resposta-incidentes-ciberseguranca-pme) para detalhe técnico.)
+
+### Secção 2: Equipa de Gestão de Crise
+
+Define papéis, não pessoas — para que o plano funcione mesmo quando alguém está de férias.
+
+**Papéis típicos:**
+- **Coordenador de Crise**: Decisões executivas, porta-voz externo
+- **Responsável Técnico**: Coordena recuperação de sistemas (IT interno ou externo)
+- **Responsável de Comunicação**: Mensagens a clientes, fornecedores, redes sociais
+- **Responsável Operacional**: Garante continuidade de processos críticos com alternativas manuais
+- **Responsável Jurídico/Compliance**: Notificações regulatórias (CNPD se houver dados pessoais afectados, CNCS se for entidade NIS2)
+
+Para cada papel: nome da pessoa primária, contacto directo, substituto e respectivo contacto.
+
+### Secção 3: Plano de Comunicação
+
+A comunicação em crise é frequentemente mais danosa que o incidente em si — quando feita mal.
+
+**Comunicação interna:**
+- Canal alternativo ao email se o email estiver comprometido (ex: grupo WhatsApp de gestão, Signal)
+- Template de mensagem para colaboradores: o que dizer, o que não dizer, quem responde a perguntas
+- Frequência de actualizações (a cada 2 horas é razoável)
+
+**Comunicação com clientes:**
+A regra de ouro: comunicar cedo, mesmo que com informação limitada, é melhor do que o silêncio.
+
+Template para comunicação inicial:
+*"Estamos a enfrentar uma situação técnica que afecta [serviço X]. A nossa equipa está a trabalhar na resolução. Actualizamos dentro de [X horas]. Em caso urgente, contacte [contacto alternativo]."*
+
+O que NÃO dizer na comunicação inicial:
+- Detalhes técnicos do incidente (podem ser usados contra si)
+- Garantias sobre dados de clientes antes de investigar
+- Estimativas de resolução que não consegue cumprir
+
+**Comunicação com fornecedores:**
+Identifique quais os fornecedores cujos serviços dependem dos seus sistemas (ex: fornecedor de logística que integra com o seu ERP). Avisá-los rapidamente evita cascata de problemas.
+
+**Obrigações regulatórias:**
+- **CNPD**: Se dados pessoais foram comprometidos, tem 72 horas para notificar após ter conhecimento. Ver regulamento no [guia RGPD](/blog/guia-rgpd-pequenas-empresas-portugal).
+- **CNCS**: Se for entidade NIS2, tem obrigação de notificar no prazo definido. Ver [como reportar um ciberataque em Portugal](/blog/como-reportar-ciberataque-portugal-pme).
+
+### Secção 4: Procedimentos de Continuidade por Processo
+
+Para cada processo crítico identificado no inventário, define a alternativa operacional durante a crise.
+
+**Exemplo — Continuidade de faturação durante indisponibilidade do ERP:**
+1. Emitir faturas em PDF usando template Excel guardado localmente em dois portáteis designados
+2. Registar manualmente em folha de cálculo partilhada via Google Sheets/OneDrive
+3. Importar dados manualmente para o ERP quando restaurado
+4. Pessoa responsável: [nome], substituição: [nome]
+
+**Exemplo — Continuidade de comunicação se email estiver comprometido:**
+1. Activar endereço de email de emergência em serviço diferente (ex: Gmail empresarial criado para este fim)
+2. Comunicar novo contacto a clientes via SMS ou redes sociais
+3. Redireccionamento automático configurado previamente (se serviço o permitir)
+
+### Secção 5: Lista de Contactos de Emergência
+
+Compilar num único sítio — e manter actualizada:
+
+- Suporte técnico do prestador de IT (com SLA de resposta)
+- Suporte do fornecedor de cloud/hosting (com número de contrato)
+- Seguradora cibernética (se tiver [seguro cibernético](/blog/seguro-cibernetico-pme-portugal)) — ligar antes de tomar decisões maiores
+- Advogado (para orientação em notificações regulatórias)
+- CNPD — linha de notificação de violações
+- CNCS — linha de apoio a incidentes
+- Contacto de cada fornecedor crítico
+
+Esta lista deve existir em papel e digitalmente — porque um incidente pode tornar sistemas digitais inacessíveis.
+
+### Secção 6: Procedimentos de Regresso à Normalidade
+
+A fase de recuperação tem tanto risco como a fase de crise. Sistemas restaurados a partir de backups comprometidos reinstalam o malware. Sistemas ligados demasiado cedo reinfectam a rede.
+
+**Checklist de regresso seguro:**
+- [ ] Sistemas limpos e reimaginados ou confirmados não comprometidos
+- [ ] Backups restaurados de cópias verificadas como anteriores ao incidente
+- [ ] Passwords de todos os sistemas alteradas
+- [ ] MFA verificado como activo em todas as contas
+- [ ] Logs analisados para confirmar que não há presença residual do atacante
+- [ ] Processo documentado para futura análise (post-mortem)
+- [ ] Comunicação de normalização enviada a clientes e parceiros
+
+## Testes e Manutenção do BCP
+
+Um BCP não testado é uma falsas esperança.
+
+**Teste de secretária (tabletop exercise):** Reunião de 2 horas onde a equipa de gestão percorre um cenário hipotético: "É segunda-feira de manhã, o sistema de email está comprometido por ransomware, o que fazemos?" Sem sistemas reais envolvidos, apenas o documento. Revela lacunas de comunicação e decisões ambíguas.
+
+**Frequência recomendada:** Pelo menos uma vez por ano, ou após qualquer mudança significativa de sistemas ou pessoal.
+
+**Actualização obrigatória quando:**
+- Muda software ou fornecedor de serviço crítico
+- Colaborador com papel no BCP entra ou sai
+- Ocorre um incidente real (mesmo que pequeno) — o que descobriu?
+- Muda o modelo de negócio ou os processos críticos
+
+## Integração com Outros Controlos
+
+O BCP não existe isolado. Complementa:
+
+- **[Backup 3-2-1](/blog/backup-dados-pme-regra-3-2-1)**: Os seus backups são o principal mecanismo técnico que o BCP usa para restaurar dados
+- **[Resposta a Incidentes](/blog/plano-resposta-incidentes-ciberseguranca-pme)**: O plano técnico de resposta alimenta o BCP com status de recuperação
+- **[Seguro Cibernético](/blog/seguro-cibernetico-pme-portugal)**: A maioria das apólices exige um BCP documentado para activar cobertura de paragem de negócio
+- **NIS2**: Entidades abrangidas têm obrigação explícita de ter planos de gestão de continuidade — veja [obrigações NIS2 para PMEs](/blog/nis2-decreto-lei-125-2025-obrigacoes-pme)
+
+## Por Onde Começar Esta Semana
+
+Se nunca teve um BCP, não tente criar o documento perfeito de uma vez. Comece com três acções:
+
+**Acção 1 — Inventário de 30 minutos**: Liste os 5 processos mais críticos da sua empresa (os que, se pararem, param o negócio) e estime o RTO de cada um.
+
+**Acção 2 — Lista de contactos**: Crie um documento (que existe também em papel) com todos os contactos de emergência: IT, cloud, seguradora, advogado, CNPD, CNCS. Distribua à gestão.
+
+**Acção 3 — Canal de comunicação alternativo**: Crie agora um grupo de Signal ou WhatsApp com a gestão e IT, etiquetado "Crise". Teste que toda a gente está e que funciona. Quando o email estiver em baixo, este é o canal de coordenação.
+
+Estas três acções levam menos de 2 horas e cobrem as falhas mais críticas que uma PME encontra nas primeiras horas de um incidente.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-15",
+    readingTime: 14,
+  },
+  {
+    slug: "seguranca-wordpress-pme-portugal",
+    title: "Segurança WordPress para PMEs: Guia Completo para Proteger o Seu Site em 2026",
+    excerpt:
+      "WordPress alimenta 43% da web, incluindo muitos sites de PMEs portuguesas. É também o CMS mais atacado do mundo. Guia prático de hardening, plugins essenciais e manutenção para proteger o seu site sem técnico dedicado.",
+    content: `O WordPress alimenta cerca de 43% de todos os websites no mundo. Essa popularidade tem um custo: é também o CMS mais atacado, com **milhares de tentativas de intrusão por site por mês**. Para uma PME portuguesa que usa WordPress para o seu website ou loja online, ignorar a segurança não é uma opção — é uma questão de quando, não se, algo acontece.
+
+A boa notícia: a maioria dos ataques a WordPress exploram configurações padrão e plugins desatualizados. Com medidas básicas bem implementadas, elimina 90% do risco sem precisar de um especialista dedicado.
+
+## Como os Sites WordPress são Comprometidos
+
+Antes de falar em soluções, é útil perceber como os ataques acontecem na prática:
+
+**1. Plugins e temas desatualizados (responsáveis por 56% dos compromissos)**
+Cada plugin com uma vulnerabilidade conhecida é uma porta aberta. Os atacantes escaneiam a internet à procura de sites com versões específicas vulneráveis — é automatizado e corre 24 horas por dia.
+
+**2. Passwords fracas e ataques de força bruta**
+O endereço \`/wp-admin\` é público por defeito. Bots tentam combinações de passwords comuns em centenas de contas por hora. Passwords como \`admin\`, \`123456\` ou \`empresa2024\` são comprometidas em segundos.
+
+**3. Temas e plugins de fontes não oficiais (piratados)**
+Plugins "premium" descarregados gratuitamente de sites duvidosos frequentemente contêm backdoors instaladas intencionalmente. É uma das formas mais comuns de comprometimento em PMEs que tentam poupar dinheiro.
+
+**4. Conta de alojamento comprometida**
+Se partilha alojamento (shared hosting) com outros sites, uma vulnerabilidade noutro site do mesmo servidor pode afectar o seu. Ou, mais frequentemente, as credenciais FTP ou do painel de controlo do hosting são comprometidas por phishing ou reutilização de passwords.
+
+**5. Injecção de SQL e XSS via formulários**
+Formulários de contacto, pesquisa e comentários mal configurados permitem a atacantes injectar código malicioso. Os plugins mais populares corrigem estas vulnerabilidades regularmente — por isso as actualizações importam.
+
+## Hardening Básico: O Que Fazer Primeiro
+
+### 1. Credenciais e Acesso
+
+**Mude o utilizador "admin":**
+Por defeito, o WordPress sugere "admin" como nome de utilizador. É o primeiro que qualquer ataque de força bruta vai tentar.
+- Crie um novo utilizador com nome único e role "Administrador"
+- Inicie sessão com o novo utilizador
+- Delete o utilizador "admin" original
+
+**Password forte + gestor de passwords:**
+A password do admin do WordPress deve ter mínimo 20 caracteres, gerada por um gestor de passwords. Veja o [guia de gestão de passwords](/blog/gestao-passwords-pme-guia-completo).
+
+**Autenticação de dois fatores:**
+O plugin gratuito **WP 2FA** ou **Two Factor Authentication** adiciona MFA ao login do WordPress. Com MFA activo, uma password comprometida não é suficiente para entrar. Ver [guia de 2FA para PMEs](/blog/autenticacao-dois-fatores-2fa-pme).
+
+**Limitar tentativas de login:**
+Instale **Limit Login Attempts Reloaded** (gratuito). Após 3-5 tentativas falhadas, bloqueia o IP por X minutos. Elimina eficazmente ataques de força bruta automatizados.
+
+### 2. Actualizações — A Medida Mais Importante
+
+A regra é simples: **WordPress core, todos os plugins e todos os temas devem estar sempre na versão mais recente**.
+
+**Actualizações automáticas para minor releases:**
+No ficheiro \`wp-config.php\`, adicione:
+\`\`\`php
+define('WP_AUTO_UPDATE_CORE', true);
+\`\`\`
+Isto activa actualizações automáticas para versões de segurança (ex: 6.4.1 → 6.4.2).
+
+**Actualizações de plugins:**
+Pode activar actualizações automáticas por plugin individualmente em WordPress > Plugins > clique em "Activar actualizações automáticas" para cada plugin crítico.
+
+**Atenção às actualizações major:**
+Versões principais (ex: 6.4 → 6.5) podem quebrar compatibilidade com plugins. Faça backup antes, teste num ambiente de staging se possível.
+
+**Plugins e temas sem manutenção:**
+Se um plugin não é actualizado há mais de 2 anos, está provavelmente abandonado e pode ter vulnerabilidades não corrigidas. Substitua por alternativa activa.
+
+### 3. Configuração do Servidor e Ficheiros
+
+**Remova informações de versão:**
+Por defeito, o WordPress anuncia a sua versão no HTML de cada página — útil para atacantes que procuram versões vulneráveis. Para remover, adicione ao \`functions.php\` do seu tema:
+\`\`\`php
+remove_action('wp_head', 'wp_generator');
+\`\`\`
+
+**Proteja ficheiros sensíveis com .htaccess** (em servidores Apache):
+\`\`\`apache
+# Bloquear acesso ao wp-config.php
+<files wp-config.php>
+order allow,deny
+deny from all
+</files>
+
+# Bloquear acesso a ficheiros .htaccess
+<files .htaccess>
+order allow,deny
+deny from all
+</files>
+\`\`\`
+
+**Desactivar a edição de ficheiros no painel:**
+O WordPress permite editar ficheiros PHP directamente do painel — se um atacante entrar no admin, pode modificar código. Desactive no \`wp-config.php\`:
+\`\`\`php
+define('DISALLOW_FILE_EDIT', true);
+\`\`\`
+
+**Permissões de ficheiros correctas:**
+- Directorias: 755
+- Ficheiros: 644
+- \`wp-config.php\`: 600 (apenas o servidor lê)
+
+### 4. Backup Automatizado
+
+Um site WordPress comprometido pode precisar de ser restaurado para um estado limpo. Sem backup, essa restauração é impossível.
+
+**Plugin recomendado: UpdraftPlus** (versão gratuita cobre a maioria das PMEs)
+- Backups automáticos para armazenamento externo (Google Drive, Dropbox, S3)
+- Backup antes de cada actualização major
+- Retenção de pelo menos 4 backups (2 semanas)
+- Verifique periodicamente que os backups existem e são funcionais
+
+A regra [3-2-1 de backups](/blog/backup-dados-pme-regra-3-2-1) aplica-se também ao WordPress: 3 cópias, 2 suportes diferentes, 1 off-site.
+
+### 5. Plugin de Segurança All-in-One
+
+Um bom plugin de segurança consolida muitas medidas numa interface. Para PMEs sem técnico dedicado, recomendamos:
+
+**Wordfence Security** (versão gratuita robusta):
+- Firewall de aplicação web (WAF) — bloqueia ataques conhecidos antes de atingirem o WordPress
+- Scanner de malware — verifica ficheiros do WordPress contra assinaturas de ameaças conhecidas
+- Monitorização de logins suspeitos
+- Alertas por email para actividade anómala
+
+**Alternativa: Solid Security (anteriormente iThemes Security)**
+- Interface mais simples
+- Bom para quem quer configuração guiada
+- Versão gratuita cobre o essencial
+
+**Importante:** Não instale múltiplos plugins de segurança em simultâneo — conflituam entre si e degradam performance.
+
+## SSL/HTTPS: Obrigatório, Não Opcional
+
+Em 2026, um site sem HTTPS activo é uma falha de segurança e um sinal negativo para o Google.
+
+**Verificação:** O seu site deve carregar com \`https://\` e mostrar o cadeado no browser. Se mostrar \`http://\`, precisa de agir.
+
+**Solução:** A maioria dos serviços de alojamento oferece certificados SSL gratuitos via Let's Encrypt. Verifique no painel do seu hosting (cPanel, Plesk, Hetzner, etc.) se SSL está activado. Após activar SSL:
+
+1. Force HTTPS em WordPress: Settings > General > altere ambas as URLs para \`https://\`
+2. Instale o plugin **Really Simple SSL** para redireccionamento automático e correcção de mixed content
+
+## Monitorização Contínua
+
+A segurança não é um projecto com data de fim — é uma prática contínua.
+
+**O que monitorizar:**
+- Actualizações disponíveis (WordPress, plugins, temas) — verifique semanalmente
+- Alertas do Wordfence ou plugin de segurança — leia-os quando chegam
+- Uptime do site — o plugin Jetpack ou serviços como UptimeRobot alertam quando o site cai
+- Google Search Console — se o Google detectar malware no seu site, avisa-o aqui (e pode penalizar o SEO)
+
+**Frequência de scans de malware:** Mensalmente via plugin, ou imediatamente se detectar comportamento estranho (redirecccionamentos inesperados, conteúdo alterado, emails de clientes sobre spam que parece vir de si).
+
+## Alojamento Seguro: A Fundação que Tudo Apoia
+
+O melhor hardening do WordPress não protege um site alojado em infraestrutura comprometida.
+
+**O que procurar num alojamento seguro para PMEs:**
+- Isolamento de contas (contas em shared hosting não partilham sistema de ficheiros)
+- PHP actualizado (7.4 é EOL; 8.1+ recomendado)
+- Actualizações de servidor regulares
+- Firewall de rede e protecção DDoS
+- Backups automáticos do lado do servidor (adicional ao plugin)
+- Suporte com resposta a incidentes de segurança
+
+**Prestadores populares em Portugal:** SiteGround, Raiola Networks, PCextreme, e os alojamentos geridos da Cloudflare (Pages + Workers para sites estáticos) são opções com boa reputação de segurança.
+
+**Evite:** alojamentos partilhados de baixo custo onde o isolamento entre clientes é fraco — é o ambiente ideal para ataques cruzados entre sites.
+
+## Checklist de Segurança WordPress para PMEs
+
+Guarde e use como referência mensal:
+
+**Configuração inicial (fazer uma vez):**
+- [ ] Nome de utilizador admin alterado para nome único
+- [ ] Password forte gerada por gestor de passwords
+- [ ] MFA activado no admin
+- [ ] Limitação de tentativas de login activa
+- [ ] SSL/HTTPS activo e forçado
+- [ ] \`wp-config.php\` protegido
+- [ ] Edição de ficheiros no painel desactivada
+- [ ] Backup automático configurado para armazenamento externo
+- [ ] Plugin de segurança instalado e configurado
+
+**Manutenção contínua (mensal):**
+- [ ] WordPress core actualizado
+- [ ] Todos os plugins actualizados
+- [ ] Todos os temas actualizados (incluindo temas inativos)
+- [ ] Plugins e temas sem uso desinstalados
+- [ ] Scan de malware executado
+- [ ] Backup testado (restauro parcial confirmado)
+- [ ] Google Search Console verificado
+
+## Quando Acontece o Pior
+
+Se o seu site WordPress foi comprometido:
+
+1. **Coloque o site offline imediatamente** — evita que visitantes sejam infectados ou que o Google penalize o SEO
+2. **Não delete ficheiros antes de investigar** — preserve evidências
+3. **Altere todas as passwords**: WordPress admin, FTP, painel de alojamento, base de dados, email associado
+4. **Contacte o suporte do alojamento** — podem ter ferramentas de limpeza e logs úteis
+5. **Restaure a partir de backup limpo** se disponível — mais fiável do que tentar limpar o site comprometido
+6. **Verifique outros sites no mesmo alojamento** — um comprometimento em shared hosting pode afectar outros
+7. **Após restauro, aplique todas as medidas desta checklist** antes de voltar a colocar online
+
+Se não tem backup ou as competências para limpeza técnica, existem serviços especializados em limpeza de WordPress (como Sucuri ou prestadores locais de IT) — o custo é normalmente menor do que o dano de um site comprometido por mais tempo.
+
+A segurança de um site WordPress não é glamorosa — é principalmente actualizações regulares e configuração correcta inicial. Mas são essas medidas banais que separam os sites comprometidos dos que ficam de pé.`,
+    category: "ferramentas",
+    categoryLabel: "Ferramentas",
+    publishedAt: "2026-04-15",
+    readingTime: 13,
+  },
+  {
+    slug: "gestao-risco-fornecedores-terceiros-pme",
+    title: "Gestão de Risco de Fornecedores para PMEs: Como Avaliar e Controlar Terceiros com Acesso à Sua Empresa",
+    excerpt:
+      "Fornecedores, consultores e parceiros com acesso aos seus sistemas são uma das principais causas de incidentes em PMEs. Guia prático de avaliação de risco de terceiros, questionários, cláusulas contratuais e monitorização contínua.",
+    content: `O seu parceiro de contabilidade tem acesso ao servidor de ficheiros. O fornecedor de TI tem credenciais de administrador. A plataforma de marketing automatizado tem acesso à sua base de dados de clientes. O técnico de manutenção de equipamentos ligou um portátil à vossa rede na semana passada.
+
+Cada um destes terceiros é um vector de risco — não necessariamente por má-fé, mas porque a segurança da sua empresa depende agora também da segurança deles. Quando o SolarWinds foi comprometido em 2020, 18.000 organizações foram afectadas através de uma actualização de software legítima de um fornecedor de confiança.
+
+**Para PMEs, a realidade é mais imediata:** um ataque de ransomware que entrou via o prestador de IT comprometido, um fornecedor de SaaS que sofreu uma violação e expôs os dados dos seus clientes, ou um ex-consultor freelancer cuja conta não foi revogada e que ainda acede ao SharePoint dois anos depois.
+
+A gestão de risco de terceiros (TPRM — Third-Party Risk Management) responde à questão: como avalio, contrato e monitorizo terceiros de forma a que o risco que introduzem seja aceitável e gerido?
+
+## Por Que Terceiros São um Risco Crescente
+
+### A Superfície de Ataque Expandida
+
+Cada terceiro com acesso à sua organização expande a superfície de ataque. O atacante não precisa de comprometer directamente a sua empresa — pode comprometer o fornecedor menos protegido que tem acesso a si.
+
+Este fenómeno é chamado de **ataque à cadeia de fornecimento** (supply chain attack) e é mencionado explicitamente na NIS2 (Decreto-Lei 125/2025) como um risco que as entidades abrangidas devem gerir. Mesmo fora do âmbito NIS2, o RGPD exige que quando partilha dados pessoais com terceiros, estes ofereçam garantias adequadas de protecção.
+
+### Os Terceiros Mais Comuns em PMEs (e os Seus Riscos)
+
+**Prestadores de TI e MSPs:**
+Risco: acesso de administrador a quase tudo. Um MSP comprometido tem acesso privilegiado a todos os seus clientes simultaneamente.
+Mitigação: MFA obrigatório, acesso just-in-time, logs de todas as sessões remotas.
+
+**Contabilistas e consultores financeiros:**
+Risco: acesso a dados financeiros, folhas de salários, dados de clientes.
+Mitigação: acesso limitado ao mínimo necessário, conta própria não partilhada, revogação imediata quando termina o trabalho.
+
+**Plataformas SaaS (CRM, marketing, HR):**
+Risco: armazenam dados de clientes, colaboradores ou estratégicos na cloud do fornecedor.
+Mitigação: avaliar as políticas de segurança do fornecedor, verificar certificações (ISO 27001, SOC 2), cláusulas contratuais de notificação de violações.
+
+**Freelancers e consultores temporários:**
+Risco: acesso concedido durante o projecto raramente é revogado após conclusão.
+Mitigação: processo formal de offboarding (revogar acessos, recuperar equipamentos), prazo máximo de acessos temporários.
+
+**Fornecedores com acesso físico:**
+Risco: técnicos de manutenção, limpeza, segurança que acedem às instalações e podem conectar dispositivos à rede.
+Mitigação: política de visitantes, segmentação de rede (convidados numa VLAN separada), supervisão durante manutenção.
+
+## Classificação de Fornecedores por Nível de Risco
+
+Nem todos os fornecedores merecem o mesmo nível de escrutínio. Classificar por risco permite focar esforços onde importam.
+
+**Critérios de classificação:**
+- Nível de acesso aos sistemas (admin, utilizador, nenhum)
+- Tipo de dados a que acede (pessoais, financeiros, estratégicos, públicos)
+- Criticidade para a operação (se este fornecedor falhar, a empresa para?)
+- Localização dos dados (ficam nos seus sistemas ou nos do fornecedor?)
+
+**Três níveis práticos:**
+
+**Nível 1 — Alto Risco:**
+Acesso privilegiado a sistemas críticos OU detém dados sensíveis de clientes/colaboradores.
+Exemplos: prestador de TI, plataforma de CRM com dados de clientes, serviço de nuvem com dados críticos.
+Acção: questionário de segurança completo, cláusulas contratuais detalhadas, revisão anual.
+
+**Nível 2 — Médio Risco:**
+Acesso limitado a sistemas não críticos OU acede a dados internos não sensíveis.
+Exemplos: fornecedor de software de design, consultora de marketing sem acesso a dados de clientes.
+Acção: questionário simplificado, cláusulas contratuais básicas, revisão cada 2 anos.
+
+**Nível 3 — Baixo Risco:**
+Sem acesso a sistemas ou dados. Fornece serviços ou produtos físicos.
+Exemplos: fornecedor de material de escritório, serviço de limpeza sem acesso a zonas técnicas.
+Acção: cláusulas contratuais gerais, verificação ad hoc se algo mudar.
+
+## Avaliação de Fornecedores: O Questionário de Segurança
+
+Antes de dar acesso a um fornecedor Nível 1 ou 2, faça uma avaliação. Um questionário não precisa de ter 100 perguntas — 15-20 perguntas bem escolhidas revelam o essencial.
+
+**Questões essenciais para fornecedores Nível 1:**
+
+*Governo e políticas:*
+1. Tem uma política de segurança da informação documentada e aprovada pela gestão?
+2. Tem um responsável designado pela segurança (CISO, DPO, ou equivalente)?
+3. Os seus colaboradores recebem formação regular em cibersegurança?
+
+*Controlo de acessos:*
+4. Como gestiona os acessos dos seus colaboradores aos sistemas que usam para nos servir?
+5. Usa MFA para acesso a sistemas críticos?
+6. Como revoga acessos quando um colaborador sai?
+
+*Segurança técnica:*
+7. Que medidas tem para proteger os dados que processa em nosso nome?
+8. Tem antivírus/EDR actualizado em todos os dispositivos?
+9. Tem um processo de gestão de vulnerabilidades e aplicação de patches?
+
+*Resposta a incidentes:*
+10. Tem um plano de resposta a incidentes documentado?
+11. Qual o prazo para nos notificar caso detecte um incidente que afecte os nossos dados ou sistemas?
+12. Já sofreu uma violação de segurança nos últimos 24 meses? Se sim, como foi gerida?
+
+*Subcontratação:*
+13. Subcontrata alguma parte dos serviços que nos presta a terceiros?
+14. Esses subcontratados estão sujeitos às mesmas exigências de segurança?
+
+*Certificações:*
+15. Tem certificação ISO 27001, SOC 2, ou outra certificação relevante de segurança?
+
+Para fornecedores Nível 2, use as questões 3, 5, 11 e 15 como versão resumida.
+
+## Cláusulas Contratuais Essenciais
+
+A avaliação de segurança só tem valor se as obrigações estão contratualmente vinculadas. Trabalhe com o seu advogado para incluir:
+
+**Cláusulas de protecção de dados (obrigatórias sob RGPD):**
+- Limitação do uso de dados ao estritamente necessário para o serviço contratado
+- Proibição de subcontratação sem autorização prévia escrita
+- Obrigação de eliminar/devolver dados no fim do contrato
+- Direito de auditoria (ou auditoria por terceiro independente)
+- Certificação de não transferência de dados fora da UE sem base legal adequada
+
+**Cláusulas de segurança:**
+- Obrigação de manter medidas de segurança adequadas (pode referenciar ISO 27001 como standard)
+- Notificação de incidentes em prazo definido (recomende 24-48 horas, máximo 72 horas para cumprir RGPD)
+- Obrigação de aplicar patches de segurança críticos em prazo razoável (ex: 72 horas para críticos)
+- Acesso limitado ao mínimo necessário para o serviço
+
+**Cláusulas de continuidade:**
+- O que acontece se o fornecedor falhar ou for comprometido?
+- Obrigação de manter plano de continuidade
+- Procedimento de migração/transição no fim do contrato para garantir que recupera os seus dados
+
+## Gestão de Acessos de Terceiros
+
+Conceder acesso a terceiros sem processo rigoroso é uma das falhas mais comuns em PMEs. Boas práticas:
+
+**Contas individuais, nunca partilhadas:**
+Cada pessoa do fornecedor que acede aos seus sistemas deve ter conta própria — nunca partilhe credenciais "de fornecedor". Quando essa pessoa sair do fornecedor, a conta é revogada sem afectar outros.
+
+**Princípio do mínimo privilégio:**
+Um técnico de TI externo precisa de acesso de administrador para uma tarefa específica? Conceda acesso temporário just-in-time, não acesso permanente. Veja o [guia de IAM para PMEs](/blog/gestao-identidade-acessos-iam-pme) para ferramentas adequadas.
+
+**MFA obrigatório:**
+Qualquer acesso remoto de terceiros (VPN, RDP, portal de administração) deve exigir MFA. Este requisito deve estar no contrato.
+
+**Acesso segmentado:**
+Tanto quanto possível, os terceiros devem aceder apenas ao segmento de rede necessário — não à rede corporativa completa. [VLANs e segmentação de rede](/blog/seguranca-wifi-empresarial-pme) criam esse isolamento.
+
+**Registo de sessões remotas:**
+Para técnicos de TI externos com acesso privilegiado, ferramentas como BeyondTrust, Splashtop Enterprise ou mesmo gravação de sessões via soluções de PAM (Privileged Access Management) criam um registo auditável de tudo o que foi feito.
+
+**Processo formal de revogação:**
+Quando termina um contrato ou projecto, a revogação de acessos não pode ser algo que "fica para fazer". Crie um checklist de offboarding para terceiros:
+- [ ] Conta no Active Directory/Azure AD desactivada
+- [ ] Acesso a email revogado
+- [ ] Acesso a SharePoint/ficheiros partilhados revogado
+- [ ] Credenciais VPN revogadas
+- [ ] Licenças de software desassociadas
+- [ ] Dados eventualmente entregues ao fornecedor eliminados
+
+## Monitorização Contínua
+
+A avaliação inicial não é suficiente — o risco de um fornecedor muda ao longo do tempo.
+
+**O que monitorizar:**
+- Notícias de violações de segurança ou incidentes que afectem o fornecedor — um fornecedor comprometido pode ser um canal para si
+- Alterações na propriedade ou gestão do fornecedor (aquisição por empresa menos fiável)
+- Cessação de certificações de segurança
+- Renovação do contrato — momento para rever a avaliação
+
+**Frequência de revisão:** Fornecedores Nível 1 anualmente; Nível 2 cada 2 anos ou quando houver mudança significativa.
+
+**Alerta para violações de fornecedores:** Configure alertas no Google News ou Talkwalker para o nome dos seus fornecedores críticos + "breach", "hack", "security incident". É uma forma simples de ser notificado rapidamente se algo acontecer.
+
+## Contexto NIS2 e RGPD
+
+**NIS2 (Decreto-Lei 125/2025):** Para entidades abrangidas, o artigo sobre segurança da cadeia de fornecimento é explícito: devem identificar e gerir riscos de segurança associados a fornecedores e prestadores de serviços. A conformidade exige política documentada de avaliação de terceiros e cláusulas contratuais adequadas. Ver [NIS2 e cadeia de fornecimento](/blog/nis2-cadeia-fornecimento-pme).
+
+**RGPD:** Quando partilha dados pessoais com um terceiro que os processa em seu nome (subcontratante), é legalmente obrigado a ter um contrato de processamento de dados (DPA — Data Processing Agreement) que inclua as garantias do Artigo 28 do RGPD. A ausência deste contrato é uma infracção directa, independentemente de haver ou não violação de dados.
+
+## Por Onde Começar
+
+Se começa do zero, um plano de 3 meses:
+
+**Mês 1 — Inventário:**
+Liste todos os fornecedores com algum acesso a sistemas, dados ou instalações. Para cada um, classifique como Nível 1, 2 ou 3 usando os critérios acima. Espera encontrar fornecedores que nem sabia que tinham acesso.
+
+**Mês 2 — Prioridades:**
+Para todos os fornecedores Nível 1 sem questionário de segurança feito, envie-o. Para os que não têm DPA (se processam dados pessoais), fale com o advogado sobre um modelo. Revogue acessos de ex-fornecedores que ainda estejam activos — este é frequentemente o ganho imediato mais importante.
+
+**Mês 3 — Processo:**
+Documente o processo para novos fornecedores: classificação → questionário (se Nível 1/2) → cláusulas contratuais → acesso concedido com princípio de mínimo privilégio → revisão periódica agendada.
+
+A gestão de risco de terceiros não elimina o risco — elimina o risco surpresa. Saber o que cada fornecedor pode aceder, ter obrigações contratuais claras, e monitorizar continuamente transforma terceiros de uma caixa negra de risco numa superfície conhecida e gerida.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-15",
+    readingTime: 13,
+  },
 ];
 
 export function getPostBySlug(slug: string): Post | undefined {
