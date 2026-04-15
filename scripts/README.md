@@ -1,10 +1,21 @@
 # CiberPME Scripts
 
-## IndexNow Batch Submission
+## IndexNow Automation
 
-### Overview
+### Automated Deploy Hook (Recommended)
 
-The `indexnow-batch.js` script automatically submits all site URLs to the IndexNow API for instant search engine indexing. This ensures new content and updates are quickly discovered by Bing, Yandex, and other IndexNow-compatible search engines.
+The site now includes **automatic IndexNow submission** after each deployment with new content. This system intelligently detects only new or updated URLs and submits them, saving API quotas and improving efficiency.
+
+**Setup**: See [docs/INDEXNOW_AUTOMATION.md](../docs/INDEXNOW_AUTOMATION.md) for complete configuration guide.
+
+**Benefits:**
+- ✅ **Zero manual intervention** — Runs automatically after Vercel deployments
+- ✅ **Smart detection** — Only submits new/updated content, not everything
+- ✅ **Immediate indexing** — New articles indexed within minutes of going live
+
+### Manual Batch Submission
+
+The `indexnow-batch.js` script provides manual control for submitting **all site URLs** to IndexNow. Use this for initial setup or when you need to resubmit everything.
 
 ### Usage
 
@@ -48,13 +59,29 @@ The script automatically detects:
 - **IndexNow key:** From `/public/indexnow-key.txt`
 - **Blog posts:** Dynamically loaded from `src/lib/posts.ts`
 
-### When to run
+## API Endpoints
 
-- After publishing new blog articles
-- After updating existing content
-- After major site structure changes
-- As part of deployment pipeline
-- Manually when needed for re-indexing
+### Automated Endpoints
+
+- **`/api/indexnow-deploy`** — Smart submission of new/updated URLs only
+- **`/api/deploy-hook`** — Vercel deployment webhook endpoint
+
+### Manual Endpoints  
+
+- **`/api/indexnow-submit`** — Submit all URLs (bulk submission)
+
+### When to use each
+
+**Use automated system for:**
+- Regular content publishing workflow
+- Immediate indexing of new articles
+- Efficient daily operations
+
+**Use manual script for:**
+- Initial site setup
+- Major site restructuring  
+- Emergency resubmission of all content
+- Troubleshooting indexing issues
 
 ### SEO Benefits
 
