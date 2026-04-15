@@ -82,6 +82,8 @@ export default async function BlogPostPage({
   // Check if this article should show the NIS2 countdown timer
   const shouldShowCountdown = post.slug.includes('nis2') || post.category === 'legislacao';
 
+  // Generate BreadcrumbList JSON-LD for improved SEO and search result display
+  // Structure: Home > Blog > Category > Post Title
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
