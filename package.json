@@ -10,6 +10,7 @@
     "test": "playwright test",
     "test:smoke": "playwright test tests/e2e/smoke.spec.ts",
     "indexnow": "node scripts/indexnow-batch.js",
+    "indexnow:auto": "node scripts/indexnow-incremental.js",
     "seed-emails": "node scripts/seed-email-sequences.js",
     "send-emails": "node scripts/send-scheduled-emails.js",
     "send-emails:dry-run": "node scripts/send-scheduled-emails.js --dry-run",
