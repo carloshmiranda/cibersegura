@@ -16,7 +16,7 @@ The system automatically detects new and updated content and submits only those 
 
 ### 2. GitHub Action Workflow (Manual Setup Required)
 
-The workflow file `.github/workflows/indexnow-auto.yml` needs to be created manually due to GitHub App permissions. Copy the contents from this PR into that file.
+The workflow file `.github/workflows/indexnow-auto.yml` needs to be created manually due to GitHub App permissions. See `docs/setup-indexnow-workflow.md` for complete setup instructions and workflow content.
 
 The workflow:
 - Triggers on pushes to main branch (after deployments)

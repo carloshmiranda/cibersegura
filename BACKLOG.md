@@ -13,8 +13,6 @@
 ## Up Next
 <!-- Items to tackle in the next cycle -->
 
-- 🟡 **P1 — SEO**: Submeter novos URLs ao IndexNow após cada deploy com conteúdo novo (endpoint `/api/indexnow-submit` já existe)
-
 ---
 
 ## Planned
@@ -30,6 +28,9 @@
 
 ## Done
 <!-- Completed items with date -->
+
+### 2026-04-16 (session 5)
+- ✅ **SEO**: Automated IndexNow URL submission after deploys — Created GitHub Actions workflow for automatic SEO indexing when content changes. Uses incremental script with state caching to avoid duplicate submissions. Manual setup required due to workflow permissions (see `docs/setup-indexnow-workflow.md`)
 
 ### 2026-04-16 (session 4)
 - ✅ **growth**: Article "SIEM Gratuito para PMEs: Monitorização de Segurança com Wazuh" — `/blog/siem-wazuh-pme-monitorizacao-seguranca-gratis`; Wazuh architecture, all-in-one install, Windows/Linux agent deployment, priority rules (brute force, FIM, ClamAV, M365), email alerting, dashboard daily review workflow, comparison table
