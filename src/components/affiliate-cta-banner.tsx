@@ -1,3 +1,5 @@
+"use client";
+
 interface AffiliateTool {
   name: string;
   description: string;
@@ -12,6 +14,7 @@ interface AffiliateCTABannerProps {
   title?: string;
   description?: string;
   source: string; // For UTM tracking (e.g., "blog-nis2", "recursos-nis2")
+  articleSlug?: string; // Blog post slug for tracking
   className?: string;
 }
 
@@ -26,11 +29,36 @@ const addUTMParams = (url: string, source: string, medium: string, campaign: str
   return urlObj.toString();
 };
 
+// Click tracking function
+const trackAffiliateClick = async (data: {
+  article_slug?: string;
+  cta_position: string;
+  link_id: string;
+  destination_url: string;
+}) => {
+  try {
+    // Use fetch with keepalive to ensure tracking even if user navigates away
+    fetch('/api/affiliate/click', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+      keepalive: true,
+    }).catch(() => {
+      // Silently handle errors to not disrupt user experience
+    });
+  } catch {
+    // Silently handle errors to not disrupt user experience
+  }
+};
+
 export default function AffiliateCTABanner({
   tools,
   title = "Ferramentas Recomendadas",
   description = "Soluções de cibersegurança selecionadas para implementar conformidade NIS2",
   source,
+  articleSlug,
   className = ""
 }: AffiliateCTABannerProps) {
 
@@ -94,12 +122,25 @@ export default function AffiliateCTABanner({
             `${tool.name.toLowerCase().replace(/\s+/g, '-')}-${index + 1}`
           );
 
+          const ctaPosition = `banner-${index + 1}`;
+          const linkId = `${tool.name.toLowerCase().replace(/\s+/g, '-')}-${tool.category}`;
+
+          const handleClick = () => {
+            trackAffiliateClick({
+              article_slug: articleSlug,
+              cta_position: ctaPosition,
+              link_id: linkId,
+              destination_url: trackedUrl,
+            });
+          };
+
           return (
             <a
               key={tool.name}
               href={trackedUrl}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={handleClick}
               className="flex items-start gap-3 p-4 rounded-lg border border-border bg-white hover:border-accent hover:shadow-sm transition group"
             >
               <div className="flex-shrink-0 p-1.5 rounded bg-bg-subtle text-accent group-hover:text-accent group-hover:bg-accent-light transition">
