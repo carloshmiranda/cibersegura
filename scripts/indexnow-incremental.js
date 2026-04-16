@@ -21,6 +21,7 @@ const SITE_URL = process.env.SITE_URL || 'https://ciberpme.vercel.app';
 const INDEXNOW_KEY = 'fc431a309850fb7ff6682a95bee49ba3';
 const INDEXNOW_API = 'https://api.indexnow.org/indexnow';
 const STATE_FILE = path.join(__dirname, '..', '.indexnow-state.json');
+const IS_CI = process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true';
 
 // Base URLs that are always included if they don't exist in state
 const BASE_URLS = [
@@ -254,16 +255,48 @@ async function submitToIndexNow(urls) {
 }
 
 /**
- * Validate IndexNow key accessibility
+ * Validate IndexNow key accessibility with deployment-aware retry logic
  */
 async function validateKeyFile() {
   console.log('🔑 Validating IndexNow key file...');
 
+  const maxRetries = IS_CI ? 3 : 1;
+  const retryDelay = 5000; // 5 seconds
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const isValid = await attemptKeyValidation();
+      if (isValid) {
+        console.log('✅ IndexNow key file is accessible and valid');
+        return true;
+      }
+
+      if (attempt < maxRetries) {
+        console.log(`⏳ Attempt ${attempt}/${maxRetries} failed, retrying in ${retryDelay/1000}s...`);
+        await new Promise(resolve => setTimeout(resolve, retryDelay));
+      }
+    } catch (error) {
+      console.warn(`⚠️  Attempt ${attempt}/${maxRetries} error:`, error.message);
+      if (attempt === maxRetries) {
+        console.warn('⚠️  Key validation failed after all attempts - continuing anyway');
+        return false;
+      }
+    }
+  }
+
+  return false;
+}
+
+/**
+ * Single attempt at key validation
+ */
+function attemptKeyValidation() {
   return new Promise((resolve, reject) => {
     const options = {
       hostname: SITE_URL.replace('https://', ''),
       path: `/${INDEXNOW_KEY}.txt`,
-      method: 'GET'
+      method: 'GET',
+      timeout: 10000 // 10 second timeout
     };
 
     const req = https.request(options, (res) => {
@@ -275,18 +308,21 @@ async function validateKeyFile() {
 
       res.on('end', () => {
         if (res.statusCode === 200 && data.trim() === INDEXNOW_KEY) {
-          console.log('✅ IndexNow key file is accessible and valid');
           resolve(true);
         } else {
-          console.error(`❌ IndexNow key validation failed. Status: ${res.statusCode}, Content: ${data}`);
-          resolve(false); // Don't reject, continue anyway
+          console.error(`❌ Key validation failed. Status: ${res.statusCode}, Content: ${data.substring(0, 100)}`);
+          resolve(false);
         }
       });
     });
 
     req.on('error', (error) => {
-      console.warn('⚠️  Error validating key file:', error.message);
-      resolve(false); // Don't reject, continue anyway
+      reject(error);
+    });
+
+    req.on('timeout', () => {
+      req.destroy();
+      reject(new Error('Request timeout'));
     });
 
     req.end();
@@ -294,10 +330,19 @@ async function validateKeyFile() {
 }
 
 /**
- * Main execution
+ * Main execution with deployment-aware enhancements
  */
 async function main() {
-  console.log('🚀 Starting IndexNow incremental URL submission...\n');
+  const runContext = IS_CI ? 'CI/deployment' : 'local';
+  console.log(`🚀 Starting IndexNow incremental URL submission (${runContext})...\n`);
+
+  if (IS_CI) {
+    console.log('📝 Environment info:');
+    console.log(`  • Site URL: ${SITE_URL}`);
+    console.log(`  • GitHub Actions: ${process.env.GITHUB_ACTIONS || 'false'}`);
+    console.log(`  • Workflow: ${process.env.GITHUB_WORKFLOW || 'n/a'}`);
+    console.log('');
+  }
 
   try {
     // Step 1: Load current state
@@ -312,16 +357,24 @@ async function main() {
     console.log(`\n📊 Analysis complete:`);
     console.log(`  • Total posts: ${posts.length}`);
     console.log(`  • New/updated URLs: ${newUrls.length}`);
+    console.log(`  • Last submission: ${state.lastRun ? new Date(state.lastRun).toLocaleString() : 'Never'}`);
 
     if (newUrls.length === 0) {
       console.log('\n✅ No new content to submit - all URLs are up to date!');
+      if (IS_CI) {
+        console.log('🔄 This is expected after deployments with no new content');
+      }
       return;
     }
 
-    // Step 4: Validate key (optional, don't fail if it doesn't work)
-    await validateKeyFile();
+    // Step 4: Validate deployment is accessible (more important in CI)
+    if (IS_CI) {
+      console.log('\n🔍 Validating deployment accessibility...');
+    }
+    const keyValid = await validateKeyFile();
 
     // Step 5: Submit new URLs
+    console.log(`\n📤 Submitting ${newUrls.length} new URLs to IndexNow...`);
     const result = await submitToIndexNow(newUrls);
 
     // Step 6: Update state
@@ -331,11 +384,31 @@ async function main() {
     console.log('\n🎉 IndexNow incremental submission completed!');
     console.log(`📈 Submitted ${result.submitted} new URLs for instant indexing`);
 
+    if (IS_CI) {
+      console.log('🔄 Search engines will be notified of new content within minutes');
+      console.log('📊 State file updated for next incremental run');
+    }
+
+    // Return detailed results for CI logging
+    if (IS_CI && result.submitted > 0) {
+      console.log('\n📋 Submitted URLs:');
+      result.urls.slice(0, 10).forEach((url, i) => {
+        console.log(`  ${i + 1}. ${url}`);
+      });
+      if (result.urls.length > 10) {
+        console.log(`  ... and ${result.urls.length - 10} more URLs`);
+      }
+    }
+
     // Return success for CI/automation
     process.exit(0);
 
   } catch (error) {
     console.error('\n💥 IndexNow incremental submission failed:', error.message);
+    if (IS_CI) {
+      console.error('🔧 This deployment will complete, but search indexing may be delayed');
+      console.error('💡 The next successful run will catch any missed URLs');
+    }
     process.exit(1);
   }
 }
