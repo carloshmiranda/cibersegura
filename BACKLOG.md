@@ -31,6 +31,11 @@
 ## Done
 <!-- Completed items with date -->
 
+### 2026-04-16 (session 7)
+- ✅ **growth**: Article "Ransomware: O Que Fazer Quando a Sua PME É Atacada" — `/blog/ransomware-o-que-fazer-pme-guia-resposta`; isolation protocol (first 10 min), ID Ransomware tool, CERT.PT contact, CNPD 72h notification obligation, recovery options (backups vs free decryptors via nomoreransom.org vs ransom negotiation), post-incident prevention checklist
+- ✅ **growth**: Article "Teletrabalho Seguro para PMEs: Como Proteger Colaboradores que Trabalham em Casa" — `/blog/teletrabalho-seguro-pme-trabalho-remoto`; VPN vs ZTNA (Cloudflare Access), home router hardening, BYOD vs company device, BitLocker/FileVault/MDM, M365/Google Workspace Conditional Access, public Wi-Fi rules, remote work policy template
+- ✅ **growth**: Article "Gestor de Passwords para Empresas: Bitwarden, 1Password ou Keeper" — `/blog/gestor-passwords-empresa-bitwarden-1password-keeper`; LastPass breach warning, comparison table (price/open-source/UX/audit/SSO/PAM), selection guide by use case, 4-phase migration playbook, offboarding process, passkeys integration
+
 ### 2026-04-16 (session 6)
 - ✅ **growth**: Article "Análise de Risco de Cibersegurança para PMEs: Como Identificar e Priorizar Ameaças" — `/blog/analise-risco-ciberseguranca-pme`; ISO 27005/NIST CSF methodology, asset inventory with criticality scoring, threat catalogue, vulnerability checklist, risk matrix (probability × impact × criticality), 4 treatment options, RGPD documentation guide, ENISA/CNCS resources
 - ✅ **growth**: Article "Passkeys para PMEs: Como Eliminar Passwords e Acabar com o Phishing de Credenciais" — `/blog/passkeys-autenticacao-sem-senha-pme`; FIDO2/WebAuthn mechanics, Microsoft Entra step-by-step config, Google Workspace setup, 1Password/Bitwarden/iCloud Keychain support, comparison table vs SMS OTP/TOTP/push MFA, 3-phase migration plan, FIDO2 hardware keys for admins
