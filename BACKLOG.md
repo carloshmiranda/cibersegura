@@ -31,6 +31,11 @@
 ## Done
 <!-- Completed items with date -->
 
+### 2026-04-16 (session 5)
+- ✅ **growth**: Article "Segurança no Google Workspace para PMEs: Guia Completo de Configuração" — `/blog/seguranca-google-workspace-pme-guia-completo`; Admin Console hardening, 2SV enforcement (passkeys, TOTP), Drive sharing restrictions, Gmail anti-spoofing + DMARC, OAuth app controls, endpoint management, offboarding checklist
+- ✅ **growth**: Article "DLP para PMEs: Como Evitar Fugas de Dados Sensíveis e Cumprir o RGPD" — `/blog/dlp-prevencao-perda-dados-pme`; M365 Purview DLP setup (audit → enforce phases), Google Workspace DLP for Gmail+Drive, endpoint DLP (USB/print blocking), data classification taxonomy, RGPD compliance angle, rollout plan
+- ✅ **growth**: Article "Simulações de Phishing para PMEs: Como Testar e Formar os Colaboradores" — `/blog/simulacao-phishing-empresa-como-fazer-pme`; GoPhish (free/self-hosted), Microsoft Attack Simulator (M365 Business Premium), KnowBe4 free tier, template effectiveness guide, PT labor law + RGPD considerations, 12-month program metrics, phishing report button setup
+
 ### 2026-04-16 (session 4)
 - ✅ **growth**: Article "SIEM Gratuito para PMEs: Monitorização de Segurança com Wazuh" — `/blog/siem-wazuh-pme-monitorizacao-seguranca-gratis`; Wazuh architecture, all-in-one install, Windows/Linux agent deployment, priority rules (brute force, FIM, ClamAV, M365), email alerting, dashboard daily review workflow, comparison table
 - ✅ **growth**: Article "Segurança em Redes Sociais para Empresas: Como Proteger as Contas da Sua PME" — `/blog/seguranca-redes-sociais-empresas-pme-portugal`; LinkedIn Company Page admin hygiene, Meta Business Manager setup, X delegated access, account takeover patterns (SIM swap, phishing, sessions), offboarding checklist, monitoring strategy
