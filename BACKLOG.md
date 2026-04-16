@@ -31,6 +31,11 @@
 ## Done
 <!-- Completed items with date -->
 
+### 2026-04-16 (session 6)
+- ✅ **growth**: Article "Análise de Risco de Cibersegurança para PMEs: Como Identificar e Priorizar Ameaças" — `/blog/analise-risco-ciberseguranca-pme`; ISO 27005/NIST CSF methodology, asset inventory with criticality scoring, threat catalogue, vulnerability checklist, risk matrix (probability × impact × criticality), 4 treatment options, RGPD documentation guide, ENISA/CNCS resources
+- ✅ **growth**: Article "Passkeys para PMEs: Como Eliminar Passwords e Acabar com o Phishing de Credenciais" — `/blog/passkeys-autenticacao-sem-senha-pme`; FIDO2/WebAuthn mechanics, Microsoft Entra step-by-step config, Google Workspace setup, 1Password/Bitwarden/iCloud Keychain support, comparison table vs SMS OTP/TOTP/push MFA, 3-phase migration plan, FIDO2 hardware keys for admins
+- ✅ **growth**: Article "Auditoria de Cibersegurança Interna para PMEs: Checklist e Guia Passo a Passo" — `/blog/auditoria-ciberseguranca-interna-pme`; 7-block audit covering IAM (accounts, MFA, privileges, passwords), network (router, Wi-Fi, VPN), endpoints (OS, AV, BitLocker), email (SPF/DKIM/DMARC, anti-phishing), cloud (M365/Google Workspace, SaaS), backups, RGPD; remediation tracking table, executive summary template
+
 ### 2026-04-16 (session 5)
 - ✅ **growth**: Article "Segurança no Google Workspace para PMEs: Guia Completo de Configuração" — `/blog/seguranca-google-workspace-pme-guia-completo`; Admin Console hardening, 2SV enforcement (passkeys, TOTP), Drive sharing restrictions, Gmail anti-spoofing + DMARC, OAuth app controls, endpoint management, offboarding checklist
 - ✅ **growth**: Article "DLP para PMEs: Como Evitar Fugas de Dados Sensíveis e Cumprir o RGPD" — `/blog/dlp-prevencao-perda-dados-pme`; M365 Purview DLP setup (audit → enforce phases), Google Workspace DLP for Gmail+Drive, endpoint DLP (USB/print blocking), data classification taxonomy, RGPD compliance angle, rollout plan
