@@ -92,7 +92,7 @@ export async function POST(request: Request) {
       urlList: uniqueUrls,
     };
 
-    console.log(`Submitting ${uniqueUrls.length} new/updated URLs to IndexNow:`, uniqueUrls);
+    console.log(`🚀 Submitting ${uniqueUrls.length} new/updated URLs to IndexNow:`, uniqueUrls);
 
     const response = await fetch("https://api.indexnow.org/indexnow", {
       method: "POST",
@@ -101,6 +101,8 @@ export async function POST(request: Request) {
         "User-Agent": "CiberPME-Auto-IndexNow/1.0"
       },
       body: JSON.stringify(payload),
+      // Add timeout to prevent hanging
+      signal: AbortSignal.timeout(30000) // 30 second timeout
     });
 
     if (!response.ok) {
@@ -152,12 +154,21 @@ export async function POST(request: Request) {
 
     setLastSubmission(submissionRecord);
 
+    console.log(`✅ Successfully submitted ${uniqueUrls.length} URLs to IndexNow`);
+
     return NextResponse.json({
       success: true,
       submitted: uniqueUrls.length,
       urls: uniqueUrls,
       timestamp: currentTime,
+      totalPosts: posts.length,
       message: `Successfully submitted ${uniqueUrls.length} new/updated URLs to IndexNow`,
+      summary: {
+        totalUrlsInSystem: allCurrentUrls.length,
+        newOrUpdatedSubmitted: uniqueUrls.length,
+        lastSubmissionTimestamp: lastSubmission?.timestamp || 'first-run',
+        searchEnginesPinged: ['IndexNow API', 'Bing Sitemap']
+      }
     });
 
   } catch (error) {

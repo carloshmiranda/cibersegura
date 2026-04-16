@@ -13,8 +13,6 @@
 ## Up Next
 <!-- Items to tackle in the next cycle -->
 
-- 🟡 **P1 — SEO**: Submeter novos URLs ao IndexNow após cada deploy com conteúdo novo (endpoint `/api/indexnow-submit` já existe)
-
 ---
 
 ## Planned
@@ -30,6 +28,9 @@
 
 ## Done
 <!-- Completed items with date -->
+
+### 2026-04-16 (session 8)
+- ✅ **seo**: IndexNow automation after deployments — Enhanced existing `/api/deploy-hook` and `/api/indexnow-deploy` system for automatic URL submission after new content deploys. Added comprehensive documentation (`INDEXNOW_AUTOMATION.md`), test script (`npm run test-indexnow`), improved error handling and logging. System uses Vercel deploy hooks to automatically detect and submit new/updated blog posts to IndexNow API for instant search engine indexing
 
 ### 2026-04-16 (session 7)
 - ✅ **growth**: Article "Ransomware: O Que Fazer Quando a Sua PME É Atacada" — `/blog/ransomware-o-que-fazer-pme-guia-resposta`; isolation protocol (first 10 min), ID Ransomware tool, CERT.PT contact, CNPD 72h notification obligation, recovery options (backups vs free decryptors via nomoreransom.org vs ransom negotiation), post-incident prevention checklist

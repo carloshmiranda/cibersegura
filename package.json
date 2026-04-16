@@ -17,7 +17,8 @@
     "send-newsletter": "node scripts/send-weekly-newsletter.js",
     "send-newsletter:dry-run": "node scripts/send-weekly-newsletter.js --dry-run",
     "analyze-links": "tsx scripts/analyze-internal-linking.js",
-    "analyze-links:stats": "tsx scripts/analyze-internal-linking.js --stats"
+    "analyze-links:stats": "tsx scripts/analyze-internal-linking.js --stats",
+    "test-indexnow": "node scripts/test-indexnow-automation.js"
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.10.0",
