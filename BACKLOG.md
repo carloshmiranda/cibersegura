@@ -29,6 +29,11 @@
 ## Done
 <!-- Completed items with date -->
 
+### 2026-04-16 (session 9)
+- ✅ **growth**: Article "Microsoft Defender for Business: O EDR para PMEs Incluído no Microsoft 365" — `/blog/microsoft-defender-for-business-pme-guia-completo`; ativação via Intune, onboarding Windows/macOS, Threat & Vulnerability Management (Secure Score), Attack Surface Reduction rules (Audit → Block), investigação automática e remediação, Live Response, isolamento de dispositivos, comparação com CrowdStrike Falcon Go e SentinelOne
+- ✅ **growth**: Article "CIS Controls v8 para PMEs: Os 56 Controlos Essenciais do Grupo IG1" — `/blog/cis-controls-v8-pme-implementacao-ig1`; todos os 18 controlos CIS v8 com foco no IG1, passos concretos por controlo, priorização em 3 fases (30 dias / 1-3 meses / 3-6 meses), mapeamento para RGPD/NIS2/ISO 27001/DORA
+- ✅ **growth**: Article "Copilot e IA Generativa nas PMEs: Riscos de Segurança e Como Usar com Segurança" — `/blog/copilot-ia-generativa-pme-riscos-seguranca`; Shadow AI, fuga de dados por serviço (ChatGPT free vs Enterprise vs M365 Copilot vs Gemini Workspace), prompt injection, RGPD e IA (base legal, transferências internacionais, DPA), oversharing SharePoint com Copilot, política de IA verde/amarelo/vermelho, configuração segura M365 Copilot com auditoria de permissões
+
 ### 2026-04-16 (session 8)
 - ✅ **seo**: IndexNow automation after deployments — Enhanced existing `/api/deploy-hook` and `/api/indexnow-deploy` system for automatic URL submission after new content deploys. Added comprehensive documentation (`INDEXNOW_AUTOMATION.md`), test script (`npm run test-indexnow`), improved error handling and logging. System uses Vercel deploy hooks to automatically detect and submit new/updated blog posts to IndexNow API for instant search engine indexing
 - ✅ **growth**: Article "Inventário de Ativos de TI para PMEs: Como Controlar Tudo o Que Está na Sua Rede" — `/blog/inventario-ativos-ti-pme`; Nmap discovery, Lansweeper free tier (100 assets), Snipe-IT open source ITAM, shadow IT problem, 5-step process (scan → enrich → cloud/accounts → criticality classification → integrate with security processes), NIS2 asset management obligation, maintenance cadence
