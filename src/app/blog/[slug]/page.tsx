@@ -6,6 +6,8 @@ import { extractFAQStructuredData } from "@/lib/seo-utils";
 import { RelatedPosts } from "@/components/related-posts";
 import { SocialShare } from "@/components/social-share";
 import CountdownTimer from "@/components/countdown-timer";
+import { AffiliateCTA } from "@/components/affiliate-cta";
+import { getToolsForContext } from "@/lib/affiliate-tools";
 import type { Metadata } from "next";
 import Footer from "@/components/footer";
 
@@ -66,6 +68,61 @@ export default async function BlogPostPage({
 
   const markdownElements = parseMarkdown(post.content);
   const renderedContent = renderMarkdown(markdownElements);
+
+  // Check if this is a NIS2 article that should have affiliate CTAs
+  const isNIS2Article = post.slug.includes('nis2') &&
+    ['nis2-cadeia-fornecimento-pme', 'nis2-portugal-guia-pme', 'checklist-nis2-conformidade',
+     'nis2-portugal-o-que-pmes-precisam-saber', 'nis2-decreto-lei-125-2025-obrigacoes-pme'].includes(post.slug);
+
+  // For NIS2 articles, render content with CTAs injected
+  const renderContentWithCTAs = () => {
+    if (!isNIS2Article) {
+      return renderedContent;
+    }
+
+    // Find the first H2 element to inject CTA after it
+    const firstH2Index = markdownElements.findIndex(el => el.type === 'heading' && el.level === 2);
+
+    if (firstH2Index === -1) {
+      // No H2 found, just render normally with CTA at end
+      return (
+        <>
+          {renderedContent}
+          <AffiliateCTA
+            tools={getToolsForContext('sme')}
+            utmSource="ciberpme"
+            utmMedium="blog"
+            utmCampaign={`nis2-${post.slug}`}
+          />
+        </>
+      );
+    }
+
+    // Split content and inject CTA after first H2
+    const beforeFirstH2 = renderMarkdown(markdownElements.slice(0, firstH2Index + 2));
+    const afterFirstH2 = renderMarkdown(markdownElements.slice(firstH2Index + 2));
+
+    return (
+      <>
+        {beforeFirstH2}
+        <AffiliateCTA
+          tools={getToolsForContext('basic')}
+          title="Ferramentas Essenciais para PMEs"
+          utmSource="ciberpme"
+          utmMedium="blog"
+          utmCampaign={`nis2-${post.slug}-mid`}
+        />
+        {afterFirstH2}
+        <AffiliateCTA
+          tools={getToolsForContext('comprehensive')}
+          title="Soluções Avançadas para Conformidade Total"
+          utmSource="ciberpme"
+          utmMedium="blog"
+          utmCampaign={`nis2-${post.slug}-end`}
+        />
+      </>
+    );
+  };
 
   const baseUrl = process.env.NEXT_PUBLIC_URL || "https://ciberpme.vercel.app";
   const articleUrl = `${baseUrl}/blog/${post.slug}`;
@@ -302,7 +359,7 @@ export default async function BlogPostPage({
 
         {/* Article content */}
         <article className="space-y-6">
-          {renderedContent}
+          {renderContentWithCTAs()}
         </article>
 
         {/* Related posts */}

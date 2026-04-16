@@ -2,6 +2,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
+import { AffiliateCTA } from "@/components/affiliate-cta";
+import { nis2Tools, toolsByCategory } from "@/lib/affiliate-tools";
 import { posts, CATEGORIES, type Post } from "@/lib/posts";
 
 export const metadata: Metadata = {
@@ -244,6 +246,66 @@ export default function RecursosNis2Page() {
             <div className="text-sm text-text-secondary">Tempo Médio de Leitura</div>
           </div>
         </div>
+
+        {/* Tool Recommendations */}
+        <section className="mb-16">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-brand mb-4 text-balance font-display">
+              Ferramentas Recomendadas para Conformidade NIS2
+            </h2>
+            <p className="text-lg text-text-secondary max-w-3xl mx-auto text-pretty">
+              Selecionamos as melhores ferramentas de cibersegurança para ajudar PMEs portuguesas
+              a cumprir os requisitos da diretiva NIS2 de forma eficaz e econômica.
+            </p>
+          </div>
+
+          {/* Essential Tools */}
+          <div className="mb-12">
+            <h3 className="text-xl font-bold text-brand mb-4">Ferramentas Essenciais</h3>
+            <AffiliateCTA
+              tools={[
+                toolsByCategory.access[0], // 1Password Business
+                nis2Tools.find(tool => tool.name === "Microsoft Defender Business")!,
+                toolsByCategory.backup[0] // Acronis
+              ]}
+              title=""
+              utmSource="ciberpme"
+              utmMedium="recursos"
+              utmCampaign="nis2-essentials"
+            />
+          </div>
+
+          {/* Advanced Tools */}
+          <div className="mb-12">
+            <h3 className="text-xl font-bold text-brand mb-4">Soluções Avançadas</h3>
+            <AffiliateCTA
+              tools={[
+                toolsByCategory.siem[0], // Wazuh SIEM
+                nis2Tools.find(tool => tool.name === "CrowdStrike Falcon Go")!,
+                nis2Tools.find(tool => tool.name === "Veeam Backup & Replication")!
+              ]}
+              title=""
+              utmSource="ciberpme"
+              utmMedium="recursos"
+              utmCampaign="nis2-advanced"
+            />
+          </div>
+
+          {/* Communication & Network Security */}
+          <div className="mb-12">
+            <h3 className="text-xl font-bold text-brand mb-4">Segurança de Comunicações</h3>
+            <AffiliateCTA
+              tools={[
+                toolsByCategory.email[0], // Proton Business
+                nis2Tools.find(tool => tool.name === "Cloudflare for Teams")!
+              ]}
+              title=""
+              utmSource="ciberpme"
+              utmMedium="recursos"
+              utmCampaign="nis2-communications"
+            />
+          </div>
+        </section>
 
         {/* Alert about deadline */}
         <div className="mb-16 p-6 rounded-xl border-l-4 border-accent bg-accent-light">
