@@ -14901,6 +14901,673 @@ Para completar a estratégia de autenticação, combine o gestor de passwords co
     publishedAt: "2026-04-16",
     readingTime: 13,
   },
+  {
+    slug: "inventario-ativos-ti-pme",
+    title: "Inventário de Ativos de TI para PMEs: Como Controlar Tudo o Que Está na Sua Rede",
+    excerpt:
+      "Não consegue proteger o que não sabe que existe. Guia prático para PMEs portuguesas criarem e manterem um inventário completo de hardware, software, serviços cloud e contas — base obrigatória para a conformidade NIS2 e para qualquer programa de segurança.",
+    content: `A maioria das PMEs portuguesas não sabe com exatidão o que tem ligado à sua rede. Há o portátil de trabalho, o PC da receção, o NAS no armazém, o tablet que alguém trouxe de casa, o servidor antigo que "já não serve para nada mas está sempre ligado", e os quarenta e tal serviços cloud subscritos ao longo dos anos — alguns ativos, outros esquecidos com cartões de crédito da empresa a pagar.
+
+Este cenário tem um nome: falta de gestão de ativos. E tem uma consequência direta: **não consegue proteger o que não sabe que existe**.
+
+O inventário de ativos de TI (ou CMDB — Configuration Management Database, no jargão formal) é o ponto de partida para qualquer programa de segurança. É também uma obrigação explícita da NIS2 para as entidades abrangidas. Mas mesmo fora do contexto regulatório, é simplesmente boa gestão.
+
+## Porque é que a Falta de Inventário Cria Problemas de Segurança
+
+### Shadow IT — a principal ameaça que vem de dentro
+
+Shadow IT são os sistemas, serviços e dispositivos que os colaboradores usam para trabalhar sem o conhecimento do departamento de IT. Não é malícia — é pragmatismo. O colaborador de vendas descobriu que o Notion é melhor para tomar notas do que o OneNote da empresa. O contabilista usa o Google Drive pessoal para partilhar ficheiros com clientes porque "é mais rápido". O gestor de projetos subscreve um SaaS com o cartão da empresa para resolver um problema imediato.
+
+O resultado: dados de clientes em contas cloud pessoais, sistemas críticos sem backup gerido, serviços SaaS com acessos de ex-colaboradores que nunca foram revogados.
+
+### Sistemas "esquecidos" como ponto de entrada
+
+Em incidentes de ransomware investigados pelo CERT.PT, um vetor recorrente são servidores antigos ou sistemas de teste expostos à internet, sem atualizações há anos, de cuja existência o IT tinha simplesmente perdido a noção. Um servidor Windows Server 2012 com Remote Desktop aberto, sem patches desde 2021, é um convite para qualquer atacante com um scanner de vulnerabilidades.
+
+### Sem inventário, sem patch management eficaz
+
+O artigo sobre [gestão de patches](/blog/gestao-patches-atualizacoes-software-pme) explica como manter software atualizado. Mas qualquer processo de patch management começa com saber o que existe para atualizar. Sem inventário, os patches ficam a cargo de cada colaborador individualmente — garantia de que alguma coisa fica para trás.
+
+## O Que Inventariar
+
+### 1. Hardware
+
+**Dispositivos de utilizador:**
+- Portáteis e desktops (todos, incluindo pessoais usados para trabalho)
+- Tablets e smartphones com acesso a email ou sistemas da empresa
+- Impressoras e periféricos em rede
+
+**Infraestrutura de rede:**
+- Routers e firewalls
+- Switches geridos e não geridos
+- Access points Wi-Fi
+- Modems e equipamentos de operadora
+
+**Servidores e armazenamento:**
+- Servidores físicos on-premises
+- NAS (Network Attached Storage) e sistemas de backup locais
+- Dispositivos IoT com acesso à rede (câmaras IP, sistemas de controlo de acesso, sensores)
+
+**Para cada dispositivo, registar:**
+- Marca e modelo
+- Número de série
+- Sistema operativo e versão
+- Localização física
+- Responsável / utilizador atribuído
+- Data de compra e fim de suporte previsto
+- Endereço IP (fixo ou reserva DHCP) e endereço MAC
+
+### 2. Software
+
+- Aplicações instaladas em cada dispositivo (nome, versão, licença)
+- Sistemas operativos (Windows, macOS, Linux — versão exata)
+- Software de segurança (antivírus, VPN, agente EDR)
+- Software de infraestrutura (servidor web, base de dados, servidor de email)
+
+**Ponto crítico:** registar também **data de fim de suporte (End of Life)**. Um sistema operativo sem suporte do fabricante não recebe patches de segurança — é um risco explícito que precisa de gestão.
+
+### 3. Serviços Cloud e SaaS
+
+Este é frequentemente o inventário mais difícil de manter — e o mais negligenciado.
+
+**O que incluir:**
+- Microsoft 365 ou Google Workspace (licenças ativas, contas de utilizador)
+- CRM (Salesforce, HubSpot, etc.)
+- Plataformas de e-commerce
+- Ferramentas de comunicação (Teams, Slack, Zoom)
+- Serviços de armazenamento (SharePoint, Google Drive, Dropbox Business)
+- Plataformas de marketing (Mailchimp, ActiveCampaign)
+- Qualquer outro SaaS com acesso a dados da empresa
+
+**Para cada serviço:**
+- Nome e URL
+- Administrador da conta
+- Utilizadores com acesso e respetivo nível de permissões
+- Tipo de dados armazenados
+- Método de pagamento e responsável
+- URL da política de privacidade e localização dos dados (EU/fora da EU)
+
+### 4. Dados e Informação
+
+Não é apenas sobre dispositivos — é também sobre onde estão os dados:
+- Que dados pessoais (clientes, colaboradores) existem e onde estão armazenados
+- Que dados são confidenciais ou críticos para o negócio
+- Onde estão os backups e como aceder em caso de incidente
+
+Este mapeamento de dados é também uma obrigação do RGPD (registo de atividades de tratamento).
+
+### 5. Contas e Identidades
+
+- Contas de utilizador em Active Directory / Microsoft Entra ID
+- Contas de administrador local em dispositivos
+- Contas de serviço (usadas por aplicações, não por pessoas)
+- Chaves de API e credenciais de sistemas
+- Certificados digitais e data de expiração
+
+## Ferramentas para Criar o Inventário
+
+### Descoberta Automática de Rede — Nmap (gratuito)
+
+O [Nmap](https://nmap.org/) é o scanner de rede de referência. Em dez minutos, identifica todos os dispositivos ativos na rede, sistemas operativos, portas abertas e serviços a correr.
+
+**Comando básico para descoberta de rede:**
+
+\`\`\`bash
+# Descobrir todos os dispositivos ativos numa rede /24
+nmap -sn 192.168.1.0/24
+
+# Identificar sistema operativo e serviços (requer privilégios)
+nmap -O -sV 192.168.1.0/24 -oX inventario.xml
+\`\`\`
+
+**Para PMEs sem equipa técnica:** existe uma interface gráfica, o Zenmap, que torna o Nmap acessível sem linha de comandos.
+
+**Limitação:** o Nmap é uma fotografia num momento — não mantém o inventário atualizado automaticamente.
+
+### Inventário Contínuo — Lansweeper (plano gratuito)
+
+O [Lansweeper](https://www.lansweeper.com/) tem um plano gratuito para até 100 ativos que faz descoberta automática e contínua da rede. Instala-se um agente nos dispositivos Windows/Linux/macOS e, a partir daí, o Lansweeper mantém um inventário atualizado com:
+- Hardware (RAM, CPU, disco, ecrã)
+- Software instalado e versões
+- Sistema operativo e nível de patch
+- Histórico de alterações
+
+Para a maioria das PMEs com menos de 50 dispositivos, o plano gratuito do Lansweeper cobre as necessidades básicas.
+
+### Gestão de Ativos de IT — Snipe-IT (open source)
+
+O [Snipe-IT](https://snipeitapp.com/) é uma solução open source de ITAM (IT Asset Management) que vai além da descoberta — é um registo estruturado de ativos com:
+- Ciclo de vida do ativo (compra, atribuição, manutenção, abate)
+- Controlo de licenças de software
+- Gestão de consumíveis (tinteiros, cabos, etc.)
+- Notificações de garantia a expirar
+- Check-in/check-out de equipamentos
+
+Pode ser auto-hospedado (gratuito) ou usar o plano SaaS (desde $39,99/mês para até 50 ativos).
+
+**Alternativa mais simples para começar:** Uma folha de cálculo Excel/Google Sheets bem estruturada é melhor do que não ter nada. O que importa é ter a informação, não a ferramenta perfeita.
+
+## Como Construir o Inventário (Passo a Passo)
+
+### Passo 1 — Scan de Rede Inicial (1 dia)
+
+Use o Nmap ou Lansweeper para descobrir todos os dispositivos ativos na(s) rede(s) da empresa. Para redes com VLANs separadas (escritório, servidores, Wi-Fi de convidados, IoT), faça um scan por cada sub-rede.
+
+O resultado será uma lista de endereços IP com endereços MAC e, onde possível, sistema operativo e serviços.
+
+### Passo 2 — Enriquecimento Manual (1-2 semanas)
+
+O scan automático diz o que existe, mas não diz o responsável, a localização, ou a função do dispositivo. Esta fase é manual:
+- Percorrer a lista de dispositivos descobertos e completar os campos em falta.
+- Identificar dispositivos não reconhecidos e investigar (podem ser intrusos na rede, ou simplesmente o router do alarme que ninguém documentou).
+- Falar com os responsáveis de departamento para identificar SaaS usados por cada equipa.
+
+### Passo 3 — Inventário de Software e Contas Cloud (1 semana)
+
+- No Microsoft 365 Admin Center ou Google Admin Console: exportar lista de utilizadores ativos, licenças atribuídas, e aplicações OAuth autorizadas.
+- No Active Directory / Entra ID: exportar lista de contas de utilizador, contas de serviço, e contas com privilégios administrativos.
+- Contactar cada departamento para levantamento de SaaS não centralizados.
+
+### Passo 4 — Definir Criticidade (Classificação de Ativos)
+
+Nem todos os ativos têm o mesmo impacto se ficarem comprometidos. Classifique cada ativo com um nível de criticidade:
+
+| Nível | Critério | Exemplos |
+|-------|----------|---------|
+| Crítico | Paragem do negócio se comprometido | Servidor ERP, base de dados de clientes, sistema de faturação |
+| Elevado | Impacto significativo mas recuperável | Servidor de ficheiros, servidor de email, sistema de RH |
+| Médio | Impacto contido, utilizador único | Portátil de colaborador, conta de utilizador standard |
+| Baixo | Impacto mínimo | Impressora, ecrã de informação, dispositivo de teste |
+
+Esta classificação informa decisões de segurança: onde investir em proteção adicional, o que fazer backup primeiro, o que restaurar com prioridade em caso de incidente.
+
+### Passo 5 — Integrar com Processos de Segurança
+
+O inventário só tem valor se for usado:
+- **Patch management:** usar o inventário para garantir que todos os sistemas críticos têm patches aplicados.
+- **Onboarding/offboarding:** quando um colaborador entra, adicionar os dispositivos e contas ao inventário; quando sai, registar a devolução do equipamento e remoção das contas.
+- **Resposta a incidentes:** em caso de incidente, o inventário permite identificar rapidamente que sistemas estão afetados e qual a criticidade.
+- **Auditoria de segurança:** a [auditoria de cibersegurança interna](/blog/auditoria-ciberseguranca-interna-pme) usa o inventário como base para verificar o estado de cada sistema.
+
+## Manutenção do Inventário
+
+Um inventário criado e esquecido torna-se inútil em poucos meses. Para manter atualizado:
+
+**Processos contínuos:**
+- Scan de rede semanal ou quinzenal (automático com Lansweeper)
+- Alerta para novos dispositivos não reconhecidos na rede (muitos routers empresariais têm esta funcionalidade)
+
+**Processos event-driven:**
+- Qualquer compra ou abate de equipamento atualiza o inventário imediatamente
+- Qualquer novo contrato de SaaS é registado antes de entrar em produção
+- Offboarding de colaboradores: remoção de dispositivos e contas do inventário
+
+**Revisão periódica:**
+- Trimestral: verificar se todos os ativos do inventário ainda existem fisicamente
+- Anual: revisão completa com scan de descoberta e comparação com o inventário
+
+## NIS2 e o Inventário de Ativos
+
+A diretiva NIS2, transposta em Portugal pelo Decreto-Lei n.º 125/2024, exige que as entidades abrangidas implementem medidas de gestão do risco de cibersegurança que incluem explicitamente a **gestão de ativos**. Sem saber o que existe, não é possível avaliar o risco de cada ativo — o que inviabiliza a conformidade.
+
+Mesmo para PMEs que não são diretamente abrangidas pela NIS2, muitos clientes e parceiros corporativos começam a exigir evidências de gestão de ativos como parte dos seus processos de avaliação de fornecedores. O artigo sobre [gestão de risco de fornecedores](/blog/gestao-risco-fornecedores-terceiros-pme) explica como estas avaliações funcionam.
+
+## Por Onde Começar Hoje
+
+Se não tem nenhum inventário, o objetivo não é criar o sistema perfeito — é ter algo utilizável o mais depressa possível:
+
+1. **Hoje:** corra o Nmap na rede e guarde o resultado num ficheiro.
+2. **Esta semana:** abra uma folha de cálculo com as colunas: nome, tipo, IP, sistema operativo, responsável, criticidade. Preencha o que o Nmap descobriu.
+3. **Este mês:** instale o Lansweeper (plano gratuito) para automatizar a descoberta contínua. Complete o inventário com SaaS e contas cloud.
+4. **Este trimestre:** migre para o Snipe-IT ou equivalente se o volume de ativos justificar uma ferramenta dedicada.
+
+Um inventário imperfeito mas existente é infinitamente mais útil do que o inventário perfeito que nunca foi criado.
+
+---
+
+Para complementar o inventário com a deteção de problemas em cada ativo, o próximo passo é a [gestão de vulnerabilidades](/blog/gestao-vulnerabilidades-pme-guia-completo) — identificar sistematicamente as falhas de segurança nos sistemas inventariados antes que os atacantes o façam. O [guia de auditoria de cibersegurança interna](/blog/auditoria-ciberseguranca-interna-pme) mostra como usar o inventário como ponto de partida para uma revisão completa do estado de segurança da empresa.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Práticas",
+    publishedAt: "2026-04-16",
+    readingTime: 12,
+  },
+  {
+    slug: "gestao-vulnerabilidades-pme-guia-completo",
+    title: "Gestão de Vulnerabilidades para PMEs: Como Encontrar e Corrigir Falhas Antes dos Atacantes",
+    excerpt:
+      "Guia prático de vulnerability management para PMEs: ferramentas gratuitas (Greenbone, Nessus Essentials), como interpretar o CVSS, priorizar pela lista KEV da CISA, e criar um processo de remediação que funciona sem equipa de segurança dedicada.",
+    content: `Existe uma diferença importante entre gestão de patches e gestão de vulnerabilidades. A gestão de patches responde à pergunta "como mantenho o software atualizado?". A gestão de vulnerabilidades responde a uma pergunta mais abrangente: "que falhas de segurança existem nos meus sistemas — e quais representam o risco real mais elevado?"
+
+Patches são uma das formas de remediar vulnerabilidades, mas não são a única. Algumas vulnerabilidades não têm patch disponível; outras existem em configurações, não em software desatualizado; outras ainda são conhecidas há anos mas o fabricante nunca as corrigiu. Um processo de gestão de vulnerabilidades identifica tudo isto sistematicamente.
+
+Para uma PME sem equipa de segurança dedicada, isto pode parecer demasiado complexo. Este guia mostra como implementar um processo funcionável com ferramentas gratuitas e um investimento de tempo razoável.
+
+## O Ciclo de Vida de uma Vulnerabilidade
+
+Entender o ciclo ajuda a perceber onde o tempo importa:
+
+1. **Descoberta:** Um investigador (ou atacante) encontra uma falha num produto.
+2. **Divulgação:** A falha é reportada ao fabricante (responsible disclosure) ou publicada diretamente.
+3. **CVE atribuído:** A falha recebe um identificador CVE (Common Vulnerabilities and Exposures) e é registada no National Vulnerability Database (NVD) do NIST.
+4. **Patch disponível (ou não):** O fabricante lança uma correção — ou não.
+5. **Exploração ativa:** Atacantes desenvolvem e usam exploits contra sistemas não corrigidos.
+6. **Remediação:** As organizações aplicam patches, mitigações ou aceitam o risco.
+
+O intervalo crítico é entre os passos 5 e 6. Em média, os atacantes exploram vulnerabilidades conhecidas **15 dias** após a publicação pública. Muitas PMEs demoram meses a aplicar patches em sistemas críticos.
+
+## O CVSS — Como se Avalia a Gravidade de uma Vulnerabilidade
+
+O CVSS (Common Vulnerability Scoring System) é a métrica padrão para quantificar a gravidade de uma vulnerabilidade, numa escala de 0 a 10:
+
+| Score | Severidade |
+|-------|-----------|
+| 9.0 – 10.0 | Crítica |
+| 7.0 – 8.9 | Alta |
+| 4.0 – 6.9 | Média |
+| 0.1 – 3.9 | Baixa |
+
+O score é calculado a partir de vários fatores:
+
+**Vetor de Ataque (AV):**
+- Network (N): explorável remotamente via internet — mais grave
+- Adjacent (A): requer acesso à mesma rede local
+- Local (L): requer acesso local ao sistema
+- Physical (P): requer acesso físico — menos grave
+
+**Complexidade do Ataque (AC):**
+- Low (L): exploração simples, sem condições especiais
+- High (H): exploração requer condições específicas difíceis de reproduzir
+
+**Privilégios necessários (PR):**
+- None (N): não requer autenticação
+- Low (L): requer conta de utilizador básica
+- High (H): requer conta de administrador
+
+**Interação do Utilizador (UI):**
+- None (N): não requer ação do utilizador
+- Required (R): requer que um utilizador execute alguma ação (abrir ficheiro, clicar link)
+
+**Exemplo prático:**
+A vulnerabilidade Log4Shell (CVE-2021-44228) tinha CVSS 10.0 — exploração remota, sem autenticação, sem interação do utilizador, impacto total em confidencialidade, integridade e disponibilidade. Era a pior combinação possível.
+
+**Mas o CVSS tem limitações:** avalia a gravidade teórica da vulnerabilidade, não o risco real no seu contexto. Uma vulnerabilidade CVSS 9.5 num sistema interno sem exposição à internet pode ser menos urgente do que uma CVSS 7.0 num servidor web público com dados de clientes.
+
+## A Lista KEV da CISA — O Atalho para Priorização
+
+A CISA (Cybersecurity and Infrastructure Security Agency) dos EUA mantém o [Known Exploited Vulnerabilities Catalog](https://www.cisa.gov/known-exploited-vulnerabilities-catalog) — uma lista de vulnerabilidades para as quais existem evidências de exploração ativa por atacantes reais.
+
+Esta lista é o melhor atalho para priorização disponível: se uma vulnerabilidade está na KEV, significa que atacantes já a estão a explorar. O CVSS pode ser 6.5 (médio), mas se está na KEV, é prioritária.
+
+**Como usar a KEV:**
+1. Aceda a [cisa.gov/known-exploited-vulnerabilities-catalog](https://www.cisa.gov/known-exploited-vulnerabilities-catalog)
+2. Descarregue o catálogo em CSV ou JSON
+3. Compare com as vulnerabilidades encontradas nos seus sistemas pelo scanner
+
+Qualquer vulnerabilidade da KEV presente nos seus sistemas deve ter prazo de remediação máximo de 2 semanas, independentemente do CVSS.
+
+## Ferramentas de Scanning de Vulnerabilidades para PMEs
+
+### Greenbone Community Edition (OpenVAS) — Gratuito
+
+O [Greenbone Community Edition](https://www.greenbone.net/en/community-edition/) é o scanner de vulnerabilidades open source mais utilizado no mundo. É o sucessor do OpenVAS e é mantido pela empresa alemã Greenbone Networks.
+
+**O que faz:**
+- Testa os sistemas da rede contra uma base de dados de mais de 80.000 testes de vulnerabilidade (NVTs — Network Vulnerability Tests), atualizada diariamente.
+- Gera relatórios detalhados por sistema, com severidade, descrição e recomendações de remediação.
+- Interface web para gestão de scans e análise de resultados.
+
+**Instalação:**
+A forma mais simples é via Docker:
+
+\`\`\`bash
+# Instalação com Docker Compose
+curl -f -L https://greenbone.github.io/docs/latest/_static/setup-and-start-greenbone-community-edition.sh -o setup-and-start-greenbone-community-edition.sh
+bash setup-and-start-greenbone-community-edition.sh
+\`\`\`
+
+O setup completo (download da base de dados inicial) demora 1-2 horas. Depois, a interface fica acessível em https://localhost:9392.
+
+**Limitação da versão Community:** Não inclui alguns feeds de vulnerabilidades comerciais disponíveis nas versões pagas (Greenbone Professional). Para a maioria das PMEs, a versão gratuita é suficiente.
+
+### Nessus Essentials — Gratuito para 16 IPs
+
+O [Nessus Essentials](https://www.tenable.com/products/nessus/nessus-essentials) da Tenable é uma versão gratuita do Nessus, o scanner de vulnerabilidades mais usado em empresas. O limite de 16 IPs é uma restrição real — para PMEs com muitos dispositivos, pode não cobrir tudo. Mas para começar ou para cobrir os sistemas mais críticos, é uma boa opção.
+
+**Vantagens sobre o Greenbone:**
+- Interface mais intuitiva e fácil de usar sem formação prévia.
+- Relatórios mais legíveis para apresentar à gestão.
+- Instalação mais simples.
+
+**Quando usar:** Se a rede tem menos de 16 sistemas críticos (servidor de ficheiros, servidor de email, servidor web, NAS, firewall), o Nessus Essentials cobre os alvos mais importantes sem custo.
+
+### Microsoft Defender Vulnerability Management — Incluído no M365 Business Premium
+
+Se a empresa usa Microsoft 365 Business Premium, o **Microsoft Defender Vulnerability Management** já está incluído na licença. Para dispositivos Windows com o agente Defender instalado, fornece:
+- Lista de vulnerabilidades detetadas em cada dispositivo.
+- Score de exposição da organização.
+- Recomendações de remediação com prioridade.
+- Rastreamento de remediação (marcar como em progresso, resolvido, aceite).
+
+Para PMEs já no ecossistema Microsoft, esta é a opção de menor fricção — não requer instalação adicional.
+
+## Como Conduzir um Scan de Vulnerabilidades
+
+### 1. Definir o Âmbito
+
+Antes de fazer o primeiro scan, defina o que vai ser testado. Para PMEs, recomenda-se começar pelos sistemas com maior exposição e maior criticidade:
+- Servidores com acesso à internet (web, email, VPN)
+- Servidores internos críticos (ERP, base de dados, ficheiros)
+- Dispositivos de rede (router, firewall, switches geridos)
+
+Deixar os postos de trabalho individuais para uma segunda fase.
+
+### 2. Scan Não Autenticado vs. Autenticado
+
+**Scan não autenticado:** o scanner testa o sistema como um atacante externo veria — sem credenciais. Identifica vulnerabilidades expostas via rede.
+
+**Scan autenticado:** o scanner usa credenciais de administrador para aceder ao sistema e verificar o estado de patches, configurações e software instalado. Muito mais completo — identifica vulnerabilidades que não são visíveis externamente mas que um atacante que ganhe acesso ao sistema encontraria.
+
+**Recomendação:** para sistemas internos, use sempre scan autenticado. Os resultados são significativamente mais ricos e acionáveis.
+
+### 3. Agendamento
+
+- **Sistemas críticos expostos à internet:** scan semanal.
+- **Sistemas internos críticos:** scan quinzenal.
+- **Postos de trabalho:** scan mensal.
+- **Após qualquer alteração significativa na infraestrutura** (novo servidor, nova aplicação, reconfiguração de rede): scan imediato.
+
+## Como Priorizar as Vulnerabilidades Encontradas
+
+Um scan típico numa PME pode devolver dezenas ou centenas de vulnerabilidades. Não é possível (nem necessário) corrigir tudo ao mesmo tempo. Priorize assim:
+
+### Matriz de Priorização
+
+| Critério | Alta Prioridade | Média Prioridade | Baixa Prioridade |
+|----------|-----------------|------------------|------------------|
+| CVSS | ≥9.0 (Crítica) ou ≥7.0 (Alta) | 4.0–6.9 (Média) | <4.0 (Baixa) |
+| KEV CISA | Sim | — | Não |
+| Exposição | Internet ou rede local sem segmentação | Rede interna segmentada | Acesso local apenas |
+| Criticidade do sistema | Crítico ou Elevado | Médio | Baixo |
+| Exploit disponível publicamente | Sim | Não confirmado | Não |
+
+**Regra prática:**
+1. Críticas (CVSS ≥9) ou qualquer KEV: **remediação em 7 dias**.
+2. Altas (CVSS 7-8.9) em sistemas críticos: **remediação em 30 dias**.
+3. Médias (CVSS 4-6.9): **remediação em 90 dias ou revisão trimestral**.
+4. Baixas: aceitar e rever anualmente.
+
+### Falsos Positivos
+
+Os scanners geram falsos positivos — vulnerabilidades reportadas que não existem realmente ou que já foram corrigidas mas o scanner não detetou a correção. Antes de gastar tempo a remediar, valide:
+- A versão do software detetada pelo scanner corresponde à versão instalada?
+- O CVE reportado aplica-se à configuração específica do sistema?
+- Existe confirmação oficial de que a vulnerabilidade existe nesta versão?
+
+Marque os falsos positivos confirmados como "aceites" no scanner para não aparecerem nos próximos relatórios.
+
+## O Processo de Remediação
+
+### Opção 1 — Aplicar o Patch
+
+A solução preferida sempre que possível. Para cada vulnerabilidade:
+1. Confirmar que existe patch do fabricante.
+2. Testar o patch num ambiente de teste antes de aplicar em produção (se o sistema for crítico).
+3. Agendar a manutenção (janela de manutenção para sistemas que requerem reinício).
+4. Aplicar e confirmar que a vulnerabilidade desapareceu no próximo scan.
+
+### Opção 2 — Controlo Compensatório
+
+Quando o patch não está disponível ou não pode ser aplicado imediatamente:
+
+- **Isolar o sistema vulnerável:** se o servidor não pode ser atualizado agora, garantir que não é acessível diretamente da internet ou de zonas de rede não confiáveis.
+- **Desativar a funcionalidade vulnerável:** se uma funcionalidade específica está vulnerável e não é usada, desativá-la.
+- **WAF ou IPS:** para vulnerabilidades em aplicações web, um Web Application Firewall pode bloquear tentativas de exploração enquanto o patch não é aplicado.
+- **Monitorização intensiva:** aumentar o nível de logging e alertas para o sistema afetado.
+
+### Opção 3 — Aceitar o Risco
+
+Para vulnerabilidades de baixa severidade em sistemas não críticos, ou quando o custo de remediação excede claramente o risco, pode-se tomar uma decisão formal de aceitar o risco:
+- Documentar a decisão (quem aceitou, porquê, com que condições).
+- Definir data de revisão (máximo 12 meses).
+- Esta aceitação deve ser assinada pela gestão, não apenas pelo IT.
+
+**Nunca aceitar risco em:** vulnerabilidades críticas ou KEV, sistemas com dados pessoais de clientes, sistemas expostos à internet.
+
+## Métricas para Acompanhar
+
+Mesmo sem equipa de segurança dedicada, acompanhe estas métricas mensalmente:
+
+- **Número de vulnerabilidades críticas e altas abertas** — deve tender para zero.
+- **Tempo médio de remediação de críticas** — objetivo: <7 dias.
+- **Número de sistemas com vulnerabilidades KEV** — deve ser sempre zero.
+- **Cobertura do scan** — percentagem dos sistemas inventariados que são regularmente escaneados.
+
+## Integração com o Processo de Patch Management
+
+A gestão de vulnerabilidades e a [gestão de patches](/blog/gestao-patches-atualizacoes-software-pme) são complementares:
+
+- O scanner de vulnerabilidades **encontra** o problema.
+- O processo de patch management **corrige** o problema (para a classe de vulnerabilidades remediáveis por patch).
+
+Um ciclo integrado funciona assim:
+1. **Scan semanal** → identifica novas vulnerabilidades.
+2. **Triagem** → prioriza pela matriz acima.
+3. **Patch Tuesday** (segunda terça-feira do mês para Windows) → aplica patches da Microsoft.
+4. **Patch de terceiros** → aplica atualizações de software de terceiros (Adobe, Chrome, Java, etc.).
+5. **Scan de confirmação** → verifica que as vulnerabilidades foram resolvidas.
+6. **Relatório** → documenta o estado e envia à gestão.
+
+---
+
+A gestão de vulnerabilidades não é uma atividade única — é um processo contínuo. A ameaça de amanhã pode ser uma vulnerabilidade em software que hoje considera seguro. O que importa não é eliminar todas as vulnerabilidades (impossível), mas sim ter um processo que identifica as mais críticas rapidamente e as resolve antes que alguém as explore.
+
+Para um contexto mais amplo sobre como a gestão de vulnerabilidades se encaixa num programa de segurança, o [guia de análise de risco de cibersegurança](/blog/analise-risco-ciberseguranca-pme) explica como avaliar e priorizar riscos de forma holística. O [inventário de ativos de TI](/blog/inventario-ativos-ti-pme) é o pré-requisito — para saber o que escanear, é necessário saber o que existe.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Práticas",
+    publishedAt: "2026-04-16",
+    readingTime: 14,
+  },
+  {
+    slug: "ciberseguranca-advocacia-contabilidade-portugal",
+    title: "Cibersegurança para Escritórios de Advogados e Contabilistas em Portugal: Guia Prático",
+    excerpt:
+      "Escritórios de advocacia e contabilidade são alvos prioritários de ciberataques pela sensibilidade dos dados que detêm. Guia específico para o setor: proteção de informação confidencial de clientes, email seguro, RGPD, e as ferramentas certas para PMEs jurídicas e financeiras.",
+    content: `Um escritório de advogados guarda os segredos mais sensíveis dos seus clientes: contratos de aquisição antes do anúncio público, estratégias de litígio, informação sobre divórcios e heranças, acordos de confidencialidade. Uma contabilidade conhece a situação financeira real das empresas que serve — faturação, margens, dívidas, operações estruturadas para eficiência fiscal.
+
+Esta informação tem valor enorme para concorrentes, para grupos de ransomware que aplicam pressão máxima ao ameaçar publicar dados confidenciais, e para Estados que fazem espionagem económica. Não é paranoia — é o modelo de negócio dos atacantes, e os escritórios de advocacia e contabilidade têm exatamente o perfil que eles procuram: dados de altíssimo valor, frequentemente com infraestrutura de TI modesta e sem equipa de segurança dedicada.
+
+## Porque é que Estes Setores São Alvos Prioritários
+
+### O Que os Atacantes Procuram
+
+**Em escritórios de advogados:**
+- Informação sobre fusões e aquisições antes do anúncio (insider trading)
+- Estratégias de defesa em litígios (vantagem para a parte adversa)
+- Dados pessoais e financeiros de clientes individuais de alto valor
+- Acesso a fundos de clientes em contas de depósito (escrow accounts)
+- Contratos e acordos para extorsão (ameaça de publicação)
+
+**Em escritórios de contabilidade:**
+- Dados fiscais que permitem fraude de identidade
+- Acesso a contas bancárias de clientes via credenciais partilhadas para pagamentos
+- Informação financeira confidencial para espionagem industrial
+- Declarações de IRS/IRC para extorsão ou ricorso
+
+### Padrões de Ataque Mais Comuns
+
+**Business Email Compromise (BEC) com personificação de sócio:**
+O atacante compromete a conta de email de um sócio (ou cria uma conta semelhante), e envia instruções ao colaborador responsável pela tesouraria para transferir fundos para uma conta "urgente". Em escritórios onde ordens financeiras por email são normais, este ataque tem taxas de sucesso alarmantes. O artigo sobre [fraude CEO/BEC](/blog/fraude-ceo-bec-pme-portugal) detalha este padrão.
+
+**Ransomware com dupla extorsão:**
+Os grupos de ransomware que visam escritórios de advocacia e contabilidade raramente se contentam com cifrar os dados e pedir resgate. Exfiltram os dados primeiro, depois cifram. Assim têm duas alavancas: "pague para desbloquear os sistemas" e "pague para não publicarmos a informação dos seus clientes". Para um escritório de advocacia, a publicação de dados confidenciais de clientes é potencialmente mais devastadora do que a paragem dos sistemas.
+
+**Phishing direcionado (spear phishing):**
+Emails cuidadosamente elaborados que imitam comunicações do Tribunal, da Ordem dos Advogados, da AT (Autoridade Tributária), do IRN (Instituto dos Registos e do Notariado), ou de clientes conhecidos. Frequentemente contêm documentos Word ou PDF com macros maliciosas, ou links para portais de login falsos.
+
+**Comprometimento de credenciais via infostealer:**
+Malware que corre silenciosamente em segundo plano e rouba passwords guardadas no browser, cookies de sessão, e credenciais de aplicações. Vendidas na dark web, estas credenciais dão acesso direto aos sistemas sem necessidade de exploit sofisticado.
+
+## Obrigações Legais Específicas do Setor
+
+### RGPD — Responsabilidade Acrescida
+
+Advogados e contabilistas são, na grande maioria dos casos, **responsáveis pelo tratamento de dados pessoais** dos seus clientes. Isto implica:
+
+- Garantir a **segurança adequada** dos dados pessoais tratados (artigo 32.º do RGPD)
+- Manter um **registo das atividades de tratamento** (artigo 30.º) — quais os dados tratados, para que finalidade, com que base legal, com que medidas de segurança
+- Notificar a **CNPD em 72 horas** em caso de violação de dados com risco para os titulares
+- Notificar os **próprios titulares** se a violação criar risco elevado (exposição de dados financeiros, saúde, informação jurídica sensível)
+
+A diferença em relação a outros setores é a natureza dos dados: informação jurídica e financeira detalhada cria riscos específicos de discriminação, extorsão e fraude de identidade que a CNPD pesa na avaliação de violações.
+
+### Segredo Profissional e Obrigação de Confidencialidade
+
+O segredo profissional do advogado (artigo 92.º do Estatuto da Ordem dos Advogados) e as obrigações deontológicas dos técnicos oficiais de contas criam um nível adicional de responsabilidade na proteção dos dados dos clientes. Uma violação de dados num escritório de advocacia pode configurar também uma violação deontológica com consequências disciplinares.
+
+### Branqueamento de Capitais e Financiamento do Terrorismo (PBCFT)
+
+Para advogados e contabilistas que prestam determinados serviços (gestão de imóveis, contas bancárias, constituição de sociedades), a Lei n.º 83/2017 impõe obrigações de due diligence sobre clientes e de conservação de registos. A cibersegurança dos sistemas que armazenam estes registos tem relevância direta para o cumprimento desta lei.
+
+## Medidas de Segurança Prioritárias para o Setor
+
+### 1. Email Seguro — A Linha de Frente
+
+O email é o vetor de ataque número um e também o canal principal de comunicação com clientes. É necessário protegê-lo em dois sentidos: impedir que cheguem emails maliciosos e garantir que as comunicações saem de forma segura.
+
+**Autenticação do domínio (SPF, DKIM, DMARC):**
+Sem SPF, DKIM e DMARC, qualquer pessoa pode enviar email a fingir ser do domínio do escritório. O [guia de SPF/DKIM/DMARC](/blog/spf-dkim-dmarc-seguranca-email-pme) explica como configurar. É obrigatório.
+
+**Anti-phishing e filtragem:**
+- Microsoft 365 Business Premium inclui o Defender for Office 365 com proteção anti-phishing, sandboxing de anexos, e verificação de links em tempo real.
+- Google Workspace Business Plus inclui proteções equivalentes.
+- Se usar qualquer outro provedor de email, considere adicionar uma camada de filtragem como Proofpoint Essentials ou Mimecast.
+
+**Email cifrado para comunicações sensíveis:**
+
+Para comunicações com clientes sobre matérias altamente confidenciais (estratégia de litígio, acordos pendentes, declarações fiscais), o email padrão é texto simples que passa por vários servidores. Opções:
+
+- **Microsoft Purview Message Encryption** (incluído em M365 Business Premium): permite enviar emails cifrados que o destinatário abre num portal seguro, sem necessidade de software adicional do lado do cliente.
+- **Proton Mail Business**: serviço de email com cifra end-to-end por defeito entre utilizadores Proton; para comunicação com externos, suporta envio com palavra-passe.
+- **S/MIME**: cifra baseada em certificados digitais — mais complexa de gerir, mas interoperável com qualquer cliente de email.
+
+**Regra prática para o setor:** defina internamente quais as categorias de comunicação que requerem email cifrado (ex: estratégia processual, acordos não assinados, dados financeiros detalhados de clientes). Para as restantes, o email padrão com DMARC é suficiente.
+
+### 2. Partilha Segura de Documentos
+
+O envio de documentos confidenciais por email é um risco desnecessário: os ficheiros ficam em múltiplos servidores, em backups do servidor de email do cliente, e frequentemente em dispositivos pessoais. Para documentos sensíveis:
+
+**Portal de cliente:**
+- Microsoft SharePoint / Teams: pasta partilhada por cliente, com acesso com autenticação Microsoft. O cliente recebe um link que exige login — não é um ficheiro solto num email.
+- Integrações específicas para o setor jurídico: Clio (gestão de processos com portal de cliente), Filevine, ou NetDocuments.
+- Para escritórios de contabilidade: Karbon, Pixie, ou Accountants' sites com portal de cliente integrado.
+
+**Partilha pontual segura:**
+Para envio único a clientes sem portal, o SharePoint/OneDrive permite gerar links com expiração e com palavra-passe. É muito superior a enviar o ficheiro como anexo.
+
+**O que evitar:** nunca partilhar documentos confidenciais via WhatsApp (dados ficam nos servidores do Meta), Wetransfer (sem autenticação, link aberto), ou email sem cifra para informação de categoria sensível.
+
+### 3. Controlo de Acesso — Quem Vê o Quê
+
+Em escritórios com múltiplos advogados ou contabilistas, é crítico que cada colaborador aceda apenas aos processos e informação que lhe dizem respeito:
+
+**Segregação por cliente/processo:**
+- No servidor de ficheiros ou SharePoint, criar pastas por cliente com permissões específicas. O advogado A não deve ter acesso à pasta do cliente do advogado B, salvo indicação em contrário.
+- No CRM ou sistema de gestão de processos, configurar perfis de acesso que limitem a visibilidade por utilizador.
+
+**Contas de administrador separadas:**
+Quem administra os sistemas de TI não deve usar a conta de administrador para o trabalho diário. Ter uma conta separada com privilégios elevados, usada apenas quando necessário, limita o impacto de um comprometimento de credenciais.
+
+**MFA obrigatório em tudo:**
+Microsoft 365, Google Workspace, sistema de gestão de processos, acesso VPN, portal bancário — todas as contas de acesso a sistemas da empresa devem ter autenticação multifator (MFA) ativa. O [guia de autenticação a dois fatores](/blog/autenticacao-dois-fatores-2fa-pme) explica como implementar.
+
+**Revisão de acessos quando colaboradores saem:**
+O offboarding é crítico no setor: um ex-colaborador com acesso ao email do escritório, ao sistema de gestão de processos, ou às pastas de clientes é um risco legal e de confidencialidade sério. Definir um processo de revogação imediata de todos os acessos no dia de saída.
+
+### 4. Proteção dos Endpoints — Portáteis e Desktops
+
+**Cifra completa do disco:**
+Todos os portáteis devem ter cifra de disco completa ativa — BitLocker no Windows, FileVault no macOS. Um portátil roubado sem cifra é uma violação de dados de todos os clientes cujos ficheiros estavam no dispositivo. O [guia de criptografia de dados](/blog/criptografia-dados-pme-guia-completo) tem o passo a passo de configuração.
+
+**EDR em vez de antivírus:**
+A deteção de malware sofisticado (infostealers, ransomware de última geração) requer EDR (Endpoint Detection and Response) em vez de antivírus tradicional. Microsoft Defender for Business (incluído no M365 Business Premium) é adequado para a maioria dos escritórios. O artigo sobre [EDR vs antivírus](/blog/edr-vs-antivirus-seguranca-endpoints-pme) compara opções.
+
+**Política de ecrã bloqueado:**
+Em escritórios com receção, salas de reunião, ou espaços partilhados, o ecrã deve bloquear automaticamente ao fim de 5 minutos sem atividade e exigir password para desbloquear. É uma regra simples com impacto real — clientes que passam pela secretária não devem conseguir ver o processo de outro cliente.
+
+### 5. Backups — O Seguro de Vida Digital
+
+O [guia de backups com a regra 3-2-1](/blog/backup-dados-pme-regra-3-2-1) aplica-se ao setor com uma particularidade: os backups não servem apenas para recuperar de ransomware — servem também para cumprir obrigações legais de conservação de documentos.
+
+Em Portugal:
+- Documentos contabilísticos: conservação por **10 anos** (artigo 40.º do Código Comercial)
+- Processos judiciais: conservação pelo prazo de prescrição da ação (variável, mas frequentemente **20 anos** para processos de maior valor)
+- Dados pessoais tratados para prestação de serviços: pelo prazo necessário à finalidade e ao cumprimento de obrigações legais
+
+Um backup apenas em disco local não é suficiente para estes prazos e para resiliência face a ransomware. A regra 3-2-1 com pelo menos um backup imutável em cloud (Backblaze B2, Azure Blob Storage com Object Lock) é o mínimo.
+
+### 6. Acesso Remoto Seguro
+
+Com o teletrabalho, muitos colaboradores acedem aos sistemas do escritório a partir de casa. A [VPN empresarial](/blog/vpn-empresarial-pme-guia-completo) é o método mais comum, mas deve ser configurada corretamente:
+- MFA obrigatório na autenticação VPN
+- Split tunneling desativado (todo o tráfego do dispositivo passa pelo VPN quando ligado)
+- Registo de todas as sessões VPN (quem acedeu, quando, de onde)
+
+**Para escritórios com processos muito sensíveis:** considere [Zero Trust Network Access (ZTNA)](/blog/zero-trust-pme-guia-pratico) em vez de VPN tradicional — dá acesso apenas às aplicações específicas necessárias, não à rede completa.
+
+### 7. Gestão de Fornecedores de TI com Acesso Remoto
+
+O provedor de IT que suporta o escritório tem, frequentemente, acesso remoto a todos os sistemas. Este acesso deve ser:
+- Documentado no registo de atividades de tratamento do RGPD (o provedor de IT é um subcontratante)
+- Coberto por um DPA (Data Processing Agreement)
+- Auditado: o acesso remoto deve usar MFA e os acessos devem ficar registados
+- Revogado imediatamente se mudar de provedor de IT
+
+O [guia de gestão de risco de fornecedores](/blog/gestao-risco-fornecedores-terceiros-pme) cobre este processo em detalhe.
+
+## Checklist de Segurança para Escritórios de Advocacia e Contabilidade
+
+### Imediato (esta semana)
+- [ ] MFA ativo em Microsoft 365 / Google Workspace para todas as contas
+- [ ] Cifra de disco (BitLocker/FileVault) em todos os portáteis
+- [ ] Verificar que SPF, DKIM e DMARC estão configurados no domínio de email
+- [ ] Confirmar que existe backup recente e testado de todos os dados de clientes
+
+### Curto prazo (este mês)
+- [ ] Rever permissões de acesso: cada colaborador tem acesso apenas aos clientes/processos que lhe dizem respeito
+- [ ] Implementar portal de cliente para partilha de documentos (substituir envio de anexos por email)
+- [ ] Definir política de email cifrado para comunicações de categoria sensível
+- [ ] Fazer inventário de todos os sistemas com dados de clientes e respectivos acessos
+
+### Médio prazo (este trimestre)
+- [ ] Instalar EDR (Microsoft Defender for Business ou equivalente) em todos os dispositivos
+- [ ] Implementar processo de offboarding: revogação imediata de acessos no dia de saída
+- [ ] Rever e atualizar registo de atividades de tratamento (RGPD)
+- [ ] Verificar que os backups cobrem os prazos legais de conservação
+- [ ] Formação de sensibilização para toda a equipa: phishing, BEC, segurança de email
+
+## O Que Fazer se Suspeitar de um Incidente
+
+Se receber um email suspeito, se um colaborador reportar comportamento anómalo num dispositivo, ou se encontrar ficheiros cifrados com extensões estranhas:
+
+1. **Não clique, não abra, não execute** nada suspeito.
+2. **Isole** o dispositivo afetado (desligue da rede, mas não desligue o dispositivo).
+3. **Contacte o CERT.PT** (+351 213 303 340 / cert@cert.pt) — têm linha de apoio a incidentes.
+4. **Notifique a CNPD** se houver indícios de acesso não autorizado a dados de clientes (prazo: 72 horas).
+5. **Contacte um advogado especializado** em ciberdireito antes de qualquer comunicação pública ou a clientes.
+6. **Preserve evidências:** não reinicie os sistemas antes de uma análise forense, se possível.
+
+O [plano de resposta a incidentes](/blog/plano-resposta-incidentes-ciberseguranca-pme) e o [guia sobre ransomware](/blog/ransomware-o-que-fazer-pme-guia-resposta) têm o protocolo completo.
+
+---
+
+Advogados e contabilistas são frequentemente os primeiros a aconselhar os seus clientes sobre riscos legais e financeiros. Aplicar o mesmo rigor à proteção digital do próprio escritório é uma questão de credibilidade, de obrigação legal, e de proteção dos clientes que depositam a sua confiança. A cibersegurança num escritório jurídico ou financeiro não é um custo de TI — é parte integrante do serviço prestado.
+
+Para um diagnóstico do estado atual de segurança, o [guia de auditoria interna](/blog/auditoria-ciberseguranca-interna-pme) tem uma checklist estruturada que pode ser aplicada sem equipa técnica especializada.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Práticas",
+    publishedAt: "2026-04-16",
+    readingTime: 15,
+  },
 ];
 
 export function getPostBySlug(slug: string): Post | undefined {
