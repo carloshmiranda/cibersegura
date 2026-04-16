@@ -303,6 +303,11 @@ async function main() {
     // Step 1: Load current state
     const state = loadState();
 
+    // CI/CD environments might benefit from fresh state for reliability
+    if (process.env.CI === 'true' && !fs.existsSync(STATE_FILE)) {
+      console.log('🔧 CI environment detected - using fresh state for reliability');
+    }
+
     // Step 2: Load current posts
     const posts = loadPosts();
 
