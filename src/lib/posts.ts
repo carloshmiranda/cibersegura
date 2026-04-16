@@ -12727,6 +12727,813 @@ Para enquadrar a decisão de externalização, ver também [como estruturar a po
     publishedAt: "2026-04-16",
     readingTime: 15,
   },
+  {
+    slug: "seguranca-google-workspace-pme-guia-completo",
+    title: "Segurança no Google Workspace para PMEs: Guia Completo de Configuração",
+    excerpt:
+      "O Google Workspace tem dezenas de controlos de segurança que a maioria das PMEs nunca ativa. Guia prático para administradores: hardening do Admin Console, MFA obrigatório, partilha segura no Drive, proteção de email e gestão de endpoints.",
+    content: `O Google Workspace é usado por milhões de pequenas e médias empresas em todo o mundo — Gmail, Drive, Docs, Meet, e Calendar num único ecossistema. O problema é que a configuração padrão prioriza facilidade de uso sobre segurança: partilha externa aberta, autenticação simples por password, e dados acessíveis de qualquer dispositivo sem controlos.
+
+Muitas PMEs compram o Google Workspace, migram o email, e ficam com as definições por omissão indefinidamente. Este guia percorre as configurações críticas que um administrador deve ativar — a maioria está incluída nos planos Business Starter e Business Standard, sem custo adicional.
+
+## Acesso ao Admin Console
+
+Todas as configurações descritas aqui estão em \`admin.google.com\`. Precisará de uma conta com privilégios de Super Admin ou de uma função administrativa com as permissões relevantes.
+
+Antes de começar: verificar que existe **mais de um Super Admin** na organização. Se a conta do único Super Admin for comprometida ou ficar inacessível, a capacidade de gerir o ambiente pode ser perdida permanentemente.
+
+## 1. Autenticação — A Base de Tudo
+
+### Impor Verificação em Dois Passos
+
+A verificação em dois passos (2SV) não está ativa por omissão — cada utilizador pode optar por não configurar. Para PMEs, isto é inaceitável.
+
+**Como ativar:**
+1. Admin Console → Segurança → Verificação em dois passos
+2. Selecionar "Permitir que os utilizadores ativem a verificação em dois passos" — já está ativo na maioria dos planos
+3. Ir a "Exigir verificação em dois passos" → selecionar "Ativado"
+4. Definir período de transição (recomendado: 1 semana para utilizadores existentes)
+5. Configurar métodos permitidos:
+   - **Recomendado:** Chave de segurança física (FIDO2) ou app de autenticação (Google Authenticator, Authy)
+   - **Aceitável:** Google Prompt (notificação no telemóvel)
+   - **Evitar como único método:** SMS — vulnerável a SIM swapping
+
+**Hierarquia de segurança dos métodos 2SV:**
+1. Passkeys / chaves de segurança FIDO2 (mais seguro — resistente a phishing)
+2. App de autenticação (TOTP)
+3. Google Prompt
+4. SMS (evitar quando possível)
+
+Para administradores de sistema e utilizadores com acesso a dados sensíveis, exigir especificamente chave de segurança ou passkey — configurável por grupo organizacional (OU).
+
+### Passkeys
+
+O Google Workspace suporta passkeys desde 2023. Permitem login sem password, usando biometria ou PIN do dispositivo — eliminam o risco de phishing de credenciais por definição.
+
+**Ativar:** Admin Console → Segurança → Verificação em dois passos → Ativar passkeys
+
+Utilizadores podem adicionar passkeys em \`myaccount.google.com/security\`.
+
+### Período de Sessão e Revogação
+
+Por omissão, as sessões do Google Workspace podem durar indefinidamente — um utilizador que autentica uma vez num browser raramente é pedido a reautenticar.
+
+**Configurar:**
+- Admin Console → Segurança → Controlos de sessão da Google
+- Definir duração máxima da sessão web: **8 horas** para acesso de alto risco, **24 horas** para uso geral
+- Ativar reautenticação para ações sensíveis
+
+Para revogar todas as sessões de um utilizador imediatamente (ex. funcionário que saiu):
+- Admin Console → Utilizadores → selecionar utilizador → Segurança → Revogar tokens de acesso
+- Ou: \`Admin Console → Dispositivos → Endpoints → Rever sessões ativas\`
+
+## 2. Partilha no Drive — Controlar o Que Sai da Empresa
+
+O Drive permite partilha externa por omissão. Um colaborador pode partilhar qualquer ficheiro com qualquer endereço externo — um risco significativo para dados confidenciais.
+
+### Restringir Partilha Externa
+
+**Admin Console → Aplicações → Google Workspace → Drive e Documentos → Definições de partilha:**
+
+- **"Partilha fora de [domínio]":** Alterar para "Proibida" ou "Permitida com aviso"
+- Se o negócio exige partilha com clientes/parceiros: usar "Domínios permitidos" — lista branca de domínios externos autorizados
+- **"Acesso a ficheiros de utilizadores não Google":** Desativar se a empresa não precisa de partilhar com pessoas sem conta Google
+
+### Desativar Partilha com "Qualquer pessoa com a ligação"
+
+Esta é a configuração mais problemática. Por omissão, utilizadores podem criar links "públicos" que qualquer pessoa com a URL pode aceder — sem autenticação.
+
+**Admin Console → Drive → Definições de partilha → Acesso a links:**
+- Alterar para "Restrito (apenas pessoas adicionadas podem abrir)"
+
+### Auditoria de Ficheiros Partilhados Externamente
+
+Para ver o que já foi partilhado externamente:
+- **Admin Console → Relatórios → Relatórios de atividade → Drive**
+- Filtrar por "Partilhado externamente"
+
+Alternativamente, usar o **Google Workspace Audit and Investigation** (disponível em Business Standard e superiores) para queries mais detalhadas.
+
+### DLP para Drive (Business Plus e Enterprise)
+
+Os planos superiores incluem **Prevenção de Perda de Dados** para o Drive — regras que bloqueiam partilha de ficheiros que contenham NIF, números de cartão de crédito, ou padrões personalizados.
+
+Para PMEs nos planos básicos, a alternativa é criar uma pasta partilhada "Documentos Externos" com permissões explícitas, e treinar os colaboradores a usar apenas essa pasta para ficheiros que precisam de sair da empresa.
+
+## 3. Gmail — Proteção de Email
+
+### Ativar Proteção Anti-Phishing e Anti-Malware Avançada
+
+**Admin Console → Aplicações → Google Workspace → Gmail → Segurança:**
+
+Secção "Spoofing e autenticação" — ativar todas as opções:
+- ✅ Proteger contra spoofing de domínio baseado em nomes de domínio semelhantes
+- ✅ Proteger contra spoofing de nomes de funcionários
+- ✅ Proteger contra emails com entrada de SPF ou DKIM não autorizada
+- ✅ Proteger contra qualquer spoofing de domínio (emails em nome do seu domínio vindos de fora)
+
+Para cada opção, configurar ação como **"Mover para spam"** ou **"Colocar em quarentena"** (não apenas "aviso").
+
+### SPF, DKIM e DMARC
+
+O Google Workspace configura automaticamente SPF e DKIM ao verificar o domínio — mas é preciso verificar que estão ativos e configurar DMARC.
+
+**Verificar SPF:** No DNS do domínio deve existir um registo TXT:
+\`\`\`
+v=spf1 include:_spf.google.com ~all
+\`\`\`
+
+**Ativar DKIM:** Admin Console → Aplicações → Gmail → Autenticar email → Gerar novo registo → adicionar no DNS.
+
+**DMARC:** Criar registo DNS TXT em \`_dmarc.seudominio.pt\`:
+\`\`\`
+v=DMARC1; p=quarantine; rua=mailto:dmarc@seudominio.pt; pct=100
+\`\`\`
+
+Começar com \`p=none\` (modo de monitorização) durante 2 semanas, analisar relatórios, depois migrar para \`p=quarantine\` ou \`p=reject\`. Para o guia completo, ver o artigo [SPF, DKIM e DMARC para PMEs](/blog/spf-dkim-dmarc-seguranca-email-pme).
+
+### Bloquear Reencaminhamento Automático Externo
+
+O reencaminhamento automático para endereços externos é um vetor de exfiltração muito usado após comprometimento de conta — o atacante configura o email da vítima para reencaminhar cópias de tudo para um endereço externo.
+
+**Admin Console → Aplicações → Gmail → Configuração avançada → Reencaminhamento automático:**
+- Desativar "Permitir que utilizadores reencaminhem email automaticamente para outro endereço"
+
+### Quarentena de Email
+
+Configurar uma quarentena administrativa permite revisar emails suspeitos antes de chegarem aos utilizadores.
+
+**Admin Console → Gmail → Quarentena de email:**
+- Criar quarentena "Suspeito de phishing"
+- Configurar regras de conformidade para encaminhar emails com pontuação alta de spam/phishing para a quarentena
+- Designar 1-2 administradores para rever a quarentena diariamente
+
+## 4. Gestão de Aplicações de Terceiros
+
+Aplicações OAuth de terceiros (extensões Chrome, apps de produtividade, integrações Zapier/Make) pedem permissões para aceder ao Google Workspace — email, Drive, contactos. Muitas PMEs têm dezenas de aplicações autorizadas que ninguém revisou.
+
+### Controlar Acesso OAuth
+
+**Admin Console → Segurança → Controlos de API → Acesso a aplicações de terceiros:**
+
+Opções disponíveis:
+1. **"Restrito"** — apenas apps aprovadas pelo administrador podem obter tokens OAuth. Qualquer nova app requer aprovação explícita. Recomendado para organizações com dados sensíveis.
+2. **"Não restrito"** — qualquer app pode pedir acesso (predefinição insegura)
+
+Para implementar restrição:
+- Ativar modo "Restrito"
+- Ir a "Gerir acesso a aplicações de terceiros" → listar e aprovar apps legítimas usadas pela empresa (Google Workspace Marketplace, Zoom, Slack, etc.)
+- Revogar acesso a apps desconhecidas ou não utilizadas
+
+### Rever Apps Autorizadas Existentes
+
+**Admin Console → Relatórios → Relatórios de atividade → OAuth token:**
+- Ver que apps têm tokens ativos
+- Revogar tokens de apps não reconhecidas ou não usadas
+
+Adicionalmente, utilizadores individuais podem rever as apps com acesso à sua conta em \`myaccount.google.com/permissions\`.
+
+## 5. Google Meet — Segurança em Videoconferências
+
+### Configurações de Segurança de Reuniões
+
+**Admin Console → Aplicações → Google Workspace → Meet → Definições de Meet:**
+
+- **"Acesso a reuniões fora do domínio":** Configurar "Apenas utilizadores da sua organização podem iniciar reuniões" se as reuniões são predominantemente internas
+- **"Sala de espera":** Ativar para que participantes externos aguardem aprovação antes de entrar
+- **"Expulsar participantes":** Garantir que anfitriões podem remover participantes
+
+Para reuniões com clientes/parceiros externos, o anfitrião pode criar a reunião com sala de espera e aprová-los individualmente.
+
+## 6. Endpoints — Gerir Dispositivos
+
+### Google Endpoint Management
+
+O Workspace inclui gestão básica de endpoints sem custo adicional. Para dispositivos Android e iOS, permite:
+- Exigir bloqueio de ecrã com PIN
+- Apagar dados da conta Google remotamente (não apaga o dispositivo inteiro — apenas os dados do Workspace)
+- Ver inventário de dispositivos com acesso
+
+**Admin Console → Dispositivos → Endpoints:**
+- Ativar gestão básica de dispositivos (Android e iOS)
+- Configurar "Gestão avançada" para dispositivos corporativos (requer MDM adicional)
+
+**Para apagamento remoto de conta:**
+- Dispositivo comprometido ou funcionário que saiu: Admin Console → Dispositivos → selecionar dispositivo → Ações → Apagar conta
+
+### Chrome Browser Cloud Management
+
+Se a empresa usa Chrome em computadores, o Cloud Management permite:
+- Forçar políticas de segurança (desativar extensões não aprovadas, bloquear sites)
+- Inventário de todos os browsers geridos
+- Relatórios de estado de segurança
+
+Disponível via Admin Console → Dispositivos → Chrome → Gerido pelo browser.
+
+## 7. Logs e Auditoria
+
+### Relatórios de Atividade
+
+O Google Workspace regista todas as ações de administração e utilizadores nos logs de auditoria:
+
+**Admin Console → Relatórios → Registos de auditoria:**
+- **Admin:** Alterações à configuração, criação/eliminação de utilizadores
+- **Login:** Tentativas de login, falhas, logins de localizações incomuns
+- **Drive:** Partilhas, downloads, eliminações
+- **Gmail:** Envios, reencaminhamentos, filtros criados
+- **Token:** OAuth tokens emitidos e revogados
+
+**Recomendação:** Configurar alertas automáticos para eventos críticos:
+- Admin Console → Relatórios → Gerir alertas:
+  - Alerta se novo utilizador criado por não-admin
+  - Alerta para logins de fora de Portugal (se aplicável)
+  - Alerta se exportação em massa de dados do Drive
+  - Alerta para alterações ao SPF/DKIM
+
+### Exportação e Retenção de Logs
+
+Os logs do Google Workspace têm retenção de 6 meses (180 dias) para a maioria dos eventos. Para retenção mais longa:
+
+- **Google Vault** (incluído nos planos Business Plus e superiores): retenção de email e Drive por períodos definidos, exportação para eDiscovery
+- **Exportação BigQuery** (Enterprise): exportar todos os logs para BigQuery para análise avançada
+
+Para PMEs nos planos básicos, exportar logs mensalmente para um destino externo se a regulamentação (RGPD, NIS2) exigir retenção superior a 6 meses.
+
+## 8. Gestão de Utilizadores — Onboarding e Offboarding
+
+### Offboarding Seguro
+
+O offboarding de um colaborador no Google Workspace requer uma sequência específica para garantir que os dados ficam na empresa e o acesso é revogado:
+
+**Sequência de offboarding:**
+1. Admin Console → Utilizadores → selecionar utilizador → **Suspender conta** (não eliminar imediatamente)
+2. **Revogar tokens OAuth** — todos os acessos de apps de terceiros são revogados
+3. **Revogar sessões** — forçar logout de todos os dispositivos
+4. **Transferir propriedade dos ficheiros do Drive** para um colega ou conta genérica da equipa
+5. Configurar **resposta automática de saída** no Gmail com os contactos alternativos
+6. Aguardar 30 dias → eliminar a conta definitivamente
+
+**Nunca eliminar imediatamente** — os ficheiros do Drive de um utilizador eliminado são apagados com a conta, a menos que a propriedade tenha sido transferida.
+
+### Grupos e Partilha Segura
+
+Em vez de dar acesso individual a cada ficheiro/pasta, usar **Google Groups** para gerir acessos por equipa:
+- Criar grupos: \`financeiro@empresa.pt\`, \`rh@empresa.pt\`, \`ti@empresa.pt\`
+- Partilhar pastas do Drive com o grupo em vez de utilizadores individuais
+- Quando um colaborador entra/sai da equipa, basta adicionar/remover do grupo
+
+Isto elimina o problema de ficheiros partilhados com ex-colaboradores que continuam acessíveis.
+
+## 9. Configurações de Segurança Avançada (Business Plus / Enterprise)
+
+Para organizações nos planos superiores, funcionalidades adicionais:
+
+**Context-Aware Access:** Permite definir condições de acesso além do login — dispositivo gerido, rede corporativa, localização geográfica. Exemplo: acesso ao Gmail só a partir de dispositivos com gestão ativa e sistema operativo atualizado.
+
+**DLP (Prevenção de Perda de Dados):** Regras que detetam padrões sensíveis (NIF, IBAN, dados de saúde) em emails e ficheiros do Drive, bloqueando ou alertando quando esses dados saem da organização.
+
+**Google Workspace Alert Center:** Dashboard centralizado de alertas de segurança — atividade suspeita, logins anómalos, ficheiros com malware detetado.
+
+## Checklist de Segurança Google Workspace para PMEs
+
+**Autenticação:**
+- [ ] Verificação em dois passos obrigatória para todos os utilizadores
+- [ ] Passkeys ou chave de segurança para administradores
+- [ ] Duração máxima de sessão configurada (8-24h)
+- [ ] Pelo menos 2 contas Super Admin
+
+**Email:**
+- [ ] SPF, DKIM e DMARC configurados e em modo de aplicação (p=quarantine ou p=reject)
+- [ ] Proteção anti-spoofing ativada em todas as opções
+- [ ] Reencaminhamento automático externo desativado
+- [ ] Quarentena administrativa criada para emails suspeitos
+
+**Drive:**
+- [ ] Partilha externa restrita ou limitada a domínios autorizados
+- [ ] Links "qualquer pessoa com a ligação" desativados
+- [ ] Auditoria de ficheiros já partilhados externamente realizada
+
+**Aplicações:**
+- [ ] Acesso OAuth restrito a apps aprovadas pelo administrador
+- [ ] Apps desconhecidas revogadas
+- [ ] Extensões Chrome geridas (se aplicável)
+
+**Endpoints:**
+- [ ] Gestão básica de dispositivos ativada (Android/iOS)
+- [ ] Bloqueio de ecrã obrigatório configurado
+
+**Alertas:**
+- [ ] Alertas para logins suspeitos e alterações de admin
+- [ ] Processo de offboarding documentado e testado
+
+---
+
+A maioria destas configurações não custa nada extra — está incluída nos planos existentes. O único custo é o tempo de configuração, que para uma PME de 20-50 utilizadores raramente ultrapassa 4-6 horas para implementar tudo de raiz.
+
+Para complementar a segurança do Google Workspace, considerar também a [segurança em videoconferências](/blog/seguranca-videoconferencias-teams-zoom-meet-pme) (Meet está incluído) e as [boas práticas de gestão de identidades e acessos](/blog/gestao-identidade-acessos-iam-pme) — os princípios de provisioning e offboarding aplicam-se a qualquer plataforma.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-16",
+    readingTime: 16,
+  },
+  {
+    slug: "dlp-prevencao-perda-dados-pme",
+    title: "DLP para PMEs: Como Evitar Fugas de Dados Sensíveis e Cumprir o RGPD",
+    excerpt:
+      "A Prevenção de Perda de Dados (DLP) já não é só para grandes empresas. Microsoft 365 e Google Workspace incluem DLP nos planos Business — guia prático para PMEs identificarem dados sensíveis e impedirem fugas por email, Drive e endpoints.",
+    content: `Uma PME portuguesa que trabalha com dados de clientes, contratos, dados de saúde, ou informação financeira tem um problema que muitas vezes não vê: os seus colaboradores partilham informação sensível por canais não seguros — email pessoal, WhatsApp, Google Drive pessoal, pens USB — sem intenção maliciosa, simplesmente porque é mais conveniente.
+
+A Prevenção de Perda de Dados (DLP — Data Loss Prevention) é o conjunto de tecnologias e processos que permitem à empresa perceber onde estão os dados sensíveis, quem os acede, e impedir que saiam por canais não autorizados.
+
+Este guia é prático: o que é DLP, porque interessa ao RGPD, e como implementar com as ferramentas que a maioria das PMEs já tem.
+
+## Porque o DLP É Relevante para PMEs
+
+### O Contexto RGPD
+
+O Regulamento Geral de Proteção de Dados (RGPD) exige que as organizações implementem "medidas técnicas e organizativas adequadas" para proteger dados pessoais. Uma violação de dados que resulte em exposição não autorizada tem de ser reportada à CNPD em 72 horas.
+
+DLP é uma dessas medidas técnicas adequadas — e a sua ausência pode ser interpretada como negligência em caso de incidente. Mais concretamente, o RGPD menciona explicitamente a prevenção de acesso não autorizado a dados pessoais como objetivo das medidas de segurança (Artigo 32.º).
+
+### Os Vetores Mais Comuns de Fuga de Dados em PMEs
+
+**1. Email:** Envio de ficheiros com dados pessoais para destinatários errados (o célebre "responder a todos"), reencaminhamento para email pessoal, anexos com NIF/IBAN em claro.
+
+**2. Cloud pessoal:** Colaboradores que sincronizam a pasta de trabalho com o Google Drive ou OneDrive pessoal para trabalhar de casa — os dados pessoais ficam fora do controlo da empresa.
+
+**3. Dispositivos removíveis:** Pens USB são convenientes e invisíveis para a empresa. Um ficheiro com dados de 1000 clientes cabe numa pen de €5.
+
+**4. Impressão e fax:** Documentos impressos deixados nas impressoras ou faxes enviados para o número errado — ainda acontecem.
+
+**5. Screenshots e fotografias:** Um colaborador que fotografa o ecrã com o telemóvel. Difícil de prevenir tecnicamente, mas auditável.
+
+**6. Saída voluntária com dados:** Colaborador que vai para a concorrência e leva consigo listas de clientes, contratos, ou propostas.
+
+## O Que o DLP Pode (e Não Pode) Fazer
+
+### O Que Pode Fazer
+
+- Detetar automaticamente dados sensíveis em emails, ficheiros e endpoints (NIF, IBAN, número de cartão de crédito, dados de saúde, dados de autenticação)
+- Bloquear ou encaminhar para aprovação ações suspeitas (email com NIF enviado para fora do domínio)
+- Alertar administradores quando padrões incomuns são detetados
+- Criar registos de auditoria de quem acedeu a quê e quando
+- Bloquear cópia de ficheiros para dispositivos USB não autorizados (DLP de endpoint)
+- Impedir partilha de ficheiros com dados sensíveis para utilizadores externos (DLP na cloud)
+
+### O Que Não Pode Fazer
+
+- Prevenir violações deliberadas e sofisticadas (um colaborador determinado sempre encontra formas)
+- Detetar dados que não têm um padrão reconhecível (estratégias de negócio, planos confidenciais sem formato específico)
+- Substituir formação e cultura de segurança — DLP sem formação gera fricção sem compreensão
+- Garantir conformidade RGPD por si só — é uma ferramenta, não uma solução completa
+
+## DLP em Microsoft 365 — Incluído a Partir do Business Premium
+
+O Microsoft 365 inclui DLP em versões Business Premium e E3/E5. Para PMEs no Business Basic ou Business Standard, o DLP não está incluído e requer o add-on de Compliance ou upgrade de plano.
+
+### Aceder às Políticas DLP
+
+**Microsoft Purview Compliance Portal:** \`compliance.microsoft.com\` → Soluções → Prevenção de perda de dados
+
+### Políticas Predefinidas Disponíveis
+
+A Microsoft fornece políticas predefinidas para os padrões mais comuns — úteis para começar:
+
+**Modelos incluídos:**
+- **Dados Financeiros:** Números de cartão de crédito, IBAN, NIF
+- **Dados de Saúde:** Diagnósticos, números de processos clínicos, dados de seguros de saúde
+- **Dados Pessoais (UE):** Padrões RGPD para dados pessoais europeus
+- **Privacidade — GDPR Enhanced:** Conjunto expandido de identificadores pessoais
+
+### Criar uma Política DLP Básica
+
+**Passo a passo:**
+
+1. Compliance Portal → Prevenção de perda de dados → Políticas → Criar política
+2. Selecionar modelo (ex: "Dados Financeiros")
+3. **Âmbito:** Selecionar onde a política se aplica — Exchange (email), SharePoint, OneDrive, Teams, Endpoint (requer Microsoft Defender for Endpoint)
+4. **Condições:** Por exemplo, "O conteúdo contém número de cartão de crédito com confiança alta (≥85%)"
+5. **Ações:**
+   - Em modo de teste/auditoria: registar o evento e enviar relatório
+   - Em modo de aplicação: bloquear envio + notificar o utilizador + alertar o administrador
+6. Começar em modo de **simulação** (sem bloquear) durante 1-2 semanas para calibrar falsos positivos
+
+### Configuração Recomendada para PMEs
+
+**Fase 1 — Deteção (sem bloqueio):**
+Criar política com os modelos "Dados Financeiros" e "RGPD" em modo de auditoria. Objetivo: perceber o volume de ocorrências reais antes de bloquear.
+
+**Fase 2 — Aplicação gradual:**
+Começar a bloquear apenas os casos de alto risco: email externo com 10+ números de cartão de crédito. Notificar o utilizador com uma justificação de negócio que permita override com confirmação.
+
+**Fase 3 — Cobertura completa:**
+Expandir para Teams, SharePoint/OneDrive, e endpoints. Afinar regras baseado na experiência das fases anteriores.
+
+### Overrides e Falsos Positivos
+
+Uma política DLP bem configurada permite ao utilizador justificar um envio que foi bloqueado — essencial para não interromper processos legítimos. Exemplo: um gestor de crédito que precisa de enviar um ficheiro com NIFs para o banco parceiro deve conseguir fazê-lo com uma justificação registada.
+
+Configurar: Compliance Portal → Política DLP → Ações de utilizador → "Permitir que o utilizador substitua a regra" + campo de justificação obrigatório.
+
+## DLP no Google Workspace — Disponível em Business Plus e Enterprise
+
+No Google Workspace, as políticas DLP aplicam-se ao Gmail e ao Drive.
+
+### DLP para Gmail
+
+**Admin Console → Aplicações → Google Workspace → Gmail → Conformidade → Regras DLP:**
+
+Criar regra:
+1. Nome: "Bloquear NIF em emails externos"
+2. Condição: "O conteúdo contém" → detetor predefinido "Portugal — Número de identificação fiscal"
+3. Ação: "Bloquear mensagem" + notificar remetente + registar evento
+4. Âmbito: Apenas emails enviados para fora do domínio
+
+**Detetores predefinidos disponíveis para Portugal:**
+- Número de Identificação Fiscal (NIF)
+- Número de cartão de crédito
+- Número IBAN
+- Dados de saúde (CID-10)
+
+### DLP para Drive
+
+**Admin Console → Segurança → Prevenção de perda de dados → Criar regra:**
+
+Exemplo: Bloquear partilha externa de ficheiros que contenham IBAN:
+1. Condição: "Conteúdo do ficheiro contém" → IBAN
+2. Ação: "Bloquear partilha externa" + notificar o utilizador e administrador
+3. Âmbito: Todos os ficheiros do Drive
+
+### Classificação de Dados com Etiquetas
+
+O Google Workspace permite aplicar **etiquetas** (labels) a ficheiros do Drive:
+- Exemplo de etiquetas: Público, Interno, Confidencial, Restrito
+- Regras DLP podem usar etiquetas como condição (ex: ficheiros marcados como "Confidencial" não podem ser partilhados externamente)
+
+As etiquetas podem ser aplicadas manualmente pelos utilizadores ou automaticamente por políticas DLP.
+
+## DLP de Endpoint — Controlar Dispositivos USB e Impressão
+
+O DLP na cloud e no email não cobre um vetor importante: cópias locais para pen USB ou disco externo.
+
+### Microsoft Endpoint DLP (Defender for Business / M365 E3)
+
+Disponível para PMEs com Microsoft Defender for Business (incluído no Business Premium) ou Defender for Endpoint.
+
+**Capacidades:**
+- Bloquear cópia de ficheiros com dados sensíveis para dispositivos USB não autorizados
+- Bloquear upload de ficheiros sensíveis para cloud pessoal (Google Drive pessoal, Dropbox pessoal)
+- Bloquear impressão de ficheiros com dados sensíveis em impressoras não autorizadas
+- Registar todas as tentativas de cópia (auditoria)
+
+**Configuração:**
+- Microsoft Purview → Endpoint DLP → Políticas → aplicar a endpoints com Defender instalado
+
+### Alternativas para PMEs sem M365 Premium
+
+Para PMEs que não têm Microsoft Defender for Endpoint, opções alternativas:
+
+**Ferramentas de controlo de dispositivos USB:**
+- **Symantec Endpoint Security** — controlo de periféricos
+- **Sophos Intercept X** — controlo de dispositivos removíveis
+- **Group Policy (Windows)** — bloquear USB via GPO (gratuito, mas sem granularidade por tipo de dado)
+
+**Group Policy para bloquear USB (Windows):**
+\`\`\`
+Computer Configuration → Administrative Templates → System → Removable Storage Access
+→ "All Removable Storage classes: Deny all access" = Enabled
+\`\`\`
+
+Esta abordagem bloqueia todos os USB (inclusive teclados e ratos USB, se não configurado corretamente) — usar com cuidado e testar antes de aplicar.
+
+## Classificação de Dados — Antes de Implementar DLP
+
+O DLP só funciona bem se a empresa souber onde estão os dados sensíveis. Antes de criar políticas, realizar um inventário:
+
+### Inventário de Dados Sensíveis
+
+**Perguntas a responder:**
+1. Que tipos de dados pessoais a empresa processa? (clientes, colaboradores, saúde, financeiros)
+2. Onde estão armazenados? (SharePoint, Drive, servidor de ficheiros local, email, base de dados)
+3. Quem tem acesso? (todos os colaboradores, equipa específica, externo)
+4. Como são partilhados? (email, link, USB, impressão)
+
+**Ferramenta gratuita:** Microsoft Purview Content Explorer (incluído no Business Premium) — varre automaticamente SharePoint, OneDrive, e Exchange e identifica onde existem dados sensíveis, sem necessidade de configurar políticas manualmente.
+
+### Classificação Simples para PMEs
+
+Para uma PME, uma taxonomia de 3-4 níveis é suficiente:
+
+| Nível | Exemplos | Restrições |
+|-------|----------|------------|
+| Público | Website, brochuras, preços | Sem restrições |
+| Interno | Procedimentos, relatórios internos | Não sai da empresa sem aprovação |
+| Confidencial | Contratos, dados de clientes, NIF | Acesso restrito por função |
+| Restrito | Dados de saúde, salários, segredos comerciais | Acesso individual + DLP ativo |
+
+## Comunicar DLP aos Colaboradores
+
+Implementar DLP sem comunicação prévia cria resistência e desconfiança — os colaboradores sentem que estão a ser "vigiados".
+
+### Como Comunicar
+
+**Antes do rollout:**
+- Informar que a empresa está a implementar medidas de proteção de dados para cumprir o RGPD
+- Explicar o que é monitorizado (tipos de dados) e o que não é (conteúdo pessoal)
+- Mostrar o que acontece quando uma regra é acionada (notificação, não bloqueio silencioso)
+
+**Mensagem de notificação quando DLP bloqueia:**
+Configurar uma mensagem clara: "Este envio contém informação que pode ser confidencial. Se for um envio legítimo, clique aqui para adicionar uma justificação. Se foi um engano, cancele o envio."
+
+**RGPD e monitorização de colaboradores:**
+A implementação de DLP que monitorize o conteúdo de emails e ficheiros dos colaboradores é uma forma de tratamento de dados pessoais. Em organizações com comissão de trabalhadores, pode requerer consulta prévia. Consultar o DPO (Encarregado de Proteção de Dados) antes da implementação se a empresa tiver um, ou obter aconselhamento jurídico.
+
+## Métricas para Avaliar a Eficácia do DLP
+
+Após 3 meses de operação, avaliar:
+
+- **Volume de eventos DLP por semana:** Tendência descendente sugere que os colaboradores estão a adaptar comportamentos; tendência ascendente pode indicar problema específico
+- **Taxa de override/justificação:** Alta taxa indica políticas demasiado restritivas (muito ruído) ou falta de formação
+- **Tipos de dados mais frequentes:** Ajuda a priorizar formação específica
+- **Incidentes reais evitados:** Casos onde DLP bloqueou um envio que seria uma violação real
+
+## Por Onde Começar — Plano Prático para PMEs
+
+**Semana 1-2:** Inventário
+- Identificar os 3 tipos de dados mais sensíveis que a empresa processa
+- Localizar onde estão armazenados
+
+**Semana 3-4:** Modo de auditoria
+- Ativar políticas DLP em modo de simulação para email e Drive/SharePoint
+- Analisar os primeiros relatórios — volume de ocorrências, padrões
+
+**Mês 2:** Aplicação gradual
+- Ativar bloqueio para os casos de maior risco (10+ registos sensíveis num único envio)
+- Comunicar aos colaboradores
+
+**Mês 3+:** Refinamento
+- Afinar regras com base no feedback e nas métricas
+- Expandir cobertura para endpoints se o plano suportar
+
+A implementação de DLP é iterativa — começar com o mínimo funcional e expandir, em vez de tentar implementar tudo de uma vez e criar resistência ou interromper processos de negócio.
+
+Para um contexto mais amplo sobre proteção de dados, ver o artigo sobre [criptografia de dados para PMEs](/blog/criptografia-dados-pme-guia-completo) e o [guia de gestão de identidades e acessos](/blog/gestao-identidade-acessos-iam-pme) — DLP, criptografia e controlo de acessos formam o triângulo básico de proteção de informação sensível.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-16",
+    readingTime: 15,
+  },
+  {
+    slug: "simulacao-phishing-empresa-como-fazer-pme",
+    title: "Simulações de Phishing para PMEs: Como Testar e Formar os Colaboradores",
+    excerpt:
+      "Saber que o phishing é perigoso não chega — os colaboradores precisam de experienciar tentativas realistas para reconhecer os sinais. Guia prático para PMEs lançarem simulações de phishing com ferramentas gratuitas e comerciais.",
+    content: `Todos os programas de formação em cibersegurança ensinam que o phishing é perigoso. Mas há uma diferença enorme entre saber que o phishing existe e conseguir identificá-lo em tempo real, sob pressão, no meio de 80 emails num dia de trabalho intenso.
+
+As simulações de phishing resolvem exatamente isso: criam uma situação controlada onde os colaboradores recebem um email de phishing realista (criado pela própria empresa ou pelo serviço contratado), e o resultado — clicou ou não clicou, reportou ou não reportou — é registado para fins de formação.
+
+Os dados são claros: empresas que fazem simulações regulares de phishing reduzem a taxa de cliques em emails maliciosos em 50-80% ao longo de 12 meses. Empresas sem simulações têm taxas de clique que variam entre 20-35% — mais de um em cada cinco colaboradores clicaria num phishing bem construído.
+
+## Como Funcionam as Simulações
+
+O processo básico:
+
+1. A empresa (ou fornecedor) cria um email de phishing simulado — pode imitar um email do RH, do banco, da Microsoft, do CTT, ou qualquer remetente relevante
+2. O email é enviado aos colaboradores (ou a um grupo específico)
+3. Os colaboradores que clicam no link são redirecionados para uma página de treino — nunca instala malware, nunca recolhe credenciais reais
+4. Os resultados são registados: quem abriu, quem clicou, quem reportou
+5. Os colaboradores que clicaram recebem formação imediata ou são encaminhados para módulos de treino específicos
+
+**O que se mede:**
+- **Taxa de abertura:** % que abriu o email (não é crítica — email de phishing real parece legítimo)
+- **Taxa de clique:** % que clicou no link — o KPI principal
+- **Taxa de credenciais inseridas:** % que chegou a inserir username/password no site falso — indica risco alto
+- **Taxa de reporte:** % que reportou o email como suspeito — o objetivo final é maximizar esta métrica
+
+## Ferramentas Disponíveis
+
+### GoPhish — Gratuito e Open Source
+
+**GoPhish** é a ferramenta de referência para simular phishing internamente. É gratuita, open source, e pode ser instalada num VPS ou num servidor local.
+
+**O que inclui:**
+- Interface web para criar campanhas
+- Criação de landing pages (páginas falsas de login)
+- Templates de email configuráveis
+- Dashboard de resultados em tempo real
+- Tracking de abertura, clique, e submissão de credenciais
+
+**Instalação básica (Linux):**
+\`\`\`bash
+# Descarregar a última versão de github.com/gophish/gophish
+wget https://github.com/gophish/gophish/releases/latest/download/gophish-linux-64bit.zip
+unzip gophish-linux-64bit.zip
+chmod +x gophish
+./gophish
+\`\`\`
+
+A interface web fica disponível em \`https://localhost:3333\` com credenciais padrão \`admin/gophish\` (alterar imediatamente).
+
+**Requisitos técnicos:**
+- Um servidor Linux com IP público (para enviar email sem cair em spam)
+- Domínio similar ao da empresa para o link de phishing (ex: \`microsoft-login.pt\` se a empresa usa M365)
+- SMTP configurado para envio de email
+
+**Custo real:** O servidor VPS para alojamento custa €5-15/mês. GoPhish em si é gratuito.
+
+### Microsoft Attack Simulator — Incluído no M365 E3/E5 e Business Premium
+
+Para empresas com Microsoft 365 Business Premium ou E3/E5, o **Attack Simulation Training** está incluído sem custo adicional.
+
+**Aceder:** \`security.microsoft.com\` → Treino de simulação de ataque
+
+**Vantagens:**
+- Integrado com o Microsoft 365 — sabe exatamente quem está em que equipa, pode segmentar por departamento
+- Biblioteca de templates de phishing pré-construídos (incluindo templates localizados)
+- Módulos de treino automáticos integrados — quem clica recebe formação no momento
+- Relatórios de risco individuais por utilizador
+
+**Funcionalidades principais:**
+- 5 tipos de simulação: credential harvest, malware attachment, link in attachment, drive-by URL, OAuth consent grant
+- Templates de email por categoria (banking, HR, IT, delivery)
+- Relatórios detalhados com benchmarks do setor
+
+**Configuração básica:**
+1. \`security.microsoft.com\` → Simulação de Ataque → Simulações → Criar simulação
+2. Selecionar tipo: "Recolha de Credenciais" (o mais comum)
+3. Selecionar template de email (ou criar personalizado)
+4. Selecionar utilizadores alvo (todos, por departamento, por risco)
+5. Definir landing page de treino
+6. Agendar envio (imediato ou futuro)
+
+### KnowBe4 — Plataforma Comercial com Tier Gratuito
+
+**KnowBe4** é a plataforma de SAT (Security Awareness Training) mais usada globalmente. Tem um plano gratuito limitado e planos pagos.
+
+**Plano gratuito inclui:**
+- Simulações de phishing ilimitadas (templates básicos)
+- Relatórios de resultados
+- Acesso a alguns módulos de formação gratuitos
+
+**Planos pagos (por utilizador/ano):**
+- Silver (~$18/utilizador/ano): biblioteca completa de phishing, módulos de treino, gamification
+- Gold/Platinum: relatórios avançados, SCIM provisioning, campanhas automatizadas
+
+**Para PMEs:** O plano gratuito é suficiente para começar. As simulações comerciais justificam-se quando a empresa quer automatizar campanhas recorrentes com formação integrada.
+
+### Outras Alternativas
+
+**Gophish na cloud (serviços geridos):**
+Alguns MSSPs e consultoras de cibersegurança portuguesas oferecem serviços de simulação de phishing geridos — útil para PMEs sem recursos técnicos internos.
+
+**Proofpoint Security Awareness:** Plataforma robusta, mais orientada para mid-market.
+
+**Cofense PhishMe:** Foca-se especificamente em cultivar a resposta de reporte — integra-se com o botão de reporte do Outlook.
+
+**Usecure:** Orientado para PMEs, plataforma simples com automação de campanhas.
+
+## Criar uma Campanha de Phishing Eficaz
+
+### Escolher o Template Certo
+
+O template define o realismo e a dificuldade da simulação. Para começar, usar templates de dificuldade média — nem óbvios demais (todos identificam e não há aprendizagem), nem tão elaborados que as taxas de clique sejam artificialmente altas.
+
+**Templates eficazes para PMEs portuguesas:**
+
+**Alta eficácia (dificuldade alta — usar após 6 meses de programa):**
+- Email interno do RH: "Novo documento de política de remuneração — reveja até sexta-feira"
+- Email da "equipa de IT": "A sua password expira em 24 horas — clique para renovar"
+- Email do CEO/gerência: "Pode ajudar-me com algo urgente? (reencaminhe para o seu email pessoal)"
+
+**Média eficácia (bom ponto de partida):**
+- Email dos CTT/DHL: "A sua encomenda está retida — pague €2.50 para liberar"
+- Email do "Microsoft": "Foram detetadas atividades suspeitas na sua conta"
+- Email de "fatura": "A sua fatura de setembro está disponível — clique para ver"
+
+**Baixa eficácia (óbvios demais — evitar como primeiro teste):**
+- Príncipe nigeriano
+- "Ganhou um iPhone"
+- Erros de gramática óbvios
+
+### Personalização que Aumenta o Realismo
+
+- Usar o nome real da empresa no email (ex: "Equipa de IT da [Empresa X]")
+- Referir o serviço real que a empresa usa (ex: "Microsoft 365" se for a suite real)
+- Incluir o nome próprio do destinatário no assunto (aumenta a taxa de abertura)
+- Usar o logótipo real da empresa ou do serviço imitado
+- Enviar em contexto temporal relevante (quinta-feira à tarde tem maior taxa de clique)
+
+## Aspetos Legais e de RH — Portugal
+
+Este é o ponto mais frequentemente ignorado em Portugal. As simulações de phishing envolvem monitorizar o comportamento dos colaboradores — há implicações legais.
+
+### Requisitos RGPD
+
+Os resultados das simulações são dados pessoais (identificam comportamentos individuais de colaboradores identificados). A empresa precisa de:
+
+1. **Base legal:** A base legal mais usada é o interesse legítimo da empresa na segurança (Art. 6.º(1)(f) RGPD). Alternativa: obrigação contratual ou consentimento.
+
+2. **Transparência:** O RGPD exige que os titulares dos dados (colaboradores) saibam que os seus dados são processados. **Isto não significa avisar que vai haver uma simulação específica** — significa informar, por exemplo na política de segurança da empresa ou no contrato de trabalho, que a empresa realiza testes de segurança periódicos.
+
+3. **DPIA (Avaliação de Impacto sobre a Proteção de Dados):** Se a monitorização for sistemática e abranger todos os colaboradores, pode ser necessária uma DPIA. Consultar o DPO da empresa.
+
+4. **Minimização:** Guardar apenas os dados necessários (taxa agregada por departamento é menos intrusiva que registos individuais detalhados).
+
+### Código do Trabalho e Comissão de Trabalhadores
+
+Em Portugal, a monitorização de trabalhadores no local de trabalho está sujeita ao Código do Trabalho (Art. 20.º-21.º):
+
+- A empresa não pode utilizar meios de vigilância que visem controlar o desempenho do trabalhador, mas pode fazê-lo por razões de segurança
+- Se houver **comissão de trabalhadores**, deve ser informada antes de implementar sistemas de monitorização
+
+**Recomendação prática:** Incluir uma referência genérica a testes de segurança periódicos na política de segurança da empresa (que todos os colaboradores assinem). Não avisar especificamente sobre datas de simulações, mas garantir que o programa existe e é comunicado.
+
+### Usar Resultados para Formaçao, Não Disciplina
+
+Nunca usar resultados de simulações de phishing para ações disciplinares — isto destrói a confiança e torna o programa contraproducente. O objetivo é formação, não penalização.
+
+**Política recomendada:**
+- Resultados agregados podem ser partilhados com gestores (ex: "o departamento de vendas tem a taxa de clique mais alta — necessita de treino adicional")
+- Resultados individuais são usados apenas para personalizar o percurso de formação do colaborador, não para avaliação de desempenho
+
+## Frequência e Progressão das Campanhas
+
+### Programa de 12 Meses para PMEs
+
+**Meses 1-2 — Baseline:**
+- 1 simulação com template de dificuldade média
+- Objetivo: medir a taxa de clique inicial (baseline)
+- Todos os colaboradores que clicaram recebem módulo de formação imediata
+
+**Meses 3-5 — Construção:**
+- 1 simulação por mês, alternando templates
+- Incluir templates específicos por departamento (RH vs. financeiro vs. comercial)
+- Introduzir formação de 15 minutos para todos (não apenas quem clicou)
+
+**Meses 6-9 — Progressão:**
+- Aumentar dificuldade dos templates
+- Iniciar campanhas de "spear phishing" dirigidas a perfis de alto risco (CFO, RH, TI)
+- Introduzir treino de como reportar emails suspeitos
+
+**Meses 10-12 — Consolidação:**
+- Manter 1 campanha mensal
+- Medir evolução da taxa de clique vs. baseline inicial
+- Adicionar métricas de reporte (quantos identificaram e reportaram o email)
+
+### Métricas de Sucesso
+
+**Benchmark por setor (dados globais, referência orientativa):**
+- Taxa de clique inicial média: 25-35%
+- Taxa de clique após 12 meses de programa: 5-10%
+- Taxa de reporte após 12 meses: 20-30%
+
+**Para a sua PME, o objetivo realista:**
+- Reduzir taxa de clique em 50% no primeiro ano
+- Atingir uma taxa de reporte superior a 15%
+
+## O Botão de Reporte de Phishing
+
+Um programa de simulações só funciona bem se os colaboradores souberem o que fazer quando identificam um email suspeito. A resposta deve ser simples: **clicar num botão de reporte**.
+
+### Microsoft Outlook — Report Message
+
+O add-in "Report Message" da Microsoft está disponível para todos os planos M365:
+- Instalar via Admin Center → Settings → Integrated Apps → "Report Message"
+- Aparece como botão no ribbon do Outlook (web e desktop)
+- Quando o utilizador clica, o email é enviado automaticamente para a equipa de segurança e para análise da Microsoft
+
+**Configurar:** \`security.microsoft.com\` → Políticas e regras → Políticas de ameaças → Submissões do utilizador → definir mailbox de destino das submissões
+
+### Google Workspace — Google Phishing Report
+
+No Gmail, os utilizadores podem clicar em "Mais opções" (⋮) → "Denunciar phishing" para reportar para a Google. Para redirecionar reportes para a equipa interna, usar um add-on do Google Workspace Marketplace (ex: "Phish Alert Button" da KnowBe4, gratuito).
+
+### Mailbox de Segurança
+
+Criar uma mailbox dedicada \`seguranca@empresa.pt\` ou \`phishing@empresa.pt\` com acesso apenas pela pessoa responsável pela segurança. Treinar os colaboradores a reencaminhar emails suspeitos para essa mailbox.
+
+## Integração com o Programa de Formação
+
+As simulações de phishing funcionam melhor integradas num programa mais amplo de formação em cibersegurança — e não como iniciativa isolada.
+
+**Sequência recomendada:**
+1. Formação inicial sobre tipos de phishing (30 min)
+2. Primeira simulação (dentro de 2 semanas após a formação)
+3. Módulo de reforço para quem clicou
+4. Simulação de seguimento (1 mês depois)
+
+Para PMEs que querem estruturar um programa completo de sensibilização, o artigo sobre [formação em cibersegurança para colaboradores](/blog/formacao-ciberseguranca-colaboradores-pme) detalha a estrutura completa.
+
+---
+
+As simulações de phishing são uma das poucas medidas de segurança com ROI comprovado e mensurável: taxa de clique antes e depois é um número concreto. Para a maioria das PMEs, começar com o GoPhish num VPS barato ou com o Attack Simulator do M365 (se já tiver Business Premium) é suficiente para os primeiros 12 meses. O importante é começar — e manter a cadência.
+
+Ver também [as técnicas de phishing com IA que tornam estes ataques cada vez mais difíceis de detetar](/blog/ciberataques-ia-phishing-deepfake-pme) e o artigo sobre [proteção contra phishing](/blog/proteger-empresa-contra-phishing) para os controlos técnicos complementares.`,
+    category: "ferramentas",
+    categoryLabel: "Ferramentas",
+    publishedAt: "2026-04-16",
+    readingTime: 17,
+  },
 ];
 
 export function getPostBySlug(slug: string): Post | undefined {
