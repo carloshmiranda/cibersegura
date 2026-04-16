@@ -13534,6 +13534,766 @@ Ver também [as técnicas de phishing com IA que tornam estes ataques cada vez m
     publishedAt: "2026-04-16",
     readingTime: 17,
   },
+  {
+    slug: "analise-risco-ciberseguranca-pme",
+    title: "Análise de Risco de Cibersegurança para PMEs: Como Identificar e Priorizar Ameaças",
+    excerpt:
+      "Guia prático para realizar uma análise de risco de cibersegurança na sua PME. Metodologia simplificada baseada na ISO 27005 e NIST CSF — identifique ativos, ameaças e vulnerabilidades, e crie um plano de tratamento de riscos.",
+    content: `A maioria das PMEs investe em medidas de segurança de forma reativa — compram um antivírus porque foram hackeadas, instalam backups após perder dados, atualizam o router depois de um incidente. Uma análise de risco estruturada inverte esta lógica: **identifica os problemas antes de acontecerem e permite alocar o orçamento de segurança onde mais importa**.
+
+Este guia apresenta uma metodologia adaptada à realidade das PMEs portuguesas, baseada nos princípios da ISO 27005 e do NIST Cybersecurity Framework, mas sem a complexidade que essas normas exigem para grandes empresas.
+
+## O Que é uma Análise de Risco de Cibersegurança
+
+Uma análise de risco responde a três perguntas simples:
+
+1. **O que temos que vale a pena proteger?** (ativos)
+2. **O que pode correr mal?** (ameaças e vulnerabilidades)
+3. **O que fazemos se correr mal?** (tratamento de risco)
+
+O resultado é uma lista priorizada de riscos com planos de ação concretos — não um documento de 200 páginas que fica numa gaveta, mas uma folha de cálculo que a gestão consulta trimestralmente.
+
+### Risco = Probabilidade × Impacto
+
+Esta fórmula simples orienta toda a análise. Um risco com alta probabilidade e alto impacto exige ação imediata. Um risco improvável com impacto mínimo pode ser aceite e ignorado. O objetivo é identificar onde estão os riscos altos antes de gastar dinheiro.
+
+## Fase 1 — Inventário de Ativos
+
+Não se pode proteger o que não se conhece. O primeiro passo é listar todos os ativos relevantes da empresa.
+
+### Categorias de Ativos
+
+**Dados (os mais críticos para a maioria das PMEs):**
+- Base de dados de clientes (nomes, emails, moradas, histórico de compras)
+- Dados financeiros e faturação
+- Dados de colaboradores (ficheiros de RH, salários, dados médicos)
+- Propriedade intelectual (contratos, propostas, designs, código fonte)
+- Credenciais de acesso (passwords, chaves de API, certificados)
+
+**Sistemas e infraestrutura:**
+- Servidores (físicos ou cloud) — listar por aplicação
+- Computadores e portáteis de colaboradores
+- Dispositivos móveis com acesso a dados empresariais
+- Equipamento de rede (router, switch, firewall)
+- Impressoras e scanners em rede
+
+**Software e serviços:**
+- ERP, CRM, sistema de faturação
+- Email (Microsoft 365, Google Workspace)
+- Armazenamento cloud (OneDrive, Google Drive, Dropbox)
+- Site/e-commerce
+- Ferramentas de comunicação (Teams, Slack)
+
+**Pessoas e processos:**
+- Colaboradores com acesso privilegiado (admins de sistemas, financeiro)
+- Processos críticos que dependem de sistemas específicos
+
+### Classificação de Criticidade
+
+Para cada ativo, atribuir uma classificação de 1 a 3:
+
+| Nível | Critério | Exemplo |
+|-------|----------|---------|
+| 3 — Crítico | Impacto grave no negócio se comprometido; dados sensíveis de clientes; obrigações legais | Base de dados de clientes, sistema de faturação |
+| 2 — Importante | Impacto significativo mas recuperável; dados internos | ERP, email, ficheiros de projetos |
+| 1 — Menor | Impacto limitado; fácil substituição | Site institucional estático, impressora |
+
+**Dica prática:** Esta classificação deve ser feita com a gestão, não apenas com TI. Quem decide o que é crítico para o negócio são os gestores, não o técnico de informática.
+
+## Fase 2 — Identificação de Ameaças
+
+Para cada ativo crítico (classificação 2 ou 3), identificar as ameaças relevantes. Usar a lista abaixo como ponto de partida:
+
+### Catálogo de Ameaças para PMEs
+
+**Ameaças externas intencionais:**
+- Ransomware — cifra os dados e exige resgate
+- Phishing — engana colaboradores para roubar credenciais
+- Ataques a partir da web — exploração de vulnerabilidades em sites/aplicações
+- Comprometimento de conta — acesso não autorizado a email ou cloud
+- Ataques de fornecedores — comprometimento através de terceiros com acesso à rede
+
+**Ameaças internas (não necessariamente maliciosas):**
+- Erro humano — email enviado para destinatário errado, ficheiro apagado acidentalmente
+- Dispositivo perdido ou roubado — portátil, telemóvel com dados empresariais
+- Colaborador descontente — exfiltração de dados antes de saída
+- Uso indevido de privilégios — acesso a dados acima do necessário
+
+**Ameaças técnicas/ambientais:**
+- Falha de hardware — disco avariado, servidor que morre
+- Corte de energia prolongado
+- Falha de fornecedor cloud/SaaS
+- Desastre físico — incêndio, inundação, roubo de equipamento
+
+### Probabilidade por Setor
+
+Alguns setores têm perfis de ameaça mais específicos:
+
+- **Contabilistas, escritórios de advogados, consultores** — alto alvo para BEC (fraude CEO/diretor), exfiltração de dados de clientes
+- **Saúde e bem-estar** — alto alvo para ransomware (dados críticos para operações), regulação CNPD mais rigorosa
+- **Retalho e e-commerce** — fraude com cartões, Magecart (skimming em sites), chargebacks fraudulentos
+- **Construção e indústria** — roubo de propriedade intelectual (plantas, projetos), comprometimento de OT/SCADA se houver automação
+
+## Fase 3 — Análise de Vulnerabilidades
+
+As vulnerabilidades são as fraquezas que as ameaças exploram. Para cada ameaça identificada, verificar se existem as seguintes vulnerabilidades:
+
+### Checklist de Vulnerabilidades Comuns
+
+**Autenticação e acessos:**
+- [ ] Passwords fracas ou reutilizadas (sem política de passwords)
+- [ ] Autenticação de dois fatores (2FA) não ativa em sistemas críticos
+- [ ] Contas de ex-colaboradores ainda ativas
+- [ ] Partilha de credenciais entre colaboradores
+- [ ] Acessos administrativos excessivos (todos são admin)
+
+**Atualizações e patches:**
+- [ ] Software desatualizado (Windows, aplicações, plugins WordPress)
+- [ ] Firmware de router/firewall sem atualizar há mais de 6 meses
+- [ ] Dispositivos com sistemas operativos fora de suporte (Windows 7, 8)
+
+**Backups:**
+- [ ] Sem backups regulares ou sem testar a restauração
+- [ ] Backups no mesmo local que os dados originais
+- [ ] Backups acessíveis a partir da rede (vulneráveis a ransomware)
+
+**Rede e perímetro:**
+- [ ] Rede Wi-Fi sem segmentação (IoT, convidados e trabalho na mesma rede)
+- [ ] Router com credenciais de fábrica (admin/admin)
+- [ ] Acesso remoto sem VPN ou sem 2FA
+- [ ] Portas desnecessárias abertas para a internet (RDP exposto)
+
+**Email e comunicações:**
+- [ ] Sem SPF, DKIM e DMARC configurados
+- [ ] Sem filtro anti-spam ou anti-phishing
+- [ ] Colaboradores sem formação para identificar phishing
+
+**Dados e dispositivos:**
+- [ ] Dispositivos sem encriptação (disco não encriptado)
+- [ ] Dados sensíveis em folhas de cálculo locais sem controlo de acesso
+- [ ] Sem política BYOD para dispositivos pessoais
+
+### Pontuar as Vulnerabilidades
+
+Para cada vulnerabilidade identificada, atribuir um nível de 1 a 3:
+- **3 — Alta:** Trivial de explorar, sem controlo compensador
+- **2 — Média:** Requer algum esforço ou há controlos parciais
+- **1 — Baixa:** Difícil de explorar ou controlos mitigam o risco
+
+## Fase 4 — Cálculo e Priorização de Riscos
+
+Com as ameaças e vulnerabilidades mapeadas, calcular o risco para cada combinação:
+
+**Risco = Criticidade do Ativo × Probabilidade da Ameaça × Nível da Vulnerabilidade**
+
+Na prática, usar uma escala de 1-3 para cada dimensão:
+
+### Matriz de Risco Simplificada
+
+| Risco | Ativo | Ameaça | Vulnerabilidade | Score (1-27) | Prioridade |
+|-------|-------|--------|-----------------|--------------|------------|
+| Ransomware sobre backups | 3 | 3 | 3 | 27 | Crítico |
+| Phishing para roubo de credenciais M365 | 3 | 3 | 2 | 18 | Alto |
+| Acesso não autorizado com conta de ex-colaborador | 3 | 2 | 3 | 18 | Alto |
+| Perda de portátil sem encriptação | 2 | 2 | 3 | 12 | Médio |
+| Falha de hardware do servidor | 3 | 2 | 1 | 6 | Baixo |
+
+**Score de referência:**
+- 18-27 — Risco Crítico: ação imediata, não esperar
+- 9-17 — Risco Alto: tratar no próximo mês
+- 4-8 — Risco Médio: tratar no próximo trimestre
+- 1-3 — Risco Baixo: monitorizar, tratar quando possível
+
+## Fase 5 — Tratamento de Riscos
+
+Para cada risco identificado, escolher uma de quatro opções de tratamento:
+
+### As Quatro Opções
+
+**1. Mitigar** — Implementar controlos para reduzir o risco
+- Exemplo: ativar 2FA para reduzir o risco de comprometimento de contas
+- É a opção mais comum para riscos médios e altos
+
+**2. Aceitar** — Reconhecer o risco e não tomar ação (por ser baixo ou por custo-benefício)
+- Exemplo: aceitar o risco de falha do site estático (impacto mínimo no negócio)
+- Deve ser uma decisão documentada e consciente da gestão
+
+**3. Transferir** — Passar o risco para terceiros
+- Exemplo: contratar um seguro cibernético, externalizar a gestão de segurança para um MSSP
+- Não elimina o risco — apenas redistribui o impacto financeiro
+
+**4. Evitar** — Eliminar a atividade que gera o risco
+- Exemplo: parar de usar um sistema legado que não tem suporte
+- Raro, mas adequado quando o risco é demasiado alto e a mitigação é inviável
+
+### Plano de Tratamento de Riscos
+
+Para cada risco crítico ou alto, definir:
+
+| Risco | Opção | Controlo a implementar | Responsável | Prazo | Custo estimado |
+|-------|-------|------------------------|-------------|-------|----------------|
+| Ransomware sobre backups | Mitigar | Implementar regra 3-2-1 com cópia offline | TI / Admin | 30 dias | €0-50/mês |
+| Phishing M365 | Mitigar | Ativar MFA para todos + formação de phishing | TI + gestão | 15 dias | €0 (incluído no M365) |
+| Conta de ex-colaborador | Mitigar | Processo de offboarding documentado | RH + TI | 7 dias | €0 |
+
+## Frequência e Governança
+
+### Quando Repetir a Análise
+
+A análise de risco não é um exercício único — deve ser repetida:
+
+- **Anualmente** — revisão completa de todos os ativos e riscos
+- **Quando há mudanças significativas** — novo sistema, nova localização, novos colaboradores em funções críticas, mudança de fornecedor
+- **Após um incidente** — um incidente real revela vulnerabilidades que a análise teórica pode ter falhado
+
+### Documentação Mínima
+
+Para fins de conformidade com o RGPD (obrigação de demonstrar medidas de segurança adequadas) e NIS2 (se aplicável), guardar:
+
+- Registo de ativos com classificação
+- Matriz de riscos com scores
+- Plano de tratamento com datas e responsáveis
+- Evidências de implementação (screenshots, relatórios)
+
+Esta documentação é o que apresenta ao regulador (CNPD) se houver uma violação de dados — demonstra que a empresa fez uma avaliação de segurança e implementou medidas adequadas.
+
+### Quem Deve Participar
+
+A análise de risco não é um exercício exclusivo de TI. Deve envolver:
+
+- **Gestão:** define o apetite ao risco e aprova o plano de tratamento
+- **Responsável de TI/segurança:** avalia vulnerabilidades técnicas
+- **Responsável financeiro:** avalia impacto de riscos operacionais
+- **DPO (se existir):** garante alinhamento com obrigações RGPD
+- **Responsáveis de departamento:** identificam ativos críticos para as suas operações
+
+## Ferramentas Gratuitas para PMEs
+
+### Modelos e Frameworks
+
+**ENISA Risk Assessment Tool:** A Agência Europeia de Cibersegurança disponibiliza metodologias gratuitas adaptadas à regulação europeia em enisa.europa.eu.
+
+**NIST Cybersecurity Framework:** Framework americano amplamente adotado, com guias específicos para pequenas empresas (Small Business Cybersecurity Corner).
+
+**Folha de cálculo própria:** Para a maioria das PMEs, uma folha de cálculo Excel/Google Sheets com as tabelas descritas neste artigo é suficiente. A simplicidade garante que é realmente usada.
+
+### Apoio Disponível em Portugal
+
+O **CNCS (Centro Nacional de Cibersegurança)** disponibiliza gratuitamente:
+- Guias de avaliação de risco adaptados a PMEs
+- Formação online em gestão de risco
+- Apoio a entidades que necessitam de conformidade NIS2
+
+O **IAPMEI** tem programas de apoio a PMEs na área da transformação digital, incluindo componentes de cibersegurança.
+
+## Quanto Custa e Quanto Tempo Demora
+
+Para uma PME de 10-50 colaboradores, uma primeira análise de risco bem conduzida:
+
+- **Tempo:** 2-3 dias de trabalho (não têm de ser consecutivos)
+- **Custo interno:** horas de gestão + TI
+- **Custo externo (opcional):** €800-3.000 para contratar um consultor de segurança que conduza o processo e valide os resultados
+
+O retorno sobre o investimento é claro: um incidente de ransomware custa em média €50.000-200.000 a uma PME (dados de mercado), incluindo tempo de inatividade, recuperação, honorários jurídicos e notificações CNPD. Uma análise de risco anual por €2.000 com um consultor é uma apólice de seguro barata.
+
+---
+
+Uma análise de risco não tem de ser perfeita — tem de ser feita. Uma lista de 10 riscos identificados e 5 tratamentos implementados vale mais do que uma metodologia impecável guardada numa gaveta. Comece com os ativos mais críticos, identifique os 3-5 riscos mais óbvios, e trate-os. Depois itere.
+
+Para complementar a análise de risco com uma auditoria técnica, leia o artigo sobre [auditoria de cibersegurança interna para PMEs](/blog/auditoria-ciberseguranca-interna-pme). Para implementar os controlos técnicos mais comuns identificados nas análises de risco, o [guia de gestão de patches](/blog/gestao-patches-atualizacoes-software-pme) e o artigo sobre [backups com a regra 3-2-1](/blog/backup-dados-pme-regra-3-2-1) são bons pontos de partida.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Práticas",
+    publishedAt: "2026-04-16",
+    readingTime: 16,
+  },
+  {
+    slug: "passkeys-autenticacao-sem-senha-pme",
+    title: "Passkeys para PMEs: Como Eliminar Passwords e Acabar com o Phishing de Credenciais",
+    excerpt:
+      "Os passkeys eliminam passwords e tornam o phishing de credenciais impossível. Guia prático para implementar autenticação sem senha em PMEs com Microsoft Entra, Google Workspace e gestores de passwords compatíveis.",
+    content: `As passwords são o elo mais fraco da cibersegurança empresarial — e todos o sabem há décadas. Os passkeys são a solução que finalmente tem escala para substituí-las: mais seguros, mais simples de usar, e impossíveis de roubar por phishing. Em 2026, já não há razão técnica para adiar a migração.
+
+Este guia explica o que são passkeys, como funcionam, e como uma PME pode começar a implementá-los já hoje — sem grandes investimentos e sem abandonar os utilizadores que ainda dependem de passwords.
+
+## O Que São Passkeys e Como Funcionam
+
+### A Morte da Password
+
+Uma password é um segredo partilhado: o utilizador sabe-a, o servidor guarda-a (em formato hash), e durante a autenticação ambos provam que conhecem o mesmo segredo. O problema é que esse segredo pode ser:
+- **Roubado por phishing** — o utilizador digita-o num site falso
+- **Exposto por violações de dados** — o servidor é hackeado e os hashes são quebrados
+- **Adivinhado por força bruta** — especialmente quando é fraco ou reutilizado
+- **Interceptado por malware** — keyloggers que capturam o que é digitado
+
+Um passkey elimina o segredo partilhado. Em vez disso, usa **criptografia de chave pública**:
+
+1. O dispositivo do utilizador gera um par de chaves: uma **chave privada** (fica no dispositivo, nunca sai) e uma **chave pública** (é enviada ao servidor quando o passkey é criado).
+2. Na autenticação, o servidor envia um desafio aleatório ao dispositivo.
+3. O dispositivo assina o desafio com a chave privada — mas só o faz após o utilizador se autenticar localmente (biometria, PIN, ou padrão).
+4. O servidor verifica a assinatura com a chave pública que tem guardada.
+
+**O resultado:** O servidor nunca vê a chave privada. Não há segredo a roubar por phishing. Não há password a expor em violações.
+
+### O Padrão FIDO2/WebAuthn
+
+Os passkeys são construídos sobre o padrão **FIDO2** (desenvolvido pela FIDO Alliance e W3C), composto por:
+- **WebAuthn** — protocolo web para autenticação baseada em chave pública
+- **CTAP2** — protocolo de comunicação com autenticadores externos (chaves de segurança USB como YubiKey)
+
+Este padrão é suportado por todos os grandes browsers (Chrome, Firefox, Safari, Edge) e sistemas operativos (Windows 11, macOS, iOS, Android). Em 2026, a compatibilidade é praticamente universal.
+
+### Tipos de Passkeys
+
+**Passkeys vinculados ao dispositivo (hardware-bound):**
+- Chave privada guardada no chip de segurança do dispositivo (TPM no Windows, Secure Enclave no iPhone/Mac)
+- Não podem ser sincronizados nem copiados
+- Máxima segurança, mas se perder o dispositivo, perde o passkey
+
+**Passkeys sincronizados (synced passkeys):**
+- Guardados em cofres de credenciais que sincronizam entre dispositivos
+- Apple iCloud Keychain, Google Password Manager, Microsoft, 1Password, Bitwarden
+- Perder um dispositivo não significa perder o acesso
+- É o tipo mais prático para PMEs
+
+**Chaves de segurança físicas (security keys):**
+- YubiKey, Google Titan Key, Feitian
+- Implementação FIDO2 em hardware dedicado
+- Ideal para contas de alto privilégio (admin de domínio, acesso a dados críticos)
+
+## Vantagens Concretas para PMEs
+
+### Phishing Torna-se Impossível
+
+Esta é a vantagem mais importante. Mesmo que um colaborador caia num email de phishing e visite um site falso do Microsoft 365, **o passkey não pode ser usado nesse site** — a criptografia FIDO2 é vinculada ao domínio legítimo. O site falso não consegue obter as credenciais porque simplesmente não existem credenciais a roubar.
+
+Comparar com passwords + 2FA: mesmo com autenticação de dois fatores, um ataque de phishing em tempo real (adversary-in-the-middle, como os ataques com Evilginx) consegue roubar o token de sessão após o utilizador autenticar. Com passkeys, este ataque não funciona.
+
+### Eliminação de Problemas Operacionais
+
+**Sem passwords para gerir:**
+- Sem chamadas para o helpdesk de "esqueci-me da password"
+- Sem resets de emergência à meia-noite
+- Sem passwords escritas em post-its
+- Sem reutilização de passwords entre serviços
+
+**Menos fricção para utilizadores:**
+- Login com Face ID, Touch ID, ou Windows Hello é mais rápido do que digitar uma password + código 2FA
+- Sem necessidade de gestor de passwords (embora continue útil para sites sem suporte)
+- Funciona offline (a verificação biométrica é local)
+
+### Conformidade Melhorada
+
+Os passkeys satisfazem automaticamente os requisitos de autenticação forte de várias regulações:
+- **RGPD** — medidas técnicas adequadas para proteção de dados pessoais
+- **NIS2** — autenticação multifator para sistemas críticos
+- **PCI DSS 4.0** — autenticação robusta para sistemas que processam dados de cartões
+
+## Implementação em Microsoft 365 / Entra ID
+
+A Microsoft suporta passkeys como método de autenticação passwordless desde 2024, com suporte completo em 2025.
+
+### Pré-requisitos
+
+- Microsoft Entra ID (qualquer plano, incluindo o gratuito que vem com M365 Business Basic)
+- Microsoft Authenticator app atualizada nos dispositivos dos utilizadores (para passkeys sincronizados)
+- OU chaves de segurança FIDO2 físicas (para contas de alto privilégio)
+
+### Configuração Passo a Passo
+
+**1. Ativar o método de autenticação Passkey no Entra ID:**
+
+Navegar em \`entra.microsoft.com\` → **Proteção** → **Métodos de autenticação** → **Políticas** → **Passkey (FIDO2)**. Ativar, selecionar "Todos os utilizadores" ou grupos específicos, e configurar "permitir auto-registo" = Sim.
+
+**2. Configurar a política de acesso condicional:**
+
+Criar uma política que exige passkey (ou autenticação phishing-resistant) para acesso a aplicações críticas (SharePoint, Exchange, admin center):
+
+Em \`entra.microsoft.com\` → **Segurança** → **Acesso Condicional** → **Nova política**: definir Utilizadores como todos (excluir contas break-glass), Aplicações alvo como Microsoft 365 (ou apps específicas), e em Concessão escolher Exigir força de autenticação → **Phishing-resistant MFA**.
+
+**3. Comunicar e registar passkeys com utilizadores:**
+
+Enviar instruções para cada colaborador:
+- Aceder a \`mysignins.microsoft.com\`
+- Informações de segurança → Adicionar método → Chave de acesso (FIDO2)
+- Seguir o processo de registo (confirmar biometria no dispositivo)
+
+**4. Período de transição:**
+
+Não desativar passwords imediatamente. Manter passwords + passkeys em paralelo durante 60-90 dias. Monitorizar a taxa de adoção no painel de administração. Desativar passwords apenas quando a maioria dos utilizadores tiver passkeys registados.
+
+### Contas de Administrador
+
+Para contas de administrador global e outros papéis privilegiados, usar **chaves de segurança físicas FIDO2** (YubiKey 5 Series, ~€50/unidade) em vez de passkeys sincronizados. A chave privada nunca sai do hardware, eliminando o risco de comprometimento do cofre cloud.
+
+Comprar pelo menos 2 chaves por conta crítica (uma de uso, uma de backup guardada em local seguro).
+
+## Implementação em Google Workspace
+
+O Google Workspace suporta passkeys através do Google Password Manager e do Google Authenticator.
+
+### Configurar Passkeys para a Organização
+
+**1. No Google Admin Console:**
+
+Em \`admin.google.com\` → **Segurança** → **Autenticação** → **Verificação em dois passos**: ativar para a organização e definir Método como "Chaves de acesso e chaves de segurança (FIDO2)".
+
+**2. Para contas individuais:**
+
+Cada utilizador acede a \`myaccount.google.com → Segurança → Chaves de acesso\` e cria um passkey para o seu dispositivo.
+
+**3. Impor chaves de acesso como método principal:**
+
+Em Admin Console → Segurança → Autenticação → Verificação em dois passos → Método de verificação mais seguro: selecionar "Chave de segurança" para exigir que utilizadores usem métodos resistentes ao phishing.
+
+## Gestores de Passwords com Suporte a Passkeys
+
+Para PMEs que já usam um gestor de passwords em equipa, muitos já suportam passkeys sincronizados:
+
+### 1Password
+
+Suporte completo a passkeys desde a versão 8. Os passkeys ficam guardados no cofre do 1Password e sincronizam entre todos os dispositivos do utilizador. Exige 1Password 8.x no dispositivo.
+
+**Vantagem para PMEs:** Um único gestor para passwords antigas e novos passkeys — facilita a transição sem obrigar a mudar de ferramenta.
+
+### Bitwarden
+
+Suporte a passkeys disponível nas versões mais recentes (open source, pode ser self-hosted). Opção gratuita para pequenas equipas.
+
+### iCloud Keychain (Apple)
+
+Para equipas 100% no ecossistema Apple, os passkeys ficam automaticamente disponíveis em todos os dispositivos Apple do utilizador (iPhone, iPad, Mac) via iCloud Keychain. Sem configuração adicional — funciona out-of-the-box no Safari.
+
+### Google Password Manager
+
+Para utilizadores Android/Chrome, o Google Password Manager sincroniza passkeys entre dispositivos Android e Chrome no Windows/Mac.
+
+## Passkeys vs. Outros Métodos de Autenticação
+
+| Método | Resistente a Phishing | Sem Segredo Partilhado | Simples para Utilizador | Funciona Offline |
+|--------|----------------------|----------------------|------------------------|-----------------|
+| Password | ❌ | ❌ | ✅ | ✅ |
+| Password + SMS OTP | ❌ | ❌ | ⚠️ | ❌ |
+| Password + App TOTP | ❌ (AiTM) | ❌ | ⚠️ | ✅ |
+| Password + Push MFA | ❌ (AiTM) | ❌ | ✅ | ❌ |
+| Chave de segurança física | ✅ | ✅ | ⚠️ | ✅ |
+| **Passkey** | ✅ | ✅ | ✅ | ✅ |
+
+## Plano de Migração para PMEs em 3 Fases
+
+### Fase 1 — Preparação (semanas 1-2)
+
+- Inventariar sistemas que suportam passkeys (ver lista de suporte em passkeys.dev)
+- Selecionar o tipo de passkey (plataforma nativa vs. gestor de passwords)
+- Comunicar a mudança a todos os colaboradores — explicar o porquê, não apenas o como
+- Criar guia de registo adaptado à empresa (com screenshots dos sistemas usados)
+
+### Fase 2 — Piloto (semanas 3-6)
+
+- Começar com um departamento ou grupo voluntário de 5-10 pessoas
+- Registar passkeys nos sistemas críticos (M365 ou Google Workspace + VPN)
+- Recolher feedback — o que foi difícil, o que não funcionou
+- Ajustar o guia e o processo com base no feedback
+
+### Fase 3 — Implementação Geral (semanas 7-12)
+
+- Expandir para todos os colaboradores
+- Definir prazo para registo obrigatório (90 dias é razoável)
+- Monitorizar adoção e apoiar utilizadores com dificuldades
+- Rever política de passwords — passwords antigas podem permanecer como fallback inicial
+- Planear remoção de passwords em sistemas críticos após adoção completa
+
+## Limitações e Casos de Uso que Ainda Precisam de Passwords
+
+Os passkeys não resolvem tudo. Situações que ainda exigem passwords ou alternativas:
+
+- **Sistemas legados** sem suporte FIDO2 (software antigo, ERPs de nicho)
+- **Contas partilhadas** por múltiplos utilizadores (evitar quando possível)
+- **Acesso de recuperação** quando todos os dispositivos são perdidos (necessita de processo de backup documentado)
+- **Automação e APIs** — scripts e integrações que não têm utilizador humano continuam a usar tokens de API ou certificados
+
+Para estes casos, manter passwords fortes com um gestor de passwords e 2FA continua a ser a melhor prática.
+
+---
+
+Os passkeys são a maior melhoria de segurança disponível para PMEs em 2026 — e tem custo zero se a empresa já usa M365 ou Google Workspace. A adoção demora alguns meses, mas o resultado é concreto: phishing de credenciais deixa de ser uma ameaça viável.
+
+Para implementar uma camada adicional de proteção, leia o artigo sobre [gestão de passwords para PMEs](/blog/gestao-passwords-pme-guia-completo) para gerir as credenciais que ainda não podem ser substituídas por passkeys. O artigo sobre [autenticação de dois fatores](/blog/autenticacao-dois-fatores-2fa-pme) cobre as alternativas para sistemas sem suporte FIDO2.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Práticas",
+    publishedAt: "2026-04-16",
+    readingTime: 15,
+  },
+  {
+    slug: "auditoria-ciberseguranca-interna-pme",
+    title: "Auditoria de Cibersegurança Interna para PMEs: Checklist e Guia Passo a Passo",
+    excerpt:
+      "Como realizar uma auditoria de cibersegurança interna na sua PME sem contratar consultores externos. Checklist completo cobrindo rede, endpoints, identidade, dados, cloud e conformidade RGPD/NIS2.",
+    content: `Uma auditoria de cibersegurança é uma fotografia do estado real da segurança da empresa — não o que deveria estar configurado, mas o que está. Para a maioria das PMEs, a diferença entre os dois é surpreendente: regras que nunca foram aplicadas, atualizações que ficaram pendentes, contas de ex-colaboradores que continuam ativas.
+
+Este guia permite realizar uma auditoria interna estruturada sem contratar consultores externos. Não substitui uma auditoria técnica profissional (pentest, revisão de código), mas identifica 80% dos problemas com 20% do esforço.
+
+## Âmbito e Objetivos
+
+Antes de começar, definir o âmbito da auditoria:
+
+**O que auditar:**
+- Infraestrutura de rede (router, firewall, Wi-Fi, VPN)
+- Endpoints (computadores, portáteis, dispositivos móveis)
+- Gestão de identidade e acessos (contas, passwords, 2FA)
+- Serviços cloud (M365, Google Workspace, armazenamento)
+- Dados e backups
+- Email e comunicações
+- Conformidade com RGPD e NIS2 (se aplicável)
+
+**Objetivos da auditoria:**
+1. Identificar vulnerabilidades técnicas e operacionais
+2. Verificar conformidade com políticas internas e regulação
+3. Priorizar ações de remediação
+4. Documentar o estado base para comparação futura
+
+**Quem deve participar:**
+- Responsável de TI ou pessoa com acesso admin aos sistemas
+- Gestão (para validar políticas e aceitar riscos)
+- Opcionalmente: DPO, advogado especializado em proteção de dados
+
+## Bloco 1 — Gestão de Identidade e Acessos
+
+Este bloco é frequentemente o mais crítico. A maioria dos incidentes começa com credenciais comprometidas ou acessos excessivos.
+
+### 1.1 Inventário de Contas
+
+**Ação:** Exportar lista de todas as contas de utilizador dos sistemas principais.
+
+Para Microsoft 365: \`admin.microsoft.com\` → **Utilizadores** → **Utilizadores ativos** → **Exportar**.
+
+Para Google Workspace: \`admin.google.com\` → **Diretório** → **Utilizadores** → **Transferir**.
+
+**Verificar:**
+- [ ] Há contas de ex-colaboradores ainda ativas? (comparar com lista de RH)
+- [ ] Há contas genéricas partilhadas (admin@, info@, geral@) com acesso a sistemas críticos?
+- [ ] Há contas de prestadores de serviços sem data de expiração definida?
+- [ ] Há contas inativas há mais de 90 dias sem justificação?
+
+**Red flags:** Qualquer conta de ex-colaborador ativa = risco crítico. Revogar imediatamente.
+
+### 1.2 Autenticação Multifator (MFA)
+
+**Ação:** Verificar quais utilizadores têm MFA ativo.
+
+M365: \`entra.microsoft.com → Utilizadores → Relatórios → Registo de métodos de autenticação\`
+
+Google Workspace: \`admin.google.com → Segurança → Dashboard → 2-Step Verification\`
+
+**Verificar:**
+- [ ] MFA ativo para todos os utilizadores (não apenas admins)?
+- [ ] Administradores usam método forte (chave FIDO2 ou app authenticator, não SMS)?
+- [ ] Há contas com MFA desativado por exceção? Está documentado e aprovado?
+- [ ] Utilizadores usam passkeys ou apenas SMS OTP (menos seguro)?
+
+**Benchmark:** Em 2026, qualquer PME sem MFA em todos os utilizadores está abaixo do mínimo razoável.
+
+### 1.3 Privilégios e Permissões
+
+**Verificar:**
+- [ ] Quantos utilizadores têm papel de Administrador Global (M365) ou Super Admin (Google)? Deveria ser máximo 2-4.
+- [ ] Administradores usam conta separada para tarefas administrativas (não o email do dia a dia)?
+- [ ] Princípio do menor privilégio aplicado? (cada utilizador tem apenas as permissões que precisa)
+- [ ] Há utilizadores com acesso a dados de outros departamentos sem necessidade justificada?
+
+**Ação:** Exportar lista de administradores e rever cada um com a gestão.
+
+### 1.4 Passwords e Política
+
+**Verificar:**
+- [ ] Política de passwords documentada e comunicada?
+- [ ] Comprimento mínimo de 12 caracteres (16 para admins)?
+- [ ] Empresa usa gestor de passwords em equipa (Bitwarden, 1Password, etc.)?
+- [ ] Há passwords visíveis em documentos partilhados (Excel de passwords, notas em SharePoint)?
+- [ ] Contas de serviço e APIs usam passwords fortes e únicas?
+
+**Ação de auditoria:** Pesquisar em SharePoint/Google Drive por ficheiros com "passwords", "credenciais", "acessos" no nome ou conteúdo.
+
+## Bloco 2 — Rede e Perímetro
+
+### 2.1 Router e Firewall
+
+**Ação:** Aceder à interface de administração do router/firewall.
+
+**Verificar:**
+- [ ] Password de administração do router foi alterada das credenciais de fábrica?
+- [ ] Firmware do router está atualizado? (comparar versão instalada com a mais recente no site do fabricante)
+- [ ] Interface de administração acessível apenas da rede interna (não da internet)?
+- [ ] Acesso remoto à rede (VPN) requer 2FA?
+- [ ] Há portas desnecessárias abertas para a internet? (RDP na porta 3389 é um red flag claro)
+- [ ] Há regras de firewall desatualizadas que permitem tráfego que já não faz sentido?
+
+**Ferramenta:** Usar Shodan.io para verificar o que está visível da internet a partir do IP público da empresa. Pesquisar por \`ip:<ip_publico_da_empresa>\`.
+
+### 2.2 Segmentação de Rede Wi-Fi
+
+**Verificar:**
+- [ ] Rede de convidados separada da rede de trabalho?
+- [ ] Dispositivos IoT (câmaras, impressoras, smart TVs) numa VLAN separada?
+- [ ] Rede Wi-Fi usa WPA3 ou WPA2-Enterprise? (WPA2-Personal é aceitável para PMEs pequenas)
+- [ ] Password do Wi-Fi de colaboradores foi alterada nos últimos 12 meses?
+- [ ] Password do Wi-Fi de convidados é diferente da rede de trabalho?
+
+### 2.3 Acesso Remoto
+
+**Verificar:**
+- [ ] Acesso remoto é feito via VPN corporativa (não RDP direto à internet)?
+- [ ] VPN requer 2FA para autenticação?
+- [ ] Há colaboradores a usar software de acesso remoto pessoal (TeamViewer, AnyDesk) sem aprovação da empresa?
+- [ ] Sessões de acesso remoto são registadas (logs)?
+
+## Bloco 3 — Endpoints
+
+### 3.1 Inventário de Dispositivos
+
+**Ação:** Comparar o inventário de dispositivos geridos com a lista de dispositivos em uso real.
+
+M365: \`intune.microsoft.com → Dispositivos → Todos os dispositivos\`
+
+**Verificar:**
+- [ ] Há dispositivos desconhecidos a aceder à rede da empresa?
+- [ ] Dispositivos de ex-colaboradores foram removidos do MDM e bloqueados?
+- [ ] Dispositivos pessoais (BYOD) têm política de gestão definida?
+
+### 3.2 Sistemas Operativos e Atualizações
+
+**Verificar:**
+- [ ] Todos os computadores correm Windows 10/11 com suporte ativo (Windows 10 acaba suporte em outubro 2025)?
+- [ ] Atualizações automáticas do Windows estão ativas?
+- [ ] Há computadores com Windows 7 ou Windows 8? — risco crítico, sem patches de segurança
+- [ ] Software de escritório (Microsoft Office, LibreOffice) está atualizado?
+- [ ] Plugins de browser (Adobe Reader, Java) estão atualizados ou foram removidos se não forem necessários?
+
+**Ação:** No Windows 10/11, \`Definições → Atualização e Segurança → Windows Update → Ver histórico de atualizações\`. Verificar se a atualização mais recente foi instalada nos últimos 30 dias.
+
+### 3.3 Proteção de Endpoints
+
+**Verificar:**
+- [ ] Todos os dispositivos têm proteção antivírus/EDR ativa e atualizada?
+- [ ] Windows Defender está ativo em todos os dispositivos Windows sem outro AV instalado?
+- [ ] Há alertas pendentes no console de gestão do AV/EDR?
+- [ ] Proteção contra ransomware (Controlled Folder Access no Windows Defender) está ativa?
+
+### 3.4 Encriptação de Dispositivos
+
+**Verificar:**
+- [ ] BitLocker ativo em todos os portáteis Windows? (\`Painel de Controlo → BitLocker Drive Encryption\`)
+- [ ] FileVault ativo em todos os Mac? (\`Definições do Sistema → Privacidade e Segurança → FileVault\`)
+- [ ] Dispositivos móveis com acesso a dados empresariais têm encriptação ativa?
+- [ ] Chaves de recuperação BitLocker estão guardadas num local seguro (não no próprio computador)?
+
+## Bloco 4 — Email e Comunicações
+
+### 4.1 Configurações Anti-Phishing
+
+**Verificar registos DNS de email** (usar ferramenta online como mxtoolbox.com):
+
+- [ ] SPF configurado e correto para o domínio da empresa?
+- [ ] DKIM configurado e a assinar emails enviados?
+- [ ] DMARC configurado com política de quarantine ou reject (não apenas none)?
+- [ ] BIMI configurado? (opcional, mas melhora entregabilidade e credibilidade)
+
+**Verificar na plataforma de email:**
+- [ ] Filtros anti-spam e anti-phishing estão ativos?
+- [ ] M365 Defender para Office 365 ou Google Workspace Advanced Protection estão ativados?
+- [ ] Há regras de transporte que reescrevem remetentes ou alteram cabeçalhos de forma inesperada?
+- [ ] Há regras de encaminhamento automático para endereços externos? (red flag — pode indicar comprometimento)
+
+### 4.2 Comunicações Internas
+
+**Verificar:**
+- [ ] Há dados sensíveis partilhados por email em vez de sistemas seguros?
+- [ ] Teams/Slack têm convidados externos com acesso mais amplo do que necessário?
+- [ ] Reuniões de videoconferência com dados sensíveis têm sala de espera e password?
+
+## Bloco 5 — Cloud e Aplicações
+
+### 5.1 Microsoft 365 / Google Workspace
+
+**Verificar:**
+- [ ] Relatório de atividade de login revisado regularmente? (logins de países inesperados = red flag)
+- [ ] Há aplicações de terceiros com acesso ao M365/Google Workspace? Todas são conhecidas e necessárias?
+- [ ] Partilha externa de ficheiros está configurada adequadamente? (não "qualquer pessoa com o link")
+- [ ] Dados sensíveis em SharePoint/Google Drive têm permissões apropriadas?
+- [ ] Backups do M365/Google Workspace são feitos? (a Microsoft e Google não fazem backup de dados de utilizador)
+
+### 5.2 Outras Aplicações SaaS
+
+**Ação:** Inventariar todas as aplicações SaaS usadas pela empresa (pedir a cada departamento a lista de ferramentas que usam).
+
+**Verificar para cada aplicação:**
+- [ ] Há contas de ex-colaboradores ativas?
+- [ ] As contas usam passwords únicas e fortes (ou passkeys)?
+- [ ] 2FA está ativo?
+- [ ] Há dados sensíveis armazenados que podiam estar numa solução mais controlada?
+
+## Bloco 6 — Backups e Recuperação
+
+**Verificar:**
+- [ ] Política de backups documentada com frequência, retenção e responsável?
+- [ ] Backups seguem a regra 3-2-1? (3 cópias, 2 suportes diferentes, 1 fora do local)
+- [ ] Última restauração de teste foi feita há menos de 6 meses?
+- [ ] Backups estão protegidos contra ransomware? (cópia imutável ou offline)
+- [ ] Tempo estimado de recuperação (RTO) está documentado e foi testado?
+- [ ] Dados de email e cloud (M365, Google Workspace) também têm backup próprio?
+
+**Ação crítica:** Se não há evidência de que a restauração foi testada nos últimos 6 meses, considerar isso uma vulnerabilidade alta independentemente de como os backups estão configurados.
+
+## Bloco 7 — Conformidade RGPD
+
+**Verificar:**
+- [ ] Registo de Atividades de Tratamento (RAT) está atualizado?
+- [ ] Contratos com subcontratantes (fornecedores com acesso a dados pessoais) incluem cláusulas RGPD?
+- [ ] Há um processo definido para responder a pedidos de acesso, retificação ou eliminação de titulares?
+- [ ] Em caso de violação de dados: sabe quem notificar (CNPD), em quanto tempo (72 horas) e como?
+- [ ] DPO nomeado (se obrigatório)?
+- [ ] Aviso de privacidade do site está atualizado e preciso?
+
+## Documentação dos Resultados
+
+Para cada item auditado, registar:
+
+| Área | Item | Estado | Risco | Ação | Prazo | Responsável |
+|------|------|--------|-------|------|-------|-------------|
+| Identidade | Contas de ex-colaboradores | 2 contas ativas encontradas | Crítico | Desativar imediatamente | 1 dia | Admin TI |
+| Rede | Firmware do router | Versão 1.2 (última: 2.1) | Alto | Atualizar | 7 dias | Admin TI |
+| Endpoints | BitLocker | 3 portáteis sem encriptação | Alto | Ativar BitLocker | 14 dias | Admin TI |
+
+### Relatório Executivo
+
+Para apresentar à gestão, preparar um resumo de uma página com:
+- Número de itens auditados
+- Distribuição por nível de risco (crítico/alto/médio/baixo)
+- Top 5 vulnerabilidades identificadas com plano de ação
+- Recursos necessários (tempo, custo)
+
+## Frequência e Próximos Passos
+
+**Auditoria interna:** Realizar a cada 6-12 meses, ou após mudanças significativas na infraestrutura.
+
+**Quando contratar uma auditoria externa:**
+- A empresa processa dados de saúde, financeiros, ou de grande volume
+- A empresa está sujeita a NIS2 ou a certificação ISO 27001
+- Houve um incidente de segurança recente
+- O conselho de administração exige garantias independentes
+- A empresa vai iniciar uma parceria que exige evidências de conformidade de segurança
+
+Uma auditoria externa por um consultor certificado (CISM, CISSP, CEH) custa tipicamente €2.000-8.000 para uma PME de 10-50 colaboradores, dependendo do âmbito. O [teste de penetração](/blog/teste-penetracao-pentest-pme-quando-contratar) é uma forma mais técnica de auditoria que simula ataques reais.
+
+---
+
+Uma auditoria interna semestral, por mais simples que seja, é melhor do que uma auditoria profissional feita uma vez e depois esquecida. A cibersegurança é um processo contínuo, não um projeto com data de entrega.
+
+Para complementar esta auditoria com uma análise de risco mais estruturada, leia o artigo sobre [análise de risco de cibersegurança para PMEs](/blog/analise-risco-ciberseguranca-pme). Para implementar os controlos mais comuns identificados nas auditorias, o [guia de gestão de identidade e acessos](/blog/gestao-identidade-acessos-iam-pme) e o artigo sobre [backups com a regra 3-2-1](/blog/backup-dados-pme-regra-3-2-1) são os pontos de partida mais impactantes.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Práticas",
+    publishedAt: "2026-04-16",
+    readingTime: 18,
+  },
 ];
 
 export function getPostBySlug(slug: string): Post | undefined {
