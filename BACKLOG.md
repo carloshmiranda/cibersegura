@@ -13,8 +13,6 @@
 ## Up Next
 <!-- Items to tackle in the next cycle -->
 
-- 🟡 **P1 — SEO**: Submeter novos URLs ao IndexNow após cada deploy com conteúdo novo (endpoint `/api/indexnow-submit` já existe)
-
 ---
 
 ## Planned
@@ -32,6 +30,7 @@
 <!-- Completed items with date -->
 
 ### 2026-04-16 (session 8)
+- ✅ **seo**: IndexNow automation after deployments — Enhanced existing `/api/deploy-hook` and `/api/indexnow-deploy` system for automatic URL submission after new content deploys. Added comprehensive documentation (`INDEXNOW_AUTOMATION.md`), test script (`npm run test-indexnow`), improved error handling and logging. System uses Vercel deploy hooks to automatically detect and submit new/updated blog posts to IndexNow API for instant search engine indexing
 - ✅ **growth**: Article "Inventário de Ativos de TI para PMEs: Como Controlar Tudo o Que Está na Sua Rede" — `/blog/inventario-ativos-ti-pme`; Nmap discovery, Lansweeper free tier (100 assets), Snipe-IT open source ITAM, shadow IT problem, 5-step process (scan → enrich → cloud/accounts → criticality classification → integrate with security processes), NIS2 asset management obligation, maintenance cadence
 - ✅ **growth**: Article "Gestão de Vulnerabilidades para PMEs: Como Encontrar e Corrigir Falhas Antes dos Atacantes" — `/blog/gestao-vulnerabilidades-pme-guia-completo`; CVSS 3.1 scoring explained (critical/high/medium/low), CISA KEV catalog (exploit-confirmed = always priority), Greenbone Community Edition (OpenVAS), Nessus Essentials (free for 16 IPs), Microsoft Defender Vulnerability Management (included in M365 Business Premium), authenticated vs unauthenticated scans, prioritization matrix (CVSS × KEV × exposure × criticality), 3 remediation paths (patch/compensating control/accept), false positives, KPIs
 - ✅ **growth**: Article "Cibersegurança para Escritórios de Advogados e Contabilistas em Portugal" — `/blog/ciberseguranca-advocacia-contabilidade-portugal`; why targeted (M&A insider info, client financials, settlement pressures), BEC impersonation of partners, ransomware dual extortion, RGPD 72h notification, segredo profissional, PBCFT obligations, email encryption (M365 Purview, Proton Business, S/MIME), secure document sharing (SharePoint vs email attachments), per-client file permissions, full disk encryption mandate, backup legal retention periods (10yr accounting / 20yr litigation), offboarding protocol, sector-specific checklist
