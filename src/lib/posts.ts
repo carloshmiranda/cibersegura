@@ -14294,6 +14294,613 @@ Para complementar esta auditoria com uma análise de risco mais estruturada, lei
     publishedAt: "2026-04-16",
     readingTime: 18,
   },
+  {
+    slug: "ransomware-o-que-fazer-pme-guia-resposta",
+    title: "Ransomware: O Que Fazer Quando a Sua PME É Atacada — Guia de Resposta Passo a Passo",
+    excerpt:
+      "Guia de resposta a ransomware para PMEs portuguesas: o que fazer nas primeiras horas após um ataque, como comunicar, as obrigações legais de notificação e como recuperar sem pagar o resgate.",
+    content: `O ransomware não avisa. Na segunda-feira de manhã, os colaboradores chegam ao trabalho, abrem o computador e veem uma mensagem a exigir €15.000 em Bitcoin para recuperar os ficheiros. O servidor partilhado está inacessível. O sistema de faturação não abre. O backoffice do e-commerce mostra erros.
+
+Este guia foi escrito para esse momento. Não para o depois — para o durante. O que fazer nas primeiras horas determina se a empresa sobrevive ao ataque ou entra em colapso operacional.
+
+## O Que É Ransomware (Brevemente)
+
+Ransomware é malware que cifra os ficheiros da vítima e exige pagamento de resgate em criptomoeda para fornecer a chave de desencriptação. Os ataques modernos seguem dois padrões:
+
+**Ransomware simples:** Cifra ficheiros e exige resgate. Sem acesso a backups limpos, os ficheiros ficam inacessíveis.
+
+**Ransomware com dupla extorsão:** Antes de cifrar, os atacantes exfiltram dados sensíveis (clientes, contratos, dados bancários). Mesmo que a empresa recupere dos backups, ameaçam publicar os dados na dark web se o resgate não for pago. Esta é a modalidade dominante desde 2021.
+
+Grupos como LockBit, ALPHV/BlackCat e Black Basta usam frequentemente a dupla extorsão e têm vitimado PMEs europeias.
+
+## As Primeiras Horas São Decisivas
+
+Não entre em pânico, mas aja depressa. Cada minuto que o ransomware continua a correr aumenta o número de ficheiros cifrados e o dano total.
+
+### Passo 1 — Isolar Imediatamente (primeiros 10 minutos)
+
+**Objetivo:** Parar a propagação. O ransomware não ficou apenas num computador — está a tentar alcançar todos os dispositivos na rede.
+
+**O que fazer:**
+
+1. Desligar da rede **todos os dispositivos afetados** — cabo de rede fora, Wi-Fi desligado. Não desligar da corrente (os processos em memória podem ser úteis para análise forense).
+2. Se houver um switch gerenciável, desligar as portas afetadas em vez de puxar os cabos (mais rápido se souber fazê-lo).
+3. Desligar o servidor de ficheiros da rede, mesmo que ainda não mostre sintomas — pode já estar cifrado mas ainda não ter apresentado a nota de resgate.
+4. Desligar o acesso VPN a partir do exterior para impedir que dispositivos remotos sejam vetores adicionais.
+5. Se o ataque estiver ativo (pode ver processos de cifração em curso), desligar o router principal é a opção nuclear mas eficaz.
+
+**O que NÃO fazer:**
+- Não reiniciar os computadores afetados (pode destruir evidências em memória).
+- Não tentar desencriptar ficheiros com ferramentas desconhecidas.
+- Não pagar o resgate imediatamente — há mais opções a explorar primeiro.
+- Não apagar nada. Cada ficheiro, cada log, pode ser necessário para a investigação ou para a seguradora.
+
+### Passo 2 — Avaliar o Âmbito (primeiros 30 minutos)
+
+Com a propagação contida, perceba o que foi atingido:
+
+- Quantos computadores/servidores mostram a nota de resgate?
+- Os backups estão acessíveis? (Se estiverem no mesmo servidor, provavelmente estão cifrados.)
+- Há cópias em cloud (OneDrive, Google Drive)? Estão sincronizadas com ficheiros cifrados?
+- Qual é o último ponto no tempo em que os sistemas estavam limpos?
+
+Fotografe (literalmente, com o telemóvel) as notas de resgate que aparecem nos ecrãs. Esse texto contém informação sobre o grupo responsável e um identificador de vítima necessário para qualquer contacto posterior.
+
+### Passo 3 — Ativar a Equipa de Resposta
+
+**Dentro da empresa:**
+- Responsável de IT / prestador de serviços de IT
+- Gerente / CEO (tomar decisões sobre continuidade)
+- Responsável de comunicação (para clientes e fornecedores)
+- Advogado (se tiver dados de clientes envolvidos — e provavelmente tem)
+
+**Externos a contactar nas primeiras 2 horas:**
+- **CERT.PT** — [cert.pt/report](https://www.cert.pt/report) ou +351 213 030 100. O CERT.PT presta apoio técnico a incidentes e pode ajudar a identificar o tipo de ransomware e se há decryptors disponíveis.
+- **Seguradora** (se tiver seguro cyber) — notificar o sinistro imediatamente. Muitas apólices têm prazos de notificação de 24-72h.
+- **Prestador de segurança / MSSP** (se tiver contrato).
+
+Se a empresa processar dados de clientes (e quase todas processam), há obrigações legais de notificação com prazos curtos — ver Passo 5.
+
+## Identificar o Ransomware
+
+Saber com que variante está a lidar determina as opções de recuperação.
+
+### ID Ransomware
+
+Aceda a [id-ransomware.malwarehunterteam.com](https://id-ransomware.malwarehunterteam.com) a partir de um dispositivo **não afetado** e faça upload de:
+- A nota de resgate (ficheiro de texto que o ransomware deixou)
+- Um ficheiro cifrado de exemplo
+
+O serviço identifica a variante e indica se existe um decryptor gratuito disponível.
+
+### No More Ransom
+
+O projeto [nomoreransom.org](https://www.nomoreransom.org) (suportado pela Europol, Interpol e polícias europeias) disponibiliza decryptors gratuitos para dezenas de variantes. Se o seu ransomware estiver listado, pode recuperar os ficheiros sem pagar. **Verifique sempre este site antes de considerar pagar.**
+
+Em 2024, existiam decryptors gratuitos para variantes como Conti (versões antigas), Maze, Ryuk (parcial), Dharma/Crysis e muitas outras.
+
+## Avaliar as Opções de Recuperação
+
+Há três caminhos possíveis, por ordem de preferência:
+
+### Opção 1 — Recuperar de Backups Limpos (Melhor Opção)
+
+Se tiver backups offline, imutáveis ou em cloud com versionamento, esta é a saída sem pagar.
+
+**Verificar antes de restaurar:**
+- Os backups são anteriores à data de comprometimento? (O ransomware pode ter estado latente semanas antes de cifrar.)
+- Os backups estão realmente limpos? Restaurar um backup infetado reinicia o ciclo.
+- O vetor de ataque inicial foi identificado e corrigido? Restaurar sem corrigir a vulnerabilidade original resulta numa reinfecção em horas.
+
+**Processo de restauro:**
+1. Isolar completamente a infraestrutura antiga (não ligar à rede).
+2. Preparar hardware limpo (ou VMs novas) para receber os dados restaurados.
+3. Restaurar os backups e validar integridade antes de ligar à rede de produção.
+4. Mudar todas as credenciais — o atacante pode ainda ter acesso.
+5. Só então ligar à rede, com monitorização intensiva.
+
+**Tempo estimado:** 1-5 dias para PMEs com boa gestão de backups, dependendo do volume de dados e da qualidade do plano de recuperação.
+
+### Opção 2 — Usar um Decryptor Gratuito
+
+Se o ID Ransomware ou o No More Ransom identificar um decryptor disponível, usá-lo. É gratuito, não envolve negociação com criminosos e funciona para as variantes cobertas.
+
+**Atenção:** Use sempre os decryptors dos sites oficiais (nomoreransom.org, Kaspersky, Emsisoft). Decryptors de fontes desconhecidas podem ser malware adicional.
+
+### Opção 3 — Negociar ou Pagar (Último Recurso)
+
+Pagar o resgate é a pior opção, mas por vezes é a única para empresas sem backups e cujo ransomware não tem decryptor disponível. Antes de qualquer decisão:
+
+**Por que pagar é problemático:**
+- Cerca de 20-30% das empresas que pagam não recebem a chave de desencriptação.
+- Algumas variantes fornecem chaves que só funcionam parcialmente.
+- Pagar financia grupos criminosos e pode violar sanções internacionais (alguns grupos estão em listas de sanções da UE/OFAC).
+- Se houve dupla extorsão, o pagamento não garante que os dados não sejam publicados.
+- Sinaliza que a empresa paga — pode tornar-se alvo novamente.
+
+**Se mesmo assim pagar for a única saída:**
+- Envolva um advogado especializado antes de transferir qualquer valor (questões de sanções).
+- Documente tudo para a seguradora e para o processo penal.
+- Negocie — os grupos de ransomware profissionais aceitam frequentemente 30-50% do valor inicial se negociado com competência.
+- Empresas especializadas em negociação de ransomware (como a Coveware ou Kivu) têm taxas de sucesso mais altas e custos que se justificam para resgates elevados.
+
+## Obrigações Legais de Notificação
+
+Este é o ponto que muitos gestores ignoram até ser tarde. O não cumprimento pode resultar em coimas que excedem o próprio custo do ataque.
+
+### CNPD — Notificação Obrigatória em 72 Horas
+
+Se o ransomware envolveu dados pessoais (clientes, colaboradores, fornecedores — e quase sempre envolve), é obrigatório notificar a **Comissão Nacional de Proteção de Dados (CNPD)** no prazo de **72 horas** após tomar conhecimento da violação.
+
+A notificação é feita em [cnpd.pt](https://www.cnpd.pt) e deve incluir:
+- Natureza da violação (o que aconteceu)
+- Categorias e número aproximado de titulares afetados
+- Categorias e número aproximado de registos afetados
+- Contacto do responsável pelo tratamento (DPO se existir)
+- Consequências prováveis
+- Medidas tomadas ou propostas
+
+Se não tiver toda a informação em 72 horas (é normal — a investigação ainda está em curso), pode fazer uma notificação preliminar e complementá-la depois.
+
+### Notificação aos Titulares dos Dados
+
+Se a violação representar um **risco elevado** para os direitos e liberdades dos titulares (exposição de dados financeiros, de saúde, documentos de identificação), deve também notificar as **pessoas diretamente afetadas** sem demora injustificada.
+
+### NIS2 — Se Aplicável
+
+Empresas em setores críticos (energia, transportes, saúde, fornecedores digitais, etc.) sujeitas à NIS2 têm obrigações adicionais de reporte à autoridade competente nacional.
+
+### Participação à Polícia Judiciária
+
+O cibercrime é um crime. Participar à Unidade Nacional de Combate ao Cibercrime e à Criminalidade Tecnológica (UNC3T) da Polícia Judiciária em [policiajudiciaria.pt](https://www.policiajudiciaria.pt) é recomendado e necessário para qualquer processo de seguro ou litígio posterior.
+
+## Comunicação Durante o Incidente
+
+### O que comunicar (e quando) a clientes e parceiros
+
+O instinto é esconder o incidente para proteger a reputação. É o instinto errado. A transparência controlada protege a empresa legalmente e preserva a confiança.
+
+**Comunicação interna imediata:** Todos os colaboradores devem saber o que aconteceu e o que NÃO devem fazer (não ligar computadores desligados, não falar com a imprensa).
+
+**Comunicação a clientes afetados:** Apenas após confirmação de que os dados foram comprometidos, e apenas com os clientes cujos dados estavam efetivamente em risco. A mensagem deve ser factual, sem dramatismo, e incluir o que a empresa está a fazer.
+
+**Comunicação pública:** Só se necessário (jornalistas, redes sociais) e idealmente através de um advogado especializado.
+
+**O que nunca dizer:** Não especule sobre a origem do ataque, não culpe terceiros sem evidências, não prometa datas de recuperação que não consegue cumprir.
+
+## Investigação Pós-Incidente: Como Entraram?
+
+Depois da crise aguda passar, é fundamental perceber o vetor de entrada para evitar reinfecção. Os vetores mais comuns em PMEs:
+
+**1. Email de phishing** — um colaborador clicou num anexo ou link malicioso. Verificar os logs de email do período anterior ao incidente.
+
+**2. RDP exposto** — Remote Desktop Protocol aberto para a internet, com credenciais fracas. Ferramenta dos atacantes para acesso inicial em 30%+ dos casos. Verificar se havia portas 3389 abertas no firewall.
+
+**3. VPN com credenciais comprometidas** — credenciais de VPN compradas na dark web ou obtidas por phishing anterior. Verificar logs de autenticação VPN.
+
+**4. Software desatualizado** — exploração de vulnerabilidades conhecidas em software sem patching. Verificar versões do sistema operativo, navegadores e aplicações críticas.
+
+**5. Supply chain** — comprometimento através de um fornecedor de IT com acesso remoto aos sistemas da empresa.
+
+## Checklist de Prevenção (Para Depois da Crise)
+
+Quando a empresa recuperar, implementar imediatamente:
+
+- [ ] **Backups 3-2-1 imutáveis** — 3 cópias, 2 suportes diferentes, 1 offline ou imutável (o ransomware não pode cifrar o que não consegue alcançar)
+- [ ] **Remover RDP da internet** — usar VPN com MFA em vez de RDP direto
+- [ ] **MFA em todas as contas** — email, VPN, Microsoft 365, acesso remoto
+- [ ] **Segmentação de rede** — servidores de produção numa VLAN isolada dos computadores dos colaboradores
+- [ ] **Princípio do menor privilégio** — os utilizadores só têm acesso ao que precisam, não a partilhas de rede inteiras
+- [ ] **EDR em todos os endpoints** — um antivírus moderno com capacidades de deteção comportamental pode parar o ransomware antes de cifrar
+- [ ] **Patching regular** — sistemas operativos e aplicações atualizadas eliminam os vetores de exploração mais comuns
+- [ ] **Monitorização** — um SIEM como o [Wazuh](/blog/siem-wazuh-pme-monitorizacao-seguranca-gratis) deteta atividade suspeita antes de o ransomware ser ativado
+- [ ] **Plano de resposta documentado** — este guia serve de base, mas deve existir uma versão personalizada impressa e acessível offline (quando o ransomware atinge, o plano digital pode estar inacessível)
+
+## Quanto Tempo Demora a Recuperar?
+
+Depende dos backups e da preparação:
+
+| Situação | Tempo de Recuperação Estimado |
+|----------|-------------------------------|
+| Backups recentes e plano de recuperação testado | 1-3 dias |
+| Backups existentes mas não testados recentemente | 3-7 dias |
+| Backups parciais ou desatualizados | 1-3 semanas |
+| Sem backups (recuperação de ficheiros individuais via shadow copies ou VSS) | 2-4 semanas |
+| Sem backups e sem decryptor disponível | Meses (ou nunca, para alguns dados) |
+
+A diferença entre recuperar em 2 dias e em 2 meses é, frequentemente, a qualidade dos backups e se o plano de recuperação foi alguma vez testado.
+
+---
+
+Um ataque de ransomware é uma crise empresarial, não apenas um problema técnico. As decisões tomadas nas primeiras horas — isolar, contactar o CERT.PT, notificar a CNPD, avaliar os backups — definem o resultado. A preparação antecipada, designadamente ter backups imutáveis testados e um plano de resposta escrito, é a diferença entre sobreviver ao ataque e fechar.
+
+Para construir a resiliência antes que seja necessária, leia o artigo sobre [backups com a regra 3-2-1](/blog/backup-dados-pme-regra-3-2-1) e o [guia de plano de continuidade de negócio](/blog/plano-continuidade-negocio-bcp-ciberataque-pme). Para detetar o ataque antes que chegue à fase de cifragem, o artigo sobre [SIEM com Wazuh](/blog/siem-wazuh-pme-monitorizacao-seguranca-gratis) e o [EDR vs antivírus](/blog/edr-vs-antivirus-seguranca-endpoints-pme) mostram como monitorizar os endpoints.`,
+    category: "ameacas",
+    categoryLabel: "Ameaças",
+    publishedAt: "2026-04-16",
+    readingTime: 16,
+  },
+  {
+    slug: "teletrabalho-seguro-pme-trabalho-remoto",
+    title: "Teletrabalho Seguro para PMEs: Como Proteger Colaboradores que Trabalham em Casa",
+    excerpt:
+      "Guia prático de segurança para teletrabalho em PMEs portuguesas: VPN, segurança da rede doméstica, dispositivos, dados em cloud e política de trabalho remoto — tudo o que precisa para proteger a empresa além das paredes do escritório.",
+    content: `O teletrabalho deixou de ser uma exceção de crise para se tornar uma realidade permanente em muitas PMEs portuguesas. Mas a maioria das empresas implementou o trabalho remoto a correr, em 2020, sem pensar na segurança — e nunca corrigiu isso.
+
+O problema não é o teletrabalho em si. É que o perímetro de segurança da empresa deixou de existir quando os colaboradores saíram do escritório. A rede doméstica do colaborador, o router da NOS ou MEO em casa, o portátil partilhado com a família — nenhum destes está sob controlo da empresa. E os atacantes sabem disso.
+
+## O Que Mudou com o Teletrabalho
+
+No escritório, a proteção é (relativamente) centralizada: o firewall da empresa filtra o tráfego, os dispositivos estão na mesma rede gerida pelo IT, há câmaras e controlo físico. Em casa:
+
+- O router é da NOS/MEO/Vodafone com password padrão que o colaborador nunca mudou
+- O portátil pode ser pessoal, partilhado com cônjuge e filhos
+- O colaborador usa o Wi-Fi do café quando tem uma reunião fora de casa
+- Os ficheiros de trabalho ficam na área de transferência do Windows junto a ficheiros pessoais
+
+Nenhum destes cenários é catastrófico individualmente. Combinados, criam vetores de ataque que os atacantes exploram ativamente.
+
+## 1. Acesso Remoto — VPN vs. Zero Trust
+
+### VPN Tradicional
+
+A VPN (Virtual Private Network) cria um túnel cifrado entre o dispositivo do colaborador e a rede da empresa. Todo o tráfego passa por esse túnel, como se o colaborador estivesse fisicamente no escritório.
+
+**Vantagens:** Simples de implementar, os colaboradores acedem a recursos internos (servidor de ficheiros, ERP, impressoras de rede) como se estivessem no escritório.
+
+**Desvantagens:** Se a conta VPN de um colaborador for comprometida, o atacante tem acesso à rede interna completa. É tudo ou nada.
+
+**Implementação para PMEs:**
+- **WireGuard** — protocolo moderno, rápido, fácil de configurar. Disponível em pfSense, OPNsense e a maioria dos routers empresariais.
+- **OpenVPN Access Server** — versão gratuita para até 2 utilizadores simultâneos. Para PMEs pequenas, pode ser suficiente.
+- **Microsoft Azure VPN Gateway** ou **AWS Client VPN** — se a infraestrutura já estiver na cloud.
+
+Independentemente da solução, a VPN deve exigir **MFA (autenticação multifator)**. Uma VPN com apenas username e password é um alvo fácil.
+
+### Zero Trust Network Access (ZTNA)
+
+A abordagem Zero Trust não liga o utilizador à rede — liga-o apenas à aplicação ou recurso específico de que precisa. Cada acesso é validado individualmente com base em identidade, dispositivo e contexto.
+
+Para PMEs práticas: **Cloudflare Access** (gratuito até 50 utilizadores) é uma das formas mais acessíveis de implementar ZTNA. Em vez de uma VPN que liga à rede toda, o colaborador acede a uma URL específica (ex: \`erp.empresa.pt\`) que o Cloudflare valida antes de encaminhar.
+
+O artigo sobre [Zero Trust para PMEs](/blog/zero-trust-pme-guia-pratico) explica a implementação em detalhe.
+
+## 2. Segurança da Rede Doméstica
+
+A maioria das empresas não controla a rede doméstica dos colaboradores — nem deveria, na maioria dos casos. Mas pode definir requisitos mínimos na política de teletrabalho.
+
+### Requisitos Mínimos para a Rede Doméstica
+
+**Password do Wi-Fi:**
+- Usar WPA3 (ou WPA2 se o router não suportar WPA3).
+- Password com pelo menos 15 caracteres — não a password padrão do router.
+- Nunca partilhar a password Wi-Fi com visitantes — usar rede de convidados separada.
+
+**Firmware do router:**
+- Atualizar o firmware do router doméstico para a versão mais recente. A maioria dos routers da NOS/MEO tem opção de atualização automática nas definições.
+- Desativar a gestão remota se estiver ativa (UPnP também, se não usar).
+
+**Rede de convidados:**
+- Criar uma rede Wi-Fi separada para dispositivos pessoais, dispositivos IoT (câmaras, speakers inteligentes) e visitas.
+- O portátil de trabalho fica na rede principal; tudo o resto na rede de convidados.
+
+### O Que a Empresa Pode Fazer
+
+Se o colaborador usa um dispositivo da empresa, pode configurar o **DNS filtering** para usar Cloudflare Gateway ou NextDNS mesmo quando está em redes externas. O artigo sobre [filtragem de DNS](/blog/filtragem-dns-seguranca-pme) explica como configurar isto por dispositivo, sem tocar no router do colaborador.
+
+## 3. Segurança dos Dispositivos
+
+### Dispositivos da Empresa (O Ideal)
+
+Se a empresa fornece o dispositivo, tem controlo total:
+- **BitLocker** (Windows) ou **FileVault** (macOS) ativo — em caso de roubo ou perda, os dados ficam inacessíveis.
+- **EDR/antivírus gerido** — não apenas um antivírus local, mas uma solução que reporta ao IT da empresa.
+- **MDM (Mobile Device Management)** — o Microsoft Intune (incluído no Microsoft 365 Business Premium) permite gerir remotamente portáteis da empresa: aplicar políticas, forçar atualizações, fazer wipe remoto se o portátil for roubado.
+
+### BYOD — Dispositivos Pessoais
+
+Se o colaborador usa o dispositivo pessoal para trabalhar (BYOD — Bring Your Own Device), o risco aumenta significativamente. O dispositivo pode ter software pirata, estar desatualizado, ou ser partilhado com a família.
+
+**Mínimo exigível para BYOD:**
+- Sistema operativo atualizado (Windows 11, macOS Sonoma ou superior)
+- Antivírus ativo
+- Password de ecrã com bloqueio automático após 5 minutos de inatividade
+- Disco cifrado (BitLocker/FileVault)
+- Nenhum acesso a dados sensíveis da empresa — apenas a aplicações web (o browser é o cliente, não o dispositivo)
+
+O artigo sobre [BYOD](/blog/byod-politica-dispositivos-pessoais-trabalho-pme) tem um guia completo para implementar uma política segura de dispositivos pessoais.
+
+### Separação Entre Trabalho e Pessoal
+
+Um dos maiores riscos do teletrabalho é a mistura entre o pessoal e o profissional no mesmo dispositivo. Boas práticas:
+
+- **Perfil de browser separado** — Chrome e Firefox suportam perfis múltiplos. Perfil de trabalho separado do pessoal, com extensões e cookies isolados.
+- **Não instalar software pessoal no portátil de trabalho** — jogos, clientes BitTorrent, software de fontes desconhecidas são vetores de ataque.
+- **Não guardar ficheiros de trabalho no desktop ou em Downloads** — usar apenas as pastas sincronizadas com o sistema de armazenamento da empresa (OneDrive, Google Drive).
+
+## 4. Dados em Cloud — Gerir o Acesso Remoto
+
+### Microsoft 365 e Google Workspace
+
+A cloud é aliada do teletrabalho — permite aceder aos documentos a partir de qualquer lugar. Mas esta conveniência cria riscos se não estiver configurada corretamente.
+
+**Configurações essenciais:**
+- **Conditional Access** (Microsoft 365) ou **Context-Aware Access** (Google Workspace) — permite definir regras como "só pode aceder de dispositivos geridos" ou "acesso de países fora da UE requer aprovação".
+- **Sessões com timeout** — definir que sessões expiram após inatividade (ex: 8 horas).
+- **Bloqueio de download de dados sensíveis** para dispositivos não geridos — o colaborador pode ver o ficheiro no browser mas não fazer download para o portátil pessoal.
+- **Alertas de login de localização incomum** — login a partir de um IP estrangeiro deve gerar alerta imediato.
+
+Para detalhes de configuração, o artigo sobre [segurança no Google Workspace](/blog/seguranca-google-workspace-pme-guia-completo) cobre estas opções em profundidade.
+
+### Transferência de Ficheiros
+
+Proibir canais não autorizados de transferência de ficheiros de trabalho:
+- **Proibido:** Enviar documentos da empresa para email pessoal, WhatsApp pessoal, Dropbox pessoal.
+- **Autorizado:** SharePoint/Google Drive da empresa, sistemas de partilha aprovados pela empresa.
+
+## 5. Reuniões e Comunicação Segura
+
+### Videoconferências
+
+- Nunca usar a sala de reunião sem password ou sem sala de espera ativa.
+- Não partilhar o link de uma reunião em canais públicos (redes sociais, newsletters).
+- Em reuniões com informação sensível (resultados financeiros, recursos humanos), garantir que todos os participantes estão identificados antes de começar.
+
+O artigo sobre [segurança em videoconferências](/blog/seguranca-videoconferencias-teams-zoom-meet-pme) tem as configurações específicas para Teams, Zoom e Google Meet.
+
+### Redes Wi-Fi Públicas
+
+Cafés, aeroportos, hotéis — o Wi-Fi público não deve ser usado para trabalho sem VPN ativa. O tráfego numa rede pública pode ser intercetado por outros utilizadores na mesma rede.
+
+**Regra simples para os colaboradores:** Se estiver em Wi-Fi público, a VPN tem de estar ligada. Se a VPN não ligar, usar os dados móveis do telemóvel (hotspot pessoal) em vez do Wi-Fi público.
+
+## 6. A Política de Teletrabalho
+
+Uma boa política de teletrabalho não é um documento de 30 páginas que ninguém lê. É uma página A4 com regras claras que os colaboradores assinem. O essencial:
+
+**Ambiente de trabalho:**
+- Ecrã não deve ser visível a terceiros (familiares, vizinhos) quando se trabalha com dados sensíveis.
+- Câmara e microfone cobertos quando não estão em uso.
+- Documentos físicos com dados sensíveis devem ser destruídos (não simplesmente deitados ao lixo).
+
+**Dispositivos:**
+- Lista clara de o que é/não é permitido (BYOD vs. equipamento da empresa).
+- Obrigação de reportar roubo ou perda de dispositivos dentro de X horas.
+- Bloqueio de ecrã obrigatório (tecla Windows + L no Windows, Ctrl+Command+Q no Mac).
+
+**Dados:**
+- Quais os sistemas/dados acessíveis em teletrabalho e quais requerem acesso presencial.
+- Proibição explícita de enviar dados de trabalho para contas pessoais.
+
+**Incidentes:**
+- O que fazer se suspeitar de comprometimento (a quem contactar, que informação recolher).
+
+## Checklist de Segurança para Teletrabalho
+
+**Empresa:**
+- [ ] VPN com MFA configurada para todos os colaboradores remotos
+- [ ] Política de teletrabalho assinada por todos
+- [ ] DNS filtering configurado nos dispositivos da empresa
+- [ ] BitLocker/FileVault ativo em todos os portáteis
+- [ ] Conditional Access configurado no Microsoft 365 / Google Workspace
+
+**Colaborador (por dispositivo):**
+- [ ] Router doméstico com password forte e firmware atualizado
+- [ ] Rede de convidados separada para IoT e pessoal
+- [ ] Disco cifrado (BitLocker/FileVault)
+- [ ] Antivírus atualizado
+- [ ] Bloqueio automático de ecrã após 5 minutos
+- [ ] VPN ativa sempre que em Wi-Fi público
+- [ ] Perfil de browser separado para trabalho
+
+---
+
+O teletrabalho seguro não exige tecnologia cara. Exige consistência: VPN com MFA, dispositivos com disco cifrado, dados nos sistemas da empresa (não em emails pessoais) e colaboradores que sabem o que fazer quando algo corre mal.
+
+Para complementar a segurança do trabalho remoto, o artigo sobre [gestão de identidade e acessos](/blog/gestao-identidade-acessos-iam-pme) garante que as contas remotas têm os privilégios mínimos necessários. O [guia de simulações de phishing](/blog/simulacao-phishing-empresa-como-fazer-pme) ajuda a testar se os colaboradores em casa continuam vigilantes.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Práticas",
+    publishedAt: "2026-04-16",
+    readingTime: 14,
+  },
+  {
+    slug: "gestor-passwords-empresa-bitwarden-1password-keeper",
+    title: "Gestor de Passwords para Empresas: Bitwarden, 1Password ou Keeper — Qual Escolher?",
+    excerpt:
+      "Comparação prática dos principais gestores de passwords para PMEs: Bitwarden Teams, 1Password Business e Keeper Business. Funcionalidades, preços, pontos fortes e fracos — para escolher a solução certa para a sua empresa.",
+    content: `A maioria das PMEs portuguesas não usa um gestor de passwords empresarial. Os colaboradores reutilizam a mesma password em vários serviços, guardam credenciais em ficheiros Excel, ou usam o gestor do browser (que não é gerido pela empresa e não pode ser auditado).
+
+O resultado está nos números: **81% das violações de dados envolvem passwords fracas ou reutilizadas**. Um gestor de passwords empresarial é provavelmente o investimento de segurança com melhor retorno que uma PME pode fazer — custa €3-6 por colaborador por mês e elimina a classe de vulnerabilidades mais explorada.
+
+Este artigo compara as três soluções mais adequadas para PMEs: Bitwarden Teams, 1Password Business e Keeper Business.
+
+## Porquê um Gestor de Passwords Empresarial (e não o do Browser)?
+
+O gestor de passwords do Chrome ou Edge é útil para uso pessoal, mas tem limitações críticas para uso empresarial:
+
+- **Sem gestão central:** O IT não consegue saber que credenciais existem, quem tem acesso a quê, ou revogar acessos quando um colaborador sai.
+- **Ligado à conta pessoal:** Se o colaborador usa a conta Google pessoal, leva as passwords da empresa consigo quando sair.
+- **Sem partilha segura:** Partilhar uma password entre colaboradores exige enviá-la por email ou WhatsApp — texto simples.
+- **Sem auditoria:** Não há registo de quem acedeu a que credencial, nem alertas de passwords comprometidas.
+
+Um gestor empresarial resolve todos estes problemas. Quando um colaborador sai, o IT desativa a conta e as credenciais partilhadas ficam na vault da empresa.
+
+## LastPass — O Elefante na Sala
+
+Antes de comparar as alternativas, é necessário falar do LastPass. **Em 2022, o LastPass sofreu duas violações de dados graves** — a segunda resultou no roubo de vaults cifradas de utilizadores (incluindo empresas). Em 2023, as investigações de cripto confirmaram que alguns utilizadores perderam milhares de euros em ativos digitais porque as suas master passwords foram descobertas através dos dados roubados.
+
+O LastPass não é recomendado. As alternativas abaixo têm históricos de segurança significativamente melhores.
+
+## Comparação: Bitwarden vs. 1Password vs. Keeper
+
+### Bitwarden Teams
+
+**Preço:** €4/utilizador/mês (Teams); €6/utilizador/mês (Enterprise)
+
+**O que é:** Gestor de passwords open-source, com opção de auto-hosting. A única solução open-source das três, o que significa que o código pode ser auditado publicamente.
+
+**Pontos fortes:**
+- **Open-source e auditado** — o código é público e auditado por terceiros independentes anualmente.
+- **Auto-hosting disponível** — empresas com requisitos de soberania de dados podem correr o Bitwarden nos próprios servidores (gratuito para auto-hosting).
+- **Plano gratuito generoso** — para uso pessoal ou equipas muito pequenas (até 2 utilizadores), o plano gratuito é funcional.
+- **Apps em todas as plataformas** — Windows, macOS, Linux, iOS, Android, extensões de browser.
+- **Preço mais baixo** da categoria.
+
+**Pontos fracos:**
+- Interface menos polida que os concorrentes — mais funcional do que intuitiva.
+- As funcionalidades de relatórios de segurança são mais básicas no plano Teams.
+- Suporte técnico menos imediato (principalmente email e fórum comunidade no plano Teams).
+
+**Ideal para:** PMEs com sensibilidade a open-source ou soberania de dados, equipas técnicas, empresas que querem o custo mais baixo sem abdicar de segurança.
+
+**Funcionalidades-chave para empresas:**
+- Coleções partilhadas com controlo de acesso por grupo
+- Políticas de organização (força de master password, expiração de sessão)
+- Relatório de passwords reutilizadas e comprometidas (breach monitoring)
+- SSO com SAML 2.0 (plano Enterprise)
+- SCIM provisioning para Microsoft Entra ID / Okta (Enterprise)
+
+---
+
+### 1Password Business
+
+**Preço:** €7,99/utilizador/mês (Business); €19,95/utilizador/mês (Enterprise)
+
+**O que é:** O gestor de passwords mais orientado à experiência de utilizador. Fundado em 2005, tem uma reputação sólida de segurança sem incidentes significativos.
+
+**Pontos fortes:**
+- **Melhor UX da categoria** — a interface é limpa e intuitiva, a adoção pelos colaboradores é mais rápida.
+- **Watchtower** — funcionalidade proativa que alerta para passwords comprometidas em brechas públicas, passwords fracas, sites sem 2FA ativo, domínios com problemas.
+- **Travel Mode** — permite remover temporariamente vaults do dispositivo ao atravessar fronteiras (útil para viajantes frequentes em países com requisitos de inspeção de dispositivos).
+- **1Password Business Reports** — relatórios detalhados sobre a saúde das passwords da organização.
+- **Suporte excelente** — suporte em tempo real com resposta rápida.
+
+**Pontos fracos:**
+- **Preço mais alto** que Bitwarden e Keeper.
+- Não é open-source — o código não é auditável publicamente.
+- Auto-hosting não disponível.
+
+**Ideal para:** Empresas que valorizam a adoção pelos colaboradores acima de tudo, organizações com colaboradores menos técnicos, empresas que querem suporte rápido e fiável.
+
+**Funcionalidades-chave para empresas:**
+- Vaults de equipa com permissões granulares
+- Contas de hóspede (guests) para freelancers/externos sem licença completa
+- Integração com Microsoft Entra ID, Okta, OneLogin
+- Registos de auditoria completos (quem acedeu a quê, quando)
+- Aprovação de acessos temporários
+
+---
+
+### Keeper Business
+
+**Preço:** €4,46/utilizador/mês (Business); €6,25/utilizador/mês (Enterprise)
+
+**O que é:** Focado no mercado empresarial e de conformidade, com as funcionalidades de auditoria e relatórios mais avançadas das três opções.
+
+**Pontos fortes:**
+- **KeeperPAM** — módulo de gestão de acessos privilegiados (Privileged Access Management) integrado, para empresas que precisam de controlar acessos a sistemas críticos (bases de dados, servidores).
+- **Relatórios de conformidade** — geração de relatórios para auditorias SOC 2, ISO 27001, HIPAA. Útil para empresas que precisam demonstrar conformidade.
+- **Keeper Secrets Manager** — gestão de segredos de DevOps (chaves de API, tokens, certificados) integrada no mesmo ecossistema.
+- **BreachWatch** — monitorização da dark web para credenciais comprometidas.
+
+**Pontos fracos:**
+- Interface mais densa, curva de aprendizagem ligeiramente maior.
+- Modelo de preços por add-ons pode tornar-se caro se quiser todas as funcionalidades premium.
+- Menos conhecido entre utilizadores não técnicos.
+
+**Ideal para:** Empresas com requisitos de conformidade formal, equipas DevOps que gerem segredos além de passwords, organizações que precisam de PAM integrado.
+
+---
+
+## Tabela Comparativa
+
+| Critério | Bitwarden Teams | 1Password Business | Keeper Business |
+|----------|-----------------|-------------------|-----------------|
+| Preço/utilizador/mês | €4 | €7,99 | €4,46 |
+| Open-source | Sim | Não | Não |
+| Auto-hosting | Sim | Não | Não |
+| UX / Adoção | Boa | Excelente | Boa |
+| Relatórios de segurança | Básico | Avançado | Avançado |
+| SSO/SAML | Enterprise | Business | Business |
+| PAM integrado | Não | Não | Sim (add-on) |
+| Secrets management | Não | Não | Sim (add-on) |
+| Suporte | Email/fórum | Chat/email | Chat/email/tel |
+| Histórico de segurança | Sem incidentes | Sem incidentes | Sem incidentes |
+
+## Como Escolher
+
+**Escolha Bitwarden se:**
+- O custo é o principal critério.
+- Tem uma equipa técnica que valoriza open-source.
+- Quer a opção de auto-hosting para soberania de dados.
+- A equipa é confortável com uma interface mais funcional do que bonita.
+
+**Escolha 1Password se:**
+- A adoção pelos colaboradores (especialmente menos técnicos) é crítica.
+- Quer o menor atrito na implementação.
+- Viaja frequentemente para fora da UE e valoriza o Travel Mode.
+- O suporte rápido e fiável é importante.
+
+**Escolha Keeper se:**
+- Tem requisitos de conformidade formal (SOC 2, ISO 27001).
+- Gere acessos a sistemas privilegiados (servidores, bases de dados).
+- A equipa de DevOps precisa de gestão de segredos.
+
+## Implementação: Como Migrar para um Gestor Empresarial
+
+### Fase 1 — Setup (1-2 semanas)
+
+1. Criar a organização no gestor escolhido.
+2. Configurar grupos que espelhem a estrutura da empresa (ex: Financeiro, Comercial, TI, Gestão).
+3. Definir políticas: comprimento mínimo de master password (recomendado: 16+ caracteres), expiração de sessão (8h), bloqueio de exportação não autorizado.
+4. Configurar SSO se disponível (reduz fricção — os colaboradores entram com as credenciais do Microsoft 365 ou Google Workspace).
+
+### Fase 2 — Importação de Credenciais (1 semana)
+
+Os gestores de passwords permitem importar de outras fontes:
+- **Do browser:** Chrome/Edge/Firefox exportam as passwords guardadas em CSV. Importar para o Bitwarden/1Password/Keeper e depois eliminar do browser.
+- **Do Excel ou documentos:** Preparar um CSV com os campos (nome, URL, username, password) e importar.
+- **Do LastPass:** Todos os três têm importação direta do LastPass.
+
+### Fase 3 — Formação e Adoção (2-4 semanas)
+
+O maior risco na implementação de um gestor de passwords é a baixa adoção. Se os colaboradores continuarem a usar o browser ou ficheiros Excel em paralelo, o problema persiste.
+
+**Estratégia de adoção:**
+- Sessão de 30 minutos com toda a equipa: instalação da extensão do browser + app móvel + primeira password guardada.
+- Definir uma data-limite após a qual as credenciais partilhadas serão rotacionadas (forçando a migração).
+- Gamification: relatório de saúde de passwords com ranking por equipa (funcional no 1Password e Keeper).
+
+### Fase 4 — Rotacionar Credenciais Partilhadas
+
+As passwords que foram partilhadas por email, WhatsApp ou Excel devem ser alteradas após a migração. Assume-se que estão comprometidas — qualquer pessoa que as recebeu de forma insegura pode ainda tê-las armazenadas em algum lado.
+
+## Passkeys — O Futuro das Passwords
+
+Os três gestores já suportam **passkeys** — credenciais criptográficas que substituem as passwords tradicionais em sites compatíveis. Bitwarden, 1Password e Keeper funcionam como cofres de passkeys além de gestores de passwords.
+
+O artigo sobre [passkeys para PMEs](/blog/passkeys-autenticacao-sem-senha-pme) explica como as passkeys eliminam o phishing de credenciais e como implementar a transição gradualmente.
+
+## Gestão de Offboarding
+
+Quando um colaborador sai da empresa, o processo com um gestor empresarial é simples:
+
+1. Desativar a conta no gestor de passwords (as credenciais partilhadas ficam acessíveis à equipa, o colaborador perde acesso).
+2. Rotacionar as passwords de sistemas críticos a que o colaborador tinha acesso individual.
+3. Verificar no registo de auditoria se houve exportação de dados antes da saída.
+
+Sem um gestor empresarial, este processo é manual, incompleto e frequentemente ignorado — um ex-colaborador com más intenções pode aceder a sistemas da empresa durante meses.
+
+---
+
+Qualquer um dos três gestores desta comparação é vastamente superior a não ter nenhum. Se está a começar, o Bitwarden é a escolha de menor risco de custo — se não funcionar para a equipa, migrar para 1Password ou Keeper é fácil. Se a adoção é a preocupação principal (equipa menos técnica), comece pelo 1Password.
+
+Para completar a estratégia de autenticação, combine o gestor de passwords com [MFA em todas as contas](/blog/gestao-identidade-acessos-iam-pme) e considere [passkeys](/blog/passkeys-autenticacao-sem-senha-pme) para os sistemas que já suportam. O [guia de auditoria interna](/blog/auditoria-ciberseguranca-interna-pme) tem um bloco dedicado à higiene de credenciais que complementa esta implementação.`,
+    category: "ferramentas",
+    categoryLabel: "Ferramentas",
+    publishedAt: "2026-04-16",
+    readingTime: 13,
+  },
 ];
 
 export function getPostBySlug(slug: string): Post | undefined {
