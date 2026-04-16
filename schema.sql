@@ -97,6 +97,9 @@ CREATE INDEX IF NOT EXISTS idx_pricing_clicks_date ON pricing_clicks(date);
 CREATE TABLE IF NOT EXISTS affiliate_clicks (
   id              TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
   date            DATE NOT NULL DEFAULT CURRENT_DATE,
+  article_slug    TEXT,                                  -- blog post slug where click originated
+  cta_position    TEXT,                                  -- position identifier of the CTA
+  referrer        TEXT,                                  -- HTTP referrer header
   link_id         TEXT NOT NULL,                         -- identifier for the affiliate link/product
   destination_url TEXT,                                  -- where the click goes
   source_path     TEXT NOT NULL DEFAULT '/',             -- page the click came from
