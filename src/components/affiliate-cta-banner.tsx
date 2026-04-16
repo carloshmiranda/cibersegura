@@ -20,13 +20,35 @@ interface AffiliateCTABannerProps {
 
 // UTM tracking function
 const addUTMParams = (url: string, source: string, medium: string, campaign: string, content: string): string => {
-  const urlObj = new URL(url);
-  urlObj.searchParams.set('utm_source', 'ciberpme.pt');
-  urlObj.searchParams.set('utm_medium', medium);
-  urlObj.searchParams.set('utm_campaign', campaign);
-  urlObj.searchParams.set('utm_content', content);
-  urlObj.searchParams.set('utm_term', source);
-  return urlObj.toString();
+  try {
+    const urlObj = new URL(url);
+    urlObj.searchParams.set('utm_source', 'ciberpme.pt');
+    urlObj.searchParams.set('utm_medium', medium);
+    urlObj.searchParams.set('utm_campaign', campaign);
+    urlObj.searchParams.set('utm_content', content);
+    urlObj.searchParams.set('utm_term', source);
+
+    // Debug logging (only in development)
+    if (process.env.NODE_ENV === 'development') {
+      console.log('UTM parameters added:', {
+        original_url: url,
+        tracked_url: urlObj.toString(),
+        utm_source: 'ciberpme.pt',
+        utm_medium: medium,
+        utm_campaign: campaign,
+        utm_content: content,
+        utm_term: source
+      });
+    }
+
+    return urlObj.toString();
+  } catch (error) {
+    // Fallback to original URL if UTM addition fails
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Failed to add UTM parameters:', error, { url, source, medium, campaign, content });
+    }
+    return url;
+  }
 };
 
 // Click tracking function
@@ -38,18 +60,31 @@ const trackAffiliateClick = async (data: {
 }) => {
   try {
     // Use fetch with keepalive to ensure tracking even if user navigates away
-    fetch('/api/affiliate/click', {
+    const response = await fetch('/api/affiliate/click', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
       keepalive: true,
-    }).catch(() => {
-      // Silently handle errors to not disrupt user experience
     });
-  } catch {
-    // Silently handle errors to not disrupt user experience
+
+    // Debug logging (only in development)
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Affiliate click tracked:', {
+        status: response.status,
+        data,
+        success: response.ok
+      });
+    }
+
+    return response.ok;
+  } catch (error) {
+    // Debug logging (only in development)
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Failed to track affiliate click:', error, data);
+    }
+    return false;
   }
 };
 
@@ -125,13 +160,26 @@ export default function AffiliateCTABanner({
           const ctaPosition = `banner-${index + 1}`;
           const linkId = `${tool.name.toLowerCase().replace(/\s+/g, '-')}-${tool.category}`;
 
-          const handleClick = () => {
-            trackAffiliateClick({
-              article_slug: articleSlug,
-              cta_position: ctaPosition,
-              link_id: linkId,
-              destination_url: trackedUrl,
-            });
+          const handleClick = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+            // Track the click and wait briefly for it to complete
+            try {
+              const tracked = await trackAffiliateClick({
+                article_slug: articleSlug,
+                cta_position: ctaPosition,
+                link_id: linkId,
+                destination_url: trackedUrl,
+              });
+
+              // Small delay to ensure tracking completes before navigation
+              if (tracked) {
+                await new Promise(resolve => setTimeout(resolve, 50));
+              }
+            } catch (error) {
+              // Don't block navigation if tracking fails
+              if (process.env.NODE_ENV === 'development') {
+                console.error('Click tracking error:', error);
+              }
+            }
           };
 
           return (
