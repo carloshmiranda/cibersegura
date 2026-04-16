@@ -31,6 +31,11 @@
 ## Done
 <!-- Completed items with date -->
 
+### 2026-04-16 (session 4)
+- ✅ **growth**: Article "SIEM Gratuito para PMEs: Monitorização de Segurança com Wazuh" — `/blog/siem-wazuh-pme-monitorizacao-seguranca-gratis`; Wazuh architecture, all-in-one install, Windows/Linux agent deployment, priority rules (brute force, FIM, ClamAV, M365), email alerting, dashboard daily review workflow, comparison table
+- ✅ **growth**: Article "Segurança em Redes Sociais para Empresas: Como Proteger as Contas da Sua PME" — `/blog/seguranca-redes-sociais-empresas-pme-portugal`; LinkedIn Company Page admin hygiene, Meta Business Manager setup, X delegated access, account takeover patterns (SIM swap, phishing, sessions), offboarding checklist, monitoring strategy
+- ✅ **growth**: Article "MSSP vs SOC Interno: Como as PMEs Podem Externalizar a Cibersegurança" — `/blog/mssp-soc-externalizar-ciberseguranca-pme`; MSSP vs MDR vs vCISO differences, SLA requirements, contract red flags, Portugal pricing guide (€300-2500/mês), evaluation questions, provider list, what to keep internal
+
 ### 2026-04-15 (session 3)
 - ✅ **growth**: Article "Criptografia de Dados para PMEs: Como Proteger Informação em Portáteis, Discos e Email" — `/blog/criptografia-dados-pme-guia-completo`; BitLocker/FileVault/VeraCrypt, encrypted USB drives, email encryption (TLS/S/MIME/M365), key management, phased implementation plan
 - ✅ **growth**: Article "Filtragem de DNS para PMEs: Bloqueie Malware e Phishing Antes de Chegarem aos Dispositivos" — `/blog/filtragem-dns-seguranca-pme`; how DNS filtering works, Cloudflare Gateway (free), NextDNS, Cisco Umbrella, router/DHCP/per-device config, DoH bypass mitigation, log analysis
