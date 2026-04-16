@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { posts, CATEGORIES, type Post } from "@/lib/posts";
+import AffiliateCTABanner from "@/components/affiliate-cta-banner";
+import { getAllNIS2Tools } from "@/lib/affiliate-tools";
 
 export const metadata: Metadata = {
   title: "Recursos NIS2 — Guias e Artigos sobre a Diretiva de Cibersegurança",
@@ -320,6 +322,26 @@ export default function RecursosNis2Page() {
             </section>
           ))}
         </div>
+
+        {/* Tools Recommendations */}
+        <section className="mt-20">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-brand mb-4 text-balance font-display">
+              Ferramentas de Conformidade NIS2
+            </h2>
+            <p className="text-text-secondary max-w-2xl mx-auto text-pretty">
+              Soluções de cibersegurança recomendadas pela nossa equipa para implementar
+              os requisitos da diretiva NIS2 de forma prática e eficaz
+            </p>
+          </div>
+
+          <AffiliateCTABanner
+            tools={getAllNIS2Tools()}
+            title="Soluções Essenciais para PMEs"
+            description="Ferramentas testadas e aprovadas para cumprir os requisitos técnicos e organizacionais da NIS2"
+            source="recursos-nis2"
+          />
+        </section>
 
         {/* Related Resources */}
         <section className="mt-20">
