@@ -6,6 +6,8 @@ import { extractFAQStructuredData } from "@/lib/seo-utils";
 import { RelatedPosts } from "@/components/related-posts";
 import { SocialShare } from "@/components/social-share";
 import CountdownTimer from "@/components/countdown-timer";
+import AffiliateCTABanner from "@/components/affiliate-cta-banner";
+import { getAllNIS2Tools } from "@/lib/affiliate-tools";
 import type { Metadata } from "next";
 import Footer from "@/components/footer";
 
@@ -81,6 +83,15 @@ export default async function BlogPostPage({
 
   // Check if this article should show the NIS2 countdown timer
   const shouldShowCountdown = post.slug.includes('nis2') || post.category === 'legislacao';
+
+  // Check if this is a top NIS2 article that should show affiliate recommendations
+  const isTopNIS2Article = [
+    'nis2-portugal-guia-pme',
+    'checklist-nis2-conformidade',
+    'nis2-decreto-lei-125-2025-obrigacoes-pme',
+    'multas-coimas-nis2-pme',
+    'registo-cncs-nis2-guia-completo'
+  ].includes(post.slug);
 
   // Generate BreadcrumbList JSON-LD for improved SEO and search result display
   // Structure: Home > Blog > Category > Post Title
@@ -304,6 +315,18 @@ export default async function BlogPostPage({
         <article className="space-y-6">
           {renderedContent}
         </article>
+
+        {/* Affiliate CTA for top NIS2 articles */}
+        {isTopNIS2Article && (
+          <div className="mt-12 mb-12">
+            <AffiliateCTABanner
+              tools={getAllNIS2Tools()}
+              title="Ferramentas Recomendadas para Conformidade NIS2"
+              description="Soluções de cibersegurança selecionadas pela nossa equipa para implementar os requisitos da diretiva NIS2 de forma eficaz"
+              source={`blog-${post.slug}`}
+            />
+          </div>
+        )}
 
         {/* Related posts */}
         <RelatedPosts currentPostSlug={post.slug} category={post.category} />
