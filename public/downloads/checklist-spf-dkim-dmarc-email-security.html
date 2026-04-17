@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checklist SPF, DKIM e DMARC para PMEs</title>
+    <style>
+        @media print {
+            body { margin: 0; }
+            .no-print { display: none; }
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.4;
+            color: #1f2937;
+            max-width: 210mm;
+            margin: 0 auto;
+            padding: 20mm;
+            background: white;
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #0369a1;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #0f172a;
+            margin: 0 0 10px 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .header p {
+            color: #6b7280;
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .intro {
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .intro h2 {
+            color: #0f172a;
+            margin: 0 0 10px 0;
+            font-size: 18px;
+        }
+
+        .intro p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #374151;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            break-inside: avoid;
+        }
+
+        .section h3 {
+            background: #0369a1;
+            color: white;
+            padding: 12px 15px;
+            margin: 0 0 15px 0;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .checklist {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .checklist li {
+            padding: 12px 0;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .checklist li:last-child {
+            border-bottom: none;
+        }
+
+        .checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #0369a1;
+            border-radius: 3px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .priority {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+
+        .priority.critica {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .priority.alta {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .priority.media {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .code-block {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #1e293b;
+            margin: 8px 0;
+            word-break: break-all;
+        }
+
+        .service-specific {
+            background: #fefce8;
+            border-left: 4px solid #eab308;
+            padding: 10px 15px;
+            margin: 8px 0;
+            font-size: 13px;
+        }
+
+        .warning {
+            background: #fef2f2;
+            border: 1px solid #fca5a5;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 8px 0;
+            font-size: 13px;
+            color: #b91c1c;
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e5e7eb;
+            text-align: center;
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .instructions {
+            background: #fefce8;
+            border: 1px solid #facc15;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 30px;
+        }
+
+        .instructions h4 {
+            margin: 0 0 8px 0;
+            color: #854d0e;
+            font-size: 14px;
+        }
+
+        .instructions p {
+            margin: 4px 0;
+            font-size: 12px;
+            color: #a16207;
+        }
+
+        .verification-tools {
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 8px 0;
+        }
+
+        .verification-tools h5 {
+            margin: 0 0 8px 0;
+            color: #065f46;
+            font-size: 13px;
+        }
+
+        .verification-tools p {
+            margin: 0;
+            font-size: 12px;
+            color: #047857;
+        }
+
+        @page {
+            margin: 15mm;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Checklist SPF, DKIM e DMARC para PMEs</h1>
+        <p><strong>Guia passo-a-passo para implementar proteção de email contra spoofing</strong></p>
+        <p>Desenvolvido por CiberPME | ciberpme.vercel.app</p>
+        <p style="margin-top: 15px;">Data: ________________ | Empresa: ________________________________</p>
+        <p>Domínio: ________________ | Serviço de Email: ________________________________</p>
+    </div>
+
+    <div class="intro">
+        <h2>O que são SPF, DKIM e DMARC?</h2>
+        <p><strong>SPF:</strong> Define quais servidores podem enviar email pelo seu domínio</p>
+        <p><strong>DKIM:</strong> Assina digitalmente os emails para verificar autenticidade</p>
+        <p><strong>DMARC:</strong> Liga SPF e DKIM, define o que fazer com emails suspeitos</p>
+        <p><strong>Tempo estimado:</strong> 30-60 minutos | <strong>Dificuldade:</strong> Básica a Intermédia</p>
+        <p><strong>Resultado:</strong> Domínio protegido contra spoofing e melhor deliverability dos emails</p>
+    </div>
+
+    <div class="instructions">
+        <h4>📋 Como usar este checklist</h4>
+        <p>1. Implemente SPF primeiro, depois DKIM, e finalmente DMARC</p>
+        <p>2. Teste cada configuração antes de avançar para o próximo passo</p>
+        <p>3. Comece com políticas suaves e endureça gradualmente</p>
+        <p>4. Marque cada item como ✓ (concluído) ou ✗ (pendente)</p>
+    </div>
+
+    <div class="section">
+        <h3>🔍 1. Preparação e Avaliação Inicial</h3>
+        <ul class="checklist">
+            <li>
+                <div class="checkbox"></div>
+                <span>Identificar todos os serviços que enviam email pelo domínio <span class="priority critica">CRÍTICA</span></span>
+                <div style="margin-top: 8px; font-size: 12px; color: #6b7280;">
+                    Ex: Google Workspace, Microsoft 365, Mailchimp, Sendinblue, servidor próprio
+                </div>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Verificar registos DNS atuais <span class="priority alta">ALTA</span></span>
+                <div class="verification-tools">
+                    <h5>🔧 Ferramentas de verificação:</h5>
+                    <p>• MXToolbox.com • DMARClyzer.com • Google Admin Toolbox</p>
+                </div>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Garantir acesso ao painel de gestão DNS <span class="priority critica">CRÍTICA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Criar endereço de email para receber relatórios DMARC <span class="priority media">MÉDIA</span></span>
+                <div style="margin-top: 8px; font-size: 12px; color: #6b7280;">
+                    Ex: dmarc@suaempresa.pt ou security@suaempresa.pt
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h3>📧 2. Configuração SPF (Sender Policy Framework)</h3>
+        <ul class="checklist">
+            <li>
+                <div class="checkbox"></div>
+                <span>Criar registo TXT SPF na raiz do domínio (@) <span class="priority critica">CRÍTICA</span></span>
+
+                <div class="service-specific">
+                    <strong>Google Workspace:</strong>
+                    <div class="code-block">v=spf1 include:_spf.google.com ~all</div>
+                </div>
+
+                <div class="service-specific">
+                    <strong>Microsoft 365:</strong>
+                    <div class="code-block">v=spf1 include:spf.protection.outlook.com ~all</div>
+                </div>
+
+                <div class="service-specific">
+                    <strong>Zoho Mail:</strong>
+                    <div class="code-block">v=spf1 include:zoho.com ~all</div>
+                </div>
+
+                <div class="service-specific">
+                    <strong>Múltiplos serviços (exemplo):</strong>
+                    <div class="code-block">v=spf1 include:_spf.google.com include:servers.mcsv.net ~all</div>
+                </div>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Verificar sintaxe do registo SPF <span class="priority alta">ALTA</span></span>
+                <div class="verification-tools">
+                    <h5>🔧 Teste com:</h5>
+                    <p>mxtoolbox.com/spf.aspx</p>
+                </div>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Testar envio de email após implementação <span class="priority alta">ALTA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Aguardar propagação DNS (24-48 horas) antes de endurecer política <span class="priority media">MÉDIA</span></span>
+                <div class="warning">
+                    <strong>Atenção:</strong> Use ~all (softfail) inicialmente. Só mude para -all após testes
+                </div>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Mudança para política rígida: ~all → -all <span class="priority alta">ALTA</span></span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h3>🔐 3. Configuração DKIM (DomainKeys Identified Mail)</h3>
+        <ul class="checklist">
+            <li>
+                <div class="checkbox"></div>
+                <span>Ativar DKIM no serviço de email <span class="priority critica">CRÍTICA</span></span>
+
+                <div class="service-specific">
+                    <strong>Google Workspace:</strong><br>
+                    Admin Console → Apps → Google Workspace → Gmail → Authenticate email → Generate new record
+                </div>
+
+                <div class="service-specific">
+                    <strong>Microsoft 365:</strong><br>
+                    Security.microsoft.com → Email & collaboration → Policies & rules → DKIM
+                </div>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Copiar registos CNAME gerados pelo serviço <span class="priority critica">CRÍTICA</span></span>
+                <div style="margin-top: 8px; font-size: 12px; color: #6b7280;">
+                    Exemplo típico: google._domainkey.suaempresa.pt
+                </div>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Adicionar registos CNAME ao DNS <span class="priority critica">CRÍTICA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Verificar configuração DKIM <span class="priority alta">ALTA</span></span>
+                <div class="verification-tools">
+                    <h5>🔧 Teste com:</h5>
+                    <p>mxtoolbox.com/dkim.aspx (usar o seletor correto, ex: "google")</p>
+                </div>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Confirmar que emails enviados têm assinatura DKIM <span class="priority alta">ALTA</span></span>
+                <div style="margin-top: 8px; font-size: 12px; color: #6b7280;">
+                    Verificar headers dos emails enviados para confirmar "DKIM-Signature:"
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h3>🛡️ 4. Configuração DMARC (3 Fases)</h3>
+
+        <h4 style="margin: 20px 0 10px 0; color: #0369a1; font-size: 14px;">Fase 1: Monitorização (Primeira semana)</h4>
+        <ul class="checklist">
+            <li>
+                <div class="checkbox"></div>
+                <span>Criar registo TXT DMARC para monitorização <span class="priority critica">CRÍTICA</span></span>
+                <div class="code-block">_dmarc.suaempresa.pt TXT "v=DMARC1; p=none; rua=mailto:dmarc@suaempresa.pt; ruf=mailto:dmarc@suaempresa.pt; fo=1"</div>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Verificar que relatórios DMARC estão a ser recebidos <span class="priority alta">ALTA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Analisar relatórios para identificar fontes legítimas de email <span class="priority alta">ALTA</span></span>
+            </li>
+        </ul>
+
+        <h4 style="margin: 20px 0 10px 0; color: #0369a1; font-size: 14px;">Fase 2: Quarentena (Após 1-2 semanas)</h4>
+        <ul class="checklist">
+            <li>
+                <div class="checkbox"></div>
+                <span>Atualizar política DMARC para quarentena <span class="priority critica">CRÍTICA</span></span>
+                <div class="code-block">_dmarc.suaempresa.pt TXT "v=DMARC1; p=quarantine; pct=25; rua=mailto:dmarc@suaempresa.pt"</div>
+                <div class="warning">
+                    <strong>Nota:</strong> pct=25 aplica a política apenas a 25% dos emails suspeitos
+                </div>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Monitorizar relatórios para falsos positivos <span class="priority alta">ALTA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Aumentar gradualmente a percentagem (pct=50, pct=75, pct=100) <span class="priority media">MÉDIA</span></span>
+            </li>
+        </ul>
+
+        <h4 style="margin: 20px 0 10px 0; color: #0369a1; font-size: 14px;">Fase 3: Rejeição (Após validação completa)</h4>
+        <ul class="checklist">
+            <li>
+                <div class="checkbox"></div>
+                <span>Implementar política de rejeição total <span class="priority alta">ALTA</span></span>
+                <div class="code-block">_dmarc.suaempresa.pt TXT "v=DMARC1; p=reject; rua=mailto:dmarc@suaempresa.pt"</div>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Continuar monitorização regular dos relatórios <span class="priority media">MÉDIA</span></span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h3>📊 5. Validação e Testes Finais</h3>
+        <ul class="checklist">
+            <li>
+                <div class="checkbox"></div>
+                <span>Testar todos os registos com ferramentas online <span class="priority critica">CRÍTICA</span></span>
+                <div class="verification-tools">
+                    <h5>🔧 Ferramentas de teste completo:</h5>
+                    <p>• dmarclyzer.com • mxtoolbox.com • mail-tester.com</p>
+                </div>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Enviar emails de teste para diferentes provedores <span class="priority alta">ALTA</span></span>
+                <div style="margin-top: 8px; font-size: 12px; color: #6b7280;">
+                    Testar: Gmail, Outlook/Hotmail, Yahoo, provedor local português
+                </div>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Verificar que emails não vão para spam <span class="priority alta">ALTA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Confirmar headers de autenticação nos emails recebidos <span class="priority media">MÉDIA</span></span>
+                <div style="margin-top: 8px; font-size: 12px; color: #6b7280;">
+                    Procurar: "Authentication-Results" nos headers dos emails
+                </div>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Documentar todas as configurações implementadas <span class="priority media">MÉDIA</span></span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h3>🔄 6. Manutenção Contínua</h3>
+        <ul class="checklist">
+            <li>
+                <div class="checkbox"></div>
+                <span>Configurar revisão mensal dos relatórios DMARC <span class="priority alta">ALTA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Atualizar registos SPF quando adicionar novos serviços de email <span class="priority critica">CRÍTICA</span></span>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Monitorizar reputação do domínio trimestralmente <span class="priority media">MÉDIA</span></span>
+                <div class="verification-tools">
+                    <h5>🔧 Ferramentas de monitorização:</h5>
+                    <p>• Google Postmaster Tools • Microsoft SNDS</p>
+                </div>
+            </li>
+            <li>
+                <div class="checkbox"></div>
+                <span>Formar equipa sobre identificação de emails suspeitos <span class="priority alta">ALTA</span></span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="warning" style="margin-top: 30px;">
+        <strong>⚠️ Avisos Importantes:</strong><br>
+        • Nunca implemente p=reject diretamente sem teste gradual<br>
+        • Mantenha backups dos registos DNS antes de alterar<br>
+        • Teste sempre envio de emails após cada mudança<br>
+        • A propagação DNS pode demorar até 48 horas
+    </div>
+
+    <div class="footer">
+        <p><strong>Próximos Passos:</strong></p>
+        <p>1. Implemente SPF → 2. Configure DKIM → 3. Teste DMARC em fases → 4. Monitorize regularmente</p>
+        <p><strong>Suporte:</strong> Para mais detalhes, consulte o artigo completo em ciberpme.vercel.app/blog/spf-dkim-dmarc-seguranca-email-pme</p>
+        <br>
+        <p>© 2026 CiberPME | Recurso gratuito para PMEs portuguesas</p>
+        <p>Para mais recursos visite: <strong>ciberpme.vercel.app</strong></p>
+    </div>
+
+    <div class="no-print" style="position: fixed; top: 20px; right: 20px; background: #0369a1; color: white; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-size: 14px;" onclick="window.print()">
+        🖨️ Imprimir PDF
+    </div>
+</body>
+</html>
