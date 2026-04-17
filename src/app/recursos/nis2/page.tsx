@@ -188,6 +188,11 @@ const breadcrumbJsonLd = {
 };
 
 export default function RecursosNis2Page() {
+  // Calculate days remaining until CNCS deadline (May 4, 2026)
+  const cncsDeadline = new Date('2026-05-04T23:59:59');
+  const today = new Date();
+  const daysRemaining = Math.ceil((cncsDeadline.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+
   return (
     <div className="min-h-screen bg-bg">
       <script
@@ -337,8 +342,8 @@ export default function RecursosNis2Page() {
 
           <AffiliateCTABanner
             tools={getAllNIS2Tools()}
-            title="Soluções Essenciais para PMEs"
-            description="Ferramentas testadas e aprovadas para cumprir os requisitos técnicos e organizacionais da NIS2"
+            title={`🚨 URGENTE: ${daysRemaining} Dias para Conformidade CNCS — Prazo: 4 Maio 2026`}
+            description={`PRAZO CRÍTICO: Faltam apenas ${daysRemaining} dias para o registo obrigatório CNCS! Implemente agora os controlos de segurança essenciais com estas ferramentas certificadas antes que seja tarde demais.`}
             source="recursos-nis2"
           />
         </section>

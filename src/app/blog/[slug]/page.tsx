@@ -91,6 +91,11 @@ export default async function BlogPostPage({
                            post.content.toLowerCase().includes('cncs') ||
                            post.content.toLowerCase().includes('nis2');
 
+  // Calculate days remaining until CNCS deadline (May 4, 2026)
+  const cncsDeadline = new Date('2026-05-04T23:59:59');
+  const today = new Date();
+  const daysRemaining = Math.ceil((cncsDeadline.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+
   // Generate BreadcrumbList JSON-LD for improved SEO and search result display
   // Structure: Home > Blog > Category > Post Title
   const breadcrumbJsonLd = {
@@ -343,11 +348,11 @@ export default async function BlogPostPage({
           <AffiliateCTABanner
             tools={getAllNIS2Tools()}
             title={isCNCSUrgentTopic
-              ? "🚨 Ferramentas Urgentes para Conformidade CNCS — Prazo: 4 Maio 2026"
+              ? `🚨 URGENTE: ${daysRemaining} Dias para Conformidade CNCS — Prazo: 4 Maio 2026`
               : "Ferramentas Recomendadas de Cibersegurança"
             }
             description={isCNCSUrgentTopic
-              ? "ATENÇÃO: Faltam apenas meses para o prazo de registo CNCS! Estas soluções ajudam a implementar rapidamente os controlos de segurança obrigatórios antes do prazo legal."
+              ? `PRAZO CRÍTICO: Faltam apenas ${daysRemaining} dias para o registo obrigatório CNCS! Implemente agora os controlos de segurança essenciais com estas ferramentas certificadas antes que seja tarde demais.`
               : "Soluções de cibersegurança selecionadas pela nossa equipa para proteger a sua PME de forma eficaz"
             }
             source={`blog-${post.slug}`}
