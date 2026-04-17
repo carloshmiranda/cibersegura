@@ -16,6 +16,7 @@ interface AffiliateCTABannerProps {
   source: string; // For UTM tracking (e.g., "blog-nis2", "recursos-nis2")
   articleSlug?: string; // Blog post slug for tracking
   className?: string;
+  variant?: "default" | "cncs-urgency"; // New variant prop for CNCS urgency copy
 }
 
 // UTM tracking function
@@ -63,12 +64,32 @@ const trackAffiliateClick = async (data: {
 
 export default function AffiliateCTABanner({
   tools,
-  title = "Ferramentas Recomendadas",
-  description = "Soluções de cibersegurança selecionadas para implementar conformidade NIS2",
+  title,
+  description,
   source,
   articleSlug,
-  className = ""
+  className = "",
+  variant = "default"
 }: AffiliateCTABannerProps) {
+
+  // Determine copy based on variant
+  const getCopyContent = () => {
+    if (variant === "cncs-urgency") {
+      return {
+        title: title || "⚠️ Registo CNCS Obrigatório até Maio 2026",
+        description: description || "Implemente estas soluções agora para cumprir os requisitos NIS2 antes do prazo final. Não deixe a sua empresa em risco de coimas até €10M.",
+        urgencyNote: "🚨 Prazo final: 4 de Maio de 2026. Empresas não conformes enfrentam coimas severas."
+      };
+    }
+
+    return {
+      title: title || "Ferramentas Recomendadas",
+      description: description || "Soluções de cibersegurança selecionadas pela nossa equipa para melhorar a segurança da sua PME",
+      urgencyNote: null
+    };
+  };
+
+  const copyContent = getCopyContent();
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
@@ -115,8 +136,13 @@ export default function AffiliateCTABanner({
           </svg>
         </div>
         <div className="flex-1">
-          <h3 className="text-lg font-bold text-brand mb-2">{title}</h3>
-          <p className="text-text-secondary text-sm">{description}</p>
+          <h3 className="text-lg font-bold text-brand mb-2">{copyContent.title}</h3>
+          <p className="text-text-secondary text-sm">{copyContent.description}</p>
+          {copyContent.urgencyNote && (
+            <div className="mt-3 p-2 bg-warning-bg border border-warning-border rounded-md">
+              <p className="text-xs font-medium text-warning-text">{copyContent.urgencyNote}</p>
+            </div>
+          )}
         </div>
       </div>
 
