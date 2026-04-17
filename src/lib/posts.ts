@@ -17039,6 +17039,971 @@ Para o contexto mais amplo de gestão de risco de fornecedores, consulte o artig
     publishedAt: "2026-04-17",
     readingTime: 15,
   },
+  {
+    slug: "segmentacao-redes-vlans-pme",
+    title: "Segmentação de Redes para PMEs: VLANs, Microsegmentação e Isolamento de Ameaças",
+    excerpt:
+      "Como dividir a sua rede empresarial em zonas isoladas com VLANs e microsegmentação — guia prático para PMEs que querem limitar o impacto de um ataque sem grandes investimentos.",
+    content: `Quando o ransomware entra num PC da receção e em 20 minutos está a cifrar ficheiros no servidor de contabilidade, o problema não foi só o malware — foi a ausência de fronteiras na rede. **Uma rede plana onde tudo fala com tudo é o maior presente que pode dar a um atacante.**
+
+A segmentação de rede é o controlo que muda isto. Não elimina os ataques, mas limita dramaticamente o movimento lateral — a capacidade do atacante de se deslocar de um sistema comprometido para outros. Este guia explica como implementar segmentação numa PME com recursos limitados.
+
+## O Que É Segmentação de Rede e Por Que Importa
+
+**Rede plana (o estado atual de muitas PMEs):**
+Todos os dispositivos — portáteis de colaboradores, impressoras, câmaras IP, servidores, dispositivos IoT, redes Wi-Fi de convidados — estão na mesma rede. Um dispositivo comprometido tem acesso direto a todos os outros.
+
+**Rede segmentada:**
+A rede está dividida em zonas (segmentos). O tráfego entre zonas passa por uma firewall que aplica regras — por exemplo, uma impressora não deve conseguir iniciar ligações ao servidor de contabilidade, e um portátil de convidado não deve ter acesso a nenhum recurso interno.
+
+**O impacto prático:** no ataque de ransomware da introdução, se o PC da receção estivesse num segmento separado do servidor de contabilidade, sem regra de firewall que permitisse o acesso direto, o ransomware não conseguiria propagar-se. O impacto seria contido a um único dispositivo.
+
+## Conceitos Essenciais
+
+### VLAN (Virtual LAN)
+Uma VLAN é uma rede lógica separada que corre sobre a mesma infraestrutura física. Vários dispositivos no mesmo switch físico podem estar em VLANs diferentes e não conseguem comunicar entre si sem passar por um router ou firewall.
+
+**Exemplo:** o switch principal do escritório tem 24 portas. As portas 1-8 estão na VLAN 10 (colaboradores), as portas 9-12 na VLAN 20 (servidores), as portas 13-16 na VLAN 30 (IoT/impressoras). Um PC na VLAN 10 não consegue aceder diretamente a uma câmara IP na VLAN 30 — o tráfego tem de passar pela firewall, que pode bloquear ou permitir consoante as regras.
+
+### Trunk Port vs Access Port
+- **Access port**: pertence a uma única VLAN. Portáteis, impressoras, dispositivos terminais.
+- **Trunk port**: transporta tráfego de múltiplas VLANs com etiquetas (802.1Q). Usado nas ligações entre switches e entre switch e firewall/router.
+
+### Microsegmentação
+Enquanto as VLANs segmentam ao nível da rede (L2/L3), a microsegmentação vai mais longe: aplica políticas ao nível do workload ou do endpoint. Cada servidor ou VM tem regras de firewall que definem com quem pode comunicar, independentemente da VLAN em que está.
+
+Em ambientes cloud (Azure, AWS) isto é feito com security groups e network security groups. Em ambientes on-premise mais avançados, com software-defined networking (SDN) como VMware NSX. Para a maioria das PMEs, VLANs com regras de firewall bem definidas são suficientes.
+
+## Desenho de Segmentação para PMEs
+
+### Zonas Recomendadas
+
+**Zona de Utilizadores (VLAN 10 — ex: 192.168.10.0/24)**
+Portáteis e desktops dos colaboradores. Acesso à internet, a aplicações de negócio (ERP, email), mas não a servidores diretamente na maioria dos casos.
+
+**Zona de Servidores (VLAN 20 — ex: 192.168.20.0/24)**
+Servidores de ficheiros, Active Directory, bases de dados, servidores de aplicações. Acesso restrito: apenas dispositivos e serviços autorizados devem conseguir comunicar aqui.
+
+**Zona de Gestão (VLAN 30 — ex: 192.168.30.0/24)**
+Interfaces de gestão de switches, firewalls, NAS, servidores. Acesso apenas de administradores a partir de dispositivos específicos. Esta zona deve ser a mais restrita.
+
+**Zona IoT/Dispositivos (VLAN 40 — ex: 192.168.40.0/24)**
+Impressoras, câmaras IP, telefones VoIP, termóstatos inteligentes, qualquer dispositivo IoT. Acesso mínimo: apenas ao que estritamente precisam (ex: impressoras acedem a um servidor de impressão; câmaras IP acedem ao servidor de gravação). Sem acesso à zona de utilizadores ou servidores.
+
+**Zona Wi-Fi Convidados (VLAN 50 — ex: 192.168.50.0/24)**
+Rede Wi-Fi para visitas, clientes, dispositivos pessoais dos colaboradores. Acesso apenas à internet, totalmente isolada de todas as outras zonas. Separação física do SSID de empresa.
+
+**DMZ (VLAN 60 — ex: 192.168.60.0/24)** *(se aplicável)*
+Servidores acessíveis da internet (servidor web, servidor de email, VPN concentrator). Isolados da rede interna — só o tráfego necessário é permitido entre DMZ e interior.
+
+### Diagrama de Fluxo de Tráfego
+
+\`\`\`
+Internet
+    |
+  Firewall/Router (UTM/NGFW)
+    |
+    +-- VLAN 10: Utilizadores  → pode aceder VLAN 20 (portas específicas)
+    |                          → acesso total à internet
+    |
+    +-- VLAN 20: Servidores    → recebe ligações de VLAN 10 (portas específicas)
+    |                          → acesso restrito à internet (updates, email)
+    |
+    +-- VLAN 30: Gestão        → apenas de IPs de admin em VLAN 10
+    |                          → sem acesso à internet
+    |
+    +-- VLAN 40: IoT           → sem acesso a VLAN 10, 20, 30
+    |                          → acesso internet limitado (firmware updates)
+    |
+    +-- VLAN 50: Convidados    → apenas internet
+    |                          → sem acesso a qualquer VLAN interna
+    |
+    +-- VLAN 60: DMZ           → acessível da internet (portas específicas)
+                               → acesso limitado a VLAN 20 (apenas o necessário)
+\`\`\`
+
+## Implementação Prática
+
+### Pré-requisitos de Hardware
+
+**Switch gerido (managed switch)**
+Necessário para configurar VLANs. Switches não geridos (unmanaged) não suportam VLANs.
+
+Opções acessíveis para PMEs:
+- **Cisco SG350-10** (~€200) — entry-level gerido, fiável
+- **Netgear GS308E** (~€50) — smart managed, sufficiente para escritórios pequenos
+- **TP-Link TL-SG108E** (~€35) — económico, funcional para PMEs com orçamento limitado
+- **Ubiquiti UniFi switches** — solução integrada com os APs UniFi, excelente para gestão centralizada
+
+**Firewall/Router com suporte a VLANs**
+- **pfSense/OPNsense** em hardware dedicado (PC industrial ~€150) — open source, muito configurável
+- **Fortinet FortiGate 40F** (~€300) — UTM completo, suporta VLANs nativas
+- **Ubiquiti UniFi Dream Machine** (~€350) — solução integrada router/switch/APs/firewall
+- **Mikrotik hEX** (~€60) — router capaz, curva de aprendizagem mais alta
+
+### Configuração de VLANs (Exemplo OPNsense/pfSense)
+
+**1. Criar VLANs na interface WAN parent:**
+\`\`\`
+Interfaces → Other Types → VLAN
+Parent: igb0 (ou a sua interface LAN)
+VLAN Tag: 10
+Description: Utilizadores
+
+Repetir para VLANs 20, 30, 40, 50
+\`\`\`
+
+**2. Atribuir interfaces:**
+\`\`\`
+Interfaces → Assignments
+Adicionar cada VLAN como interface (OPT1, OPT2, etc.)
+Configurar IP de gateway para cada VLAN:
+  VLAN10_GW: 192.168.10.1/24
+  VLAN20_GW: 192.168.20.1/24
+  (...)
+\`\`\`
+
+**3. Configurar DHCP por VLAN:**
+\`\`\`
+Services → DHCP Server → VLAN10
+Range: 192.168.10.100 - 192.168.10.200
+\`\`\`
+
+**4. Regras de firewall inter-VLAN:**
+\`\`\`
+Firewall → Rules → VLAN10:
+  PASS: VLAN10 net → VLAN20 net, porta 443 (HTTPS para app interna)
+  PASS: VLAN10 net → VLAN20 net, porta 445 (SMB para servidor de ficheiros)
+  BLOCK: VLAN10 net → VLAN30 net (gestão — bloquear utilizadores normais)
+  BLOCK: VLAN10 net → VLAN40 net (IoT — sem razão para aceder)
+  PASS: VLAN10 net → WAN (internet)
+
+Firewall → Rules → VLAN40 (IoT):
+  BLOCK: VLAN40 net → VLAN10 net
+  BLOCK: VLAN40 net → VLAN20 net
+  BLOCK: VLAN40 net → VLAN30 net
+  PASS: VLAN40 net → WAN (internet, para updates de firmware)
+
+Firewall → Rules → VLAN50 (Convidados):
+  BLOCK: VLAN50 net → qualquer rede interna
+  PASS: VLAN50 net → WAN
+\`\`\`
+
+### Configuração no Switch (Exemplo TP-Link Smart Switch)
+
+**1. Criar VLANs:**
+\`\`\`
+802.1Q VLAN → Add VLAN:
+  VLAN ID: 10, Name: Utilizadores
+  VLAN ID: 20, Name: Servidores
+  VLAN ID: 40, Name: IoT
+  VLAN ID: 50, Name: Convidados
+\`\`\`
+
+**2. Configurar portas:**
+\`\`\`
+Porta 1 (uplink para firewall): Tagged em todas as VLANs (trunk port)
+Porta 2-8 (utilizadores): Untagged em VLAN 10, excluída das restantes
+Porta 9-12 (servidores): Untagged em VLAN 20, excluída das restantes
+Porta 13-16 (IoT): Untagged em VLAN 40, excluída das restantes
+\`\`\`
+
+### Wi-Fi Segmentado
+
+Se usar Access Points Ubiquiti UniFi (recomendado pela gestão centralizada):
+
+**1. Criar redes Wi-Fi separadas:**
+\`\`\`
+UniFi Controller → Settings → WiFi:
+  SSID "Empresa": VLAN 10 (colaboradores)
+  SSID "IoT-Devices": VLAN 40 (dispositivos IoT)
+  SSID "Convidados": VLAN 50 (isolado)
+\`\`\`
+
+**2. Client Isolation em Convidados:**
+Ativar "Client Device Isolation" na rede de convidados para que os dispositivos não consigam comunicar entre si.
+
+Para outras marcas (TP-Link EAP, Netgear WAX), o princípio é o mesmo: cada SSID mapeia para uma VLAN diferente.
+
+## Regras de Firewall Essenciais
+
+### O Princípio Base: Negar Tudo, Permitir o Necessário
+
+Em vez de começar com tudo aberto e bloquear o perigoso, comece com tudo bloqueado e abra apenas o que é necessário para o negócio funcionar.
+
+### Regras Críticas a Implementar
+
+**Bloquear acesso à interface de gestão da firewall de VLANs não-admin:**
+\`\`\`
+BLOCK: qualquer rede (exceto VLAN30) → IP da firewall, porta 443/80/22
+\`\`\`
+
+**Impedir movimento lateral entre VLANs de utilizadores e IoT:**
+\`\`\`
+BLOCK: VLAN40 (IoT) → VLAN10 (Utilizadores)
+BLOCK: VLAN40 (IoT) → VLAN20 (Servidores)
+\`\`\`
+
+**Separar convidados completamente:**
+\`\`\`
+BLOCK: VLAN50 → RFC1918 (192.168.0.0/16, 10.0.0.0/8, 172.16.0.0/12)
+PASS: VLAN50 → WAN
+\`\`\`
+
+**Limitar acesso de servidores à internet** (reduz o canal de exfiltração):
+\`\`\`
+PASS: VLAN20 → WAN, porta 443 (updates, cloud)
+PASS: VLAN20 → WAN, porta 25/465/587 (email, se aplicável)
+BLOCK: VLAN20 → WAN (restante)
+\`\`\`
+
+## Validação da Segmentação
+
+Depois de configurar, teste se as regras funcionam:
+
+**Teste básico de isolamento:**
+\`\`\`bash
+# A partir de um PC de convidado (VLAN 50), tente aceder a um servidor interno
+ping 192.168.20.10  # deve falhar (Request timeout)
+nmap -p 445 192.168.20.10  # deve retornar filtered
+
+# A partir de um dispositivo IoT (VLAN 40), tente aceder a PC de utilizador
+ping 192.168.10.50  # deve falhar
+\`\`\`
+
+**Ferramenta de validação — Nmap:**
+\`\`\`bash
+# De cada VLAN, mapear o que está acessível
+nmap -sn 192.168.20.0/24  # listar hosts visíveis em VLAN Servidores
+\`\`\`
+
+**Verificar logs da firewall:**
+Regras de bloqueio devem gerar logs. Confirme que os bloqueios estão a ser registados — isto serve também como deteção de tentativas de movimento lateral.
+
+## Casos de Uso Reais
+
+### Contabilista com PC comprometido
+
+Sem segmentação: o malware no PC da contabilista propaga-se para todos os PCs da rede e para o servidor de ficheiros.
+
+Com segmentação: o PC comprometido está na VLAN de utilizadores. A firewall bloqueia o tráfego SMB lateral entre PCs. O servidor de ficheiros na VLAN de servidores só aceita ligações nas portas necessárias. O blast radius é limitado ao PC comprometido.
+
+### Câmara IP comprometida
+
+Câmeras IP baratas são frequentemente alvo de botnets. Sem segmentação, uma câmera comprometida tem acesso à mesma rede que os servidores.
+
+Com segmentação IoT: a câmera está na VLAN 40. A firewall bloqueia todo o tráfego desta VLAN para a rede interna. O atacante controla a câmera mas não consegue movimentar-se para os sistemas de negócio.
+
+### Auditor externo com acesso a Wi-Fi
+
+O auditor liga-se ao Wi-Fi de convidados. Acede à internet para o seu trabalho, mas está completamente isolado da rede interna. Mesmo que o portátil do auditor esteja comprometido, não tem acesso a nenhum sistema da empresa.
+
+## Limitações e O Que a Segmentação Não Resolve
+
+A segmentação **não** substitui:
+- **Backups**: um servidor na VLAN de servidores ainda pode ser cifrado se o ransomware obtiver credenciais de acesso legítimas
+- **MFA e controlo de acessos**: a segmentação controla onde se pode chegar, não quem são
+- **Patching**: vulnerabilidades em serviços expostos dentro de uma VLAN continuam exploráveis
+- **EDR/antivírus**: deteção de malware nos endpoints ainda é necessária
+
+A segmentação é uma camada de defesa, não a única. Ver [CIS Controls v8](/blog/cis-controls-v8-pme-implementacao-ig1) para o quadro completo de controlos essenciais.
+
+## Checklist de Implementação
+
+### Fase 1 — Prioridade Alta (1-2 semanas)
+- [ ] Isolar Wi-Fi de convidados completamente da rede interna
+- [ ] Criar VLAN separada para dispositivos IoT (câmaras, impressoras)
+- [ ] Verificar que switch e router/firewall suportam VLANs (substituir se necessário)
+
+### Fase 2 — Segmentação Estruturada (1-2 meses)
+- [ ] Criar VLAN de servidores separada da VLAN de utilizadores
+- [ ] Definir e implementar regras de firewall inter-VLAN (princípio de menor privilégio)
+- [ ] Criar VLAN de gestão para acesso a interfaces administrativas
+- [ ] Documentar diagrama de rede com VLANs e regras
+
+### Fase 3 — Refinamento (contínuo)
+- [ ] Validar regras com testes de conectividade
+- [ ] Rever logs de firewall mensalmente para detetar anomalias
+- [ ] Atualizar segmentação quando novos sistemas são adicionados
+- [ ] Considerar microsegmentação em servidores críticos
+
+---
+
+A segmentação de rede é um dos controlos com melhor retorno de investimento em cibersegurança para PMEs: o custo é relativamente baixo (um switch gerido e uma firewall adequada), mas o impacto na contenção de incidentes é enorme. Um ransomware que fica contido num único PC em vez de se propagar por toda a empresa é a diferença entre um incidente gerível e uma catástrofe operacional.
+
+Para implementar uma postura de segurança completa, combine a segmentação com [gestão de vulnerabilidades](/blog/gestao-vulnerabilidades-pme-guia-completo), [controlo de identidades e acessos](/blog/gestao-identidade-acessos-iam-pme), e [backups isolados](/blog/backup-dados-pme-regra-3-2-1).`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Práticas",
+    publishedAt: "2026-04-17",
+    readingTime: 14,
+  },
+  {
+    slug: "ciberseguranca-clinicas-saude-portugal",
+    title: "Cibersegurança para Clínicas e Serviços de Saúde em Portugal: Guia Prático",
+    excerpt:
+      "Clínicas dentárias, médicas e farmácias são alvos prioritários de ransomware. Guia de proteção específico para serviços de saúde em Portugal: dados de saúde, RGPD, NIS2 e controlos essenciais.",
+    content: `Em fevereiro de 2024, o Hospital de Barcelos foi alvo de um ciberataque que obrigou ao encerramento de sistemas informáticos e ao adiamento de consultas. Em 2023, o Centro Hospitalar Universitário de Lisboa Central sofreu um ataque de ransomware que expôs dados de doentes. Estes não são casos isolados: **os serviços de saúde são o setor mais atacado por ransomware a nível global**, e as clínicas e consultórios privados não estão imunes.
+
+Para uma clínica dentária, consultório médico, clínica de fisioterapia ou farmácia em Portugal, um ataque de ransomware não é apenas uma crise tecnológica — é uma crise de negócio imediata: sem acesso aos agendamentos, historial clínico e receituário, a operação para.
+
+Este guia aborda os riscos específicos do setor de saúde e os controlos práticos que uma PME de saúde pode implementar.
+
+## Por Que os Serviços de Saúde São Alvos Prioritários
+
+### O Valor dos Dados de Saúde
+
+Os dados de saúde valem mais no mercado negro do que os dados de cartão de crédito. Um registo de saúde completo inclui nome, NIF, morada, histórico médico, medicação — informação que permite fraude de identidade por anos.
+
+**No dark web:**
+- Dados de cartão de crédito: €1-10 por registo
+- Registo médico completo: €50-500 por registo
+
+Além da venda, os atacantes usam dados de saúde para **extorsão direta**: "pagam ou publicamos o histórico médico dos seus doentes" — pressionando ao pagamento do resgate por razões de segredo profissional e reputação.
+
+### Pressão Operacional para Pagar
+
+As clínicas têm baixa tolerância à interrupção. Um escritório de advogados pode funcionar sem sistemas por alguns dias com dificuldade. Uma clínica sem acesso ao sistema de agendamento, historial e prescrições fica operacionalmente paralisada em horas.
+
+Os grupos de ransomware sabem isto — e escolhem alvos onde a pressão para pagar é máxima.
+
+### Sistemas Legados e Dispositivos Médicos
+
+Muitas clínicas usam software de gestão clínica (SGC) antigo, frequentemente baseado em Windows 7 ou versões antigas do SQL Server, sem suporte de segurança ativo. Equipamentos médicos (aparelhos de radiografia digital, ECG, PACS para imagiologia) correm frequentemente em sistemas operativos obsoletos e não podem ser atualizados facilmente.
+
+## O Quadro Regulatório em Portugal
+
+### RGPD e Dados de Saúde
+
+Os dados de saúde são **dados sensíveis de categoria especial** ao abrigo do RGPD (artigo 9.º), sujeitos a proteções adicionais:
+
+- Proibição de tratamento como regra geral, com exceções (tratamento de saúde, interesse público, consentimento explícito)
+- Para clínicas: a base legal é geralmente o **contrato de prestação de cuidados de saúde** (necessário para cumprimento de obrigação legal) ou o consentimento explícito do paciente
+- **Obrigação de notificação da CNPD** em caso de violação de dados no prazo de 72 horas (ver [guia de resposta a incidentes](/blog/plano-resposta-incidentes-ciberseguranca-pme))
+- **Nomeação de DPO (Encarregado de Proteção de Dados)** obrigatória para estabelecimentos de saúde que tratam dados de saúde em larga escala — verifique com a CNPD se a sua dimensão o obriga
+
+**Medidas técnicas exigidas pelo RGPD:**
+- Pseudonimização e cifragem de dados de saúde
+- Controlo de acesso com princípio de menor privilégio
+- Registos de auditoria dos acessos ao historial clínico
+- Acordo de processamento de dados (DPA) com todos os fornecedores que processam dados de doentes (software de gestão clínica, cloud backup, etc.)
+
+### NIS2 e Setor da Saúde
+
+A Diretiva NIS2 (Decreto-Lei 125/2025) inclui o setor da saúde como **setor altamente crítico**. Hospitais e prestadores de cuidados de saúde acima de determinados limiares são entidades essenciais ou importantes com obrigações NIS2.
+
+Para a maioria das clínicas privadas de pequena dimensão, a NIS2 pode não se aplicar diretamente. Contudo, se prestar serviços a entidades NIS2 (hospitais públicos, seguradoras), pode ser pressionado a demonstrar controlos de segurança equivalentes.
+
+Consulte o [guia NIS2 para PMEs](/blog/nis2-portugal-guia-pme) e verifique no [portal CNCS](https://www.cncs.gov.pt) se a sua organização está abrangida.
+
+### Segredo Médico e Dever de Confidencialidade
+
+O segredo médico (Lei n.º 15/2014 — Lei de Bases da Saúde, Código Deontológico da Ordem dos Médicos) impõe obrigações legais de confidencialidade sobre os dados dos doentes, independentemente do RGPD. Uma violação de dados que exponha informação clínica tem consequências deontológicas para o médico, além das legais para a clínica.
+
+## Ameaças Específicas do Setor
+
+### Ransomware Direcionado a SGC
+
+Os sistemas de gestão clínica (Glintt, Alert, Siemens Healthineers, entre outros) são alvos conhecidos. Os atacantes exploram:
+- Credenciais fracas ou default de acesso ao SGC
+- Vulnerabilidades em versões antigas do software
+- Acesso remoto mal configurado (RDP exposto, TeamViewer com credenciais fracas)
+
+**Proteção:**
+- Atualize o SGC para a versão mais recente suportada pelo fornecedor
+- Altere todas as credenciais default
+- Nunca exponha o RDP diretamente à internet — use VPN com MFA
+- Contrate suporte ativo do fornecedor que inclua patches de segurança
+
+### Phishing para Roubo de Credenciais
+
+Emails fraudulentos a imitar a Ordem dos Médicos, a Direção-Geral da Saúde, ou comunicações de seguradoras (Multicare, Médis) são usados para roubar credenciais de portais de saúde.
+
+**Proteção:**
+- Ativar MFA em todos os portais de seguradoras e sistemas de faturação eletrónica
+- Formação básica de sensibilização para phishing (ver [guia de simulação de phishing](/blog/simulacao-phishing-empresa-como-fazer-pme))
+- Verificar sempre o endereço de email real do remetente, não só o nome apresentado
+
+### Acesso Indevido por Ex-Colaboradores
+
+Numa clínica com rotatividade de pessoal (rececionistas, técnicos), ex-colaboradores com acesso não revogado aos sistemas são um risco real.
+
+**Proteção:**
+- Processo de offboarding formalizado: desativar conta no dia da saída, não depois
+- Contas individuais por colaborador — nunca contas partilhadas
+- Revisão trimestral de acessos ativos
+
+### Equipamentos Médicos Conectados
+
+Aparelhos de radiografia digital, ecógrafo, PACS, TCR — muitos ligados à rede para partilha de imagens. Frequentemente correm sistemas operativos obsoletos e não recebem patches.
+
+**Proteção:**
+- Segmentar equipamentos médicos numa VLAN própria, isolada da rede de trabalho (ver [guia de segmentação de redes](/blog/segmentacao-redes-vlans-pme))
+- Não ligar equipamentos médicos diretamente à internet
+- Verificar com o fornecedor do equipamento a política de atualizações de segurança
+
+## Controlos Essenciais para Clínicas
+
+### 1. Backup com a Regra 3-2-1
+
+Este é o controlo mais crítico. Um backup funcional significa que um ataque de ransomware é um incidente, não uma catástrofe.
+
+**Regra 3-2-1:**
+- 3 cópias dos dados
+- em 2 suportes diferentes (ex: servidor local + cloud)
+- com 1 cópia offsite (cloud ou disco externo guardado fora das instalações)
+
+**Para clínicas:**
+- Backup diário automático do SGC e base de dados de doentes
+- Backup para cloud cifrada (Backblaze Business, Azure Backup, Veeam Cloud Connect)
+- Backup local em NAS com retenção de 30 dias
+- **Testar o restauro mensalmente** — um backup que nunca foi testado não é um backup
+- Armazenar backups de cloud em conta separada, não acessível do servidor principal
+
+Ver o [guia completo de backups 3-2-1](/blog/backup-dados-pme-regra-3-2-1) para configuração detalhada.
+
+### 2. MFA em Todos os Acessos Críticos
+
+- Portais de seguradoras (Multicare, Médis, AdvanceCare, etc.)
+- Portal da Ordem profissional
+- Email da clínica
+- Acesso remoto aos sistemas (VPN obrigatória com MFA — nunca RDP direto)
+- Sistema de gestão clínica, se suportar MFA
+
+Ver [guia de 2FA/MFA para PMEs](/blog/autenticacao-dois-fatores-2fa-pme).
+
+### 3. Controlo de Acesso ao Historial Clínico
+
+Nem todos os colaboradores precisam de acesso ao historial completo de todos os doentes:
+- **Médicos/profissionais de saúde**: acesso ao historial dos seus doentes
+- **Recepcionistas**: acesso ao agendamento e dados de contacto, não ao historial clínico
+- **Técnicos administrativos**: acesso à faturação, não aos registos clínicos
+
+Configure o SGC com perfis de acesso por função. Registos de auditoria de acesso devem estar ativos — quem acedeu ao historial de quem e quando.
+
+### 4. Cifrar Dados em Portáteis e Dispositivos Móveis
+
+Se um portátil com dados de doentes for roubado sem estar cifrado, tem de notificar a CNPD mesmo que não haja certeza de acesso aos dados.
+
+- **Windows**: BitLocker ativo (ver [guia de criptografia de dados](/blog/criptografia-dados-pme-guia-completo))
+- **macOS**: FileVault ativo
+- **Tablets/smartphones** usados para acesso a sistemas clínicos: PIN/biometria + gestão MDM
+
+### 5. Segmentação de Rede
+
+- VLAN separada para equipamentos médicos
+- VLAN separada para Wi-Fi de doentes (se disponibilizar)
+- Servidores de SGC em VLAN isolada do tráfego geral de escritório
+
+### 6. Atualização de Software e SGC
+
+O software não atualizado é o vetor de entrada mais comum. Para clínicas:
+- Windows Update automático ativado em todos os postos
+- Antivírus atualizado com proteção em tempo real
+- SGC: contrato de suporte ativo com o fornecedor que inclua atualizações de segurança
+- Reveja anualmente o suporte do fabricante ao sistema operativo dos postos
+
+### 7. Plano de Continuidade para a Clínica
+
+Se os sistemas ficarem indisponíveis, o que acontece?
+
+**Documentar procedimentos manuais:**
+- Lista de contacto de doentes com consultas do dia (impresso diário às 8h)
+- Fichas de papel para registo de consultas de emergência
+- Contactos dos fornecedores de SGC e IT
+- Número do CERT.PT: +351 213 111 006
+
+**Testar o plano**: simule 2h sem sistemas e verifique se a equipa sabe o que fazer.
+
+Ver [guia de plano de continuidade de negócio](/blog/plano-continuidade-negocio-bcp-ciberataque-pme).
+
+## Conformidade com RGPD — Checklist Específica para Clínicas
+
+### Documentação Obrigatória
+- [ ] Registo de Atividades de Tratamento (RAT) — lista todos os tratamentos de dados
+- [ ] Política de Privacidade visível na receção e no website
+- [ ] Formulário de consentimento explícito para tratamento de dados de saúde (quando aplicável)
+- [ ] DPA (acordo de subprocessamento) com o fornecedor do SGC e software de cloud
+- [ ] Procedimento documentado de resposta a violações de dados (72h para CNPD)
+
+### Direitos dos Doentes
+Os doentes têm direito a:
+- Aceder aos seus dados clínicos
+- Retificar dados incorretos
+- Apagar dados (com limitações — os registos clínicos têm prazos de conservação obrigatórios)
+- Portabilidade dos dados (exportar o historial para outro prestador)
+
+Deve ter um processo para responder a estes pedidos no prazo de 30 dias.
+
+### Conservação de Dados Clínicos
+Os registos clínicos têm prazos de conservação específicos definidos por lei:
+- **Registos clínicos**: mínimo 5 anos após a última consulta (Lei de Bases da Saúde)
+- **Receituário**: 5 anos
+- **Imagiologia**: 10 anos para adultos, até aos 28 anos do doente para menores
+
+Não apague dados clínicos antes dos prazos legais, mesmo a pedido do doente.
+
+## Gestão de Fornecedores de IT e SGC
+
+As clínicas dependem criticamente do fornecedor do SGC e do técnico de IT que os suporta. São os seus fornecedores com maior acesso a dados sensíveis.
+
+**Para o fornecedor do SGC:**
+- Exija DPA (Acordo de Processamento de Dados) formal — obrigatório pelo RGPD
+- Confirme onde os dados são armazenados (UE ou país com adequação CNPD)
+- Verifique a política de backup e recuperação em caso de incidente
+- Leia os termos de serviço: a quem pertencem os dados clínicos?
+
+**Para o técnico de IT:**
+- Exija conta individual de acesso, não acesso com a sua conta de administrador
+- MFA obrigatório para qualquer acesso remoto
+- Reveja o que foi feito após cada sessão de acesso remoto
+- Contrato de confidencialidade que cubra os dados de doentes
+
+Ver [gestão de risco de fornecedores terceiros](/blog/gestao-risco-fornecedores-terceiros-pme).
+
+## O Que Fazer Quando Acontece um Incidente
+
+### Primeiros 60 Minutos
+
+1. **Isolar o sistema afetado** — desligar da rede (cabo de rede ou Wi-Fi), não desligar o computador (pode destruir evidências em memória)
+2. **Avaliar o alcance** — quais os sistemas afetados? Os backups estão acessíveis?
+3. **Contactar o técnico de IT** — imediatamente
+4. **Documentar** — fotografar ecrãs com mensagens de erro/ransomware antes de qualquer ação
+5. **NÃO pagar** antes de avaliar a situação com profissionais
+
+### Obrigações de Notificação
+
+**CNPD (Comissão Nacional de Proteção de Dados):**
+Se houver probabilidade de violação de dados pessoais de doentes, notificação obrigatória no prazo de **72 horas** após tomar conhecimento do incidente.
+Portal: [cnpd.pt](https://www.cnpd.pt) → Notificação de violação de dados
+
+**CERT.PT / CNCS:**
+Para incidentes significativos, contactar o CERT.PT (ver [guia de reporte de ciberataques](/blog/como-reportar-ciberataque-portugal-pme)).
+
+**Doentes afetados:**
+Se os dados foram efetivamente acedidos ou exfiltrados, pode haver obrigação de notificação individual dos doentes afetados.
+
+**Ordens Profissionais:**
+Dependendo da gravidade e do impacto no segredo profissional, pode ser necessário informar a Ordem dos Médicos ou Ordem dos Enfermeiros.
+
+## Checklist de Segurança para Clínicas
+
+### Imediato (esta semana)
+- [ ] Verificar se os backups do SGC estão a correr e se o último backup foi bem-sucedido
+- [ ] Testar o restauro do backup (abrir um registo de doente a partir do backup)
+- [ ] Ativar MFA nos portais de seguradoras
+- [ ] Confirmar que o Wi-Fi de doentes/visitas está separado da rede interna
+
+### A Médio Prazo (1-3 meses)
+- [ ] Rever perfis de acesso ao SGC — recepcionistas não devem ter acesso ao historial clínico
+- [ ] Ativar BitLocker/FileVault em todos os portáteis
+- [ ] Contactar fornecedor do SGC para confirmar versão, suporte ativo e DPA
+- [ ] Documentar RAT (Registo de Atividades de Tratamento) para a CNPD
+- [ ] Criar plano de continuidade com procedimentos manuais para operar 24h sem sistemas
+
+### Conformidade e Governação
+- [ ] Verificar se a clínica precisa de nomear um DPO
+- [ ] Política de privacidade atualizada visível para doentes
+- [ ] Formulários de consentimento RGPD em uso
+- [ ] Revisão anual dos controlos de segurança
+
+---
+
+A cibersegurança numa clínica ou consultório médico não é luxo — é uma obrigação legal e ética. Os dados de saúde dos seus doentes merecem o mesmo nível de proteção que o segredo médico: não porque a lei exige, mas porque é o compromisso implícito de qualquer prestador de cuidados de saúde.
+
+Para o contexto regulatório completo, consulte o [guia RGPD para PMEs](/blog/guia-rgpd-pequenas-empresas-portugal) e as [obrigações NIS2](/blog/nis2-portugal-guia-pme). Para dúvidas sobre conformidade, o [CNCS e o CERT.PT](/blog/cncs-cert-pt-o-que-sao-como-ajudam-pme) disponibilizam recursos de apoio gratuitos para organizações em Portugal.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Práticas",
+    publishedAt: "2026-04-17",
+    readingTime: 16,
+  },
+  {
+    slug: "windows-11-hardening-seguranca-pme",
+    title: "Windows 11 Hardening para Empresas: Configurações de Segurança Essenciais",
+    excerpt:
+      "Como configurar o Windows 11 de forma segura em postos de trabalho empresariais — BitLocker, Windows Defender, políticas de grupo e controlos essenciais para PMEs sem departamento de IT.",
+    content: `O Windows 11 chegou com mais funcionalidades de segurança ativas por default que qualquer versão anterior — TPM 2.0 obrigatório, Secure Boot, Virtualization-Based Security (VBS). Mas **os defaults não são suficientes** para um ambiente empresarial: há dezenas de configurações que precisam de ser ajustadas para reduzir a superfície de ataque.
+
+Este guia destina-se a administradores de IT de PMEs e a donos de empresa que gerem os seus próprios postos de trabalho. Aborda os controlos de segurança mais impactantes, com instruções passo a passo.
+
+## Por Que o Windows 11 É Mais Seguro que Versões Anteriores — e Onde Ainda Falha
+
+### O Que Melhorou
+- **TPM 2.0 obrigatório**: o chip TPM guarda chaves criptográficas e permite BitLocker sem PIN (mas com proteção de hardware), atestação de estado do dispositivo, e proteção de credenciais com Credential Guard
+- **Secure Boot**: garante que apenas software com assinatura digital válida arranca — impede bootkits e malware persistente no UEFI
+- **Virtualization-Based Security (VBS)**: isola processos críticos (LSASS, Credential Guard) em hipervisor separado, mesmo que o kernel seja comprometido
+- **Smart App Control**: bloqueia por default aplicações sem reputação estabelecida na Windows Reputation Service
+- **Windows Hello**: autenticação sem password por biometria ou PIN, baseada em FIDO2
+
+### Onde Ainda Falha
+- **Configurações de rede inseguras por default** (SMBv1 pode estar ativo, NetBIOS ativo)
+- **Telemetria elevada** por default (não é uma ameaça crítica, mas é um vetor de fuga de dados)
+- **Windows Script Host ativo** — permite execução de VBScript/JScript malicioso
+- **Macro Office ativa por default** (em versões sem M365) — vetor principal de malware
+- **AutoRun/AutoPlay** ainda presente
+- **Conta de Administrador local** com o mesmo nome em todos os postos (lateral movement facilitado)
+
+## Pré-Requisitos: Hardware e Licenciamento
+
+### Para as Funcionalidades de Segurança Completas
+- **Windows 11 Pro ou Enterprise** (não Home — sem Group Policy, sem BitLocker Network Unlock, sem Windows Defender Credential Guard completo)
+- **TPM 2.0 ativo** no BIOS/UEFI
+- **Secure Boot ativo** (verificar em msinfo32 → Estado do Arranque Seguro)
+- **8GB RAM mínimo** para VBS/HVCI ativo sem impacto de performance significativo
+
+### Verificar Estado Atual
+\`\`\`powershell
+# Ver estado de segurança do sistema
+Get-ComputerInfo | Select-Object -Property \`
+  OsName, OsVersion, \`
+  BiosSecureBoot, \`
+  HyperVRequirementVMMonitorModeExtensions
+
+# Ver estado do TPM
+Get-Tpm | Select-Object TpmPresent, TpmReady, TpmEnabled, TpmActivated
+
+# Ver se VBS está ativo
+msinfo32 # → Virtualization-based security: Running
+\`\`\`
+
+## 1. BitLocker — Cifrar Todos os Discos
+
+O BitLocker cifra o disco — se o computador for roubado, os dados são inacessíveis sem a chave de recuperação.
+
+### Ativar BitLocker (Windows 11 Pro/Enterprise)
+\`\`\`powershell
+# Verificar estado atual
+manage-bde -status C:
+
+# Ativar BitLocker com TPM (sem PIN — mais conveniente, aceite para maioria das PMEs)
+Enable-BitLocker -MountPoint "C:" -TpmProtector
+
+# Guardar chave de recuperação no Active Directory (se tiver AD)
+Backup-BitLockerKeyProtector -MountPoint "C:" -KeyProtectorId (Get-BitLockerVolume -MountPoint "C:").KeyProtector[0].KeyProtectorId
+
+# Guardar chave de recuperação em ficheiro (guardar em local seguro, fora do PC)
+manage-bde -protectors -get C: > C:\BitLocker-ChaveRecuperacao.txt
+# Copiar este ficheiro para local externo e apagar do PC
+\`\`\`
+
+### Se Não Tiver AD — Guardar Chaves no Entra ID (Azure AD)
+No Microsoft 365 Business Premium, o Intune guarda automaticamente as chaves de recuperação BitLocker no Entra ID. Acesse em: portal.azure.com → Dispositivos → BitLocker Recovery Keys.
+
+### BitLocker com PIN (Mais Seguro, Mais Atrito)
+Para postos com dados muito sensíveis:
+\`\`\`powershell
+# Adicionar PIN ao BitLocker existente
+Add-BitLockerKeyProtector -MountPoint "C:" -Pin (Read-Host "PIN" -AsSecureString) -TpmAndPinProtector
+\`\`\`
+
+O utilizador terá de introduzir o PIN em cada arranque. Recomendado para: portáteis, postos de gestão financeira/RH, servidores locais.
+
+Ver o [guia completo de criptografia de dados](/blog/criptografia-dados-pme-guia-completo) para contexto adicional.
+
+## 2. Windows Defender — Configuração de Proteção Avançada
+
+O Windows Defender incluído no Windows 11 é um AV/EDR competente — mas precisa de estar bem configurado.
+
+### Verificar e Otimizar via PowerShell
+\`\`\`powershell
+# Ver configuração atual
+Get-MpPreference | Select-Object \`
+  RealTimeProtectionEnabled, \`
+  CloudProtectionLevel, \`
+  EnableNetworkProtection, \`
+  AttackSurfaceReductionRules_Ids
+
+# Ativar proteção cloud máxima
+Set-MpPreference -CloudProtectionLevel MAPSReporting 4 -CloudBlockLevel 6
+
+# Ativar proteção de rede (bloqueia ligações a IPs/domínios maliciosos)
+Set-MpPreference -EnableNetworkProtection Enabled
+
+# Ativar proteção contra adulteração (impede desativação do Defender por malware)
+# Feito via GUI: Segurança do Windows → Proteção contra vírus e ameaças → Definições → Proteção contra adulteração
+\`\`\`
+
+### Attack Surface Reduction (ASR) — Regras Mais Importantes
+
+As regras ASR bloqueiam comportamentos usados por malware, independentemente de assinaturas conhecidas:
+
+\`\`\`powershell
+# Modo Audit primeiro (regista sem bloquear) — deixar 2 semanas para validar
+$AuditMode = 2
+$BlockMode = 1
+
+# Regras críticas para PMEs
+Set-MpPreference -AttackSurfaceReductionRules_Ids @(
+  "d4f940ab-401b-4efc-aadc-ad5f3c50688a",  # Bloquear criação de processos filhos pelo Office
+  "3b576869-a4ec-4529-8536-b80a7769e899",  # Bloquear criação de conteúdo executável pelo Office
+  "75668c1f-73b5-4cf0-bb93-3ecf5cb7cc84",  # Bloquear injeção de código pelo Office noutros processos
+  "92e97fa1-2edf-4476-bdd6-9dd0b4dddc7b",  # Bloquear chamadas Win32 API a partir de macros Office
+  "be9ba2d9-53ea-4cdc-84e5-9b1eeee46550",  # Bloquear execução de conteúdo executável em email
+  "e6db77e5-3df2-4cf1-b95a-636979351e5b",  # Bloquear scripts ofuscados
+  "5beb7efe-fd9a-4556-801d-275e5ffc04cc"   # Bloquear execução de payloads a partir de USB
+) -AttackSurfaceReductionRules_Actions @(
+  $AuditMode, $AuditMode, $AuditMode,
+  $AuditMode, $AuditMode, $AuditMode, $AuditMode
+)
+
+# Após validação em modo Audit, mudar para Block:
+# Substituir $AuditMode por $BlockMode nas regras validadas
+\`\`\`
+
+**Nota**: Em modo Block, regras ASR podem quebrar alguns softwares legítimos. Sempre testar em Audit primeiro.
+
+## 3. Políticas de Grupo (GPO) — Configurações Essenciais
+
+Se tiver Active Directory, use GPOs para aplicar configurações a todos os postos. Sem AD, use o Editor de Política de Grupo Local (gpedit.msc) em cada posto — ou scripts PowerShell para automatizar.
+
+### Desativar SMBv1 (Vetor do WannaCry e NotPetya)
+\`\`\`powershell
+# Verificar se SMBv1 está ativo
+Get-SmbServerConfiguration | Select-Object EnableSMB1Protocol
+Get-WindowsOptionalFeature -Online -FeatureName SMB1Protocol
+
+# Desativar SMBv1
+Set-SmbServerConfiguration -EnableSMB1Protocol $false -Force
+Disable-WindowsOptionalFeature -Online -FeatureName SMB1Protocol -NoRestart
+\`\`\`
+
+### Desativar NetBIOS over TCP/IP
+NetBIOS é um protocolo legado usado em ataques de envenenamento LLMNR/NBT-NS (Responder):
+\`\`\`powershell
+# Desativar via GPO: Computer Configuration → Administrative Templates →
+# Network → DNS Client → Turn off Multicast Name Resolution: Enabled
+
+# Via PowerShell (para todos os adaptadores de rede):
+$adapters = Get-WmiObject Win32_NetworkAdapterConfiguration | Where-Object {$_.IPEnabled -eq $true}
+foreach ($adapter in $adapters) {
+    $adapter.SetTcpipNetbios(2)  # 2 = Disable NetBIOS
+}
+\`\`\`
+
+### Desativar Windows Script Host
+O Windows Script Host permite execução de .vbs e .js — vetor frequente de malware:
+\`\`\`powershell
+# Via Registro
+New-Item -Path "HKLM:\Software\Microsoft\Windows Script Host\Settings" -Force
+Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows Script Host\Settings" -Name "Enabled" -Value 0
+\`\`\`
+
+### Configuração de Password/PIN pelo Windows Hello
+\`\`\`
+GPO: Computer Configuration → Windows Settings → Security Settings →
+  Account Policies → Password Policy:
+    - Minimum password length: 12
+    - Password complexity: Enabled
+    - Maximum password age: 90 days
+    - Password history: 12
+
+  Account Lockout Policy:
+    - Account lockout threshold: 5 invalid attempts
+    - Account lockout duration: 15 minutes
+    - Reset account lockout counter after: 15 minutes
+\`\`\`
+
+### Controlo de Conta de Utilizador (UAC) — Nível Máximo
+\`\`\`
+GPO: Computer Configuration → Windows Settings → Security Settings →
+  Local Policies → Security Options:
+    - UAC: Elevate only signed and validated executables: Enabled
+    - UAC: Run all administrators in Admin Approval Mode: Enabled
+    - UAC: Virtualize file and registry write failures to per-user locations: Enabled
+\`\`\`
+
+### Desativar Execução Automática (AutoRun/AutoPlay)
+\`\`\`
+GPO: Computer Configuration → Administrative Templates → Windows Components →
+  AutoPlay Policies:
+    - Turn off Autoplay: Enabled (All drives)
+    - Default behavior for AutoRun: Do not execute any autorun commands
+\`\`\`
+
+## 4. Microsoft Defender Firewall — Regras por Perfil
+
+O Windows Firewall tem três perfis: Domínio, Privado, Público. Para portáteis que se ligam a redes externas, o perfil Público é crítico.
+
+\`\`\`powershell
+# Verificar estado
+Get-NetFirewallProfile | Select-Object Name, Enabled, DefaultInboundAction, DefaultOutboundAction
+
+# Garantir que o firewall está ativo em todos os perfis
+Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled True
+
+# Perfil Público — bloquear tudo o que entra, exceto exceções explícitas
+Set-NetFirewallProfile -Profile Public -DefaultInboundAction Block -DefaultOutboundAction Allow
+
+# Bloquear SMB de entrada em redes públicas (nunca deve estar exposto)
+New-NetFirewallRule -DisplayName "Block SMB Inbound Public" \`
+  -Direction Inbound -Protocol TCP -LocalPort 445 \`
+  -Profile Public -Action Block
+
+# Bloquear RDP de entrada em redes públicas
+New-NetFirewallRule -DisplayName "Block RDP Inbound Public" \`
+  -Direction Inbound -Protocol TCP -LocalPort 3389 \`
+  -Profile Public -Action Block
+\`\`\`
+
+## 5. Gestão de Contas Locais
+
+### Renomear e Desativar a Conta Administrador Builtin
+A conta "Administrator" com nome previsível é alvo de ataques de força bruta e lateral movement:
+\`\`\`powershell
+# Renomear conta de Administrador builtin
+Rename-LocalUser -Name "Administrator" -NewName "Admin_$(Get-Random -Minimum 1000 -Maximum 9999)"
+
+# Desativar conta Guest
+Disable-LocalUser -Name "Guest"
+
+# Criar conta de utilizador padrão para uso diário (sem direitos de admin)
+New-LocalUser -Name "NomeUtilizador" -Password (Read-Host -AsSecureString "Password") \`
+  -FullName "Nome Completo" -Description "Conta de utilizador padrão"
+Add-LocalGroupMember -Group "Users" -Member "NomeUtilizador"
+# NÃO adicionar ao grupo Administrators
+\`\`\`
+
+### Microsoft LAPS — Passwords Únicas de Admin Local
+O LAPS (Local Administrator Password Solution) gere automaticamente passwords únicas para a conta de administrador local em cada posto. Sem LAPS, todos os postos têm a mesma senha de admin local — comprometer um é comprometer todos.
+
+**Configuração com Microsoft LAPS (integrado no Windows 11):**
+\`\`\`powershell
+# Ativar LAPS (requer Windows 11 22H2+ e Entra ID ou AD)
+# Via Intune: Endpoint Security → Account Protection → Local Admin Password Solution
+
+# Verificar se LAPS está configurado
+Get-LapsAADPassword -DeviceId (Get-WmiObject Win32_ComputerSystemProduct).UUID
+\`\`\`
+
+Para o contexto do Active Directory, ver o [guia de hardening do Active Directory](/blog/active-directory-hardening-pme).
+
+## 6. Proteção de Credenciais
+
+### Windows Defender Credential Guard
+Isola o processo LSASS (que guarda hashes de passwords) em modo de virtualização — impede ataques Pass-the-Hash e Pass-the-Ticket:
+\`\`\`
+GPO: Computer Configuration → Administrative Templates → System →
+  Device Guard → Turn on Virtualization Based Security: Enabled
+    Platform Security Level: Secure Boot and DMA Protection
+    Credential Guard Configuration: Enabled with UEFI lock
+\`\`\`
+
+### Desativar Armazenamento de Hashes LM
+LM hashes são extremamente fáceis de crackear:
+\`\`\`
+GPO: Computer Configuration → Windows Settings → Security Settings →
+  Local Policies → Security Options:
+    - Network security: Do not store LAN Manager hash value on next password change: Enabled
+\`\`\`
+
+## 7. Controlo de Aplicações
+
+### AppLocker ou Windows Defender Application Control (WDAC)
+
+Permite definir quais as aplicações que podem ser executadas — eficaz contra malware e execução não autorizada.
+
+**AppLocker (mais simples, Windows Enterprise):**
+\`\`\`
+GPO: Computer Configuration → Windows Settings → Security Settings →
+  Application Control Policies → AppLocker:
+    - Executable Rules: Default rules + bloquear execução de %APPDATA%, %TEMP%, %USERPROFILE%\Downloads
+    - Script Rules: Bloquear execução de scripts de localizações de utilizador
+\`\`\`
+
+**Regra simples via PowerShell — bloquear execução de %APPDATA% (onde malware frequentemente se instala):**
+\`\`\`powershell
+# Criar regra AppLocker via PowerShell
+$Policy = Get-AppLockerPolicy -Effective
+# Exportar e editar política XML para adicionar regras de bloqueio
+Get-AppLockerPolicy -Effective -Xml | Out-File "AppLockerPolicy.xml"
+\`\`\`
+
+### Smart App Control (Windows 11 nativo)
+O Smart App Control bloqueia aplicações sem reputação estabelecida. Ativar em: Segurança do Windows → Controlo de Aplicações e Browser → Smart App Control.
+
+**Nota**: Smart App Control pode bloquear software legítimo pouco usado. Avalie no ambiente antes de ativar em produção.
+
+## 8. Atualizações e Manutenção
+
+### Configurar Windows Update para PMEs
+\`\`\`
+GPO: Computer Configuration → Administrative Templates → Windows Components →
+  Windows Update → Manage end user experience:
+    - Configure Automatic Updates: 4 - Auto download and schedule the install
+    - Scheduled install day: 0 - Every day
+    - Scheduled install time: 02:00
+
+  Windows Update for Business:
+    - Select when Quality Updates are received: 0 days deferral (instalar imediatamente)
+    - Select when Feature Updates are received: 60 days deferral (estabilizar antes de atualizar)
+\`\`\`
+
+### Verificar Atualizações Pendentes via PowerShell
+\`\`\`powershell
+# Listar atualizações pendentes
+Get-WindowsUpdate
+
+# Instalar atualizações críticas imediatamente
+Install-WindowsUpdate -Category "Security Updates" -AcceptAll -AutoReboot
+# (requer módulo PSWindowsUpdate: Install-Module PSWindowsUpdate)
+\`\`\`
+
+## Verificação com Microsoft Security Baseline
+
+A Microsoft publica Security Baselines — configurações de GPO recomendadas para Windows 11. Disponível gratuitamente em [Microsoft Security Compliance Toolkit](https://www.microsoft.com/en-us/download/details.aspx?id=55319).
+
+\`\`\`powershell
+# Após descarregar e extrair o Security Compliance Toolkit
+# Aplicar baseline via GPO:
+.\Baseline-LocalInstall.ps1
+
+# Verificar conformidade com a baseline:
+.\Compare-PasswordPolicy.ps1
+\`\`\`
+
+Para auditar o estado de segurança de múltiplos postos, o [Microsoft Defender Vulnerability Management](/blog/microsoft-defender-for-business-pme-guia-completo) (incluído no Microsoft 365 Business Premium) fornece relatórios de conformidade de configuração de segurança.
+
+## Checklist de Hardening Windows 11
+
+### Proteção de Dados
+- [ ] BitLocker ativo em todos os discos (verificar em Painel de Controlo → BitLocker)
+- [ ] Chaves de recuperação BitLocker guardadas fora do dispositivo (Entra ID, ficheiro seguro)
+- [ ] Credential Guard ativo (msinfo32 → Virtualization-based security)
+
+### Proteção contra Malware
+- [ ] Windows Defender atualizado e com proteção em tempo real ativa
+- [ ] Network Protection ativa (Set-MpPreference -EnableNetworkProtection Enabled)
+- [ ] Regras ASR ativas no mínimo em modo Audit
+- [ ] SMBv1 desativado
+- [ ] Windows Script Host desativado
+
+### Contas e Autenticação
+- [ ] Conta Administrator builtin renomeada ou desativada
+- [ ] Utilizadores do dia-a-dia sem direitos de administrador
+- [ ] LM Hash storage desativado
+- [ ] UAC no nível máximo
+- [ ] Microsoft LAPS configurado (se tiver AD/Entra ID)
+
+### Rede e Firewall
+- [ ] Windows Firewall ativo em todos os perfis
+- [ ] Perfil Público com entrada bloqueada por default
+- [ ] SMB e RDP bloqueados no perfil Público
+- [ ] NetBIOS/LLMNR desativados
+
+### Atualizações
+- [ ] Windows Update automático configurado
+- [ ] Atualizações de segurança sem deferral
+- [ ] Software de terceiros (Adobe, Java, browsers) também atualizado
+
+---
+
+O hardening do Windows 11 não é uma tarefa única — é um processo contínuo. À medida que surgem novas ameaças e a Microsoft publica novas baselines, as configurações devem ser revistas. O ideal para PMEs com múltiplos postos é gerir as políticas centralmente via Intune (Microsoft 365 Business Premium) ou Active Directory com GPOs.
+
+Para o contexto de gestão central de endpoints, consulte o [guia Microsoft Defender for Business](/blog/microsoft-defender-for-business-pme-guia-completo). Para proteção da infraestrutura de servidor Windows, ver o [guia de hardening do Active Directory](/blog/active-directory-hardening-pme).`,
+    category: "ferramentas",
+    categoryLabel: "Ferramentas",
+    publishedAt: "2026-04-17",
+    readingTime: 15,
+  },
 ];
 
 export function getPostBySlug(slug: string): Post | undefined {
