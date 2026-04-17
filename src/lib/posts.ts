@@ -1,3 +1,10 @@
+export interface Author {
+  name: string;
+  title: string;
+  bio?: string;
+  image?: string;
+}
+
 export interface Post {
   slug: string;
   title: string;
@@ -8,6 +15,7 @@ export interface Post {
   publishedAt: string;
   updatedAt?: string;
   readingTime: number;
+  author?: Author;
 }
 
 export const CATEGORIES: Record<string, string> = {
@@ -16,6 +24,24 @@ export const CATEGORIES: Record<string, string> = {
   "boas-praticas": "Boas Praticas",
   ferramentas: "Ferramentas",
   formacao: "Formacao",
+};
+
+export const AUTHORS: Record<string, Author> = {
+  "carlos-miranda": {
+    name: "Carlos Miranda",
+    title: "Consultor de Cibersegurança",
+    bio: "Especialista em cibersegurança para PMEs com mais de 10 anos de experiência em compliance RGPD e implementação de controlos de segurança. Ajuda empresas portuguesas a navegar os desafios da transformação digital de forma segura."
+  },
+  "rita-santos": {
+    name: "Rita Santos",
+    title: "Analista de Segurança",
+    bio: "Especialista em análise de ameaças e resposta a incidentes, com foco em pequenas e médias empresas. Certificada em CISSP e com experiência em implementação de soluções de segurança adaptadas às necessidades específicas das PMEs portuguesas."
+  },
+  "miguel-ferreira": {
+    name: "Miguel Ferreira",
+    title: "Auditor de Compliance",
+    bio: "Consultor especializado em NIS2, ISO 27001 e auditorias de cibersegurança. Ajuda PMEs portuguesas a implementar programas de compliance eficazes e adaptados à realidade regulamentar nacional e europeia."
+  }
 };
 
 export const posts: Post[] = [
@@ -355,6 +381,7 @@ Com este programa estruturado, a sua PME estará preparada para enfrentar as ame
     publishedAt: "2026-04-11",
     updatedAt: "2026-04-12",
     readingTime: 18,
+    author: AUTHORS["carlos-miranda"],
   },
   {
     slug: "nis2-cadeia-fornecimento-pme",
@@ -18369,6 +18396,7 @@ Para uma visão completa de recuperação após incidentes graves, consulte o [g
     categoryLabel: "Boas Praticas",
     publishedAt: "2026-04-17",
     readingTime: 14,
+    author: AUTHORS["rita-santos"],
   },
   {
     slug: "seguro-ciberseguranca-pme-portugal",
@@ -18570,6 +18598,7 @@ O seguro de cibersegurança não é um substituto para boas práticas — é uma
     categoryLabel: "Boas Praticas",
     publishedAt: "2026-04-17",
     readingTime: 12,
+    author: AUTHORS["miguel-ferreira"],
   },
   {
     slug: "microsoft-365-email-security-anti-phishing-safe-links-bec",

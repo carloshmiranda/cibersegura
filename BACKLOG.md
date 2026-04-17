@@ -17,8 +17,6 @@
 
 ## Planned
 <!-- Items identified but not yet prioritized -->
-
-- 🟢 **P2 — UX**: Author/byline component on blog posts — adds credibility and E-E-A-T signals for Google
 - 🟢 **P2 — SEO**: Hreflang tag for `pt-PT` language variant — current `lang="pt"` could be more specific
 - 🟢 **P2 — Content**: Resource page with curated links to CNCS, CERT.PT, CNPD, PJ Cibercrime — useful for SMEs and good for internal linking
 - 🟢 **P2 — Content**: Downloadable checklist for SPF/DKIM/DMARC setup (complement new post)
@@ -28,6 +26,9 @@
 
 ## Done
 <!-- Completed items with date -->
+
+### 2026-04-17 (session 13)
+- ✅ **UX**: Author/byline component on blog posts — Added AuthorByline and AuthorCard components with 3 expert profiles (Carlos Miranda, Rita Santos, Miguel Ferreira), updated Post interface, blog post template, and JSON-LD schema for improved credibility and E-E-A-T signals
 
 ### 2026-04-17 (session 12)
 - ✅ **growth**: Article "Estratégia de Backup para PMEs: Regra 3-2-1, Ferramentas e Como Testar a Recuperação" — `/blog/estrategia-backup-pme-regra-3-2-1-recuperacao`; regra 3-2-1 e variante 3-2-1-1-0, RPO/RTO para PMEs, tipos de backup (full/incremental/diferencial), ferramentas (Veeam Community, Windows Server Backup, Synology Active Backup, Azure Backup, Backblaze B2, Duplicati), imutabilidade via S3 Object Lock e Linux Hardened Repository, testes de restauro (mensal/trimestral/anual), RGPD e backup de dados pessoais, exemplo de estratégia para PME de 20 pessoas com custo €83/mês
