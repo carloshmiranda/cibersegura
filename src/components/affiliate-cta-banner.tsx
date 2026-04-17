@@ -32,9 +32,6 @@ const addUTMParams = (url: string, source: string, medium: string, campaign: str
     return urlObj.toString();
   } catch (error) {
     // Fallback to original URL if UTM addition fails
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Failed to add UTM parameters:', error, { url, source, medium, campaign, content });
-    }
     return url;
   }
 };
@@ -60,10 +57,6 @@ const trackAffiliateClick = async (data: {
 
     return response.ok;
   } catch (error) {
-    // Debug logging (only in development)
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Failed to track affiliate click:', error, data);
-    }
     return false;
   }
 };
@@ -149,9 +142,6 @@ export default function AffiliateCTABanner({
               destination_url: trackedUrl,
             }).catch(error => {
               // Don't block navigation if tracking fails
-              if (process.env.NODE_ENV === 'development') {
-                console.error('Click tracking error:', error);
-              }
             });
           };
 
