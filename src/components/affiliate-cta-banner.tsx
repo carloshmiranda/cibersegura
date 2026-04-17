@@ -1,5 +1,8 @@
 "use client";
 
+import React, { useRef, useEffect } from 'react';
+import { useCTAImpressionTracking } from '@/lib/analytics';
+
 interface AffiliateTool {
   name: string;
   description: string;
@@ -69,6 +72,15 @@ export default function AffiliateCTABanner({
   articleSlug,
   className = ""
 }: AffiliateCTABannerProps) {
+  const bannerRef = useRef<HTMLDivElement>(null);
+
+  // Track banner impression when it becomes visible
+  useCTAImpressionTracking(bannerRef, {
+    article_slug: articleSlug,
+    cta_position: 'banner',
+    link_id: `affiliate-banner-${source}`,
+    cta_type: 'banner'
+  });
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
@@ -107,7 +119,7 @@ export default function AffiliateCTABanner({
   };
 
   return (
-    <div className={`p-6 rounded-xl border-l-4 border-accent bg-accent-light ${className}`}>
+    <div ref={bannerRef} className={`p-6 rounded-xl border-l-4 border-accent bg-accent-light ${className}`}>
       <div className="flex items-start gap-4 mb-6">
         <div className="flex-shrink-0 p-2 rounded-lg bg-accent text-white">
           <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">

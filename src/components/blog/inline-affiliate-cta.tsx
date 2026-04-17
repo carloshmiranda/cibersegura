@@ -1,5 +1,8 @@
 "use client";
 
+import React, { useRef } from 'react';
+import { useCTAImpressionTracking } from '@/lib/analytics';
+
 export interface AffiliateTool {
   name: string;
   description: string;
@@ -67,6 +70,16 @@ export default function InlineAffiliateCTA({
   position,
   className = ""
 }: InlineAffiliateCTAProps) {
+  const ctaRef = useRef<HTMLDivElement>(null);
+
+  // Track inline CTA impression when it becomes visible
+  useCTAImpressionTracking(ctaRef, {
+    article_slug: articleSlug,
+    cta_position: `inline-${position}`,
+    link_id: `${tool.name.toLowerCase().replace(/\s+/g, '-')}-${tool.category}-inline`,
+    cta_type: 'inline',
+    position: position
+  });
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
@@ -145,7 +158,7 @@ export default function InlineAffiliateCTA({
   };
 
   return (
-    <div className={`my-8 p-5 rounded-lg border-l-3 border-accent bg-accent-light/50 ${className}`}>
+    <div ref={ctaRef} className={`my-8 p-5 rounded-lg border-l-3 border-accent bg-accent-light/50 ${className}`}>
       <div className="flex items-start gap-4">
         <div className="flex-shrink-0 p-2 rounded-lg bg-accent text-white">
           {getCategoryIcon(tool.category)}
