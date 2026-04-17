@@ -17,7 +17,7 @@ const emailSequences = [
     subject: "Bem-vindo ao CiberPME — A sua posição na lista é #{{POSITION}}",
     body_html: `
       <!DOCTYPE html>
-      <html lang="pt">
+      <html lang="pt-PT">
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -141,7 +141,7 @@ https://ciberpme.vercel.app
     subject: "Preparado para melhorar a segurança da sua empresa? 🛡️",
     body_html: `
       <!DOCTYPE html>
-      <html lang="pt">
+      <html lang="pt-PT">
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
