@@ -1,5 +1,7 @@
 "use client";
 
+import { useImpressionTracking } from '@/lib/use-impression-tracking';
+
 interface AffiliateTool {
   name: string;
   description: string;
@@ -70,6 +72,14 @@ export default function AffiliateCTABanner({
   className = ""
 }: AffiliateCTABannerProps) {
 
+  // Track banner impression
+  const bannerRef = useImpressionTracking({
+    article_slug: articleSlug,
+    cta_position: 'banner',
+    link_id: `affiliate-banner-${source}`,
+    destination_url: tools[0]?.url || ''
+  });
+
   const getCategoryIcon = (category: string) => {
     switch (category) {
       case "siem":
@@ -107,7 +117,7 @@ export default function AffiliateCTABanner({
   };
 
   return (
-    <div className={`p-6 rounded-xl border-l-4 border-accent bg-accent-light ${className}`}>
+    <div ref={bannerRef} className={`p-6 rounded-xl border-l-4 border-accent bg-accent-light ${className}`}>
       <div className="flex items-start gap-4 mb-6">
         <div className="flex-shrink-0 p-2 rounded-lg bg-accent text-white">
           <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
