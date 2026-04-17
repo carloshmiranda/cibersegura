@@ -17,13 +17,15 @@
 
 ## Planned
 <!-- Items identified but not yet prioritized -->
-- 🟢 **P2 — Content**: Downloadable checklist for SPF/DKIM/DMARC setup (complement new post)
 - ⚪ **P3 — Content**: Video or infographic version of the incident reporting guide — high shareability
 
 ---
 
 ## Done
 <!-- Completed items with date -->
+
+### 2026-04-17 (session 15)
+- ✅ **Content**: Downloadable SPF/DKIM/DMARC checklist — Created comprehensive HTML checklist (`/downloads/checklist-spf-dkim-dmarc-email-security.html`) with phase-based implementation guide (preparation → SPF → DKIM → DMARC monitoring/quarantine/reject), service-specific configurations for Google Workspace/Microsoft 365/Zoho, verification tools, and print-friendly design. Added prominent download section to SPF/DKIM/DMARC blog post. PR #109 created.
 
 ### 2026-04-17 (session 14)
 - ✅ **growth**: Article "Quanto Custa um Ciberataque a uma PME Portuguesa? Impacto Real em 2026" — `/blog/custo-ciberataque-pme-portugal-2026`; decomposição de custos diretos (recuperação, downtime, forense, multas CNPD, resgate) vs indiretos (perda de clientes, dano reputacional, produtividade); custo por tipo de ataque (ransomware €30K-350K, BEC médiana €47K, violação de dados + CNPD); tabela ROI de medidas preventivas (€1.7K-9K/ano vs €80K-200K de incidente); estatística 60% PMEs fecham em 6 meses após ransomware grave
