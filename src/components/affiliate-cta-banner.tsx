@@ -28,18 +28,6 @@ const addUTMParams = (url: string, source: string, medium: string, campaign: str
     urlObj.searchParams.set('utm_content', content);
     urlObj.searchParams.set('utm_term', source);
 
-    // Debug logging (only in development)
-    if (process.env.NODE_ENV === 'development') {
-      console.log('UTM parameters added:', {
-        original_url: url,
-        tracked_url: urlObj.toString(),
-        utm_source: 'ciberpme.pt',
-        utm_medium: medium,
-        utm_campaign: campaign,
-        utm_content: content,
-        utm_term: source
-      });
-    }
 
     return urlObj.toString();
   } catch (error) {
@@ -69,14 +57,6 @@ const trackAffiliateClick = async (data: {
       keepalive: true,
     });
 
-    // Debug logging (only in development)
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Affiliate click tracked:', {
-        status: response.status,
-        data,
-        success: response.ok
-      });
-    }
 
     return response.ok;
   } catch (error) {
@@ -160,26 +140,19 @@ export default function AffiliateCTABanner({
           const ctaPosition = `banner-${index + 1}`;
           const linkId = `${tool.name.toLowerCase().replace(/\s+/g, '-')}-${tool.category}`;
 
-          const handleClick = async (e: React.MouseEvent<HTMLAnchorElement>) => {
-            // Track the click and wait briefly for it to complete
-            try {
-              const tracked = await trackAffiliateClick({
-                article_slug: articleSlug,
-                cta_position: ctaPosition,
-                link_id: linkId,
-                destination_url: trackedUrl,
-              });
-
-              // Small delay to ensure tracking completes before navigation
-              if (tracked) {
-                await new Promise(resolve => setTimeout(resolve, 50));
-              }
-            } catch (error) {
+          const handleClick = () => {
+            // Fire-and-forget tracking with keepalive
+            trackAffiliateClick({
+              article_slug: articleSlug,
+              cta_position: ctaPosition,
+              link_id: linkId,
+              destination_url: trackedUrl,
+            }).catch(error => {
               // Don't block navigation if tracking fails
               if (process.env.NODE_ENV === 'development') {
                 console.error('Click tracking error:', error);
               }
-            }
+            });
           };
 
           return (
