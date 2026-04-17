@@ -16417,6 +16417,628 @@ Para mais contexto sobre proteção de dados e conformidade, o [guia de RGPD par
     publishedAt: "2026-04-16",
     readingTime: 16,
   },
+  {
+    slug: "active-directory-hardening-pme",
+    title: "Active Directory: Guia de Hardening para PMEs com Windows Server",
+    excerpt:
+      "O Active Directory é o alvo preferido dos atacantes em ambientes Windows — quando cai, cai tudo. Guia prático de endurecimento para PMEs: contas privilegiadas, LAPS, NTLM, Protected Users, auditoria e ferramentas de avaliação gratuitas.",
+    content: `O Active Directory (AD) é a espinha dorsal de qualquer empresa que usa Windows Server. Gere utilizadores, computadores, políticas e autenticação. É também o principal alvo em qualquer ataque a redes corporativas: **quem controla o AD controla a empresa**.
+
+Num ataque típico de ransomware em PMEs, o AD é comprometido em menos de 48 horas após a entrada inicial. Domain Admins são criados, backups são eliminados, e o payload é distribuído via Group Policy para toda a rede.
+
+Este guia cobre as configurações de hardening mais impactantes — priorizadas para PMEs sem equipas de segurança dedicadas.
+
+## O Que Está em Risco
+
+Quando um atacante se torna Domain Admin, pode:
+- Criar contas backdoor com privilégios permanentes
+- Distribuir malware a todos os computadores da empresa via GPO
+- Exportar a base de dados do AD (NTDS.dit) com todas as passwords em hash
+- Desativar ou eliminar backups
+- Aceder a todos os ficheiros em servidores de ficheiros, SharePoint On-Premise, ou sistemas ERP
+
+A boa notícia: a maioria dos ataques ao AD exploram configurações padrão que podem ser corrigidas sem custo.
+
+## 1. Separar Contas Administrativas das Contas do Dia-a-Dia
+
+**Problema padrão:** o administrador de sistema usa a mesma conta para verificar email, navegar na web, e administrar o AD.
+
+Se essa conta clicar num link malicioso, o atacante herda imediatamente os privilégios de Domain Admin.
+
+**Solução:** criar contas separadas para administração:
+
+| Conta | Uso | Permissões |
+|-------|-----|-----------|
+| joao.silva | Trabalho diário (email, Office) | Utilizador normal |
+| joao.silva.adm | Administração de sistemas | Domain Admin / Server Admin |
+| joao.silva.da | Acesso ao Domain Controller apenas | Domain Admin restrito a DCs |
+
+**Regras essenciais:**
+- A conta ADM nunca acede ao email ou internet
+- A conta ADM só é usada quando necessário, a partir de uma workstation segura (ou Privileged Access Workstation — PAW)
+- Domain Admins devem ser o mínimo possível (idealmente 2-3 contas para redundância)
+
+## 2. Microsoft LAPS — Passwords Locais Únicas em Cada Máquina
+
+**Problema padrão:** a conta de Administrador local tem a mesma password em todos os computadores da empresa. O atacante compromete um PC, obtém a password local, e usa-a para aceder a todos os outros (pass-the-hash ou credenciais diretas).
+
+**Solução:** Microsoft LAPS (Local Administrator Password Solution) gera e gere passwords únicas e aleatórias para a conta de Administrador local em cada máquina, armazenando-as no AD.
+
+**Como instalar (Windows Server 2019/2022):**
+
+O LAPS moderno está integrado no Windows a partir do Windows 11 22H2 e Server 2022. Para versões mais antigas, instale via:
+\`\`\`
+# Via Group Policy Management — instalar extensão LAPS em todos os PCs via GPO software installation
+\\\\servidor\\NETLOGON\\LAPS.x64.msi
+\`\`\`
+
+**Configuração básica:**
+1. Instale o LAPS Management Tools no servidor
+2. Atualize o schema do AD: \`Update-LapsADSchema\`
+3. Configure permissões via PowerShell: defina quais grupos podem ler as passwords LAPS de que OUs
+4. Crie uma GPO: ative LAPS, defina complexidade da password e rotação (recomendado: 30 dias)
+
+Após implementação, as passwords locais de cada máquina são visíveis no Active Directory Users and Computers (ADUC) — apenas por quem tiver permissão.
+
+## 3. Política de Passwords — Fine-Grained Password Policies
+
+A política de passwords padrão do AD aplica-se a todos os utilizadores. Com Fine-Grained Password Policies (PSO — Password Settings Object), pode ter políticas diferentes para grupos diferentes.
+
+**Recomendações por grupo:**
+
+| Grupo | Comprimento mínimo | Histórico | Bloqueio |
+|-------|-------------------|-----------|---------|
+| Utilizadores normais | 12 caracteres | 10 passwords | 5 tentativas / 15 min |
+| Administradores | 16 caracteres | 24 passwords | 3 tentativas / 30 min |
+| Contas de serviço | 24+ caracteres aleatórios | N/A (geridas por LAPS/gMSA) | Desativado |
+
+**Como criar via PowerShell:**
+\`\`\`powershell
+New-ADFineGrainedPasswordPolicy -Name "PSO-Admins" \`
+  -Precedence 10 \`
+  -MinPasswordLength 16 \`
+  -PasswordHistoryCount 24 \`
+  -LockoutThreshold 3 \`
+  -LockoutDuration "00:30:00" \`
+  -LockoutObservationWindow "00:30:00" \`
+  -ComplexityEnabled \$true
+
+Add-ADFineGrainedPasswordPolicySubject "PSO-Admins" -Subjects "Domain Admins"
+\`\`\`
+
+## 4. Desativar Protocolos de Autenticação Legados
+
+### NTLMv1 e LM — desativar completamente
+
+NTLMv1 e LM são protocolos de autenticação obsoletos e inseguros. Se ainda estiverem ativos, são facilmente explorados.
+
+**Via GPO:**
+- Computer Configuration → Windows Settings → Security Settings → Local Policies → Security Options
+- "Network security: LAN Manager authentication level" → **Send NTLMv2 response only. Refuse LM & NTLM**
+- "Network security: Do not store LAN Manager hash value on next password change" → **Enabled**
+
+### NTLMv2 — limitar onde possível
+
+O Kerberos deve ser o protocolo de autenticação preferido. NTLM é necessário em alguns cenários, mas pode ser restringido:
+- Bloqueie NTLM para contas sensíveis (Domain Admins) via GPO: "Network security: Restrict NTLM: Outgoing NTLM traffic to remote servers" → **Deny All**
+
+## 5. Protected Users Security Group
+
+O grupo **Protected Users** (disponível desde Windows Server 2012 R2) aplica automaticamente proteções extra a qualquer conta membro:
+- Sem autenticação NTLM (força Kerberos)
+- Sem delegação de Kerberos
+- As credenciais não são cached localmente
+- Tickets Kerberos com validade máxima de 4 horas
+
+**Como usar:**
+Adicione todas as contas de Domain Admin e administradores sénior ao grupo Protected Users:
+\`\`\`powershell
+Add-ADGroupMember -Identity "Protected Users" -Members "joao.silva.da", "Administrator"
+\`\`\`
+
+**Atenção:** teste primeiro numa conta não-crítica. Contas de serviço não devem ser adicionadas sem teste — podem falhar se dependerem de NTLM ou delegação.
+
+## 6. Credential Guard (Windows 10/11 Enterprise e Server 2016+)
+
+O Credential Guard usa virtualização para proteger os hashes de credenciais em memória, impedindo ataques de pass-the-hash com ferramentas como Mimikatz.
+
+**Ativação via GPO:**
+- Computer Configuration → Administrative Templates → System → Device Guard
+- "Turn On Virtualization Based Security" → **Enabled**
+- "Credential Guard Configuration" → **Enabled with UEFI lock**
+
+Requer: UEFI Secure Boot ativo, TPM 2.0, e processador com suporte a virtualização de hardware.
+
+## 7. Contas de Serviço — gMSA em vez de Contas Normais
+
+Contas de serviço com passwords que nunca expiram são um risco permanente. Se a password for descoberta, o atacante tem acesso indefinido.
+
+**Group Managed Service Accounts (gMSA)** gerem automaticamente a password da conta de serviço (rotação a cada 30 dias, gerida pelo AD) e não permitem login interativo.
+
+\`\`\`powershell
+# Criar gMSA
+New-ADServiceAccount -Name "svc-webapp" \`
+  -DNSHostName "svc-webapp.empresa.pt" \`
+  -PrincipalsAllowedToRetrieveManagedPassword "Web-Servers-Group"
+
+# Instalar no servidor onde o serviço corre
+Install-ADServiceAccount -Identity "svc-webapp"
+
+# Configurar o serviço: usar gMSA como conta de execução
+# No Services.msc, defina a conta como "empresa\\svc-webapp\$"
+\`\`\`
+
+Migre gradualmente as contas de serviço existentes para gMSA, começando pelas que têm mais privilégios.
+
+## 8. Auditoria e Logging — Event IDs Essenciais
+
+O AD gera eventos de segurança que precisam de ser monitorizados. Ative a auditoria avançada via GPO:
+
+**GPO:** Computer Configuration → Windows Settings → Security Settings → Advanced Audit Policy Configuration
+
+| Categoria | Configuração | Razão |
+|-----------|-------------|-------|
+| Account Logon | Success + Failure | Detetar brute force e logins suspeitos |
+| Account Management | Success + Failure | Criação de contas e alterações de grupos |
+| Directory Service Changes | Success | Modificações no AD |
+| Logon/Logoff | Success + Failure | Rastrear acessos |
+| Privilege Use | Success + Failure | Uso de privilégios administrativos |
+| Policy Change | Success + Failure | Alterações de políticas |
+
+**Event IDs críticos para alertar imediatamente:**
+- **4625** — Login falhado (brute force: muitos eventos rápidos)
+- **4720** — Conta criada (especialmente fora de horário)
+- **4728/4732/4756** — Membro adicionado a grupo privilegiado
+- **4768/4769/4771** — Kerberoasting (múltiplos pedidos TGS para contas de serviço)
+- **7045** — Novo serviço instalado (frequentemente usado por malware)
+- **4648** — Login com credenciais explícitas (movimento lateral)
+
+Se tiver o Wazuh implementado (ver [guia SIEM Wazuh](/blog/siem-wazuh-pme-monitorizacao-seguranca-gratis)), as regras 18100-18200 cobrem muitos destes eventos automaticamente.
+
+## 9. Auditar Membros de Grupos Privilegiados
+
+Regularmente (pelo menos mensal), verifique quem está nos grupos mais privilegiados:
+
+\`\`\`powershell
+# Listar todos os Domain Admins
+Get-ADGroupMember "Domain Admins" | Select-Object Name, SamAccountName, ObjectClass
+
+# Listar Enterprise Admins
+Get-ADGroupMember "Enterprise Admins" | Select-Object Name, SamAccountName
+
+# Schema Admins (deve estar vazio exceto durante mudanças de schema)
+Get-ADGroupMember "Schema Admins" | Select-Object Name, SamAccountName
+\`\`\`
+
+**Regra de ouro:** Schema Admins e Enterprise Admins devem estar **vazios** exceto durante operações específicas que os requerem. Após a operação, remova imediatamente.
+
+## 10. Ferramentas Gratuitas de Avaliação
+
+### PingCastle — Auditoria automatizada do AD
+
+[PingCastle](https://www.pingcastle.com/) é a ferramenta mais usada para avaliar a segurança do Active Directory. Gera um relatório com score de risco e lista priorizada de problemas.
+
+**Como usar:**
+1. Descarregue PingCastle (gratuito para uso não comercial)
+2. Execute na rede onde o DC está acessível: \`PingCastle.exe --healthcheck\`
+3. Analise o relatório HTML — foca nos itens de nível "Critical" e "High"
+
+PingCastle verifica automaticamente: delegation misconfigurations, legacy protocols, privileged account hygiene, GPO security, e dezenas de outros controlos.
+
+### BloodHound Community Edition — Visualizar caminhos de ataque
+
+BloodHound é usado defensivamente para visualizar como um atacante poderia chegar a Domain Admin a partir de uma conta comprometida.
+
+Execute o SharpHound collector (modo de leitura apenas) para recolher dados e visualize no BloodHound quais utilizadores/grupos têm caminhos privilegiados não intencionais.
+
+## Checklist de Implementação
+
+### Imediato (esta semana)
+- [ ] Criar contas administrativas separadas para todos os administradores de sistemas
+- [ ] Verificar membros de Domain Admins, Enterprise Admins, Schema Admins — remover o que não for necessário
+- [ ] Configurar política de bloqueio de conta (lockout após 5 tentativas)
+- [ ] Desativar NTLMv1/LM via GPO
+
+### Este mês
+- [ ] Implementar Microsoft LAPS em todos os computadores
+- [ ] Criar Fine-Grained Password Policy para contas administrativas
+- [ ] Adicionar Domain Admins ao Protected Users group
+- [ ] Ativar auditoria avançada de segurança e redirecionar logs para SIEM
+- [ ] Executar PingCastle e corrigir os problemas "Critical"
+
+### Este trimestre
+- [ ] Migrar contas de serviço para gMSA
+- [ ] Implementar Credential Guard em workstations e servidores suportados
+- [ ] Executar BloodHound para identificar caminhos de ataque não intencionais
+- [ ] Rever e documentar todas as GPOs ativas
+
+---
+
+O Active Directory é um sistema complexo que acumula configurações ao longo de anos — e os atacantes conhecem cada atalho. A maioria das PMEs consegue enderecer os riscos mais críticos em poucas semanas com os passos acima, sem custos de licenciamento adicionais.
+
+Para um contexto mais amplo sobre gestão de identidades, consulte o artigo sobre [IAM para PMEs](/blog/gestao-identidade-acessos-iam-pme) e, se ainda não tem MFA implementado, o [guia de autenticação de dois fatores](/blog/autenticacao-dois-fatores-2fa-pme).`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Práticas",
+    publishedAt: "2026-04-17",
+    readingTime: 14,
+  },
+  {
+    slug: "seguranca-azure-pme-microsoft-defender-for-cloud",
+    title: "Segurança no Azure para PMEs: Microsoft Defender for Cloud Passo a Passo",
+    excerpt:
+      "Guia prático de segurança para PMEs que usam Microsoft Azure. Defender for Cloud, Secure Score, NSGs, JIT VM Access, Azure Key Vault e monitorização com Log Analytics — o que é gratuito e como começar.",
+    content: `Muitas PMEs portuguesas já usam o Microsoft Azure para hospedar servidores, bases de dados, e aplicações — frequentemente como extensão natural do Microsoft 365. Mas ao contrário do M365, que tem um conjunto razoável de defaults de segurança, o Azure requer configuração ativa: por padrão, muitas permissões são permissivas e a monitorização está desativada.
+
+Este guia cobre as configurações de segurança essenciais para PMEs no Azure, com foco em controlos que podem ser implementados sem custos significativos.
+
+## Microsoft Defender for Cloud — O Centro de Segurança do Azure
+
+O **Microsoft Defender for Cloud** (anteriormente Azure Security Center) é o ponto de partida para a segurança no Azure. A versão gratuita (CSPM — Cloud Security Posture Management) está disponível para todas as subscriptions Azure sem custo adicional e fornece:
+
+- **Secure Score**: pontuação de 0-100 que mede a postura de segurança
+- **Recomendações priorizadas**: lista de problemas de segurança ordenados por impacto
+- **Inventário de recursos**: visibilidade sobre todos os recursos Azure
+- **Compliance**: comparação contra frameworks como CIS, NIST, e Azure Security Benchmark
+
+**Como ativar:**
+1. No portal Azure, pesquise "Microsoft Defender for Cloud"
+2. Clique em "Upgrade" para ativar o plano gratuito (CSPM)
+3. Ative para todas as subscriptions relevantes
+
+### Entender o Secure Score
+
+O Secure Score é calculado com base nas recomendações ativas. Cada recomendação tem um peso — resolver uma recomendação de score alto sobe significativamente a pontuação.
+
+**Onde focar primeiro:**
+- Recomendações com "Quick Fix" disponível (corrigíveis com um clique)
+- Recomendações de severidade "High" nas categorias: Identity, Network Access, Data Protection
+- Máquinas virtuais com portas de gestão (RDP 3389, SSH 22) expostas diretamente à internet
+
+### Defender for Servers — Vale o Custo?
+
+O Defender for Servers (pago, ~€10-15/servidor/mês) adiciona EDR (Microsoft Defender for Endpoint) integrado com o Azure, detecção de ameaças em tempo real, e avaliação de vulnerabilidades.
+
+**Recomendação para PMEs:**
+- **Plan 1** (~€5/servidor/mês): inclui MDE integration e JIT VM Access — adequado para maioria das PMEs
+- **Plan 2**: adiciona File Integrity Monitoring, análise de rede, e avaliação de vulnerabilidades completa — justifica-se se tiver servidores críticos com dados sensíveis
+
+Para servidores de desenvolvimento ou não-produção, o plano gratuito com boas práticas de rede é suficiente.
+
+## Azure RBAC — Acesso com Menor Privilégio
+
+O Azure usa Role-Based Access Control (RBAC) separado do Entra ID (embora integrado). Os erros mais comuns:
+
+**Erro 1: Dar Owner ou Contributor a toda a subscription**
+Um utilizador com role **Owner** na subscription pode fazer qualquer coisa — criar, modificar, ou eliminar qualquer recurso, incluindo apagar backups e desativar segurança.
+
+**Boa prática:**
+- Defina roles no nível mais granular possível (Resource Group, não Subscription)
+- Use roles pré-definidos com menor privilégio:
+  - **Reader**: apenas leitura — para consultores externos ou auditores
+  - **Contributor**: criar e gerir recursos, mas não gerir acessos
+  - Roles específicos: **Virtual Machine Contributor**, **Storage Blob Data Contributor**, etc.
+- Reserve **Owner** apenas para administradores de plataforma, com MFA obrigatório
+
+**Rever acessos atuais:**
+No portal Azure → Subscriptions → Access control (IAM) → Role assignments — verifique quem tem Owner ou Contributor e se ainda é necessário.
+
+## Privileged Identity Management (PIM) para Azure
+
+Se a sua organização usar Entra ID P2, o PIM permite ativar roles do Azure just-in-time — em vez de ter Owner permanentemente atribuído, o administrador ativa o role por 1-4 horas quando necessário, com MFA e justificação obrigatória.
+
+**Como configurar:**
+1. Entra ID → Privileged Identity Management → Azure resources
+2. Selecione a subscription
+3. Converta roles permanentes em "Eligible" (elegível, não ativo)
+4. Configure aprovação e MFA para ativação
+
+Para PMEs sem P2, a alternativa é criar um utilizador de emergência (break-glass) com Owner permanente, mantido em cofre, e verificar periodicamente quem tem acesso permanente.
+
+## Network Security Groups — Fechar Portas Desnecessárias
+
+Os **Network Security Groups (NSGs)** controlam o tráfego de rede para VMs e subredes. O erro mais crítico: ter a porta RDP (3389) ou SSH (22) aberta para qualquer IP (0.0.0.0/0) na internet.
+
+**Verificar NSGs exposta:**
+No Defender for Cloud → Recomendações, procure: "Management ports of virtual machines should be protected with just-in-time network access control"
+
+**Boa prática para acesso RDP/SSH:**
+Não deve haver regra de NSG a permitir RDP/SSH diretamente da internet. As alternativas:
+
+1. **Azure Bastion** (€130-200/mês): acesso RDP/SSH via browser sem expor portas — recomendado se tiver budget
+2. **Just-in-Time VM Access** (incluído no Defender for Servers Plan 1): abre a porta apenas para o seu IP, apenas quando solicitado, por tempo limitado
+3. **VPN Point-to-Site**: acesso via VPN, sem expor portas diretamente
+
+### Just-in-Time (JIT) VM Access
+
+Com o JIT, as portas de gestão ficam fechadas por padrão. Quando precisa de aceder:
+1. No portal Azure → VM → Connect → Request access
+2. Especifique o tempo de acesso (máx. 3h) e o seu IP
+3. O NSG é automaticamente atualizado e revertido após o tempo definido
+
+**Como ativar JIT:**
+Defender for Cloud → Workload protections → Just-in-time VM access → Selecione as VMs → Enable JIT
+
+## Azure Key Vault — Gerir Secrets e Certificados
+
+Nunca armazene passwords, connection strings, ou chaves de API em:
+- Ficheiros de configuração (appsettings.json, .env)
+- Variáveis de ambiente em texto claro
+- Código-fonte ou repositórios Git
+
+O **Azure Key Vault** é o serviço correto para armazenar:
+- Passwords e connection strings de bases de dados
+- Chaves de API de serviços externos (Stripe, Twilio, etc.)
+- Certificados SSL/TLS
+- Chaves de encriptação
+
+**Custo:** o Key Vault tem preço por operação — para PMEs com volume normal, o custo mensal raramente excede €1-5.
+
+**Boas práticas Key Vault:**
+- Ative o Soft Delete (90 dias) e Purge Protection — previne eliminação acidental ou por ransomware
+- Reveja periodicamente quem tem acesso (Access Policies ou RBAC)
+- Ative o Azure Monitor para logs de acesso ao Key Vault
+- Use Managed Identity para que aplicações Azure acedam ao Key Vault sem credenciais explícitas
+
+## Azure Storage — Desativar Acesso Público
+
+Por padrão (em subscriptions antigas), os Storage Accounts podem ter acesso público ao blob ativado. Isto significa que ficheiros podem estar acessíveis sem autenticação.
+
+**Verificar e corrigir:**
+\`\`\`
+# Azure CLI — listar storage accounts com acesso público
+az storage account list --query "[?allowBlobPublicAccess==true].{Name:name, RG:resourceGroup}" -o table
+\`\`\`
+
+No portal: Storage Account → Configuration → "Allow Blob public access" → **Disabled**
+
+**Outras configurações essenciais:**
+- "Minimum TLS version" → TLS 1.2
+- "Secure transfer required" (HTTPS only) → **Enabled**
+- Ative o Azure Defender for Storage (deteção de anomalias e malware upload)
+- Reveja SAS tokens: tokens sem expiração ou com permissões excessivas são um risco permanente
+
+## Monitorização com Azure Monitor e Log Analytics
+
+Para ter visibilidade sobre o que acontece na sua infraestrutura Azure:
+
+**1. Activity Log**
+O Activity Log regista todas as operações de gestão (quem criou o quê, quando, e de onde). Por padrão, é retido 90 dias. Para retenção mais longa e análise:
+
+Crie um Log Analytics Workspace e configure o Activity Log para enviar para lá (Diagnostic Settings → Send to Log Analytics).
+
+**2. Microsoft Sentinel (SIEM cloud)**
+Para PMEs com budget limitado, o Microsoft Sentinel pode ser muito caro (cobrado por GB ingerido). Em alternativa, use o Log Analytics com queries KQL para alertas básicos:
+
+\`\`\`kql
+// Alertar quando Owner é atribuído a uma subscription
+AzureActivity
+| where OperationNameValue == "MICROSOFT.AUTHORIZATION/ROLEASSIGNMENTS/WRITE"
+| where Properties contains "Owner"
+| project TimeGenerated, Caller, ResourceGroup, Properties
+\`\`\`
+
+**3. Alertas essenciais a configurar:**
+- Criação de novas role assignments de Owner/Contributor
+- Eliminação de Key Vaults ou recursos críticos
+- Logins de contas privilegiadas fora de horário ou de países incomuns
+- Alterações em NSGs que abram portas para a internet
+
+## Azure Policy — Guardrails Automáticos
+
+O **Azure Policy** permite definir regras que se aplicam automaticamente a todos os recursos. Alguns built-in policies úteis para PMEs:
+
+- **Require secure transfer to storage accounts** — garante HTTPS
+- **Audit VMs that do not use managed disks** — evita discos não geridos
+- **Only allow resource types in approved regions** — evita criar recursos em regiões não desejadas (compliance de dados)
+- **Key vaults should have soft delete enabled**
+
+Para ativar: Azure Policy → Assignments → Assign Policy → selecione os built-in policies relevantes.
+
+## Checklist de Segurança Azure para PMEs
+
+### Imediato
+- [ ] Ativar Microsoft Defender for Cloud (plano gratuito CSPM)
+- [ ] Verificar o Secure Score e resolver recomendações "Quick Fix"
+- [ ] Identificar VMs com RDP/SSH aberto à internet e fechar ou implementar JIT
+- [ ] Verificar Storage Accounts com acesso público ativo e desativar
+
+### Este mês
+- [ ] Rever Role Assignments na subscription — remover Owner/Contributor desnecessários
+- [ ] Criar Azure Key Vault e migrar secrets de ficheiros de configuração
+- [ ] Ativar JIT VM Access para todas as VMs de produção
+- [ ] Configurar Activity Log para Log Analytics Workspace com retenção de 90+ dias
+- [ ] Ativar alertas para criação de role assignments privilegiados
+
+### Este trimestre
+- [ ] Implementar Azure Policy para guardrails automáticos
+- [ ] Avaliar Defender for Servers Plan 1 para servidores de produção
+- [ ] Configurar Conditional Access para acessos ao portal Azure (MFA obrigatório)
+- [ ] Rever e revogar SAS tokens antigos ou sem expiração
+
+---
+
+O Azure oferece ferramentas de segurança poderosas — muitas gratuitas — mas requerem configuração ativa. A maioria das PMEs que foram comprometidas em ambientes Azure tinha VMs com RDP aberto, contas com Owner permanente sem MFA, ou secrets em texto claro nos repositórios. Corrigir estes três pontos elimina a maioria do risco.
+
+Para uma visão mais ampla da segurança em ambientes cloud, consulte o [guia de segurança cloud para PMEs](/blog/seguranca-cloud-pme-guia-pratico) e, para gestão de identidades Azure, o artigo sobre [IAM e controlo de acessos](/blog/gestao-identidade-acessos-iam-pme).`,
+    category: "ferramentas",
+    categoryLabel: "Ferramentas",
+    publishedAt: "2026-04-17",
+    readingTime: 13,
+  },
+  {
+    slug: "ataques-supply-chain-como-proteger-pme",
+    title: "Ataques de Supply Chain: O Que São e Como as PMEs Podem Proteger-se",
+    excerpt:
+      "SolarWinds, Log4Shell, XZ Utils — os ataques à cadeia de fornecimento de software estão a tornar-se a ameaça mais difícil de defender. Guia prático para PMEs: o que são, casos reais, e medidas concretas de proteção.",
+    content: `Em dezembro de 2020, a SolarWinds — empresa de software de monitorização de redes usada por 33.000 organizações — foi comprometida. Os atacantes inseriram código malicioso numa atualização legítima do software Orion. Quando as organizações instalaram a atualização, instalaram também um backdoor que esteve ativo durante meses sem ser detetado.
+
+Entre as vítimas: agências governamentais dos EUA, empresas Fortune 500, e centenas de organizações em todo o mundo. O ataque não explorou nenhuma vulnerabilidade técnica nas vítimas — explorou a **confiança nas atualizações de software que já usavam**.
+
+Isto é um ataque de supply chain: o atacante não entra diretamente na vítima, mas compromete um fornecedor ou componente de software em que a vítima confia.
+
+## O Que Distingue um Ataque de Supply Chain
+
+Num ataque direto, o atacante tenta comprometer o seu sistema de frente. Num ataque de supply chain, compromete algo em que confia:
+
+- **Software que usa** (atualizações, instaladores)
+- **Dependências open source** que o seu software incorpora
+- **Fornecedores de TI** com acesso administrativo à sua infraestrutura
+- **Hardware** (mais raro, mas documentado)
+
+A dificuldade está na confiança implícita: a empresa instala uma atualização legítima de um software que usa há anos, sem suspeitar que o processo de build do fornecedor foi comprometido.
+
+## Casos Reais — O Que Aconteceu e Porque Importa para PMEs
+
+### SolarWinds Orion (2020)
+**O que aconteceu:** Código malicioso inserido no processo de compilação da SolarWinds permaneceu ativo em atualizações por meses. Backdoor instalado silenciosamente em ~18.000 organizações.
+**Relevância para PMEs:** qualquer software de gestão de IT (RMM, monitorização, antivírus) é um vetor potencial. Fornecedores de MSP/MSSP que usam ferramentas comprometidas podem inadvertidamente propagar o ataque a todos os seus clientes.
+
+### Kaseya VSA (2021)
+**O que aconteceu:** O grupo REvil explorou uma vulnerabilidade de zero-day no Kaseya VSA — software de gestão remota usado por MSPs. Ao comprometer o VSA, conseguiram distribuir ransomware a ~1.500 empresas clientes dos MSPs afetados.
+**Relevância para PMEs:** se usa um MSP ou MSSP, o acesso administrativo que dão aos seus sistemas é um risco. Um MSP comprometido é um vetor direto para toda a sua rede.
+
+### Log4Shell / Log4j (2021)
+**O que aconteceu:** Vulnerabilidade crítica na biblioteca Java Log4j — usada em centenas de milhares de aplicações. Exploração extremamente simples (uma linha de texto num campo de input) comprometia qualquer sistema que usasse Log4j sem patch.
+**Relevância para PMEs:** se usa aplicações Java (ERPs, ferramentas de gestão, plataformas cloud), provavelmente usava Log4j sem saber. A maioria das PMEs não sabia sequer que tinham o problema até semanas depois.
+
+### XZ Utils (2024)
+**O que aconteceu:** Um contribuidor malicioso passou dois anos a ganhar confiança no projeto open source XZ Utils (ferramenta de compressão presente em quase todas as distribuições Linux). Inseriu um backdoor sofisticado que seria distribuído em atualizações do sistema operativo.
+**Relevância para PMEs:** os servidores Linux que usa (Azure VMs, servidores web, appliances) dependem de centenas de bibliotecas open source mantidas por voluntários. Um atacante paciente pode comprometer qualquer uma.
+
+### Pacotes Maliciosos em npm/PyPI
+**O que acontece regularmente:** atacantes publicam pacotes com nomes quase idênticos a pacotes legítimos (typosquatting: "lodash" vs "lodahs"), ou comprometem contas de maintainers de pacotes populares para publicar versões maliciosas.
+**Relevância para PMEs com equipas de desenvolvimento:** qualquer projeto Node.js ou Python pode inadvertidamente instalar um pacote comprometido via npm install ou pip install.
+
+## Os Três Vetores Principais e Como Endereçá-los
+
+### Vetor 1: Atualizações de Software Comprometidas
+
+**Risco:** um software que atualiza automaticamente em background pode distribuir código malicioso antes que qualquer alerta seja publicado.
+
+**Medidas para PMEs:**
+
+**1. Inventário de software crítico** — saber o que tem instalado é o primeiro passo. Sem inventário, não consegue agir quando uma vulnerabilidade é publicada. Use o Lansweeper (gratuito até 100 ativos) ou o Snipe-IT para manter um registo atualizado (ver [guia de inventário de ativos](/blog/inventario-ativos-ti-pme)).
+
+**2. Não desative atualizações de segurança** — a solução para supply chain attacks não é parar de atualizar. Atualizações de segurança continuam a ser a proteção mais eficaz contra a maioria das ameaças. O risco de não atualizar é muito maior que o risco de uma atualização comprometida.
+
+**3. Segmentação de rede** — mesmo que um software seja comprometido, se o sistema onde corre está isolado da rede de produção, o blast radius é limitado. Um PC de desenvolvimento não deve ter acesso direto ao servidor de base de dados de produção.
+
+**4. Monitorizar alertas de fornecedores e CVEs** — subscreva os canais de segurança dos fornecedores de software crítico. O CERT.PT ([guia CNCS/CERT.PT](/blog/cncs-cert-pt-o-que-sao-como-ajudam-pme)) publica alertas sobre vulnerabilidades relevantes para empresas portuguesas.
+
+### Vetor 2: Dependências Open Source no Desenvolvimento
+
+Se a sua empresa tem equipas de desenvolvimento ou mantém aplicações web/móveis, este vetor é altamente relevante.
+
+**Ferramentas gratuitas de análise de dependências:**
+
+**npm audit** (Node.js — já incluído):
+\`\`\`
+npm audit
+npm audit fix  # corrige automaticamente onde possível
+\`\`\`
+
+**pip-audit** (Python):
+\`\`\`
+pip install pip-audit
+pip-audit
+\`\`\`
+
+**OWASP Dependency-Check** (multi-linguagem, integra com CI/CD):
+\`\`\`
+dependency-check --project "MeuProjeto" --scan ./src --out ./report
+\`\`\`
+
+**GitHub Dependabot** (gratuito para repositórios públicos e privados):
+Crie um ficheiro \`.github/dependabot.yml\` no repositório — o Dependabot cria automaticamente pull requests para atualizar dependências com vulnerabilidades conhecidas.
+
+**Snyk** (gratuito até 200 testes/mês):
+Integra com GitHub/GitLab, analisa dependências em múltiplas linguagens, e alerta para novas vulnerabilidades em dependências já instaladas.
+
+**SBOM (Software Bill of Materials):**
+Um SBOM é um inventário de todas as dependências de um projeto de software. A NIS2 e tendências regulatórias estão a tornar o SBOM obrigatório para software crítico. Ferramentas como Syft (gratuito) geram SBOMs automaticamente:
+\`\`\`
+syft scan dir:./meu-projeto -o spdx-json > sbom.json
+\`\`\`
+
+### Vetor 3: Acesso de Fornecedores de TI
+
+Este é o vetor mais relevante para PMEs que externalizam a gestão de TI. Um MSP ou MSSP com acesso administrativo a todos os seus sistemas é um ponto de falha único — se forem comprometidos, a sua empresa também é.
+
+**Medidas essenciais:**
+
+**1. Exigir MFA obrigatório no acesso do fornecedor**
+Qualquer acesso administrativo de um terceiro à sua infraestrutura deve usar MFA. Se o fornecedor se opõe, é um sinal de alerta.
+
+**2. Credenciais separadas para cada fornecedor**
+Não dê ao MSP as mesmas credenciais que usa internamente. Crie contas específicas (ex: \`admin.mssp-nome\`) com acesso apenas ao necessário. Assim, se as credenciais do fornecedor forem comprometidas, o impacto é limitado.
+
+**3. Acesso just-in-time, não permanente**
+Em vez de deixar o fornecedor com acesso permanente, configure acesso JIT que é ativado quando necessário e automaticamente revogado. Azure tem JIT VM Access; o Entra ID tem PIM.
+
+**4. Registos de auditoria do acesso de terceiros**
+Qualquer ação feita por uma conta de fornecedor deve ser registada. Configure logs de auditoria (Microsoft 365 Audit Log, Azure Activity Log) e reveja periodicamente o que foi feito.
+
+**5. Cláusulas contratuais de segurança**
+O contrato com o MSP/MSSP deve incluir obrigações de segurança: notificação em X horas em caso de incidente, requisitos de MFA, política de subcontratação (não pode dar acesso aos seus sistemas a subcontratados sem aprovação), e responsabilidade em caso de comprometimento por falha de segurança do fornecedor.
+
+**Perguntas a fazer ao seu MSP:**
+- "Qual é a vossa política de resposta a incidentes de segurança?"
+- "Como são geridas as credenciais de acesso aos sistemas dos clientes?"
+- "Usam MFA para todos os acessos administrativos?"
+- "Foram alvo de algum incidente de segurança nos últimos 12 meses?"
+
+## O Que a NIS2 Diz sobre Supply Chain
+
+A Diretiva NIS2 (transposta para Portugal pelo Decreto-Lei 125/2025) introduziu requisitos explícitos de segurança da cadeia de fornecimento para entidades abrangidas. O artigo sobre [NIS2 e cadeia de fornecimento](/blog/nis2-cadeia-fornecimento-pme) detalha as obrigações específicas, mas o essencial é:
+
+- As entidades NIS2 devem avaliar os riscos de segurança dos seus fornecedores de TI e serviços digitais críticos
+- Contratos com fornecedores críticos devem incluir cláusulas de segurança específicas
+- Incidentes em fornecedores que afetem a entidade devem ser reportados como se fossem incidentes diretos
+
+Mesmo que a sua PME não seja diretamente abrangida pela NIS2, clientes que o sejam irão exigir garantias de segurança da cadeia de fornecimento a partir de 2026.
+
+## Não Há Defesa Perfeita — Mas Há Resiliência
+
+A verdade sobre supply chain attacks é que não é possível eliminar o risco completamente. Mesmo com todas as medidas acima, se um atacante comprometer um software amplamente usado antes de qualquer alerta, a sua empresa pode ser afetada.
+
+O que pode controlar é o **blast radius** (o dano que um compromisso pode causar) e a **capacidade de detetar e responder rapidamente**.
+
+**Princípios de resiliência:**
+- **Segmentação**: um sistema comprometido não deve ter acesso ilimitado à restante rede
+- **Menor privilégio**: o software não deve ter mais permissões do que precisa para funcionar
+- **Monitorização**: anomalias de comportamento (tráfego incomum, processos novos, ligações a IPs desconhecidos) devem gerar alertas
+- **Backups isolados**: backups não devem ser acessíveis pelo sistema que está a proteger (ver [regra 3-2-1](/blog/backup-dados-pme-regra-3-2-1))
+- **Plano de resposta**: saber o que fazer quando um fornecedor anuncia um compromisso crítico (ver [plano de resposta a incidentes](/blog/plano-resposta-incidentes-ciberseguranca-pme))
+
+## Checklist para PMEs
+
+### Gestão de Software
+- [ ] Manter inventário atualizado de todo o software instalado
+- [ ] Subscrever alertas de segurança dos fornecedores críticos (ERP, RMM, antivírus, etc.)
+- [ ] Aplicar patches de segurança em tempo útil (teste → produção em 72h para críticos)
+- [ ] Segmentar rede para limitar movimento lateral em caso de compromisso
+
+### Desenvolvimento (se aplicável)
+- [ ] Integrar análise de dependências no pipeline CI/CD (npm audit, pip-audit, Dependabot)
+- [ ] Rever e aprovar dependências novas antes de as adicionar a projetos críticos
+- [ ] Gerar SBOM para aplicações em produção
+
+### Fornecedores de TI
+- [ ] Exigir MFA obrigatório para qualquer acesso administrativo de terceiros
+- [ ] Criar contas separadas por fornecedor com menor privilégio
+- [ ] Rever periodicamente os logs de acesso de terceiros
+- [ ] Incluir cláusulas de segurança nos contratos com fornecedores de TI críticos
+
+---
+
+Os ataques de supply chain são particularmente insidiosos porque exploram a confiança — em software que usa há anos, em fornecedores com que tem boa relação, em componentes open source que toda a gente usa. Não existe defesa perfeita, mas uma combinação de inventário, segmentação, controlo de acessos de terceiros e backups isolados reduz drasticamente o impacto de um compromisso.
+
+Para o contexto mais amplo de gestão de risco de fornecedores, consulte o artigo sobre [gestão de risco de terceiros](/blog/gestao-risco-fornecedores-terceiros-pme).`,
+    category: "ameacas",
+    categoryLabel: "Ameaças",
+    publishedAt: "2026-04-17",
+    readingTime: 15,
+  },
 ];
 
 export function getPostBySlug(slug: string): Post | undefined {
