@@ -7,6 +7,7 @@ import { RelatedPosts } from "@/components/related-posts";
 import { SocialShare } from "@/components/social-share";
 import CountdownTimer from "@/components/countdown-timer";
 import AffiliateCTABanner from "@/components/affiliate-cta-banner";
+import { AuthorByline, AuthorCard } from "@/components/author-byline";
 import { getAllNIS2Tools } from "@/lib/affiliate-tools";
 import type { Metadata } from "next";
 import Footer from "@/components/footer";
@@ -132,7 +133,16 @@ export default async function BlogPostPage({
     name: post.title,
     headline: post.title,
     description: post.excerpt,
-    author: {
+    author: post.author ? {
+      "@type": "Person",
+      name: post.author.name,
+      ...(post.author.bio && { description: post.author.bio }),
+      worksFor: {
+        "@type": "Organization",
+        name: "CiberPME",
+        url: baseUrl,
+      }
+    } : {
       "@type": "Organization",
       name: "CiberPME",
       url: baseUrl,
@@ -275,16 +285,24 @@ export default async function BlogPostPage({
           <h1 className="text-3xl md:text-4xl font-bold text-brand mb-4 leading-tight text-balance font-display tracking-tight">
             {post.title}
           </h1>
-          <div className="flex items-center gap-4 text-sm text-text-muted">
-            <time dateTime={post.publishedAt}>
-              {new Date(post.publishedAt).toLocaleDateString("pt-PT", {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })}
-            </time>
-            <span>{post.readingTime} min de leitura</span>
-          </div>
+          {post.author ? (
+            <AuthorByline
+              author={post.author}
+              publishedAt={post.publishedAt}
+              readingTime={post.readingTime}
+            />
+          ) : (
+            <div className="flex items-center gap-4 text-sm text-text-muted">
+              <time dateTime={post.publishedAt}>
+                {new Date(post.publishedAt).toLocaleDateString("pt-PT", {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                })}
+              </time>
+              <span>{post.readingTime} min de leitura</span>
+            </div>
+          )}
         </header>
 
         {/* NIS2 Countdown Timer for legislacao articles */}
@@ -315,6 +333,13 @@ export default async function BlogPostPage({
         <article className="space-y-6">
           {renderedContent}
         </article>
+
+        {/* Author card */}
+        {post.author && post.author.bio && (
+          <div className="mt-12 mb-12">
+            <AuthorCard author={post.author} />
+          </div>
+        )}
 
         {/* Affiliate CTA for top NIS2 articles */}
         {isTopNIS2Article && (
