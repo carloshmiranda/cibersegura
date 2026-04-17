@@ -68,7 +68,7 @@ export default async function BlogPostPage({
   if (!post) notFound();
 
   const markdownElements = parseMarkdown(post.content);
-  const renderedContent = renderMarkdown(markdownElements);
+  const renderedContent = renderMarkdown(markdownElements, post.slug);
 
   const baseUrl = process.env.NEXT_PUBLIC_URL || "https://ciberpme.vercel.app";
   const articleUrl = `${baseUrl}/blog/${post.slug}`;
