@@ -116,13 +116,30 @@ export default function InlineAffiliateCTA({
   const linkId = `${tool.name.toLowerCase().replace(/\s+/g, '-')}-${tool.category}-inline`;
 
   const handleClick = () => {
-    // Fire-and-forget tracking with keepalive
-    trackAffiliateClick({
+    const trackingData = {
       article_slug: articleSlug,
       cta_position: ctaPosition,
       link_id: linkId,
       destination_url: trackedUrl,
+    };
+
+    // Debug logging for affiliate health verification
+    console.log('🔗 Affiliate click tracked:', {
+      tool: tool.name,
+      position: ctaPosition,
+      url: trackedUrl,
+      article: articleSlug,
+    });
+
+    // Fire-and-forget tracking with keepalive
+    trackAffiliateClick(trackingData).then(success => {
+      if (success) {
+        console.log('✅ Affiliate tracking successful:', linkId);
+      } else {
+        console.warn('⚠️ Affiliate tracking failed:', linkId);
+      }
     }).catch(error => {
+      console.error('❌ Affiliate tracking error:', error);
       // Don't block navigation if tracking fails
     });
   };
