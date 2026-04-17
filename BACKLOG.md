@@ -17,7 +17,6 @@
 
 ## Planned
 <!-- Items identified but not yet prioritized -->
-- 🟢 **P2 — Content**: Resource page with curated links to CNCS, CERT.PT, CNPD, PJ Cibercrime — useful for SMEs and good for internal linking
 - 🟢 **P2 — Content**: Downloadable checklist for SPF/DKIM/DMARC setup (complement new post)
 - ⚪ **P3 — Content**: Video or infographic version of the incident reporting guide — high shareability
 
@@ -27,6 +26,7 @@
 <!-- Completed items with date -->
 
 ### 2026-04-17 (session 13)
+- ✅ **Content**: Resource page enhancement with official Portuguese entities — Enhanced `/recursos` page with detailed sections for CNCS, CERT.PT, CNPD, PJ Cibercrime including SME-specific guidance on when to contact each entity, practical escalation procedures, and extensive internal linking to relevant blog posts. Added "Quick Implementation Guides" section linking to 6 key topic areas for improved user journey and SEO internal linking structure.
 - ✅ **SEO**: Hreflang tag for `pt-PT` language variant — Updated lang attribute from 'pt' to 'pt-PT' in 3 files (downloadable checklist + email templates) for better local SEO targeting of Portuguese PME audience
 - ✅ **UX**: Author/byline component on blog posts — Added AuthorByline and AuthorCard components with 3 expert profiles (Carlos Miranda, Rita Santos, Miguel Ferreira), updated Post interface, blog post template, and JSON-LD schema for improved credibility and E-E-A-T signals
 - ✅ **growth**: Article "Microsoft Intune para PMEs: Gestão de Endpoints Incluída no Microsoft 365 Business Premium" — `/blog/microsoft-intune-pme-gestao-endpoints-seguranca`; MDM vs MAM, enrollment Windows/iOS/Android (manual, Autopilot, bulk), compliance policies (BitLocker, OS mínimo, Secure Boot), App Protection Policies para BYOD, Conditional Access (report-only → enforce), Update Rings, remote actions (Retire vs Wipe para BYOD/RGPD), plano de implementação 4 semanas, erros comuns (CA antes de enrollment, Wipe em BYOD, sem break-glass)
