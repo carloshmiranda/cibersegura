@@ -4,16 +4,16 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 
 export const metadata: Metadata = {
-  title: "Recursos de Cibersegurança — Ferramentas e Guias para PMEs",
+  title: "Recursos de Cibersegurança — Ferramentas, Guias e Entidades Oficiais para PMEs",
   description:
-    "Catálogo de ferramentas de cibersegurança recomendadas para pequenas e médias empresas portuguesas. Antivírus, backup, VPN, formação e mais recursos essenciais.",
+    "Catálogo completo com ferramentas de cibersegurança, guias de implementação e contactos oficiais (CNCS, CERT.PT, CNPD, PJ Cibercrime) para PMEs portuguesas. Antivírus, backup, VPN, formação e recursos governamentais.",
   alternates: {
     canonical: "https://ciberpme.vercel.app/recursos",
   },
   openGraph: {
-    title: "Recursos de Cibersegurança — Ferramentas e Guias para PMEs",
+    title: "Recursos de Cibersegurança — Ferramentas e Entidades Oficiais para PMEs",
     description:
-      "Catálogo de ferramentas de cibersegurança recomendadas para pequenas e médias empresas portuguesas. Antivírus, backup, VPN, formação e mais recursos essenciais.",
+      "Catálogo completo com ferramentas de cibersegurança, guias de implementação e contactos oficiais (CNCS, CERT.PT, CNPD, PJ Cibercrime) para PMEs portuguesas.",
     type: "website",
     url: "https://ciberpme.vercel.app/recursos",
     images: [
@@ -418,36 +418,74 @@ const categories: ResourceCategory[] = [
   },
 ];
 
-const additionalResources = [
+const officialResources = [
   {
     title: "CNCS — Centro Nacional de Cibersegurança",
-    description: "Portal oficial para reportar incidentes e obter orientações.",
+    description: "Portal oficial para reportar incidentes, obter alertas de segurança e aceder a guias de boas práticas específicos para empresas portuguesas.",
+    fullDescription: "O CNCS é a entidade nacional responsável pela coordenação da cibersegurança em Portugal. Para PMEs, oferece relatórios de incidentes obrigatórios (prazo de 72h), alertas sobre novas ameaças, e guias práticos de implementação.",
     url: "cncs.gov.pt",
     type: "Oficial",
+    whenToUse: "Reportar incidentes de segurança, consultar alertas nacionais, implementar conformidade NIS2",
+    relatedArticles: [
+      { title: "Guia NIS2 para PMEs", slug: "nis2-decreto-lei-125-2025-obrigacoes-pme" },
+      { title: "Plano de Resposta a Incidentes", slug: "plano-resposta-incidentes-ciberseguranca-pme" }
+    ],
+  },
+  {
+    title: "CERT.PT — Computer Emergency Response Team",
+    description: "Equipa técnica nacional de resposta rápida a incidentes informáticos, com alertas técnicos e ferramentas gratuitas de análise.",
+    fullDescription: "O CERT.PT fornece suporte técnico direto para análise de malware, validação de ameaças, e resposta coordenada a incidentes críticos. Essencial para PMEs sem equipa técnica interna.",
+    url: "cert.pt",
+    type: "Técnico",
+    whenToUse: "Análise de ficheiros suspeitos, validação técnica de ameaças, coordenação durante incidentes ativos",
+    relatedArticles: [
+      { title: "Resposta a Ransomware", slug: "ransomware-o-que-fazer-pme-guia-resposta" },
+      { title: "Gestão de Vulnerabilidades", slug: "gestao-vulnerabilidades-pme-guia-completo" }
+    ],
   },
   {
     title: "CNPD — Comissão Nacional de Proteção de Dados",
-    description: "Orientações sobre RGPD e proteção de dados.",
+    description: "Autoridade nacional para RGPD com orientações específicas sobre notificação de violações e proteção de dados em PMEs.",
+    fullDescription: "A CNPD esclarece obrigações RGPD para PMEs, incluindo quando nomear um DPO, como notificar violações de dados (72h), e que medidas técnicas implementar.",
     url: "cnpd.pt",
     type: "Oficial",
-  },
-  {
-    title: "CERT.PT",
-    description: "Equipa de resposta a incidentes informáticos em Portugal.",
-    url: "cert.pt",
-    type: "Técnico",
+    whenToUse: "Violações de dados pessoais, dúvidas sobre DPO, conformidade RGPD em processos de backup e resposta a incidentes",
+    relatedArticles: [
+      { title: "RGPD e Backup de Dados", slug: "estrategia-backup-pme-regra-3-2-1-recuperacao" },
+      { title: "Proteção de Dados em Clínicas", slug: "ciberseguranca-clinicas-saude-portugal" }
+    ],
   },
   {
     title: "PJ Cibercrime — Polícia Judiciária",
-    description: "Unidade nacional de combate ao cibercrime para denunciar crimes informáticos.",
-    url: "pj.pt/cibercrime",
+    description: "Unidade especializada para denúncia formal de crimes informáticos, incluindo ransomware, fraude BEC e roubo de dados.",
+    fullDescription: "A Unidade Nacional de Combate ao Cibercrime (UNC3T) da PJ processa denúncias criminais e coordena investigações. Fundamental para casos de extorsão, fraude empresarial e violações graves de dados.",
+    url: "pj.pt/unidades-especializadas/unc3t",
     type: "Oficial",
+    whenToUse: "Crimes informáticos consumados (ransomware, BEC, extorsão), investigação criminal, recuperação de ativos digitais",
+    relatedArticles: [
+      { title: "Prevenção BEC e Fraude", slug: "bec-business-email-compromise-como-prevenir-pme" },
+      { title: "Plano de Continuidade após Ciberataque", slug: "plano-continuidade-negocio-bcp-ciberataque-pme" }
+    ],
   },
+];
+
+const frameworkResources = [
   {
     title: "NIST Cybersecurity Framework",
-    description: "Framework internacional de referência para cibersegurança.",
+    description: "Framework internacional para identificar, proteger, detectar, responder e recuperar de incidentes de cibersegurança.",
     url: "nist.gov/cyberframework",
-    type: "Internacional",
+    type: "Framework",
+    whenToUse: "Estruturação de programa de cibersegurança, auditoria interna, preparação para certificações",
+  },
+  {
+    title: "CIS Controls v8",
+    description: "18 controlos técnicos prioritários baseados em dados reais de ataques, com foco em implementação gradual para PMEs (IG1).",
+    url: "cisecurity.org/controls",
+    type: "Framework",
+    whenToUse: "Implementação prática passo-a-passo, priorização de investimentos em segurança",
+    relatedArticles: [
+      { title: "CIS Controls para PMEs", slug: "cis-controls-v8-pme-implementacao-ig1" }
+    ],
   },
 ];
 
@@ -473,10 +511,10 @@ export default function RecursosPage() {
             Recursos de Cibersegurança
           </h1>
           <p className="text-lg text-text-secondary max-w-3xl mx-auto text-pretty">
-            Ferramentas, serviços e recursos cuidadosamente selecionados para
+            Ferramentas, guias de implementação e contactos oficiais cuidadosamente selecionados para
             ajudar pequenas e médias empresas portuguesas a protegerem-se contra
-            ameaças digitais. Todas as recomendações são baseadas em experiência
-            real de implementação.
+            ameaças digitais. Inclui entidades governamentais (CNCS, CERT.PT, CNPD, PJ Cibercrime)
+            e recomendações baseadas em experiência real de implementação.
           </p>
         </div>
 
@@ -566,64 +604,337 @@ export default function RecursosPage() {
           ))}
         </div>
 
-        {/* Additional Resources */}
+        {/* Quick Implementation Guides */}
         <section className="mt-20">
           <h2 className="text-2xl font-bold text-brand mb-8 text-center text-balance font-display">
-            Recursos Oficiais e Técnicos
+            Guias de Implementação Rápida
           </h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            {additionalResources.map((resource, index) => (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="p-6 rounded-xl bg-bg-subtle border border-border">
+              <div className="mb-4">
+                <svg aria-hidden="true" className="w-8 h-8 text-accent mb-3" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
+                </svg>
+                <h3 className="font-bold text-brand">Microsoft 365 Business Premium</h3>
+              </div>
+              <p className="text-sm text-text-secondary mb-4">
+                Configure segurança empresarial em 4 semanas com o plano mais popular para PMEs portuguesas.
+              </p>
+              <Link
+                href="/blog/seguranca-microsoft-365-business-premium-pme"
+                className="inline-flex items-center gap-1 text-sm text-accent hover:underline font-medium"
+              >
+                Ver guia completo
+                <svg aria-hidden="true" className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                </svg>
+              </Link>
+            </div>
+
+            <div className="p-6 rounded-xl bg-bg-subtle border border-border">
+              <div className="mb-4">
+                <svg aria-hidden="true" className="w-8 h-8 text-accent mb-3" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z" />
+                </svg>
+                <h3 className="font-bold text-brand">Gestores de Passwords</h3>
+              </div>
+              <p className="text-sm text-text-secondary mb-4">
+                Compare Bitwarden, 1Password e Keeper para equipas, com plano de migração detalhado.
+              </p>
+              <Link
+                href="/blog/gestor-passwords-empresa-bitwarden-1password-keeper"
+                className="inline-flex items-center gap-1 text-sm text-accent hover:underline font-medium"
+              >
+                Ver comparação detalhada
+                <svg aria-hidden="true" className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                </svg>
+              </Link>
+            </div>
+
+            <div className="p-6 rounded-xl bg-bg-subtle border border-border">
+              <div className="mb-4">
+                <svg aria-hidden="true" className="w-8 h-8 text-accent mb-3" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" />
+                </svg>
+                <h3 className="font-bold text-brand">Estratégia de Backup 3-2-1</h3>
+              </div>
+              <p className="text-sm text-text-secondary mb-4">
+                Implementação de backup empresarial com Veeam, Acronis e soluções cloud para PMEs.
+              </p>
+              <Link
+                href="/blog/estrategia-backup-pme-regra-3-2-1-recuperacao"
+                className="inline-flex items-center gap-1 text-sm text-accent hover:underline font-medium"
+              >
+                Ver estratégia completa
+                <svg aria-hidden="true" className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                </svg>
+              </Link>
+            </div>
+
+            <div className="p-6 rounded-xl bg-bg-subtle border border-border">
+              <div className="mb-4">
+                <svg aria-hidden="true" className="w-8 h-8 text-accent mb-3" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 14.25h13.5m-13.5 0a3 3 0 0 1-3-3V7.875a1.125 1.125 0 0 1 1.125-1.125h16.5A1.125 1.125 0 0 1 21.75 7.875v3.375a3 3 0 0 1-3 3m-16.5 0a3 3 0 0 1 3-3h10.5a3 3 0 0 1 3 3m-16.5 0h13.5m-16.5 0v5.25A2.25 2.25 0 0 0 7.5 21.75h9a2.25 2.25 0 0 0 2.25-2.25V14.25" />
+                </svg>
+                <h3 className="font-bold text-brand">Firewalls Empresariais</h3>
+              </div>
+              <p className="text-sm text-text-secondary mb-4">
+                Comparação UTM vs NGFW: FortiGate, SonicWall e Cisco Meraki para diferentes cenários de PME.
+              </p>
+              <Link
+                href="/blog/firewall-empresarial-utm-ngfw-pme"
+                className="inline-flex items-center gap-1 text-sm text-accent hover:underline font-medium"
+              >
+                Ver comparação técnica
+                <svg aria-hidden="true" className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                </svg>
+              </Link>
+            </div>
+
+            <div className="p-6 rounded-xl bg-bg-subtle border border-border">
+              <div className="mb-4">
+                <svg aria-hidden="true" className="w-8 h-8 text-accent mb-3" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5" />
+                </svg>
+                <h3 className="font-bold text-brand">Formação Phishing</h3>
+              </div>
+              <p className="text-sm text-text-secondary mb-4">
+                KnowBe4, GoPhish e Microsoft Attack Simulator - escolha a melhor solução para a sua equipa.
+              </p>
+              <Link
+                href="/blog/simulacao-phishing-empresa-como-fazer-pme"
+                className="inline-flex items-center gap-1 text-sm text-accent hover:underline font-medium"
+              >
+                Ver programa de formação
+                <svg aria-hidden="true" className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                </svg>
+              </Link>
+            </div>
+
+            <div className="p-6 rounded-xl bg-bg-subtle border border-border">
+              <div className="mb-4">
+                <svg aria-hidden="true" className="w-8 h-8 text-accent mb-3" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 0 1-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 0 1 4.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 14.5M14.25 3.104c.251.023.501.05.75.082M19.8 14.5l-2.436 2.436a2.25 2.25 0 0 1-1.591.659h-3.546a2.25 2.25 0 0 1-1.591-.659L8.2 14.5m11.6 0V16a2.25 2.25 0 0 1-2.25 2.25h-11.5A2.25 2.25 0 0 1 4 16v-1.5m15.8 0a2.25 2.25 0 0 0 2.2-2.357 2.968 2.968 0 0 0-.6-1.5L19.8 14.5ZM8.2 14.5a2.968 2.968 0 0 0-.6 1.5A2.25 2.25 0 0 0 9.85 18H18a2.25 2.25 0 0 0 2.25-2.25V16l-2.4-1.5H8.2Z" />
+                </svg>
+                <h3 className="font-bold text-brand">Auditoria de Segurança</h3>
+              </div>
+              <p className="text-sm text-text-secondary mb-4">
+                Checklist de 56 pontos para auditar a cibersegurança da sua PME internamente, sem custos externos.
+              </p>
+              <Link
+                href="/blog/auditoria-ciberseguranca-interna-pme"
+                className="inline-flex items-center gap-1 text-sm text-accent hover:underline font-medium"
+              >
+                Ver checklist completo
+                <svg aria-hidden="true" className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                </svg>
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Official Portuguese Resources */}
+        <section className="mt-20">
+          <h2 className="text-2xl font-bold text-brand mb-4 text-center text-balance font-display">
+            Entidades Oficiais Portuguesas
+          </h2>
+          <p className="text-text-secondary text-center mb-12 max-w-3xl mx-auto">
+            Recursos oficiais para reportar incidentes, obter orientações técnicas e cumprir obrigações legais de cibersegurança em Portugal.
+          </p>
+
+          <div className="space-y-8">
+            {officialResources.map((resource, index) => (
               <div
                 key={index}
-                className="p-6 rounded-xl border border-border hover:border-accent transition cursor-pointer"
+                className="p-8 rounded-xl border border-border hover:border-accent hover:shadow-sm transition"
               >
-                <div className="flex justify-between items-start mb-3">
-                  <h3 className="font-bold text-brand">{resource.title}</h3>
+                <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-4">
+                  <div>
+                    <h3 className="text-xl font-bold text-brand mb-2">{resource.title}</h3>
+                    <span className="px-3 py-1 text-xs font-medium text-accent bg-accent-light rounded-full">
+                      {resource.type}
+                    </span>
+                  </div>
+                  <a
+                    href={`https://${resource.url}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-accent border border-accent rounded-lg hover:bg-accent hover:text-white transition shrink-0"
+                  >
+                    Visitar Portal
+                    <svg aria-hidden="true" className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                    </svg>
+                  </a>
+                </div>
+
+                <p className="text-text-secondary mb-4 leading-relaxed">
+                  {resource.fullDescription}
+                </p>
+
+                <div className="mb-6">
+                  <h4 className="text-sm font-medium text-brand mb-2">Quando contactar:</h4>
+                  <p className="text-sm text-text-secondary italic">
+                    {resource.whenToUse}
+                  </p>
+                </div>
+
+                {resource.relatedArticles && resource.relatedArticles.length > 0 && (
+                  <div className="pt-4 border-t border-border">
+                    <h4 className="text-sm font-medium text-brand mb-3">Artigos relacionados:</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {resource.relatedArticles.map((article, articleIndex) => (
+                        <Link
+                          key={articleIndex}
+                          href={`/blog/${article.slug}`}
+                          className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-accent bg-accent-light rounded-lg hover:bg-accent hover:text-white transition"
+                        >
+                          {article.title}
+                          <svg aria-hidden="true" className="w-3 h-3" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                          </svg>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* International Frameworks */}
+        <section className="mt-20">
+          <h2 className="text-2xl font-bold text-brand mb-4 text-center text-balance font-display">
+            Frameworks Internacionais
+          </h2>
+          <p className="text-text-secondary text-center mb-12 max-w-3xl mx-auto">
+            Standards e frameworks reconhecidos mundialmente para estruturar e avaliar programas de cibersegurança.
+          </p>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            {frameworkResources.map((framework, index) => (
+              <div
+                key={index}
+                className="p-6 rounded-xl border border-border hover:border-accent hover:shadow-sm transition"
+              >
+                <div className="flex justify-between items-start mb-4">
+                  <h3 className="text-lg font-bold text-brand">{framework.title}</h3>
                   <span className="px-2 py-1 text-xs font-medium text-text-secondary bg-bg-subtle rounded">
-                    {resource.type}
+                    {framework.type}
                   </span>
                 </div>
-                <p className="text-sm text-text-secondary mb-4">
-                  {resource.description}
+
+                <p className="text-sm text-text-secondary mb-4 leading-relaxed">
+                  {framework.description}
                 </p>
+
+                <div className="mb-6">
+                  <h4 className="text-sm font-medium text-brand mb-2">Quando usar:</h4>
+                  <p className="text-sm text-text-secondary italic">
+                    {framework.whenToUse}
+                  </p>
+                </div>
+
+                {framework.relatedArticles && framework.relatedArticles.length > 0 && (
+                  <div className="mb-6 pt-4 border-t border-border">
+                    <div className="flex flex-wrap gap-2">
+                      {framework.relatedArticles.map((article, articleIndex) => (
+                        <Link
+                          key={articleIndex}
+                          href={`/blog/${article.slug}`}
+                          className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-accent bg-accent-light rounded-lg hover:bg-accent hover:text-white transition"
+                        >
+                          {article.title}
+                          <svg aria-hidden="true" className="w-3 h-3" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                          </svg>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 <a
-                  href={`https://${resource.url}`}
+                  href={`https://${framework.url}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm text-accent hover:underline"
+                  className="inline-block w-full text-center px-4 py-2 text-sm font-medium text-accent border border-accent rounded-lg hover:bg-accent hover:text-white transition"
                 >
-                  {resource.url} →
+                  Aceder ao Framework
                 </a>
               </div>
             ))}
           </div>
         </section>
 
-        {/* CTA */}
-        <div className="mt-20 p-8 rounded-xl bg-bg-subtle text-center">
-          <h2 className="text-2xl font-bold text-brand mb-4 text-balance font-display">
-            Precisa de ajuda na escolha?
-          </h2>
-          <p className="text-text-secondary mb-6 max-w-2xl mx-auto text-pretty">
-            Explore os nossos artigos detalhados sobre implementação de
-            cibersegurança ou subscreva a newsletter para receber
-            recomendações personalizadas.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/blog"
-              className="px-8 py-3 bg-accent text-white rounded-lg font-bold hover:opacity-90 transition"
-            >
-              Ver Guias de Implementação
-            </Link>
-            <Link
-              href="/#newsletter"
-              className="px-8 py-3 border border-border text-brand rounded-lg font-medium hover:border-accent transition"
-            >
-              Newsletter Gratuita
-            </Link>
+        {/* CTA Section */}
+        <section className="mt-20">
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* Primary CTA */}
+            <div className="p-8 rounded-xl bg-accent text-white">
+              <h2 className="text-2xl font-bold mb-4 text-balance font-display">
+                Por onde começar?
+              </h2>
+              <p className="mb-6 opacity-90">
+                Use a nossa avaliação gratuita para identificar as prioridades de segurança específicas da sua PME e receber um plano personalizado.
+              </p>
+              <Link
+                href="/avaliacao-seguranca"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-white text-accent rounded-lg font-bold hover:bg-gray-100 transition"
+              >
+                Fazer Avaliação Gratuita
+                <svg aria-hidden="true" className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                </svg>
+              </Link>
+            </div>
+
+            {/* Secondary CTA */}
+            <div className="p-8 rounded-xl border border-border">
+              <h2 className="text-2xl font-bold text-brand mb-4 text-balance font-display">
+                Explore por categoria
+              </h2>
+              <p className="text-text-secondary mb-6">
+                Navegue pelos nossos guias organizados por tipo de ameaça, setor de atividade, ou área técnica.
+              </p>
+              <div className="space-y-3">
+                <Link
+                  href="/blog/categoria/boas-praticas"
+                  className="flex items-center justify-between p-3 rounded-lg bg-bg-subtle hover:bg-accent-light transition"
+                >
+                  <span className="font-medium text-brand">Boas Práticas</span>
+                  <svg aria-hidden="true" className="w-4 h-4 text-accent" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                  </svg>
+                </Link>
+                <Link
+                  href="/blog/categoria/ameacas"
+                  className="flex items-center justify-between p-3 rounded-lg bg-bg-subtle hover:bg-accent-light transition"
+                >
+                  <span className="font-medium text-brand">Ameaças e Ataques</span>
+                  <svg aria-hidden="true" className="w-4 h-4 text-accent" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                  </svg>
+                </Link>
+                <Link
+                  href="/blog/categoria/ferramentas"
+                  className="flex items-center justify-between p-3 rounded-lg bg-bg-subtle hover:bg-accent-light transition"
+                >
+                  <span className="font-medium text-brand">Ferramentas e Tecnologia</span>
+                  <svg aria-hidden="true" className="w-4 h-4 text-accent" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                  </svg>
+                </Link>
+              </div>
+            </div>
           </div>
-        </div>
+        </section>
       </main>
 
       <Footer />
