@@ -438,6 +438,12 @@ const additionalResources = [
     type: "Técnico",
   },
   {
+    title: "PJ Cibercrime — Polícia Judiciária",
+    description: "Unidade nacional de combate ao cibercrime para denunciar crimes informáticos.",
+    url: "pj.pt/cibercrime",
+    type: "Oficial",
+  },
+  {
     title: "NIST Cybersecurity Framework",
     description: "Framework internacional de referência para cibersegurança.",
     url: "nist.gov/cyberframework",
