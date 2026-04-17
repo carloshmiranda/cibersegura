@@ -29,6 +29,11 @@
 ## Done
 <!-- Completed items with date -->
 
+### 2026-04-17 (session 10)
+- ✅ **growth**: Article "Active Directory: Guia de Hardening para PMEs com Windows Server" — `/blog/active-directory-hardening-pme`; contas administrativas separadas, Microsoft LAPS, Fine-Grained Password Policies, desativar NTLMv1/LM, Protected Users Security Group, Credential Guard, gMSA para contas de serviço, Event IDs críticos para alertar (4625/4720/4728/4769/7045), PingCastle e BloodHound para avaliação
+- ✅ **growth**: Article "Segurança no Azure para PMEs: Microsoft Defender for Cloud Passo a Passo" — `/blog/seguranca-azure-pme-microsoft-defender-for-cloud`; Defender for Cloud CSPM gratuito vs Defender for Servers, Secure Score, Azure RBAC princípio menor privilégio, PIM para Azure, NSGs e JIT VM Access, Azure Key Vault, Storage Account hardening (desativar acesso público, TLS 1.2), Log Analytics + KQL queries para alertas, Azure Policy guardrails
+- ✅ **growth**: Article "Ataques de Supply Chain: O Que São e Como as PMEs Podem Proteger-se" — `/blog/ataques-supply-chain-como-proteger-pme`; casos reais SolarWinds/Kaseya/Log4Shell/XZ Utils/npm typosquatting, 3 vetores (software updates, open source deps, acesso MSP), npm audit/pip-audit/Dependabot/Snyk/OWASP Dependency-Check, SBOM com Syft, controlos para fornecedores MSP (MFA, contas separadas, JIT, logs), cláusulas contratuais, NIS2 supply chain
+
 ### 2026-04-16 (session 9)
 - ✅ **growth**: Article "Microsoft Defender for Business: O EDR para PMEs Incluído no Microsoft 365" — `/blog/microsoft-defender-for-business-pme-guia-completo`; ativação via Intune, onboarding Windows/macOS, Threat & Vulnerability Management (Secure Score), Attack Surface Reduction rules (Audit → Block), investigação automática e remediação, Live Response, isolamento de dispositivos, comparação com CrowdStrike Falcon Go e SentinelOne
 - ✅ **growth**: Article "CIS Controls v8 para PMEs: Os 56 Controlos Essenciais do Grupo IG1" — `/blog/cis-controls-v8-pme-implementacao-ig1`; todos os 18 controlos CIS v8 com foco no IG1, passos concretos por controlo, priorização em 3 fases (30 dias / 1-3 meses / 3-6 meses), mapeamento para RGPD/NIS2/ISO 27001/DORA
