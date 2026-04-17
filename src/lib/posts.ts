@@ -18946,6 +18946,1284 @@ A configuração de email security do M365 é um investimento de algumas horas q
     publishedAt: "2026-04-17",
     readingTime: 16,
   },
+  {
+    slug: "microsoft-intune-pme-gestao-endpoints-seguranca",
+    title: "Microsoft Intune para PMEs: Gestão de Endpoints Incluída no Microsoft 365 Business Premium",
+    excerpt:
+      "O Microsoft Intune está incluído no Microsoft 365 Business Premium e permite gerir todos os dispositivos da empresa — Windows, Mac, iOS e Android — a partir de uma consola central. Guia completo de implementação para PMEs.",
+    content: `A maioria das PMEs que paga pelo Microsoft 365 Business Premium não sabe que tem acesso ao **Microsoft Intune**, uma plataforma de gestão de endpoints (MDM/MAM) valorizada em centenas de euros por ano se comprada separadamente. O Intune permite definir políticas de segurança, gerir aplicações, forçar encriptação e fazer wipe remoto de qualquer dispositivo da empresa.
+
+Este guia explica o que é o Intune, o que está incluído no Business Premium, e como começar a implementar em menos de uma tarde.
+
+## O Que é o Microsoft Intune
+
+O Intune é o serviço de **Mobile Device Management (MDM)** e **Mobile Application Management (MAM)** da Microsoft. Simplificando:
+
+- **MDM** — a empresa controla o dispositivo inteiro (enrollment). Adequado para dispositivos da empresa.
+- **MAM** — a empresa controla apenas as aplicações Microsoft no dispositivo, sem tocar nos dados pessoais. Adequado para BYOD.
+
+### O Que Está Incluído em Cada Plano
+
+| Funcionalidade | M365 Business Basic | M365 Business Standard | M365 Business Premium |
+|---|---|---|---|
+| Intune Plan 1 (MDM/MAM) | ✗ | ✗ | ✓ |
+| Microsoft Defender for Business | ✗ | ✗ | ✓ |
+| Conditional Access | ✗ | ✗ | ✓ |
+| Entra ID P1 | ✗ | ✗ | ✓ |
+
+O **Intune Plan 1** (incluído no Business Premium) cobre tudo o que uma PME precisa: gestão de Windows, macOS, iOS, Android, políticas de conformidade, gestão de aplicações, e integração com Microsoft Defender for Business.
+
+O Intune Plan 2 (standalone, ~€8/utilizador/mês) adiciona funcionalidades avançadas como Remote Help, Advanced Endpoint Analytics e Tunnel — desnecessárias para a maioria das PMEs.
+
+## Arquitetura: Como o Intune se Integra com o Ecossistema M365
+
+O Intune funciona em conjunto com o **Microsoft Entra ID** (antigo Azure AD) e o **Microsoft Defender for Business**:
+
+\`\`\`
+Dispositivo → Enrollment no Intune → Registo no Entra ID
+                     ↓
+         Políticas de Conformidade aplicadas
+                     ↓
+    Conditional Access verifica conformidade antes de dar acesso ao M365
+\`\`\`
+
+Um dispositivo não conforme (sem BitLocker, OS desatualizado, sem PIN) pode ser bloqueado automaticamente de aceder ao email e ficheiros corporativos — mesmo que as credenciais estejam corretas.
+
+## Configuração Inicial do Intune
+
+### 1. Aceder à Consola
+
+1. Aceder a **admin.microsoft.com** com conta de admin global
+2. Ir a **Todos os centros de administração → Endpoint Manager** (ou aceder diretamente a intune.microsoft.com)
+3. A consola do Intune abre no **Microsoft Intune admin center**
+
+### 2. Configurar o MDM Authority
+
+Por defeito, o Intune já está configurado como MDM authority para novos tenants. Para verificar:
+
+1. **Tenant administration → Tenant details**
+2. Confirmar que **MDM authority** está definido como "Microsoft Intune"
+
+Se estiver como "None", clicar em **Set MDM Authority** e escolher Intune.
+
+### 3. Domínio e Marca
+
+Em **Tenant administration → Customization**:
+- Adicionar o logótipo da empresa
+- Definir o nome da organização
+- Configurar informações de contacto de suporte
+
+Esta configuração aparece na aplicação **Company Portal** que os utilizadores instalam nos seus dispositivos.
+
+## Enrollment de Dispositivos Windows
+
+### Opção 1: Enrollment Manual (utilizador instala Company Portal)
+
+Para dispositivos Windows já em uso:
+1. O utilizador acede à **Microsoft Store** e instala **Company Portal**
+2. Abre a app e autentica com a conta M365 da empresa
+3. O dispositivo fica registado no Intune
+
+Esta abordagem é a mais simples para PMEs com poucos dispositivos já em uso.
+
+### Opção 2: Windows Autopilot (novos dispositivos ou reimagem)
+
+O Autopilot permite que novos PCs se configurem automaticamente quando ligados pela primeira vez:
+
+1. **Obter hardware hash** dos dispositivos (fornecedor ou script PowerShell):
+\`\`\`powershell
+Install-Script -Name Get-WindowsAutoPilotInfo
+Get-WindowsAutoPilotInfo -OutputFile AutopilotHWID.csv
+\`\`\`
+
+2. **Importar CSV** no Intune: Devices → Windows → Windows enrollment → Devices → Import
+
+3. Criar um **Deployment Profile**:
+   - Devices → Windows → Windows enrollment → Deployment Profiles → Create Profile
+   - Configurar: join type (Entra ID joined), account type, skip screens de setup desnecessárias
+   - Deployment mode: Self-Deploying (sem interação do utilizador) ou User-Driven
+
+4. Atribuir o profile aos dispositivos importados
+
+Na próxima vez que o utilizador ligar o PC e autenticar com a conta M365, o Windows configura-se automaticamente com todas as políticas e aplicações definidas.
+
+### Opção 3: Bulk Enrollment (via Provisioning Package)
+
+Para reconfigurar vários PCs existentes sem reimagem completa — útil para PMEs com 10-50 PCs.
+
+## Enrollment de iOS e Android
+
+### iOS/iPadOS
+
+**Para dispositivos da empresa:**
+1. Configurar **Apple MDM Push Certificate** (obrigatório):
+   - Devices → iOS/iPadOS → iOS enrollment → Apple MDM Push Certificate
+   - Criar Apple ID corporativo (usar email genérico, não pessoal)
+   - Seguir o processo no Apple Push Certificates Portal
+2. Escolher enrollment type: **Device Enrollment** (padrão) ou **Automated Device Enrollment** (Apple Business Manager — para muitos dispositivos)
+
+**Para BYOD (MAM sem enrollment):**
+- Não é necessário enrollar o iPhone
+- O utilizador instala as apps Microsoft (Outlook, Teams, OneDrive) da App Store
+- O Intune aplica políticas MAM apenas a essas apps
+- Dados pessoais não são tocados
+
+### Android
+
+- **Android Enterprise (Work Profile)** — para BYOD: cria um perfil de trabalho separado no mesmo dispositivo. Dados pessoais e empresariais ficam isolados.
+- **Fully Managed** — para dispositivos da empresa: controlo total sobre o dispositivo.
+
+Para configurar o Android Enterprise:
+1. Devices → Android → Android enrollment → Managed Google Play
+2. Ligar a conta Google corporativa (ou criar uma específica para o tenant)
+
+## Políticas de Conformidade
+
+As políticas de conformidade definem os requisitos mínimos de segurança que um dispositivo deve cumprir. Dispositivos não conformes podem ser bloqueados do acesso a recursos corporativos via Conditional Access.
+
+### Política de Conformidade para Windows
+
+Em **Devices → Compliance policies → Create policy → Windows 10 and later:**
+
+**Recomendações para PMEs:**
+
+\`\`\`
+System Security:
+  ✓ Require BitLocker: Yes
+  ✓ Require Secure Boot: Yes
+  ✓ Require Code Integrity: Yes
+
+Device Health:
+  ✓ Require device to be at or under machine risk score: Medium
+    (integração com Microsoft Defender for Business)
+
+Device Properties:
+  ✓ Minimum OS version: 10.0.19045 (Windows 10 22H2)
+    (forçar sistemas atualizados)
+
+System Security (passwords):
+  ✓ Require a password to unlock mobile devices: Yes
+  ✓ Minimum password length: 8
+  ✓ Password type: Alphanumeric
+\`\`\`
+
+**Ações para não conformidade:**
+- 0 dias: Marcar como não conforme
+- 1 dia: Enviar email ao utilizador
+- 3 dias: Bloquear acesso a email (via Conditional Access)
+- 30 dias: Retire (apagar dados corporativos)
+
+### Política de Conformidade para iOS/Android
+
+Principais requisitos a ativar:
+- Versão mínima de OS (iOS 16+, Android 11+)
+- Dispositivo não jailbroken/rooted
+- PIN/password obrigatório (mínimo 6 dígitos)
+- Encriptação ativa
+- Proteção contra ameaças (Defender for Endpoint, se licenciado)
+
+## Configuration Profiles: Políticas de Segurança Avançadas
+
+Os configuration profiles permitem configurar e forçar definições nos dispositivos, mesmo sem interação do utilizador.
+
+### Perfil de Segurança Windows (recomendado)
+
+Em **Devices → Configuration profiles → Create profile → Windows 10 and later → Settings catalog:**
+
+**Configurações críticas a ativar:**
+
+\`\`\`
+BitLocker:
+  → Require Device Encryption: Yes
+  → Allow Standard User Encryption: Yes
+  → BitLocker Fixed Drive Policy → Recovery Key: Backup to Entra ID
+
+Defender:
+  → Allow Realtime Monitoring: Yes
+  → Allow Cloud Protection: Yes
+  → Enable Network Protection: Block
+
+Attack Surface Reduction:
+  → Block executable content from email and webmail clients: Block
+  → Block Office applications from creating child processes: Block
+  → Block credential stealing from Windows LSASS: Block
+
+Windows Update:
+  → Automatic Update behavior: Auto install and restart at maintenance time
+  → Update rings: configurar via Update Rings (ver abaixo)
+\`\`\`
+
+### Update Rings para Windows
+
+Os Update Rings permitem controlar quando e como os dispositivos recebem atualizações do Windows:
+
+1. Devices → Windows → Update rings for Windows 10 and later → Create
+2. Configurar:
+   - **Automatic update behavior**: Auto install and reboot
+   - **Active hours**: 8h-18h (evitar reinicializações durante o trabalho)
+   - **Scheduled install day**: Quinta-feira (testar sexta, fim de semana como buffer)
+   - **Quality updates deferral**: 0 dias (instalar patches de segurança imediatamente)
+   - **Feature updates deferral**: 14 dias (estabilidade)
+3. Atribuir ao grupo de dispositivos
+
+### Perfil de Wi-Fi
+
+Distribuir a configuração da rede Wi-Fi corporativa sem necessidade de digitar password:
+
+1. Create profile → Wi-Fi
+2. Configurar SSID, tipo de segurança (WPA2-Enterprise com certificado, ou WPA2-Personal para redes simples), credenciais
+3. Atribuir a todos os dispositivos — automaticamente configura o Wi-Fi após enrollment
+
+### Perfil de Email (Microsoft Outlook)
+
+Para configurar o Outlook automaticamente em dispositivos móveis:
+1. Create profile → Email
+2. Definir servidor Exchange Online, tipo de conta, sincronização de contactos/calendário
+
+## Gestão de Aplicações
+
+### Required vs Available Apps
+
+Em **Apps → All apps:**
+
+- **Required**: instala automaticamente em todos os dispositivos do grupo, sem interação do utilizador
+- **Available**: aparece no Company Portal para o utilizador instalar se quiser
+- **Uninstall**: remove a app dos dispositivos do grupo
+
+**Apps a colocar como Required para todos os dispositivos Windows:**
+- Microsoft 365 Apps (Word, Excel, Outlook, Teams)
+- Microsoft Defender (já integrado, mas verificar onboarding)
+- Company Portal (para dispositivos não-Autopilot)
+
+### App Protection Policies (MAM para BYOD)
+
+Para dispositivos BYOD (sem enrollment completo), as App Protection Policies protegem os dados corporativos dentro das apps Microsoft:
+
+Em **Apps → App protection policies → Create policy:**
+
+\`\`\`
+Data transfer:
+  ✓ Prevent backups: Yes (impede backup de dados corporativos para iCloud/Google Drive pessoal)
+  ✓ Send org data to other apps: Policy managed apps only
+  ✓ Receive data from other apps: Policy managed apps only
+  ✓ Restrict cut, copy, paste: Policy managed apps only
+
+Access requirements:
+  ✓ PIN for access: Yes (PIN separado do PIN do dispositivo)
+  ✓ Fingerprint/Face ID: Yes (aceitar biometria)
+  ✓ Recheck access requirements after (minutes): 30
+
+Conditional launch:
+  ✓ Max PIN attempts: 5 (após 5 falhas, apaga dados corporativos da app)
+  ✓ Offline grace period: 720h (apaga dados se dispositivo offline >30 dias)
+  ✓ Jailbroken/rooted devices: Block
+\`\`\`
+
+## Conditional Access: O Guardião do Acesso Corporativo
+
+O Conditional Access (configurado no **Entra ID**, não no Intune) usa o estado de conformidade do Intune para decidir se permite ou bloqueia o acesso ao M365.
+
+**Política recomendada: Bloquear acesso de dispositivos não conformes**
+
+1. Aceder a **Entra ID → Security → Conditional Access → New policy**
+2. Configurar:
+   - **Users**: Todos os utilizadores (excluir conta de break-glass)
+   - **Cloud apps**: Office 365 (ou All cloud apps)
+   - **Conditions → Device platforms**: Windows, iOS, Android, macOS
+   - **Grant**: Require device to be marked as compliant
+3. Testar em modo "Report-only" durante 1-2 semanas antes de ativar
+4. Ativar
+
+A partir deste momento, um dispositivo sem BitLocker ou com OS desatualizado não consegue aceder ao Outlook, Teams ou SharePoint — mesmo com as credenciais corretas.
+
+## Remote Actions: O Que Fazer em Caso de Perda ou Comprometimento
+
+No Intune, ao selecionar um dispositivo, estão disponíveis as seguintes ações remotas:
+
+| Ação | Descrição | Quando usar |
+|---|---|---|
+| **Remote Lock** | Bloqueia o ecrã imediatamente | Dispositivo perdido/roubado com dados |
+| **Reset Passcode** | Remove o PIN (iOS/Android) | Utilizador esqueceu PIN |
+| **Retire** | Remove dados corporativos, deixa dados pessoais | Saída de colaborador (BYOD) |
+| **Wipe** | Apaga tudo e restaura de fábrica | Dispositivo da empresa perdido/comprometido |
+| **Fresh Start** | Reinstala Windows, mantém dados do utilizador | PC comprometido por malware |
+| **Collect diagnostics** | Recolhe logs sem interação do utilizador | Diagnóstico remoto |
+
+Para dispositivos BYOD: usar sempre **Retire** (não Wipe) para não apagar fotos pessoais do utilizador — essencial para conformidade com o RGPD.
+
+## Relatórios e Monitorização
+
+O Intune oferece dashboards úteis para monitorização contínua:
+
+- **Device compliance**: percentagem de dispositivos conformes vs não conformes
+- **Enrollment failures**: erros de enrollment para diagnóstico
+- **Discovered apps**: inventário de todas as apps instaladas nos dispositivos (útil para shadow IT)
+- **Device health attestation**: saúde de Secure Boot, BitLocker, UEFI
+
+Para uma monitorização mais avançada, o Intune integra com o **Microsoft Defender for Business** para correlacionar conformidade com alertas de ameaças.
+
+## Plano de Implementação para PMEs
+
+### Semana 1: Configuração Base
+\`\`\`
+□ Verificar licenças M365 Business Premium
+□ Configurar MDM Authority no Intune
+□ Criar grupos Entra ID: "Todos os Dispositivos Windows", "BYOD-iOS", "BYOD-Android"
+□ Configurar Apple MDM Push Certificate (para iOS)
+□ Configurar Android Enterprise (Managed Google Play)
+□ Personalizar Company Portal com logo e contacto de suporte
+\`\`\`
+
+### Semana 2: Políticas de Conformidade
+\`\`\`
+□ Criar políticas de conformidade para Windows, iOS, Android
+□ Definir ações para não conformidade (email → bloqueio)
+□ Criar configuration profile com settings de segurança Windows
+□ Configurar Update Rings para patches automáticos
+□ Testar com 2-3 dispositivos piloto
+\`\`\`
+
+### Semana 3: Enrollment em Produção
+\`\`\`
+□ Enviar instruções de enrollment aos colaboradores
+□ Enrollment manual (Company Portal) ou Autopilot para novos PCs
+□ App Protection Policies para BYOD (sem enrollment completo)
+□ Verificar que todos os dispositivos aparecem no Intune como conformes
+\`\`\`
+
+### Semana 4: Conditional Access
+\`\`\`
+□ Criar política de Conditional Access em modo "Report-only"
+□ Rever relatório durante 1 semana (identificar dispositivos não conformes)
+□ Remediar dispositivos não conformes
+□ Ativar Conditional Access em modo de bloqueio
+\`\`\`
+
+## Erros Comuns na Implementação do Intune
+
+**1. Ativar Conditional Access antes de enrollar os dispositivos**
+Resultado: todos os utilizadores ficam bloqueados. Sempre garantir que os dispositivos estão enrollados e conformes antes de ativar o CA.
+
+**2. Usar Wipe em dispositivos BYOD**
+Apaga as fotos pessoais do utilizador. Usar sempre **Retire** para BYOD.
+
+**3. Não excluir a conta de break-glass do Conditional Access**
+Se perder acesso à conta de admin, fica completamente bloqueado. Criar uma conta de emergência (break-glass) excluída de todos os CA policies.
+
+**4. Não testar os Update Rings**
+Definir reinicialização para as 3h e depois perceber que os PCs reiniciam durante reuniões. Configurar Active Hours corretamente.
+
+**5. Ignorar os dispositivos macOS**
+O Intune suporta macOS — a maioria das PMEs esquece-se de enrollar os Macs. O processo usa MDM enrollment profile (sem Apple Business Manager para PMEs pequenas).
+
+## Checklist de Implementação Intune para PMEs
+
+### Configuração
+- [ ] MDM Authority definido como Intune
+- [ ] Apple MDM Push Certificate configurado e válido
+- [ ] Android Enterprise ligado ao Managed Google Play
+- [ ] Company Portal personalizado com logo e suporte
+
+### Políticas
+- [ ] Compliance policy Windows (BitLocker, OS mínimo, Secure Boot)
+- [ ] Compliance policy iOS/Android (PIN, OS mínimo, sem jailbreak)
+- [ ] Configuration profile com security settings Windows
+- [ ] Update Rings configurados (quality updates: 0 dias, feature: 14 dias)
+- [ ] App Protection Policy para BYOD
+
+### Conditional Access
+- [ ] Conta break-glass excluída de todas as CA policies
+- [ ] CA policy em Report-only testada por 1 semana
+- [ ] CA policy ativa: bloquear dispositivos não conformes
+
+### Operacional
+- [ ] Processo de offboarding documentado (Retire vs Wipe)
+- [ ] Remote Lock/Wipe testado em dispositivo de teste
+- [ ] Dashboard de conformidade monitorizado semanalmente
+
+---
+
+O Intune transforma o M365 Business Premium de uma suite de produtividade numa plataforma completa de gestão e segurança de endpoints. Para completar a postura de segurança, consulte o [guia do Microsoft Defender for Business](/blog/microsoft-defender-for-business-pme-guia-completo) (EDR incluído no Business Premium) e o [hardening de Windows 11](/blog/windows-11-hardening-seguranca-pme) para configurações avançadas de segurança ao nível do SO.`,
+    category: "ferramentas",
+    categoryLabel: "Ferramentas",
+    publishedAt: "2026-04-17",
+    readingTime: 15,
+  },
+  {
+    slug: "linux-hardening-servidores-pme-ubuntu-debian",
+    title: "Linux Server Hardening para PMEs: Guia de Segurança para Ubuntu e Debian",
+    excerpt:
+      "Servidores Linux mal configurados são alvos fáceis. Este guia cobre o hardening essencial de Ubuntu e Debian para PMEs — SSH, firewall UFW, atualizações automáticas, auditoria e deteção de intrusão — do zero ao production-ready.",
+    content: `Muitas PMEs têm servidores Linux a correr sites, APIs, ou aplicações internas sem nunca terem aplicado configurações básicas de segurança. Um servidor Ubuntu recém-instalado com SSH na porta 22 recebe tentativas de login por força bruta **em menos de 5 minutos** após obter um IP público — isto não é exagero, é o que os logs mostram.
+
+Este guia cobre o hardening essencial de servidores Ubuntu e Debian para PMEs: o que fazer imediatamente após instalar o sistema, como monitorizar, e como detetar intrusões antes que causem danos.
+
+## Antes de Começar: O Modelo de Ameaças para Servidores de PMEs
+
+Os servidores Linux de PMEs enfrentam principalmente:
+
+1. **Ataques automatizados de força bruta SSH** — bots varrem a internet à procura da porta 22 aberta
+2. **Exploração de software desatualizado** — CMS, PHP, aplicações com CVEs conhecidos
+3. **Comprometimento de credenciais** — passwords fracas ou reutilizadas
+4. **Webshells** — upload de ficheiros maliciosos em aplicações web vulneráveis
+5. **Cryptomining** — atacante instala minerador após comprometer o servidor
+
+A maioria destes ataques é **oportunista** — não são direcionados à sua empresa especificamente. Uma configuração básica de hardening elimina praticamente todos os vetores de ataques automatizados.
+
+## 1. Configuração Inicial: Utilizador e Sudo
+
+Nunca trabalhar diretamente como root. Criar um utilizador com sudo:
+
+\`\`\`bash
+# Criar utilizador (substituir "adminpme" pelo nome desejado)
+adduser adminpme
+
+# Adicionar ao grupo sudo
+usermod -aG sudo adminpme
+
+# Testar o novo utilizador antes de fechar a sessão root
+su - adminpme
+sudo apt update
+\`\`\`
+
+Para verificar que o utilizador tem sudo corretamente:
+\`\`\`bash
+sudo -l
+\`\`\`
+
+## 2. Atualizações: O Mais Importante
+
+A maioria das intrusões explora vulnerabilidades em software desatualizado. Configurar atualizações automáticas de segurança:
+
+\`\`\`bash
+sudo apt install unattended-upgrades apt-listchanges -y
+sudo dpkg-reconfigure -plow unattended-upgrades
+\`\`\`
+
+Verificar a configuração em \`/etc/apt/apt.conf.d/50unattended-upgrades\`:
+
+\`\`\`
+Unattended-Upgrade::Allowed-Origins {
+    "\${distro_id}:\${distro_codename}-security";
+    "\${distro_id}ESMApps:\${distro_codename}-apps-security";
+    "\${distro_id}ESM:\${distro_codename}-infra-security";
+};
+
+// Reinicializar automaticamente quando necessário (ex: atualizações do kernel)
+Unattended-Upgrade::Automatic-Reboot "true";
+Unattended-Upgrade::Automatic-Reboot-Time "03:00";
+
+// Enviar email após atualizações
+Unattended-Upgrade::Mail "admin@empresa.pt";
+Unattended-Upgrade::MailReport "on-change";
+\`\`\`
+
+Testar se está a funcionar:
+\`\`\`bash
+sudo unattended-upgrade --dry-run --debug
+\`\`\`
+
+## 3. SSH Hardening: Fechar a Porta de Entrada Principal
+
+O SSH é o vetor número 1 de ataques. Editar \`/etc/ssh/sshd_config\`:
+
+\`\`\`bash
+sudo nano /etc/ssh/sshd_config
+\`\`\`
+
+Configurações a alterar:
+
+\`\`\`
+# Desativar login como root (OBRIGATÓRIO)
+PermitRootLogin no
+
+# Apenas autenticação por chave (desativar passwords)
+PasswordAuthentication no
+PubkeyAuthentication yes
+
+# Desativar métodos obsoletos
+KbdInteractiveAuthentication no
+UsePAM yes
+
+# Limitar utilizadores que podem fazer SSH (substituir por utilizadores reais)
+AllowUsers adminpme
+
+# Desativar X11 forwarding (não necessário em servidores)
+X11Forwarding no
+
+# Timeout de sessão inativa (10 minutos)
+ClientAliveInterval 600
+ClientAliveCountMax 0
+
+# Porta alternativa (opcional, reduz ruído nos logs)
+# Port 2222
+
+# Versão do protocolo
+Protocol 2
+
+# Logging mais detalhado
+LogLevel VERBOSE
+\`\`\`
+
+**Configurar chave SSH antes de desativar passwords:**
+
+No computador local (não no servidor):
+\`\`\`bash
+# Gerar par de chaves (se ainda não tiver)
+ssh-keygen -t ed25519 -C "admin@empresa.pt"
+
+# Copiar chave pública para o servidor
+ssh-copy-id adminpme@ip_do_servidor
+\`\`\`
+
+Testar que a autenticação por chave funciona antes de reiniciar o SSH:
+\`\`\`bash
+# Em nova janela (sem fechar a sessão atual)
+ssh adminpme@ip_do_servidor
+
+# Só depois de confirmar que funciona, reiniciar o SSH
+sudo systemctl restart sshd
+\`\`\`
+
+## 4. Firewall UFW: Permitir Apenas o Necessário
+
+O UFW (Uncomplicated Firewall) é o frontend do iptables recomendado para Ubuntu/Debian:
+
+\`\`\`bash
+sudo apt install ufw -y
+
+# Política por defeito: bloquear tudo o que entra, permitir tudo o que sai
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+
+# Permitir SSH (usar porta 2222 se alterou no sshd_config)
+sudo ufw allow 22/tcp comment 'SSH'
+
+# Permitir HTTP e HTTPS (para servidores web)
+sudo ufw allow 80/tcp comment 'HTTP'
+sudo ufw allow 443/tcp comment 'HTTPS'
+
+# Limitar tentativas de SSH (bloqueia após 6 tentativas em 30 segundos)
+sudo ufw limit 22/tcp
+
+# Ativar (confirmar com "y")
+sudo ufw enable
+
+# Verificar estado
+sudo ufw status verbose
+\`\`\`
+
+Para servidores de base de dados (MySQL, PostgreSQL), **nunca** abrir a porta para o exterior. Usar SSH tunneling ou ligação local:
+\`\`\`bash
+# Exemplo: MySQL apenas para localhost
+sudo ufw deny 3306/tcp  # Garantir que não está exposto
+\`\`\`
+
+## 5. Fail2ban: Bloquear Ataques de Força Bruta
+
+O fail2ban monitoriza os logs e bloqueia IPs com demasiadas tentativas de login falhadas:
+
+\`\`\`bash
+sudo apt install fail2ban -y
+\`\`\`
+
+Criar ficheiro de configuração local (nunca editar o .conf diretamente — é substituído em atualizações):
+
+\`\`\`bash
+sudo nano /etc/fail2ban/jail.local
+\`\`\`
+
+\`\`\`ini
+[DEFAULT]
+# Tempo de banimento: 1 hora
+bantime = 3600
+# Janela de tempo para contar tentativas: 10 minutos
+findtime = 600
+# Número de tentativas antes de banir
+maxretry = 5
+# Email de notificação
+destemail = admin@empresa.pt
+sendername = Fail2ban
+action = %(action_mwl)s
+
+[sshd]
+enabled = true
+port = ssh
+filter = sshd
+logpath = /var/log/auth.log
+maxretry = 3
+
+# Para servidores Nginx
+[nginx-http-auth]
+enabled = true
+filter = nginx-http-auth
+port = http,https
+logpath = /var/log/nginx/error.log
+
+# Para WordPress (se aplicável)
+[nginx-wp-login]
+enabled = true
+port = http,https
+filter = nginx-wp-login
+logpath = /var/log/nginx/access.log
+maxretry = 5
+\`\`\`
+
+\`\`\`bash
+sudo systemctl enable fail2ban
+sudo systemctl start fail2ban
+
+# Verificar estado e IPs banidos
+sudo fail2ban-client status sshd
+\`\`\`
+
+## 6. Desativar Serviços Desnecessários
+
+Cada serviço ativo é uma potencial superfície de ataque. Verificar o que está a correr:
+
+\`\`\`bash
+# Ver todos os serviços ativos
+sudo systemctl list-units --type=service --state=active
+
+# Ver portas abertas
+sudo ss -tulpn
+\`\`\`
+
+Serviços comuns para desativar em servidores de PMEs (verificar antes de desativar):
+
+\`\`\`bash
+# Bluetooth (nunca necessário num servidor)
+sudo systemctl disable bluetooth --now
+
+# Avahi (mDNS/Bonjour — raramente necessário em servidores)
+sudo systemctl disable avahi-daemon --now
+
+# Cups (impressão — não necessário num servidor)
+sudo systemctl disable cups --now
+
+# Snapd (se não usar snaps)
+sudo systemctl disable snapd --now
+\`\`\`
+
+## 7. Gestão de Utilizadores e Permissões
+
+\`\`\`bash
+# Ver utilizadores com shell de login (potencialmente com acesso SSH)
+grep -E "/bin/(bash|sh|zsh)" /etc/passwd
+
+# Bloquear contas de sistema que não devem fazer login
+sudo usermod -s /sbin/nologin nobody
+sudo usermod -s /sbin/nologin www-data  # Utilizador do servidor web
+
+# Ver utilizadores com acesso sudo
+grep -E '^sudo' /etc/group
+getent group sudo
+\`\`\`
+
+### Auditar SUID/SGID Binaries
+
+Binários com bit SUID/SGID são executados com permissões elevadas e podem ser explorados:
+
+\`\`\`bash
+# Listar todos os binários SUID
+sudo find / -perm -4000 -type f 2>/dev/null
+
+# Listar todos os binários SGID
+sudo find / -perm -2000 -type f 2>/dev/null
+\`\`\`
+
+Comparar a lista com o que é esperado para o servidor. Qualquer binário desconhecido deve ser investigado.
+
+## 8. AppArmor: Confinamento de Processos
+
+O AppArmor (ativo por defeito no Ubuntu) restringe o que cada processo pode aceder no sistema:
+
+\`\`\`bash
+# Verificar estado
+sudo apparmor_status
+
+# Ver perfis em enforce mode (ativo)
+sudo aa-status | grep "profiles in enforce mode"
+
+# Ativar perfil para o Nginx (se não estiver ativo)
+sudo aa-enforce /etc/apparmor.d/usr.sbin.nginx
+
+# Para processos sem perfil, usar aa-genprof para criar um
+sudo apt install apparmor-utils
+sudo aa-genprof /usr/sbin/nginx
+\`\`\`
+
+## 9. Auditoria com auditd
+
+O \`auditd\` regista eventos de segurança críticos que o syslog normal não captura:
+
+\`\`\`bash
+sudo apt install auditd -y
+sudo systemctl enable auditd --now
+\`\`\`
+
+Configurar regras em \`/etc/audit/rules.d/hardening.rules\`:
+
+\`\`\`
+# Monitorizar alterações em ficheiros críticos
+-w /etc/passwd -p wa -k identity
+-w /etc/shadow -p wa -k identity
+-w /etc/sudoers -p wa -k sudoers
+-w /etc/ssh/sshd_config -p wa -k sshd_config
+
+# Monitorizar comandos executados como root
+-a always,exit -F arch=b64 -F uid=0 -S execve -k root_commands
+
+# Monitorizar tentativas de acesso a /root
+-w /root -p rwxa -k root_access
+
+# Monitorizar alterações de autenticação
+-w /var/log/auth.log -p wa -k auth_log
+
+# Bloquear adição de novas regras de auditoria (imutabilidade)
+-e 2
+\`\`\`
+
+\`\`\`bash
+sudo augenrules --load
+sudo auditctl -l  # Verificar regras ativas
+\`\`\`
+
+Para consultar eventos:
+\`\`\`bash
+# Ver eventos de autenticação
+sudo ausearch -k identity
+
+# Ver comandos executados como root
+sudo ausearch -k root_commands | aureport --summary
+\`\`\`
+
+## 10. Monitorização de Integridade de Ficheiros
+
+O AIDE (Advanced Intrusion Detection Environment) cria uma baseline dos ficheiros do sistema e alerta quando algo muda:
+
+\`\`\`bash
+sudo apt install aide -y
+
+# Criar baseline inicial (demora alguns minutos)
+sudo aideinit
+sudo mv /var/lib/aide/aide.db.new /var/lib/aide/aide.db
+
+# Verificar manualmente
+sudo aide --check
+\`\`\`
+
+Automatizar verificação diária:
+\`\`\`bash
+# Criar cron job
+echo "0 3 * * * root /usr/bin/aide --check | mail -s 'AIDE check - servidor' admin@empresa.pt" | sudo tee /etc/cron.d/aide-check
+\`\`\`
+
+## 11. Deteção de Rootkits
+
+\`\`\`bash
+sudo apt install rkhunter chkrootkit -y
+
+# Atualizar base de dados
+sudo rkhunter --update
+sudo rkhunter --propupd
+
+# Executar scan
+sudo rkhunter --check --skip-keypress
+sudo chkrootkit
+\`\`\`
+
+Automatizar verificação semanal com email de resultado.
+
+## 12. Proteção de Parâmetros do Kernel (sysctl)
+
+Editar \`/etc/sysctl.d/99-hardening.conf\`:
+
+\`\`\`
+# Desativar IP forwarding (exceto se o servidor for router)
+net.ipv4.ip_forward = 0
+net.ipv6.conf.all.forwarding = 0
+
+# Proteção contra SYN floods
+net.ipv4.tcp_syncookies = 1
+net.ipv4.tcp_max_syn_backlog = 2048
+net.ipv4.tcp_synack_retries = 2
+
+# Ignorar ICMP redirects (prevenir man-in-the-middle)
+net.ipv4.conf.all.accept_redirects = 0
+net.ipv4.conf.all.send_redirects = 0
+net.ipv6.conf.all.accept_redirects = 0
+
+# Ignorar source routing
+net.ipv4.conf.all.accept_source_route = 0
+
+# Proteção contra IP spoofing
+net.ipv4.conf.all.rp_filter = 1
+net.ipv4.conf.default.rp_filter = 1
+
+# Não responder a broadcasts (prevenir amplification attacks)
+net.ipv4.icmp_echo_ignore_broadcasts = 1
+
+# Proteção de ponteiros do kernel em /proc
+kernel.kptr_restrict = 2
+
+# Desativar SysRq (não necessário em servidores de produção)
+kernel.sysrq = 0
+
+# Endereço de memória randomizado (ASLR)
+kernel.randomize_va_space = 2
+\`\`\`
+
+\`\`\`bash
+sudo sysctl -p /etc/sysctl.d/99-hardening.conf
+\`\`\`
+
+## 13. Logging e Monitorização
+
+\`\`\`bash
+# Ver tentativas de login SSH falhadas
+sudo grep "Failed password" /var/log/auth.log | tail -20
+
+# Ver logins bem sucedidos
+sudo grep "Accepted" /var/log/auth.log | tail -10
+
+# Ver IPs banidos pelo fail2ban
+sudo fail2ban-client status sshd
+
+# Ver utilizadores com sessões abertas
+who
+w
+last | head -20
+\`\`\`
+
+Para centralizar logs, o Wazuh (já coberto no [guia de SIEM para PMEs](/blog/siem-wazuh-pme-monitorizacao-seguranca-gratis)) pode receber logs deste servidor Linux via agente, correlacionando eventos com outros sistemas da empresa.
+
+## 14. Verificação CIS Benchmark
+
+O CIS fornece benchmarks específicos para Ubuntu e Debian. Para verificar automaticamente:
+
+\`\`\`bash
+# OpenSCAP — verificação automatizada contra CIS Benchmark
+sudo apt install libopenscap8 ssg-debian -y
+
+# Para Ubuntu (ajustar versão)
+sudo oscap xccdf eval \\
+  --profile xccdf_org.ssgproject.content_profile_cis_level1_server \\
+  --report /tmp/cis-report.html \\
+  /usr/share/xml/scap/ssg/content/ssg-ubuntu2004-xccdf.xml
+\`\`\`
+
+O relatório HTML mostra cada controlo CIS: passou, falhou, ou não aplicável.
+
+## Checklist de Hardening Pós-Instalação
+
+### Acesso e Autenticação
+- [ ] Utilizador não-root criado com sudo
+- [ ] Autenticação SSH por chave (passwords SSH desativadas)
+- [ ] Login root SSH desativado
+- [ ] fail2ban instalado e configurado para SSH
+- [ ] Timeout de sessão SSH configurado
+
+### Rede e Firewall
+- [ ] UFW ativo com política "deny incoming" por defeito
+- [ ] Apenas portas necessárias abertas (22, 80, 443 + específicas da aplicação)
+- [ ] Serviços desnecessários desativados
+- [ ] Parâmetros sysctl de proteção de rede aplicados
+
+### Atualizações
+- [ ] unattended-upgrades configurado para security updates
+- [ ] Reinicialização automática configurada para horário fora de produção
+
+### Monitorização
+- [ ] auditd instalado com regras para ficheiros críticos
+- [ ] Verificação de rootkits agendada (semanal)
+- [ ] AIDE instalado com verificação diária
+- [ ] Alertas de email para eventos críticos configurados
+
+### Aplicação
+- [ ] AppArmor ativo com perfis para serviços críticos
+- [ ] Permissões de ficheiros do servidor web verificadas (www-data, não root)
+- [ ] Variáveis de ambiente com credenciais não expostas em logs
+
+---
+
+Um servidor Linux corretamente configurado pode resistir a anos de exposição na internet sem comprometimento. Para proteção adicional ao nível de rede, consulte o [guia de filtragem de DNS](/blog/filtragem-dns-seguranca-pme) e, para uma visão integrada da segurança da infraestrutura, o [guia de análise de risco para PMEs](/blog/analise-risco-ciberseguranca-pme).`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-17",
+    readingTime: 14,
+  },
+  {
+    slug: "gestao-certificados-ssl-tls-pme-guia-completo",
+    title: "Gestão de Certificados SSL/TLS para PMEs: Monitorizar, Renovar e Evitar Interrupções",
+    excerpt:
+      "Certificados SSL/TLS expirados derrubam sites, bloqueiam email e falham auditorias de segurança. Guia prático para PMEs: tipos de certificado, Let's Encrypt, automação da renovação e monitorização de expiração.",
+    content: `Um certificado SSL/TLS expirado não é apenas um aviso no browser — bloqueia completamente o acesso ao site, quebra APIs, interrompe o email, e pode falhar auditorias de conformidade. Acontece com mais frequência do que parece: em 2023, a cadeia de supermercados Lidl Portugal teve o certificado expirado num portal; em 2021, o Microsoft Teams ficou offline globalmente por expiração de certificado.
+
+Para PMEs, um certificado expirado num site de e-commerce significa vendas perdidas durante horas. Este guia cobre tudo o que precisa de saber para gerir certificados SSL/TLS sem surpresas.
+
+## O Que é um Certificado SSL/TLS e Porque é Importante
+
+Um certificado SSL/TLS (hoje apenas TLS, o nome SSL mantém-se por legado) serve dois propósitos:
+
+1. **Encriptação**: protege os dados em trânsito entre o browser e o servidor
+2. **Autenticação**: prova que o site é quem diz ser (a autoridade de certificação valida)
+
+O cadeado no browser só aparece quando o certificado é válido e emitido por uma CA (Certificate Authority) confiável. Um certificado expirado ou auto-assinado mostra um aviso que a maioria dos utilizadores interpreta como "site perigoso".
+
+Para além do browser, os certificados SSL/TLS são usados em:
+- Servidores de email (SMTP/IMAP/POP3 com TLS)
+- APIs e webhooks (HTTPS obrigatório)
+- Ligações VPN
+- Comunicação interna entre serviços (microservices, bases de dados)
+- Painéis de administração internos
+
+## Tipos de Certificado: Qual Escolher
+
+### Por Nível de Validação
+
+| Tipo | Validação | Tempo | Custo | Para quem |
+|---|---|---|---|---|
+| **DV** (Domain Validation) | Apenas controlo do domínio | Minutos | Grátis–€50/ano | Sites, intranets, APIs |
+| **OV** (Organization Validation) | Empresa verificada | 1-3 dias | €50–€300/ano | Sites com credibilidade |
+| **EV** (Extended Validation) | Verificação extensiva | 1-5 dias | €150–€600/ano | Banca, e-commerce de alto valor |
+
+**Recomendação para PMEs**: certificado **DV** para a maioria dos casos. O Let's Encrypt emite certificados DV gratuitos com renovação automática. Certificado OV pode fazer sentido para o site principal de empresas que vendem serviços B2B e querem credibilidade extra. EV raramente justifica o custo — os browsers modernos já não destacam o nome da empresa na barra de endereço.
+
+### Por Cobertura de Domínios
+
+| Tipo | Cobre | Exemplo |
+|---|---|---|
+| **Single Domain** | 1 domínio | empresa.pt |
+| **Wildcard** | Domínio + todos os subdomínios de 1 nível | *.empresa.pt (inclui www, mail, app, etc.) |
+| **Multi-Domain (SAN)** | Múltiplos domínios diferentes | empresa.pt, empresa.com, loja.empresa.pt |
+
+**Recomendação**: wildcard (\`*.empresa.pt\`) para PMEs com vários subdomínios. Um único certificado cobre www, mail, vpn, app, admin — simplifica a gestão. O Let's Encrypt emite wildcards gratuitos via DNS challenge.
+
+### Duração
+
+Os certificados públicos têm validade **máxima de 398 dias** (desde 2020). A tendência é reduzir ainda mais — em 2026, a CA/Browser Forum está a considerar reduzir para 90 dias (o que tornará a automação obrigatória).
+
+Let's Encrypt emite certificados de **90 dias**, o que força boas práticas de renovação automática.
+
+## Let's Encrypt: Certificados Gratuitos com Renovação Automática
+
+O Let's Encrypt é uma CA pública gratuita que transformou a gestão de certificados. Em 2024, emitia mais de 3 milhões de certificados por dia.
+
+### Instalação do Certbot (Nginx + Ubuntu/Debian)
+
+\`\`\`bash
+# Instalar Certbot
+sudo apt install certbot python3-certbot-nginx -y
+
+# Obter e instalar certificado (substituir por domínio real)
+sudo certbot --nginx -d empresa.pt -d www.empresa.pt
+
+# Para wildcard (requer DNS challenge — ver abaixo)
+sudo certbot certonly --manual --preferred-challenges dns \\
+  -d empresa.pt -d *.empresa.pt
+\`\`\`
+
+O Certbot modifica automaticamente o \`nginx.conf\` para usar HTTPS e configura redirecionamento de HTTP para HTTPS.
+
+### Wildcard com DNS Challenge Automático
+
+Para certificados wildcard, é necessário criar um registo TXT no DNS para provar controlo do domínio. O processo manual é trabalhoso; para automatizar, usar plugins específicos do DNS provider:
+
+**Cloudflare** (DNS provider mais comum em Portugal):
+\`\`\`bash
+sudo apt install python3-certbot-dns-cloudflare -y
+
+# Criar ficheiro com API token do Cloudflare
+sudo nano /etc/letsencrypt/cloudflare.ini
+# Conteúdo:
+# dns_cloudflare_api_token = SEU_TOKEN_AQUI
+
+sudo chmod 600 /etc/letsencrypt/cloudflare.ini
+
+# Obter wildcard com renovação automática
+sudo certbot certonly \\
+  --dns-cloudflare \\
+  --dns-cloudflare-credentials /etc/letsencrypt/cloudflare.ini \\
+  -d empresa.pt \\
+  -d *.empresa.pt
+\`\`\`
+
+**Outros providers**: existem plugins para IONOS, OVH, GoDaddy, e praticamente todos os DNS providers — procurar \`python3-certbot-dns-[provider]\`.
+
+### Renovação Automática
+
+O Certbot instala automaticamente um timer systemd (ou cron job) que verifica a renovação duas vezes por dia:
+
+\`\`\`bash
+# Verificar que o timer está ativo
+sudo systemctl status certbot.timer
+
+# Testar renovação sem efetuar (dry run)
+sudo certbot renew --dry-run
+
+# Ver todos os certificados e datas de expiração
+sudo certbot certificates
+\`\`\`
+
+Após renovação, o Nginx precisa de ser reiniciado para carregar o novo certificado. Configurar hook de pós-renovação:
+
+\`\`\`bash
+sudo nano /etc/letsencrypt/renewal-hooks/post/reload-nginx.sh
+\`\`\`
+
+\`\`\`bash
+#!/bin/bash
+systemctl reload nginx
+\`\`\`
+
+\`\`\`bash
+sudo chmod +x /etc/letsencrypt/renewal-hooks/post/reload-nginx.sh
+\`\`\`
+
+### Instalação para Apache
+
+\`\`\`bash
+sudo apt install certbot python3-certbot-apache -y
+sudo certbot --apache -d empresa.pt -d www.empresa.pt
+\`\`\`
+
+## Configuração TLS Segura: Além do Certificado
+
+Ter um certificado válido não chega — a configuração TLS pode ainda ser fraca. Verificar com o **SSL Labs** (ssllabs.com/ssltest) que devolve classificação A a F.
+
+Para obter classificação A+ no Nginx, editar a configuração:
+
+\`\`\`nginx
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    server_name empresa.pt;
+
+    # Certificado
+    ssl_certificate /etc/letsencrypt/live/empresa.pt/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/empresa.pt/privkey.pem;
+    ssl_trusted_certificate /etc/letsencrypt/live/empresa.pt/chain.pem;
+
+    # Protocolos — apenas TLS 1.2 e 1.3
+    ssl_protocols TLSv1.2 TLSv1.3;
+
+    # Cipher suites seguros
+    ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256;
+    ssl_prefer_server_ciphers off;
+
+    # HSTS: forçar HTTPS por 1 ano (incluir subdomínios)
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+
+    # OCSP Stapling (melhora performance e privacidade)
+    ssl_stapling on;
+    ssl_stapling_verify on;
+    resolver 1.1.1.1 8.8.8.8 valid=300s;
+    resolver_timeout 5s;
+
+    # Sessões TLS (performance)
+    ssl_session_cache shared:MozSSL:10m;
+    ssl_session_timeout 1d;
+    ssl_session_tickets off;
+
+    # Outros headers de segurança
+    add_header X-Frame-Options DENY always;
+    add_header X-Content-Type-Options nosniff always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+}
+
+# Redirecionar HTTP para HTTPS
+server {
+    listen 80;
+    listen [::]:80;
+    server_name empresa.pt www.empresa.pt;
+    return 301 https://empresa.pt\$request_uri;
+}
+\`\`\`
+
+O **Mozilla SSL Configuration Generator** (ssl-config.mozilla.org) gera configurações otimizadas para Nginx, Apache, HAProxy, e outros servidores — selecionar "Intermediate" para compatibilidade com browsers modernos.
+
+## HSTS Preloading: Proteção Máxima
+
+O HSTS (HTTP Strict Transport Security) diz ao browser para nunca usar HTTP com o domínio. Com \`preload\`, o domínio é incluído numa lista hardcoded nos browsers (Chrome, Firefox, Safari) — mesmo a primeira visita já é HTTPS.
+
+**Atenção**: o preloading é **irreversível** durante meses. Só ativar quando tiver a certeza que todos os subdomínios suportam HTTPS.
+
+Para submeter: hstspreload.org
+
+## Monitorização de Expiração: Nunca Ser Apanhado de Surpresa
+
+### Ferramentas Gratuitas
+
+**UptimeRobot** (uptimerobot.com):
+- Plano gratuito inclui monitorização de SSL
+- Alertas por email 30 dias antes da expiração
+- Configurar em: New Monitor → SSL Certificate → URL do site
+
+**StatusCake** (statuscake.com):
+- Alertas por email para expiração de SSL no plano gratuito
+
+**Zabbix** (para empresas com mais de 10 domínios):
+\`\`\`bash
+# Template "Website certificate by Zabbix agent 2" disponível na Zabbix Library
+# Monitoriza: dias até expiração, algoritmo, CN, SAN
+\`\`\`
+
+### Script Bash para Monitorização Simples
+
+Para PMEs sem monitorização dedicada, um cron job simples:
+
+\`\`\`bash
+#!/bin/bash
+# /usr/local/bin/check-ssl-expiry.sh
+
+DOMAINS=("empresa.pt" "mail.empresa.pt" "app.empresa.pt")
+ALERT_DAYS=30
+EMAIL="admin@empresa.pt"
+
+for DOMAIN in "\${DOMAINS[@]}"; do
+    EXPIRY=\$(echo | openssl s_client -connect "\${DOMAIN}:443" -servername "\${DOMAIN}" 2>/dev/null | \\
+              openssl x509 -noout -enddate 2>/dev/null | cut -d= -f2)
+
+    if [ -z "\$EXPIRY" ]; then
+        echo "ERRO: Não foi possível verificar \${DOMAIN}" | mail -s "SSL Check ERRO: \${DOMAIN}" "\$EMAIL"
+        continue
+    fi
+
+    EXPIRY_EPOCH=\$(date -d "\$EXPIRY" +%s)
+    NOW_EPOCH=\$(date +%s)
+    DAYS_LEFT=\$(( (EXPIRY_EPOCH - NOW_EPOCH) / 86400 ))
+
+    if [ "\$DAYS_LEFT" -lt "\$ALERT_DAYS" ]; then
+        echo "AVISO: Certificado de \${DOMAIN} expira em \${DAYS_LEFT} dias (\${EXPIRY})" | \\
+        mail -s "SSL EXPIRA EM \${DAYS_LEFT} DIAS: \${DOMAIN}" "\$EMAIL"
+    fi
+done
+\`\`\`
+
+\`\`\`bash
+sudo chmod +x /usr/local/bin/check-ssl-expiry.sh
+
+# Executar diariamente às 8h
+echo "0 8 * * * root /usr/local/bin/check-ssl-expiry.sh" | sudo tee /etc/cron.d/ssl-check
+\`\`\`
+
+## Certificados em Ambientes Cloud e SaaS
+
+### Cloudflare (proxy reverso gratuito)
+O Cloudflare emite e renova certificados automaticamente para qualquer domínio que passe pelo seu proxy. Inclui:
+- Certificado Universal SSL (grátis, cobertura de domínio + www)
+- Edge certificates geridos pelo Cloudflare
+- "Full (Strict)" mode: requer certificado válido no servidor de origem também
+
+### Azure / AWS
+- **Azure App Service**: certificados geridos gratuitos para domínios personalizados
+- **AWS Certificate Manager (ACM)**: gratuito para usar com ELB, CloudFront, API Gateway
+- Ambos renovam automaticamente
+
+### Hosting partilhado (cPanel)
+A maioria dos providers portugueses (Hostinger, Host.pt, PTisp) inclui Let's Encrypt integrado no cPanel:
+- cPanel → SSL/TLS → Let's Encrypt SSL
+- Ativar "AutoSSL" para renovação automática
+
+## PKI Interna: Certificados para Serviços Internos
+
+Para serviços internos (dashboard de admin, aplicação interna, VPN), usar uma CA privada em vez de certificados públicos:
+
+\`\`\`bash
+# Criar CA raiz privada com OpenSSL
+mkdir -p /opt/pki/{certs,private,newcerts}
+chmod 700 /opt/pki/private
+
+# Gerar chave da CA
+openssl genrsa -aes256 -out /opt/pki/private/ca.key 4096
+
+# Gerar certificado da CA (válido 10 anos)
+openssl req -new -x509 -days 3650 -key /opt/pki/private/ca.key \\
+  -out /opt/pki/certs/ca.crt \\
+  -subj "/C=PT/ST=Lisboa/O=Empresa SA/CN=Empresa Internal CA"
+\`\`\`
+
+O certificado da CA deve ser distribuído a todos os dispositivos geridos (via Intune para Windows, ou perfil de configuração para iOS/Android) para que os certificados internos sejam confiáveis.
+
+Alternativa mais simples: usar o **Let's Encrypt** mesmo para serviços internos, com DNS challenge — funciona sem expor o servidor à internet.
+
+## Erros Comuns na Gestão de Certificados
+
+**1. Certificado da cadeia incompleto (chain)**
+O browser pode não verificar o certificado intermédio. Usar sempre \`fullchain.pem\` (inclui certificado + cadeia), não apenas \`cert.pem\`.
+
+**2. Renovação automática sem reload do serviço**
+O Certbot renova o ficheiro mas o Nginx continua a servir o certificado antigo da memória. Sempre configurar o hook de pós-renovação com \`systemctl reload nginx\`.
+
+**3. Wildcard não cobre o domínio raiz**
+\`*.empresa.pt\` não cobre \`empresa.pt\` — é necessário incluir ambos no mesmo certificado: \`-d empresa.pt -d *.empresa.pt\`.
+
+**4. Certificado diferente do esperado em IP partilhado**
+Em servidores com múltiplos sites (virtual hosting), o servidor precisa de SNI para saber qual certificado servir. Verificar que o cliente suporta TLS com SNI (todos os browsers modernos suportam).
+
+**5. Data/hora do servidor errada**
+Um servidor com relógio incorreto pode gerar certificados com datas inválidas ou falhar a verificação OCSP. Verificar que o NTP está configurado:
+\`\`\`bash
+timedatectl status
+sudo apt install ntp -y
+\`\`\`
+
+**6. Esquecer certificados de email**
+As PMEs costumam tratar do HTTPS do site mas esquecem os certificados do servidor de email (postfix, dovecot). Verificar:
+\`\`\`bash
+echo | openssl s_client -connect mail.empresa.pt:587 -starttls smtp 2>/dev/null | \\
+  openssl x509 -noout -dates
+\`\`\`
+
+## Inventário de Certificados
+
+Para PMEs com mais de 5 domínios/subdomínios, manter um inventário simples:
+
+| Domínio | Tipo | CA | Expira | Auto-renova | Responsável |
+|---|---|---|---|---|---|
+| empresa.pt | Wildcard DV | Let's Encrypt | 2026-07-15 | Sim (Certbot) | João IT |
+| mail.empresa.pt | Single DV | Let's Encrypt | 2026-07-15 | Sim (Certbot) | João IT |
+| app.empresa.pt | Single DV | Let's Encrypt | 2026-07-15 | Sim (Certbot) | João IT |
+| vpn.empresa.pt | Wildcard OV | DigiCert | 2026-11-30 | Não | João IT |
+
+Manter o inventário num ficheiro partilhado (SharePoint, Notion) acessível à equipa de IT.
+
+## Checklist de Gestão de Certificados SSL/TLS
+
+### Certificados em Produção
+- [ ] Todos os domínios e subdomínios públicos com HTTPS ativo
+- [ ] Redirects HTTP → HTTPS configurados
+- [ ] Certificados wildcard para cobrir subdomínios dinamicamente
+- [ ] Cadeia de certificação completa (fullchain, não apenas cert)
+- [ ] TLS 1.0 e 1.1 desativados (apenas TLS 1.2 e 1.3)
+- [ ] Nota SSL Labs: A ou A+
+
+### Renovação e Automação
+- [ ] Let's Encrypt com Certbot (ou equivalente) para todos os domínios públicos
+- [ ] Renovação automática configurada e testada (\`certbot renew --dry-run\`)
+- [ ] Hook pós-renovação para reload do serviço web
+- [ ] Monitorização de expiração com alerta 30 dias antes
+
+### Serviços Internos
+- [ ] Certificados para servidor de email (SMTP/IMAP TLS)
+- [ ] Certificados para dashboard/admin internos
+- [ ] CA interna ou Let's Encrypt via DNS challenge para serviços sem IP público
+
+### Segurança
+- [ ] HSTS ativo em todos os domínios públicos
+- [ ] OCSP stapling ativo
+- [ ] Chaves privadas com permissões restritas (600, owned by root)
+- [ ] Inventário de certificados atualizado
+
+---
+
+A automação da renovação de certificados com Let's Encrypt elimina 90% do trabalho e risco de expiração. Para proteger toda a infraestrutura web, combine com [segmentação de rede e firewall](/blog/segmentacao-redes-vlans-pme) e, se gerir servidores Linux, com o [guia de hardening de servidores Ubuntu e Debian](/blog/linux-hardening-servidores-pme-ubuntu-debian).`,
+    category: "ferramentas",
+    categoryLabel: "Ferramentas",
+    publishedAt: "2026-04-17",
+    readingTime: 13,
+  },
 ];
 
 export function getPostBySlug(slug: string): Post | undefined {
