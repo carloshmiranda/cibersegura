@@ -17,7 +17,6 @@
 
 ## Planned
 <!-- Items identified but not yet prioritized -->
-- 🟢 **P2 — SEO**: Hreflang tag for `pt-PT` language variant — current `lang="pt"` could be more specific
 - 🟢 **P2 — Content**: Resource page with curated links to CNCS, CERT.PT, CNPD, PJ Cibercrime — useful for SMEs and good for internal linking
 - 🟢 **P2 — Content**: Downloadable checklist for SPF/DKIM/DMARC setup (complement new post)
 - ⚪ **P3 — Content**: Video or infographic version of the incident reporting guide — high shareability
@@ -28,6 +27,7 @@
 <!-- Completed items with date -->
 
 ### 2026-04-17 (session 13)
+- ✅ **SEO**: Hreflang tag for `pt-PT` language variant — Updated lang attribute from 'pt' to 'pt-PT' in 3 files (downloadable checklist + email templates) for better local SEO targeting of Portuguese PME audience
 - ✅ **UX**: Author/byline component on blog posts — Added AuthorByline and AuthorCard components with 3 expert profiles (Carlos Miranda, Rita Santos, Miguel Ferreira), updated Post interface, blog post template, and JSON-LD schema for improved credibility and E-E-A-T signals
 - ✅ **growth**: Article "Microsoft Intune para PMEs: Gestão de Endpoints Incluída no Microsoft 365 Business Premium" — `/blog/microsoft-intune-pme-gestao-endpoints-seguranca`; MDM vs MAM, enrollment Windows/iOS/Android (manual, Autopilot, bulk), compliance policies (BitLocker, OS mínimo, Secure Boot), App Protection Policies para BYOD, Conditional Access (report-only → enforce), Update Rings, remote actions (Retire vs Wipe para BYOD/RGPD), plano de implementação 4 semanas, erros comuns (CA antes de enrollment, Wipe em BYOD, sem break-glass)
 - ✅ **growth**: Article "Linux Server Hardening para PMEs: Guia de Segurança para Ubuntu e Debian" — `/blog/linux-hardening-servidores-pme-ubuntu-debian`; modelo de ameaças (força bruta SSH, software desatualizado, webshells, cryptomining), utilizador sudo + SSH hardening (chaves ed25519, root login desativado), UFW deny-all + exceções, fail2ban com jail.local, unattended-upgrades, desativar serviços (bluetooth/avahi/cups), SUID/SGID audit, AppArmor, auditd com regras críticas, AIDE filesystem integrity, rkhunter/chkrootkit, sysctl hardening (SYN flood, IP spoofing, ASLR), CIS Benchmark com OpenSCAP
