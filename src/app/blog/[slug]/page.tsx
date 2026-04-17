@@ -85,14 +85,11 @@ export default async function BlogPostPage({
   // Check if this article should show the NIS2 countdown timer
   const shouldShowCountdown = post.slug.includes('nis2') || post.category === 'legislacao';
 
-  // Check if this is a top NIS2 article that should show affiliate recommendations
-  const isTopNIS2Article = [
-    'nis2-portugal-guia-pme',
-    'checklist-nis2-conformidade',
-    'nis2-decreto-lei-125-2025-obrigacoes-pme',
-    'multas-coimas-nis2-pme',
-    'registo-cncs-nis2-guia-completo'
-  ].includes(post.slug);
+  // Check if this is a CNCS urgent topic (NIS2/legislacao) for special urgency messaging
+  const isCNCSUrgentTopic = post.slug.includes('nis2') ||
+                           post.category === 'legislacao' ||
+                           post.content.toLowerCase().includes('cncs') ||
+                           post.content.toLowerCase().includes('nis2');
 
   // Generate BreadcrumbList JSON-LD for improved SEO and search result display
   // Structure: Home > Blog > Category > Post Title
@@ -341,17 +338,22 @@ export default async function BlogPostPage({
           </div>
         )}
 
-        {/* Affiliate CTA for top NIS2 articles */}
-        {isTopNIS2Article && (
-          <div className="mt-12 mb-12">
-            <AffiliateCTABanner
-              tools={getAllNIS2Tools()}
-              title="Ferramentas Recomendadas para Conformidade NIS2"
-              description="Soluções de cibersegurança selecionadas pela nossa equipa para implementar os requisitos da diretiva NIS2 de forma eficaz"
-              source={`blog-${post.slug}`}
-            />
-          </div>
-        )}
+        {/* Affiliate CTA for all blog articles */}
+        <div className="mt-12 mb-12">
+          <AffiliateCTABanner
+            tools={getAllNIS2Tools()}
+            title={isCNCSUrgentTopic
+              ? "🚨 Ferramentas Urgentes para Conformidade CNCS — Prazo: 4 Maio 2026"
+              : "Ferramentas Recomendadas de Cibersegurança"
+            }
+            description={isCNCSUrgentTopic
+              ? "ATENÇÃO: Faltam apenas meses para o prazo de registo CNCS! Estas soluções ajudam a implementar rapidamente os controlos de segurança obrigatórios antes do prazo legal."
+              : "Soluções de cibersegurança selecionadas pela nossa equipa para proteger a sua PME de forma eficaz"
+            }
+            source={`blog-${post.slug}`}
+            articleSlug={post.slug}
+          />
+        </div>
 
         {/* Related posts */}
         <RelatedPosts currentPostSlug={post.slug} category={post.category} />
