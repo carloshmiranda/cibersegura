@@ -24,12 +24,11 @@ interface AffiliateCTABannerProps {
 const addUTMParams = (url: string, source: string, medium: string, campaign: string, content: string): string => {
   try {
     const urlObj = new URL(url);
-    urlObj.searchParams.set('utm_source', 'ciberpme.pt');
-    urlObj.searchParams.set('utm_medium', medium);
-    urlObj.searchParams.set('utm_campaign', campaign);
+    urlObj.searchParams.set('utm_source', 'ciberpme');
+    urlObj.searchParams.set('utm_medium', 'cta');
+    urlObj.searchParams.set('utm_campaign', 'nis2');
     urlObj.searchParams.set('utm_content', content);
     urlObj.searchParams.set('utm_term', source);
-
 
     return urlObj.toString();
   } catch (error) {
