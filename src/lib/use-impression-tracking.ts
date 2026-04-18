@@ -10,17 +10,29 @@ interface ImpressionTrackingData {
 // Track CTA impression function
 const trackCTAImpression = async (data: ImpressionTrackingData) => {
   try {
-    await fetch('/api/track', {
+    const payload = {
+      ...data,
+      event_type: 'cta_impression'
+    };
+
+    console.log('🚀 Sending impression tracking request:', payload);
+
+    const response = await fetch('/api/track', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        ...data,
-        event_type: 'cta_impression'
-      }),
+      body: JSON.stringify(payload),
       keepalive: true,
     });
+
+    console.log('📡 Tracking response status:', response.status, response.statusText);
+
+    if (!response.ok && response.status !== 204) {
+      const errorText = await response.text();
+      console.error('❌ Tracking API error response:', errorText);
+      return false;
+    }
 
     return true;
   } catch (error) {
@@ -55,21 +67,38 @@ export function useImpressionTracking(trackingData: ImpressionTrackingData) {
 
   useEffect(() => {
     const element = elementRef.current;
-    if (!element) return;
+    if (!element) {
+      console.warn('⚠️ useImpressionTracking: Element ref is null');
+      return;
+    }
+
+    console.log('🔍 Setting up IntersectionObserver for:', trackingData.link_id);
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
+          console.log('👁️ IntersectionObserver triggered:', {
+            link_id: trackingData.link_id,
+            isIntersecting: entry.isIntersecting,
+            intersectionRatio: entry.intersectionRatio,
+            hasTracked: hasTracked.current,
+            timerActive: !!timerRef.current
+          });
+
           if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
             // Element is 50%+ visible, start timer
             if (!timerRef.current && !hasTracked.current) {
+              console.log('⏰ Starting 1-second timer for:', trackingData.link_id);
               timerRef.current = setTimeout(() => {
                 trackImpression();
               }, 1000); // 1 second delay
+            } else {
+              console.log('⏰ Timer not started (timer exists:', !!timerRef.current, 'already tracked:', hasTracked.current, ')');
             }
           } else {
             // Element is not sufficiently visible, clear timer
             if (timerRef.current) {
+              console.log('⏰ Clearing timer for:', trackingData.link_id);
               clearTimeout(timerRef.current);
               timerRef.current = null;
             }
@@ -83,9 +112,11 @@ export function useImpressionTracking(trackingData: ImpressionTrackingData) {
     );
 
     observer.observe(element);
+    console.log('✅ IntersectionObserver attached to element for:', trackingData.link_id);
 
     // Cleanup
     return () => {
+      console.log('🧹 Cleaning up IntersectionObserver for:', trackingData.link_id);
       observer.unobserve(element);
       if (timerRef.current) {
         clearTimeout(timerRef.current);
