@@ -42,9 +42,9 @@ interface HealthReport {
 function addTestUTMParams(url: string): string {
   try {
     const urlObj = new URL(url);
-    urlObj.searchParams.set('utm_source', 'ciberpme.pt');
-    urlObj.searchParams.set('utm_medium', 'affiliate');
-    urlObj.searchParams.set('utm_campaign', 'nis2-health-test');
+    urlObj.searchParams.set('utm_source', 'ciberpme');
+    urlObj.searchParams.set('utm_medium', 'cta');
+    urlObj.searchParams.set('utm_campaign', 'nis2');
     urlObj.searchParams.set('utm_content', 'diagnostic-test');
     urlObj.searchParams.set('utm_term', 'health-check');
     return urlObj.toString();
@@ -65,11 +65,11 @@ function validateUTMParams(url: string): {
     const urlObj = new URL(url);
     return {
       utm_source_present: urlObj.searchParams.has('utm_source') &&
-                          urlObj.searchParams.get('utm_source') === 'ciberpme.pt',
+                          urlObj.searchParams.get('utm_source') === 'ciberpme',
       utm_medium_present: urlObj.searchParams.has('utm_medium') &&
-                         urlObj.searchParams.get('utm_medium') === 'affiliate',
+                         urlObj.searchParams.get('utm_medium') === 'cta',
       utm_campaign_present: urlObj.searchParams.has('utm_campaign') &&
-                           urlObj.searchParams.get('utm_campaign') !== '',
+                           urlObj.searchParams.get('utm_campaign') === 'nis2',
       utm_content_present: urlObj.searchParams.has('utm_content') &&
                           urlObj.searchParams.get('utm_content') !== '',
       utm_term_present: urlObj.searchParams.has('utm_term') &&
