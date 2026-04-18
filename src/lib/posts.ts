@@ -46,6 +46,570 @@ export const AUTHORS: Record<string, Author> = {
 
 export const posts: Post[] = [
   {
+    slug: "ciberseguranca-restaurantes-cafes-portugal",
+    title: "Cibersegurança para Restaurantes e Cafés em Portugal: Guia Prático para Proteger o Negócio",
+    excerpt:
+      "Terminais POS, plataformas de entrega, Wi-Fi de clientes e alta rotatividade de pessoal tornam os restaurantes alvos fáceis. Guia prático de cibersegurança para a restauração portuguesa.",
+    content: `O setor da restauração parece improvável como alvo de ciberataques — mas é um dos mais vulneráveis entre as PMEs portuguesas. **Transações de cartão em volume, acesso remoto às plataformas de delivery, Wi-Fi partilhado e rotatividade elevada de pessoal** criam uma superfície de ataque que poucos proprietários gerem ativamente.
+
+Portugal tem mais de 75.000 estabelecimentos de restauração. Para os atacantes, cada um é uma oportunidade: dados de cartões de pagamento, credenciais de contas Uber Eats ou Glovo, e acesso a sistemas de reserva com dados de clientes.
+
+Este guia aborda os riscos específicos do setor e as medidas concretas para os gerir.
+
+## Os Riscos Específicos da Restauração
+
+### Terminais POS e Pagamentos com Cartão
+
+O terminal de pagamento é o coração financeiro do restaurante — e um alvo histórico de ataques.
+
+**Skimming físico**: Dispositivos instalados sobre ou dentro do terminal para capturar dados do cartão. Mais comum em terminais sem supervisão (exterior, balcão de bar). Sinais de alerta: terminal com aspeto diferente do habitual, peças soltas, câmara adicional perto do teclado.
+
+**Interceção de rede**: Se o terminal POS está na mesma rede Wi-Fi que outros dispositivos (tablets de gestão, computador de escritório, câmaras IP), um atacante com acesso a essa rede pode tentar intercetar dados de pagamento.
+
+**Ataques ao software POS**: Malware específico para sistemas POS existe há mais de uma década (PoSeidon, GratefulPOS, etc.). Geralmente instala-se via credenciais de acesso remoto fracas ou via dispositivos USB.
+
+**O que a maioria dos restaurantes não sabe**: Se usa terminais Unicre/Reduniq e não armazena dados de cartão (o que é o caso na maioria), a conformidade PCI DSS é relativamente simples — a responsabilidade recai sobretudo no processador. Mas isto só funciona se a rede do terminal estiver devidamente isolada.
+
+**Medidas práticas:**
+- Terminal POS em VLAN separada, isolada da rede de gestão e da Wi-Fi de clientes
+- Nunca use portas USB do terminal para outros fins (carregamento de telemóveis, etc.)
+- Verifique visualmente o terminal diariamente antes de abrir — qualquer peça solta é alerta vermelho
+- Atualize o software POS quando o fornecedor disponibilizar patches
+- Ative alertas de transação por SMS/email para valores acima de threshold definido
+
+### Plataformas de Delivery Online
+
+As contas Uber Eats, Glovo, e Just Eat do restaurante têm acesso direto aos pagamentos e à reputação do negócio. O compromisso destas contas é devastador.
+
+**Ataques típicos:**
+- **Credential stuffing**: Atacantes testam combinações de email/password vazadas noutros sites. Se o gerente usa a mesma password do Gmail e da conta Glovo, o risco é óbvio.
+- **Phishing de suporte falso**: Email aparentemente da Uber Eats/Glovo a pedir confirmação de conta ou atualização de IBAN. A página de login é falsa.
+- **Alteração de IBAN**: Após compromisso da conta, o atacante altera o IBAN de pagamento para uma conta sua. Pode passar semanas sem ser detetado.
+- **Manipulação de menu**: Mais raro mas documentado — atacantes alteram preços ou adicionam itens para fazer pedidos fraudulentos.
+
+**Medidas práticas:**
+- Ativar autenticação de dois fatores (2FA) em TODAS as plataformas de delivery — sem exceção
+- Verificar mensalmente o IBAN registado nas plataformas de pagamento
+- Criar email dedicado para contas de delivery (não use o email pessoal do gerente)
+- Nunca clique em links de emails que peçam login — vá diretamente ao site ou app
+- Rever quem tem acesso às contas quando há mudança de pessoal
+
+### Wi-Fi: O Risco Mais Ignorado
+
+Quase todos os restaurantes oferecem Wi-Fi a clientes. O problema é que muitos têm **apenas uma rede para tudo**: clientes, terminais POS, sistema de gestão, câmaras de segurança, e o tablet da cozinha.
+
+Uma rede única significa que um cliente com conhecimentos técnicos — ou um atacante que se faz passar por cliente — pode potencialmente ver o tráfego interno, aceder a dispositivos na mesma rede, ou comprometer o sistema.
+
+**Medidas práticas:**
+- Criar duas redes separadas: uma para negócio (POS, gestão, câmaras) e outra para clientes
+- A rede de clientes deve ter isolamento de clientes ativado (impede comunicação entre dispositivos ligados)
+- Mudar a password da Wi-Fi de clientes periodicamente (ou usar portal captivo)
+- Nunca usar a mesma password para a Wi-Fi de negócio e para sistemas de gestão
+- Router em local físico seguro — não acessível ao público
+
+### Sistemas de Reservas e Dados de Clientes
+
+Plataformas como TheFork (antigo TripAdvisor Reservations), Cover Manager, ou um sistema próprio de reservas armazenam dados pessoais de clientes: nome, telefone, email, número de pessoas, historial de reservas, preferências alimentares, alergias.
+
+**Implicações RGPD:**
+- Dados de **alergias alimentares e restrições dietéticas** podem ser considerados dados de saúde — categoria especial sob o RGPD (artigo 9.º)
+- Precisam de base legal clara para tratamento (geralmente consentimento ou execução de contrato)
+- Clientes têm direito a apagar os seus dados — o sistema deve permitir fazê-lo
+- Em caso de violação, obrigação de notificação à CNPD em 72 horas
+
+**O que fazer:**
+- Verificar nas definições da plataforma de reservas quem tem acesso aos dados
+- Rever a política de privacidade do restaurante — deve mencionar o tratamento de dados de reservas
+- Não exportar listas de clientes para ficheiros Excel partilhados por email
+- Quando muda de sistema de reservas, garantir eliminação de dados no sistema anterior
+- Dados de alergias: considerar tratar como dados de saúde e documentar a base legal
+
+### Programas de Fidelidade
+
+Se tem um programa de pontos ou cartão de cliente, o risco aumenta — está a armazenar mais dados pessoais, por mais tempo, com incentivo para os clientes facultarem informação correta.
+
+**Riscos principais:**
+- Base de dados de clientes é um ativo valioso para atacantes
+- Fraude por funcionários: acesso à base de dados para manipular pontos ou extrair dados
+- RGPD: direito de acesso, portabilidade, e eliminação são mais relevantes com dados acumulados ao longo do tempo
+
+### Redes Sociais — A Reputação em Risco
+
+Para muitos restaurantes, o Instagram e Facebook são os principais canais de comunicação com clientes. O compromisso destas contas é um desastre reputacional imediato.
+
+**Ataques típicos:**
+- Phishing via mensagem direta: aparente colaboração ou parceria com link malicioso
+- Roubo de sessão: malware no dispositivo onde está logado rouba o cookie de sessão ativa
+- Ataque de recuperação de conta: resetting da password via email comprometido
+
+**Após compromisso**: O atacante pode publicar conteúdo inadequado, fazer publicidade a produtos de terceiros (scam), ou simplesmente bloquear o acesso até pagar "resgate".
+
+**Medidas:**
+- 2FA obrigatório em todas as redes sociais com autenticator app (não SMS)
+- Nunca usar apenas uma conta pessoa para gerir redes sociais do negócio — use conta profissional/business
+- Meta Business Manager: adicionar o restaurante como "Business Asset", o que permite recuperar acesso mesmo se conta pessoal for comprometida
+- Lista de funcionários com acesso às redes sociais — atualizar quando há saída de pessoal
+
+## Gestão de Pessoal e Acessos
+
+A restauração tem uma das maiores taxas de rotatividade de qualquer setor. Colaboradores entram e saem com frequência, criando um ciclo constante de acessos que precisa de gestão activa.
+
+### Onboarding
+
+- Criar conta própria para cada funcionário (nunca partilhar login)
+- Atribuir apenas o acesso necessário (empregado de mesa não precisa de acesso a relatórios financeiros)
+- Mostrar a política de uso aceitável no primeiro dia — mesmo que simples
+
+### Offboarding (o mais crítico)
+
+**Cheklist de saída de colaborador:**
+- [ ] Mudar password do sistema de gestão/POS (especialmente se conta era partilhada)
+- [ ] Remover acesso às plataformas de delivery (Uber Eats, Glovo, Just Eat)
+- [ ] Remover da gestão das redes sociais
+- [ ] Revogar acesso Wi-Fi de negócio se tinha a password
+- [ ] Verificar se tinha acesso a emails do restaurante
+- [ ] Se tinha acesso ao sistema de reservas, verificar e revogar
+- [ ] Coletar dispositivos do restaurante (tablet, telemóvel de trabalho)
+
+**Um ex-funcionário com acesso a plataformas de delivery pode cancelar pedidos, alterar o cardápio, ou ver dados de encomendas durante semanas.**
+
+### Passwords
+
+Para um restaurante, a regra mínima é:
+1. Passwords únicas por sistema — não reutilizar
+2. Passwords com pelo menos 12 caracteres (ou frase)
+3. Gestor de passwords para o gerente (Bitwarden gratuito serve)
+4. Mudar passwords quando há saída de pessoal com acesso
+
+## Câmaras de Segurança (CCTV) e RGPD
+
+Praticamente todos os restaurantes têm câmaras — e praticamente nenhum cumpre todos os requisitos legais.
+
+**Obrigações RGPD para videovigilância:**
+- Sinalização obrigatória em local visível antes da entrada nas zonas filmadas
+- Retenção máxima recomendada: 30 dias (salvo necessidade específica justificada)
+- Não pode filmar zonas onde não há justificação de segurança (ex: casas de banho, vestiários)
+- Acesso restrito às gravações — documentar quem pode aceder e em que circunstâncias
+- Clientes ou funcionários têm direito de acesso às imagens onde aparecem
+
+**Cibersegurança das câmaras:**
+- Câmaras IP em VLAN separada (não na mesma rede do POS)
+- Mudar password padrão das câmaras — muitas ainda têm "admin/admin" ou "admin/1234"
+- Verificar regularmente se há atualizações de firmware
+- NVR (gravador) em local físico seguro
+
+Para um guia mais detalhado sobre segurança de dispositivos IoT incluindo câmaras, consulte o nosso artigo sobre [segurança em IoT para PMEs](/blog/seguranca-iot-dispositivos-inteligentes-pme).
+
+## Proteção Contra Ransomware
+
+Restaurantes são alvos de ransomware por dois motivos: valorizam a continuidade operacional (não podem estar offline durante o serviço) e tipicamente têm pouca proteção.
+
+**Vetores mais comuns de entrada:**
+- Email com fatura falsa de fornecedor (muito comum na restauração)
+- Acesso remoto ao sistema de gestão com password fraca
+- USB de origem desconhecida
+
+**Proteção mínima:**
+- Backup diário do sistema de gestão e reservas — em local externo à rede (pen USB + nuvem)
+- Testar o backup pelo menos uma vez (restaurar um ficheiro para confirmar que funciona)
+- Antivírus/EDR no computador de gestão
+- Não abrir anexos de emails de fornecedores sem verificar pelo telefone se for inesperado
+
+Para o caso de sofrer um ataque, consulte o nosso guia sobre [o que fazer quando a sua PME é atacada por ransomware](/blog/ransomware-o-que-fazer-pme-guia-resposta).
+
+## Plano de Ação: Por Onde Começar
+
+Se nunca pensou em cibersegurança para o restaurante, comece por estas 5 ações de alto impacto baixo custo:
+
+**Semana 1:**
+1. Ativar 2FA em todas as plataformas de delivery e redes sociais
+2. Verificar o IBAN registado nas plataformas de pagamento
+3. Criar rede Wi-Fi separada para clientes (a maioria dos routers modernos suporta)
+
+**Semana 2:**
+4. Fazer cheklist de saída de pessoal — testar com o último ex-colaborador que saiu
+5. Instalar Bitwarden (gratuito) e migrar passwords para gestor
+
+**Mês seguinte:**
+- Verificar câmaras: sinalização, password padrão, VLAN separada
+- Instalar antivírus no computador de gestão se ainda não tiver
+- Criar backup simples: pasta com dados do negócio copiada para pen USB + Google Drive
+
+---
+
+Para mais informação sobre como proteger os acessos e gerir pessoal, consulte o nosso guia de [gestão de identidade e acessos para PMEs](/blog/gestao-identidade-acessos-iam-pme).`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-18",
+    readingTime: 14,
+    author: {
+      name: "Carlos Miranda",
+      title: "Consultor de Cibersegurança",
+    },
+  },
+  {
+    slug: "quishing-qr-code-phishing-empresas-portugal",
+    title: "Quishing: A Ameaça dos QR Codes Maliciosos que Está a Atingir Empresas Portuguesas",
+    excerpt:
+      "Quishing é phishing via QR code — e contorna os filtros de email tradicionais porque a URL maliciosa está numa imagem. Como funciona, onde aparece, e como proteger a sua empresa.",
+    content: `O QR code tornou-se omnipresente depois da pandemia — menus de restaurante, terminais de pagamento, documentos de recursos humanos, faturas PDF, convites para reuniões. Os atacantes notaram. **Quishing** — phishing via QR code — é uma das ameaças que mais cresce em 2025-2026, precisamente porque contorna as defesas mais comuns.
+
+O problema central: os filtros de email e gateways de segurança tradicionais analisam hiperligações em texto. Um QR code é uma **imagem** — a URL maliciosa está codificada dentro do código visual e a maioria das soluções de segurança simplesmente não a lê.
+
+## Como Funciona o Quishing
+
+O processo é simples e eficaz:
+
+1. O atacante cria uma página de phishing — geralmente uma réplica de login da Microsoft, Google, ou serviço bancário
+2. Gera um QR code que aponta para essa página
+3. Incorpora o QR code num email, documento PDF, ou sticker físico
+4. A vítima escaneia com o telemóvel — que normalmente tem menos proteções que o computador — e aterra na página falsa
+5. Introduz credenciais, que são capturadas pelo atacante
+
+A versão física é particularmente insidiosa: **stickers com QR maliciosos colados sobre QR legítimos** em locais públicos. Em Portugal, terminais de pagamento por QR (MB Way), parquímetros nas cidades, pontos de carregamento de VE, e cartazes em locais de grande afluência são alvos documentados noutros países europeus.
+
+## Onde Aparece o Quishing em Contexto Empresarial
+
+### Nos Emails de Negócio
+
+Os cenários mais comuns em ambiente empresarial português:
+
+**Faturas e documentos de fornecedores:**
+> *"Clique no QR code para aceder à fatura eletrónica no portal do fornecedor"*
+
+A vítima escaneia, é levada para uma réplica do portal, e insere credenciais que são capturadas.
+
+**Autenticação multifator falsa:**
+> *"A sua sessão Microsoft 365 expirou. Escanear o QR code para reautenticar com o seu dispositivo móvel."*
+
+Este ataque funciona particularmente bem porque imita o fluxo legítimo de MFA que muitos utilizadores já conhecem.
+
+**Recursos humanos:**
+> *"Aceda ao novo portal RH para confirmar os seus dados de férias / recibo de vencimento / seguro de saúde"*
+
+Emails deste tipo têm alta taxa de abertura — são esperados e parecem legítimos.
+
+**DocuSign e assinaturas digitais:**
+> *"Assine o documento através do QR code abaixo"*
+
+Réplicas de DocuSign são particularmente eficazes porque capturam credenciais de email (para "autenticar" a assinatura).
+
+**Notificações de pacotes e encomendas:**
+Em contexto de restauração, retalho, ou logística, emails sobre entregas com QR code são comuns e esperados.
+
+### Físicamente no Local de Trabalho
+
+- QR codes em salas de reunião: *"Conectar ao Wi-Fi desta sala"* ou *"Aceder ao painel da reunião"*
+- Stickers em impressoras partilhadas: *"Problema de impressão? Escanear para suporte técnico"*
+- Em receções e lobbies: materiais de marketing que foram adulterados
+- Cartões de visita: QR codes substituídos em material deixado em locais comuns
+
+### No LinkedIn e Redes Sociais
+
+- Convites para conferências e webinars com QR code de registo
+- "Recrutadores" que enviam documentos com QR para candidatos
+- Perfis falsos que partilham conteúdo com QR codes
+
+## Por Que o Quishing É Difícil de Detetar
+
+### Para os Filtros de Segurança
+
+Os gateways de email tradicionais (Microsoft Defender EOP, Proofpoint, Barracuda) foram construídos para analisar texto e hiperligações. Um QR code num email é tratado como uma imagem — para a maioria das soluções, é inofensivo.
+
+**Microsoft Defender for Office 365 Plan 2** adicionou recentemente capacidade de análise de QR codes em emails (QR Code URL Protection). Esta funcionalidade está incluída no Microsoft 365 Business Premium e decodifica automaticamente URLs em imagens QR para análise. Se usa Office 365, verifique se tem o plano certo e se a funcionalidade está ativa.
+
+Para outros fornecedores: verifique se o seu gateway de email tem capacidade de análise de QR. Se não tiver, não está a analisar este vetor.
+
+### Para os Utilizadores
+
+- O comportamento de escanear QR codes é **instintivo** após anos de menus de restaurante e pagamentos QR
+- O telemóvel mostra um preview da URL — mas muitas pessoas não verificam antes de confirmar
+- Em telemóvel, a URL de phishing é mais difícil de verificar (ecrã pequeno, URL truncada)
+- O telemóvel geralmente tem menos proteções que o portátil empresarial (sem EDR, sem filtro DNS empresarial, sem VPN)
+
+## Como Proteger a Sua Empresa
+
+### Formação e Consciencialização
+
+Esta é a medida mais importante, porque a tecnologia não é suficiente.
+
+**O que ensinar aos colaboradores:**
+
+1. **Verificar sempre a URL antes de confirmar** no telemóvel. Quando o telemóvel pede para abrir o link após escanear, confirmar que o domínio é legítimo antes de tocar em "Abrir".
+
+2. **QR codes em emails são incomuns para pedidos de login**. A Microsoft, Google, ou o banco não enviam QR codes pedindo credenciais. Se receber um, é suspeito por definição.
+
+3. **Inspecionar QR físicos antes de escanear**. Se um QR code parecer um sticker colado sobre outro, ou tiver aspeto diferente dos outros no mesmo local, não escanear.
+
+4. **Reportar** emails com QR codes suspeitos ao responsável de IT ou seguir o procedimento de reporte de phishing da empresa.
+
+**Incluir exemplos de quishing nas simulações de phishing**: As plataformas como GoPhish, Microsoft Attack Simulator, e KnowBe4 já suportam campanhas de quishing. Inclua um ou dois cenários de QR code nas próximas simulações.
+
+### Controlos Técnicos
+
+**Microsoft 365 Business Premium:**
+- Verificar se QR Code URL Protection está ativa em Microsoft 365 Defender → Policies & Rules → Threat Policies → Safe Links
+- Verificar que Safe Links está configurado para analisar emails e documentos Office
+
+**Filtro DNS no telemóvel:**
+Dispositivos móveis geridos via MDM (Intune) podem ter filtro DNS aplicado. O Cloudflare Gateway (plano gratuito) pode ser configurado como DNS resolver no telemóvel para bloquear domínios maliciosos conhecidos — incluindo destinos de quishing.
+
+Para mais informação sobre filtro DNS, consulte o nosso artigo sobre [filtragem de DNS para PMEs](/blog/filtragem-dns-seguranca-pme).
+
+**MDM — Gestão de Dispositivos Móveis:**
+Se os colaboradores usam telemóveis para trabalho, o MDM (Microsoft Intune, por exemplo) permite:
+- Aplicar políticas de browser seguro
+- Forçar uso de Microsoft Edge ou Chrome gerido com proteção contra phishing
+- Restringir instalação de apps de scanner QR de terceiros (usar apenas scanner do sistema operativo)
+
+**Análise de QR codes suspeitos:**
+Antes de escanear um QR code duvidoso, pode analisar a imagem com ferramentas online como:
+- zxing.org/w/decode (online decoder — cola a imagem, vê a URL sem abrir)
+- Resultado: se a URL não for reconhecível ou parecer suspeita, não abrir
+
+### Política Interna
+
+Adicionar ao manual de segurança da empresa:
+
+> *"Não escanear QR codes em emails que peçam autenticação ou introdução de credenciais sem verificação prévia junto do IT. Comunicar imediatamente qualquer QR code físico suspeito nas instalações."*
+
+Se tiver QR codes legítimos no escritório (Wi-Fi, portais internos), **documentar quais são** e garantir que os colaboradores os conhecem — facilita a identificação de QR codes não autorizados.
+
+## O Que Fazer Se Escaneou um QR Malicioso
+
+Se um colaborador escaneou um QR code suspeito e introduziu credenciais:
+
+1. **Mudar a password imediatamente** — a partir de um dispositivo diferente
+2. **Revogar sessões ativas** (Microsoft 365: Entra ID → Utilizadores → Revogar sessões; Google: Conta → Segurança → Gerir dispositivos)
+3. **Verificar atividade recente** na conta (emails enviados, regras de reencaminhamento criadas, documentos acedidos)
+4. **Verificar se MFA foi contornado** — em casos de AiTM (adversary-in-the-middle), o atacante pode ter capturado um token de sessão mesmo com MFA ativo
+5. **Reportar ao responsável IT** e considerar alerta de violação se dados de clientes foram acedidos
+
+Se foi introdução de credenciais corporativas, assume-se compromisso da conta até prova em contrário. Agir rápido.
+
+## Quishing vs. Phishing Tradicional: Resumo
+
+| Aspeto | Phishing tradicional | Quishing |
+|--------|---------------------|----------|
+| Veículo | Link em texto | Imagem com QR code |
+| Contorna filtros de email | Parcialmente | Sim (maioria) |
+| Dispositivo alvo | Computador | Telemóvel |
+| Proteções disponíveis | Muitas | Limitadas |
+| Consciencialização do utilizador | Moderada | Baixa |
+| Tendência | Estável | Em crescimento |
+
+## Recursos
+
+- Para formação sobre phishing em geral: [Simulações de Phishing para PMEs](/blog/simulacao-phishing-empresa-como-fazer-pme)
+- Para proteção de email Microsoft 365: [Microsoft 365 Email Security](/blog/microsoft-365-email-security-anti-phishing-safe-links-bec)
+- Para gestão de dispositivos móveis: [Microsoft Intune para PMEs](/blog/microsoft-intune-pme-gestao-endpoints-seguranca)
+
+A boa notícia é que as defesas contra quishing são as mesmas que contra phishing tradicional: formação, 2FA robusto (chaves de segurança física ou passkeys são imunes a phishing), e ferramentas técnicas atualizadas. O que muda é a necessidade de incluir explicitamente o vetor QR code na consciencialização.`,
+    category: "ameacas",
+    categoryLabel: "Ameacas",
+    publishedAt: "2026-04-18",
+    readingTime: 12,
+    author: {
+      name: "Rita Santos",
+      title: "Analista de Segurança",
+    },
+  },
+  {
+    slug: "ciberseguranca-imobiliarias-agencias-arrendamento-portugal",
+    title: "Cibersegurança para Imobiliárias e Agências de Arrendamento em Portugal: Guia Prático",
+    excerpt:
+      "Fraude de IBAN em transações imobiliárias, dados pessoais sensíveis de compradores e inquilinos, e BEC em transferências de valor elevado tornam as imobiliárias alvos prioritários. Guia prático para o setor.",
+    content: `As agências imobiliárias e de arrendamento em Portugal processam transações financeiras de valor muito elevado e armazenam alguns dos dados pessoais mais sensíveis que existem: documentos de identificação, declarações de IRS, recibos de vencimento, contratos de trabalho, informações sobre composição familiar. Para um atacante, uma imobiliária comprometida representa duas oportunidades: dados pessoais para vender e interceção de transferências de centenas de milhares de euros.
+
+**A fraude de IBAN em transações imobiliárias é um dos esquemas mais lucrativos em Portugal.** Num ataque típico, o atacante compromete a caixa de email do mediador, monitoriza conversas sobre negócios em curso, e intervém no momento certo com um email — aparentemente do mediador ou notário — com um IBAN diferente para o depósito ou sinal. A vítima transfere decenas de milhar de euros para a conta do atacante.
+
+## Os Riscos Específicos do Setor
+
+### Fraude de IBAN — O Risco Mais Elevado
+
+Este é o risco com maior impacto financeiro para o setor e para os clientes. O mecanismo é simples e devastador:
+
+**Como funciona:**
+1. Atacante compromete email do mediador (via phishing, credential stuffing, ou password fraca)
+2. Monitoriza passivamente as conversas — pode estar na caixa de email durante semanas sem ser detetado
+3. Identifica transação de valor elevado próxima de concluir
+4. No momento crítico (marcação de escritura, pedido de sinal), envia email aparentemente do mediador com "dados bancários atualizados"
+5. Comprador transfere €20.000-100.000+ para conta do atacante
+6. O dinheiro é imediatamente movido para o exterior
+
+**O email fraudulento é indistinguível do legítimo** — vem da mesma conta de email, tem o histórico da conversa, usa o mesmo tom. A única diferença é o IBAN.
+
+**Casos em Portugal**: Embora o Banco de Portugal e a PJ não publiquem estatísticas detalhadas por setor, o esquema é bem documentado em Portugal e tem resultado em perdas que raramente são totalmente recuperadas. Em muitos casos, o banco do comprador não tem obrigação de reembolsar se a transferência foi autorizada pela própria vítima.
+
+**Medidas de proteção:**
+
+Para a agência:
+- MFA obrigatório em TODOS os emails de negócio — sem exceção
+- Verificar mensalmente o log de acessos ao email (Microsoft 365: Entra ID → Sign-ins; Google Workspace: Admin → Reports)
+- Monitorizar regras de reencaminhamento criadas na caixa de email — atacantes criam regras silenciosas para copiar emails
+- Usar Microsoft 365 Business Premium com Defender for Office 365 — deteta comportamento anómalo na caixa de email
+- Ativar alerta para criação de regras de reencaminhamento externas
+
+Para comunicação com clientes sobre pagamentos:
+- **Protocolo de verificação de IBAN**: nunca aceitar IBAN por email sem confirmação telefónica para número previamente conhecido
+- Incluir aviso explícito no contrato de mediação: *"A [Agência] nunca altera dados bancários por email. Qualquer comunicação com novos IBANs deve ser verificada telefonicamente antes de qualquer transferência."*
+- Dar formação aos mediadores sobre o esquema — a maioria não sabe que é um risco real
+- Quando possível, usar notário como intermediário para pagamentos de sinal
+
+Para verificação de clientes:
+- Se receber pedido de alteração de IBAN de um comprador ou proprietário por email, ligar para o número que tem no dossier (não para o número indicado no email suspeito) antes de atualizar
+
+### Dados Pessoais: Volume e Sensibilidade
+
+As imobiliárias recolhem dados pessoais em quantidade e qualidade invulgar:
+
+**Dados dos compradores/arrendatários:**
+- Bilhete de Identidade / Cartão de Cidadão (fotocópia)
+- NIF
+- Declaração de IRS (rendimentos)
+- Últimos recibos de vencimento (3-6 meses)
+- Contrato de trabalho ou declaração do empregador
+- Extrato bancário (para prova de fundos)
+- Situação familiar (composição do agregado, dependentes)
+- Dados de crédito e capacidade de endividamento
+
+**Dados dos proprietários:**
+- Identificação pessoal
+- Caderneta predial
+- Certidão permanente do registo predial
+- NIB/IBAN para rendas
+
+Este conjunto de dados é suficiente para roubo de identidade, fraude de crédito, e outros crimes. Uma base de dados de uma imobiliária de dimensão média pode conter dados completos de centenas ou milhares de pessoas.
+
+**Obrigações RGPD:**
+
+- **Base legal**: Para dados de compradores e inquilinos, a base legal é geralmente a execução de contrato (mediação imobiliária) ou cumprimento de obrigação legal (AML/PBCFT)
+- **Minimização de dados**: Recolher apenas o necessário — para arrendamento simples, não precisa de declaração completa de IRS na fase inicial
+- **Retenção**: Quanto tempo pode guardar os dados de um cliente que não comprou ou arrendou? O princípio de limitação de conservação exige eliminação quando o propósito cessa. Para clientes que desistiram do processo, os dados devem ser eliminados ou anonimizados
+- **Segurança**: Dossiers com documentos sensíveis em papel devem estar em local fechado. Ficheiros digitais devem ter controlo de acesso
+- **Incidente**: Se ocorrer violação de dados (computador roubado, email hackeado), obrigação de notificar CNPD em 72 horas e potencialmente os titulares dos dados afetados
+
+Para um guia completo sobre obrigações RGPD, consulte o nosso [guia RGPD para pequenas empresas](/blog/guia-rgpd-pequenas-empresas-portugal).
+
+### Business Email Compromise (BEC)
+
+Para além da fraude de IBAN de cliente para mediador, as imobiliárias enfrentam BEC nos dois sentidos:
+
+**Comprador/arrendatário como alvo**: Como descrito acima — recebem instruções falsas de pagamento.
+
+**Agência como alvo**:
+- Emails falsos de proprietários a pedir adiantamento de rendas para IBAN diferente
+- Emails falsos de promotoras ou construtoras com novas condições de comissão
+- Fraude de fornecedores: email aparentemente do advogado ou notário com nova conta bancária para honorários
+
+A proteção é a mesma: verificação telefónica independente de qualquer alteração de dados bancários, sem exceção.
+
+### Portais Imobiliários — Conta da Agência
+
+As contas nas plataformas Idealista, Imovirtual, Casa.sapo, e Remax (se aplicável) têm acesso às listagens e, em alguns casos, a dados de contacto de interessados.
+
+**Riscos:**
+- Compromisso da conta permite publicar listagens falsas (propriedades que não existem ou não estão à venda) para esquemas de fraude de renda ou sinal
+- Acesso a contactos de interessados para phishing/vishing dirigido
+- Dano reputacional por publicação de conteúdo indevido
+
+**Proteção:**
+- 2FA em todas as contas de portais imobiliários
+- Verificar regularmente os anúncios publicados para detetar alterações não autorizadas
+- Restringir quem tem credenciais de login — não partilhar com todos os mediadores se a plataforma suportar contas individuais
+
+### Contratos Digitais e Assinaturas Eletrónicas
+
+O CPCV (Contrato Promessa de Compra e Venda) e contratos de arrendamento cada vez mais usam assinatura eletrónica. As implicações de segurança são relevantes:
+
+**Assinatura qualificada vs. simples:**
+- Para documentos com valor legal relevante, a assinatura eletrónica qualificada (Chave Móvel Digital, certificado do Cartão de Cidadão) tem o mesmo valor que assinatura manuscrita
+- Plataformas como DocuSign, Adobe Sign, e Sievert oferecem assinatura eletrónica simples — tem valor probatório mas não equivale necessariamente a assinatura manuscrita para todos os efeitos
+
+**O que verificar:**
+- Que plataforma usa a agência para assinaturas digitais?
+- Quem tem acesso à conta da plataforma?
+- Os contratos assinados são armazenados de forma segura e com backup?
+- Clientes recebem cópia do contrato assinado imediatamente?
+
+**Phishing via DocuSign**: Como mencionado no contexto do quishing, pedidos de assinatura falsos são um vetor de ataque comum. Treinar mediadores para verificar a origem de pedidos de assinatura.
+
+## PBCFT — Prevenção de Branqueamento e Financiamento do Terrorismo
+
+As agências imobiliárias com atividade de mediação são **entidades obrigadas** ao abrigo da Lei n.º 83/2017 de prevenção de branqueamento de capitais e financiamento do terrorismo (PBCFT). Isto implica:
+
+- Identificação e verificação de clientes (KYC — Know Your Customer)
+- Avaliação de risco de branqueamento por transação
+- Comunicação de operações suspeitas ao DCIAP
+- Arquivo de documentação por 7 anos mínimo
+
+**Interseção com cibersegurança**:
+- A documentação PBCFT é altamente sensível — deve ter controlos de acesso rigorosos
+- O arquivo por 7 anos implica gestão de dados a longo prazo com segurança adequada ao longo do tempo
+- Se a documentação de identificação for comprometida, pode configurar violação RGPD e implicações PBCFT
+
+A entidade supervisora para PBCFT no setor imobiliário é o IMPIC (Instituto dos Mercados Públicos do Imobiliário e da Construção). Falhas de cumprimento podem resultar em sanções administrativas.
+
+### Acesso Remoto — Mediadores em Trabalho de Campo
+
+Mediadores imobiliários trabalham frequentemente fora do escritório: visitas a imóveis, reuniões com clientes, eventos. Isto cria risco de acesso a sistemas em redes não controladas.
+
+**Medidas:**
+- VPN para acesso ao servidor ou sistemas internos a partir de exterior (OpenVPN ou solução comercial)
+- Uso de Conditional Access no Microsoft 365 / Google Workspace para bloquear acesso de localizações ou dispositivos não geridos
+- Telemóveis de trabalho com MDM — controlo de acesso a email e documentos
+- Política clara sobre uso de Wi-Fi público para acesso a sistemas da agência
+
+Para configuração de trabalho remoto seguro, consulte o nosso guia de [segurança no trabalho remoto](/blog/seguranca-trabalho-remoto-pme).
+
+## Checklist de Segurança para Imobiliárias
+
+### Email e Comunicações
+- [ ] MFA ativado em todas as contas de email de negócio
+- [ ] Monitorização de regras de reencaminhamento (mensal)
+- [ ] Protocolo escrito de verificação de IBAN antes de qualquer transferência
+- [ ] Aviso a clientes sobre risco de fraude de IBAN (no contrato de mediação)
+
+### Dados Pessoais
+- [ ] Inventário de que dados são recolhidos, onde estão armazenados, quem tem acesso
+- [ ] Política de retenção — o que apagar e quando
+- [ ] Dossiers em papel em local fechado com chave
+- [ ] Ficheiros digitais com controlo de acesso por mediador
+
+### Portais e Plataformas
+- [ ] 2FA em Idealista, Imovirtual, e outros portais
+- [ ] Lista de quem tem acesso a cada plataforma — atualizada
+- [ ] Verificação regular de anúncios publicados
+
+### Infraestrutura
+- [ ] Antivírus / EDR no computador de backoffice
+- [ ] Backup dos contratos e documentação (local + nuvem)
+- [ ] Password única por sistema — gestor de passwords
+
+### Equipa
+- [ ] Formação sobre fraude de IBAN — todos os mediadores
+- [ ] Procedimento de offboarding quando mediador sai da agência
+- [ ] Política de acesso remoto para trabalho de campo
+
+## Por Onde Começar
+
+Se tiver de priorizar, estas três ações têm o maior impacto imediato:
+
+1. **MFA no email** — protege contra o vetor mais comum de fraude de IBAN
+2. **Protocolo de verificação de IBAN** — um processo simples pode evitar perdas de dezenas de milhar de euros por clientes
+3. **Inventário de dados pessoais** — saber o que tem e onde está é o primeiro passo para cumprir o RGPD e proteger adequadamente
+
+Para apoio técnico gratuito em caso de incidente, o [CERT.PT](/blog/cncs-cert-pt-o-que-sao-como-ajudam-pme) presta assistência a empresas portuguesas — incluindo análise de email comprometido.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-18",
+    readingTime: 15,
+    author: {
+      name: "Miguel Ferreira",
+      title: "Auditor de Compliance",
+    },
+  },
+  {
     slug: "formacao-ciberseguranca-colaboradores-pme",
     title: "Formação em Cibersegurança para Colaboradores — Guia Prático para PMEs",
     excerpt:
