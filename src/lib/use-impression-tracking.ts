@@ -47,7 +47,10 @@ export function useImpressionTracking(trackingData: ImpressionTrackingData) {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const trackImpression = useCallback(async () => {
-    if (hasTracked.current) return;
+    if (hasTracked.current) {
+      console.log('🚫 Impression already tracked for:', trackingData.link_id);
+      return;
+    }
 
     hasTracked.current = true;
 
@@ -55,6 +58,8 @@ export function useImpressionTracking(trackingData: ImpressionTrackingData) {
       position: trackingData.cta_position,
       link_id: trackingData.link_id,
       article: trackingData.article_slug,
+      destination_url: trackingData.destination_url,
+      timestamp: new Date().toISOString()
     });
 
     const success = await trackCTAImpression(trackingData);
@@ -62,6 +67,8 @@ export function useImpressionTracking(trackingData: ImpressionTrackingData) {
       console.log('✅ CTA impression tracking successful:', trackingData.link_id);
     } else {
       console.warn('⚠️ CTA impression tracking failed:', trackingData.link_id);
+      // Reset hasTracked to allow retry on next interaction
+      hasTracked.current = false;
     }
   }, [trackingData]);
 
@@ -74,6 +81,15 @@ export function useImpressionTracking(trackingData: ImpressionTrackingData) {
 
     console.log('🔍 Setting up IntersectionObserver for:', trackingData.link_id);
 
+    // Fallback timer - if no intersection happens within 10 seconds, track anyway
+    // This handles cases where the element might not properly intersect due to CSS/layout issues
+    const fallbackTimer = setTimeout(() => {
+      if (!hasTracked.current) {
+        console.log('⏰ Fallback timer triggered - tracking impression for:', trackingData.link_id);
+        trackImpression();
+      }
+    }, 10000); // 10 second fallback
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -82,7 +98,12 @@ export function useImpressionTracking(trackingData: ImpressionTrackingData) {
             isIntersecting: entry.isIntersecting,
             intersectionRatio: entry.intersectionRatio,
             hasTracked: hasTracked.current,
-            timerActive: !!timerRef.current
+            timerActive: !!timerRef.current,
+            boundingRect: {
+              top: entry.boundingClientRect.top,
+              bottom: entry.boundingClientRect.bottom,
+              height: entry.boundingClientRect.height
+            }
           });
 
           if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
@@ -106,7 +127,7 @@ export function useImpressionTracking(trackingData: ImpressionTrackingData) {
         });
       },
       {
-        threshold: 0.5, // 50% visibility threshold
+        threshold: [0.1, 0.25, 0.5], // Multiple thresholds for better debugging
         rootMargin: '0px'
       }
     );
@@ -122,6 +143,7 @@ export function useImpressionTracking(trackingData: ImpressionTrackingData) {
         clearTimeout(timerRef.current);
         timerRef.current = null;
       }
+      clearTimeout(fallbackTimer);
     };
   }, [trackImpression]);
 

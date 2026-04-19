@@ -71,6 +71,12 @@ export default function AffiliateCTABanner({
   className = ""
 }: AffiliateCTABannerProps) {
 
+  // Early return if no tools are provided
+  if (!tools || tools.length === 0) {
+    console.warn('⚠️ AffiliateCTABanner: No tools provided');
+    return null;
+  }
+
   // Track banner impression
   const bannerRef = useImpressionTracking({
     article_slug: articleSlug,

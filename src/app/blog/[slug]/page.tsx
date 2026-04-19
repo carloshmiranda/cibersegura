@@ -385,19 +385,29 @@ export default async function BlogPostPage({
 
         {/* Affiliate CTA for all blog articles */}
         <div className="mt-12 mb-12">
-          <AffiliateCTABanner
-            tools={getAllNIS2Tools()}
-            title={isCNCSUrgentTopic
-              ? `🚨 URGENTE: ${daysRemaining} Dias para Conformidade CNCS — Prazo: 4 Maio 2026`
-              : "Ferramentas Recomendadas de Cibersegurança"
+          {(() => {
+            const tools = getAllNIS2Tools();
+            if (!tools || tools.length === 0) {
+              console.warn('⚠️ No affiliate tools available for blog post:', post.slug);
+              return null;
             }
-            description={isCNCSUrgentTopic
-              ? `PRAZO CRÍTICO: Faltam apenas ${daysRemaining} dias para o registo obrigatório CNCS! Implemente agora os controlos de segurança essenciais com estas ferramentas certificadas antes que seja tarde demais.`
-              : "Soluções de cibersegurança selecionadas pela nossa equipa para proteger a sua PME de forma eficaz"
-            }
-            source={`blog-${post.slug}`}
-            articleSlug={post.slug}
-          />
+
+            return (
+              <AffiliateCTABanner
+                tools={tools}
+                title={isCNCSUrgentTopic
+                  ? `🚨 URGENTE: ${daysRemaining} Dias para Conformidade CNCS — Prazo: 4 Maio 2026`
+                  : "Ferramentas Recomendadas de Cibersegurança"
+                }
+                description={isCNCSUrgentTopic
+                  ? `PRAZO CRÍTICO: Faltam apenas ${daysRemaining} dias para o registo obrigatório CNCS! Implemente agora os controlos de segurança essenciais com estas ferramentas certificadas antes que seja tarde demais.`
+                  : "Soluções de cibersegurança selecionadas pela nossa equipa para proteger a sua PME de forma eficaz"
+                }
+                source={`blog-${post.slug}`}
+                articleSlug={post.slug}
+              />
+            );
+          })()}
         </div>
 
         {/* Related posts */}
