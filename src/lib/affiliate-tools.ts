@@ -30,10 +30,10 @@ export const nis2Tools: AffiliateTool[] = [
     recommended: true
   },
   {
-    name: "Acronis Cyber Backup",
-    description: "Solução de backup e recuperação com proteção contra ransomware e conformidade",
+    name: "Acronis Cyber Protect",
+    description: "Solução de backup e proteção com IA integrada contra ransomware e conformidade",
     category: "backup",
-    url: "https://www.acronis.com/en-us/business/cyber-backup/",
+    url: "https://www.acronis.com/en/products/cyber-protect/components/",
     recommended: true
   }
 ];
