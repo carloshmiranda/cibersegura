@@ -24,6 +24,10 @@
 ## Done
 <!-- Completed items with date -->
 
+### 2026-04-19 (session 16)
+- ✅ **growth**: Article "NIS2: Faltam 15 Dias para o Prazo" — `/blog/nis2-prazo-urgente-maio-2026-o-que-fazer-agora`; emergency action plan for businesses approaching the May 4 CNCS registration deadline; step-by-step portal registration guide, 48h/1-week/2-week priority tiers, coimas table (up to €10M for essential entities), compliance checklist; timely piece targeting high-urgency search intent around the deadline
+- ✅ **growth**: Article "Cibersegurança para Farmácias em Portugal" — `/blog/ciberseguranca-farmacias-portugal`; sector-specific guide covering RGPD special category health data (Sifarma/SIARS/SNS), DPO obligation, attack vectors (phishing impersonating ANF/INFARMED, remote access to Sifarma, single-network exposure), NIS2 for health sector, 25-item security checklist; untapped sector with high data sensitivity and low security awareness
+
 ### 2026-04-17 (session 15)
 - ✅ **Content**: Downloadable SPF/DKIM/DMARC checklist — Created comprehensive HTML checklist (`/downloads/checklist-spf-dkim-dmarc-email-security.html`) with phase-based implementation guide (preparation → SPF → DKIM → DMARC monitoring/quarantine/reject), service-specific configurations for Google Workspace/Microsoft 365/Zoho, verification tools, and print-friendly design. Added prominent download section to SPF/DKIM/DMARC blog post. PR #109 created.
 
