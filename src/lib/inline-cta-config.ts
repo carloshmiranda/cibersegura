@@ -31,7 +31,7 @@ export const INLINE_CTA_CONFIGS: Record<string, InlineCtaConfig[]> = {
   'nis2-portugal-guia-pme': [
     {
       afterHeading: 'Gestão de Incidentes',
-      tool: nis2Tools.find(t => t.name === 'Acronis Cyber Backup')!,
+      tool: nis2Tools.find(t => t.name === 'Acronis Cyber Protect')!,
       contextualCopy: '📦 Backups seguros são essenciais para recuperação rápida após incidentes. Proteja-se contra ransomware com uma solução que cumpre os padrões de continuidade exigidos pela NIS2.'
     }
   ],
