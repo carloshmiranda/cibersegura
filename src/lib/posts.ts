@@ -46,6 +46,403 @@ export const AUTHORS: Record<string, Author> = {
 
 export const posts: Post[] = [
   {
+    slug: "nis2-prazo-urgente-maio-2026-o-que-fazer-agora",
+    title: "NIS2: Faltam 15 Dias para o Prazo — O Que Fazer Agora se Ainda Não Registou a Empresa",
+    excerpt:
+      "O prazo de registo no CNCS é 4 de maio de 2026. Se ainda não registou a sua empresa, aqui está o plano de emergência: como registar, o que implementar já, e o que acontece se não cumprir.",
+    content: `O prazo de registo das empresas abrangidas pela NIS2 no portal do CNCS é **4 de maio de 2026** — 15 dias a partir de hoje. Se ainda não fez o registo, não está sozinho: muitas PMEs portuguesas ainda não o fizeram. Mas já não há tempo para adiar.
+
+Este guia é um plano de ação direto para os próximos 15 dias.
+
+## A Situação: O Que Mudou a 3 de Abril
+
+A Diretiva NIS2 entrou em vigor em Portugal a 3 de abril de 2026, com a transposição pelo Decreto-Lei n.º 125/2025. A partir dessa data, as empresas abrangidas têm obrigações legais de cibersegurança. O primeiro prazo operacional — o **registo obrigatório no portal do CNCS** — é 4 de maio de 2026.
+
+Não registar não significa que a NIS2 não se aplica à sua empresa. Significa que está em incumprimento com uma obrigação legal específica, sujeita a coima.
+
+## A Sua Empresa Está Abrangida?
+
+A NIS2 aplica-se a entidades de **setores essenciais e importantes**. Para uma PME, a pergunta-chave é dupla: setor E dimensão.
+
+### Setores Abrangidos
+
+**Setores essenciais** (maior escrutínio, multas mais elevadas):
+- Energia (eletricidade, gás, petróleo, hidrogénio)
+- Transportes (aéreo, ferroviário, rodoviário, marítimo)
+- Setor bancário e infraestruturas de mercados financeiros
+- Setor da saúde (hospitais, farmácias, fabricantes de dispositivos médicos, laboratórios)
+- Água potável e gestão de águas residuais
+- Infraestruturas digitais (data centers, cloud, telecomunicações)
+- Administração pública
+
+**Setores importantes** (NIS2 aplica-se, mas supervisão menos intensa):
+- Serviços postais e de estafetas
+- Gestão de resíduos
+- Fabricação (químicos, alimentação, dispositivos médicos, eletrónica, maquinaria)
+- Fornecedores digitais (mercados online, motores de busca, plataformas de redes sociais)
+- Investigação
+
+### Critérios de Dimensão
+
+Dentro desses setores, a NIS2 aplica-se a:
+- **Médias empresas**: ≥ 50 funcionários **OU** ≥ €10M volume de negócios anual
+- **Grandes empresas**: ≥ 250 funcionários **OU** ≥ €50M volume de negócios
+- **Micro e pequenas empresas** (< 50 funcionários e < €10M): em geral **excluídas**, exceto se prestaem serviços críticos ou se o CNCS as identificar individualmente
+
+**Nota importante**: Se a sua empresa é fornecedora de entidades abrangidas (ex: empresa de IT que presta serviços a hospitais, ou transportadora que serve infraestruturas críticas), pode também ser incluída por via contratual. A cadeia de fornecimento é área de crescente enforcement.
+
+## Como Fazer o Registo no Portal CNCS: Passo a Passo
+
+O registo faz-se em [https://riscos.cncs.gov.pt](https://riscos.cncs.gov.pt) (portal CNCS). O processo demora entre 20 a 45 minutos se tiver a informação à mão.
+
+**O que precisa antes de começar:**
+- NIF da empresa
+- Dados de identificação da pessoa responsável (nome, cargo, email)
+- Informação sobre o setor de atividade (CAE)
+- Estimativa de número de funcionários e volume de negócios
+- Contacto para comunicações de segurança (pode ser email genérico de IT)
+- Identificação de sistemas críticos principais (ex: software de gestão, email, servidores)
+
+**Passo 1 — Aceder ao portal**
+Vá a riscos.cncs.gov.pt e clique em "Registo de Entidade". O sistema aceita autenticação via CMD (Chave Móvel Digital) ou certificado digital.
+
+**Passo 2 — Criar conta da entidade**
+Preencha os dados da empresa: denominação, NIF, CAE, morada, dimensão (micro/pequena/média/grande), e setor NIS2 em que se enquadra.
+
+**Passo 3 — Designar o responsável NIS2**
+Identifique o responsável pela cibersegurança — pode ser o gerente/administrador se não existir função de IT dedicada. Esta pessoa recebe notificações oficiais do CNCS.
+
+**Passo 4 — Declarar os serviços e sistemas críticos**
+O portal pede uma descrição dos principais serviços digitais e sistemas da empresa. Seja preciso mas não exhaustivo — o objetivo é o CNCS ter uma imagem da sua pegada digital, não um inventário completo.
+
+**Passo 5 — Submeter e guardar confirmação**
+Após submissão, guarde o comprovativo. Este é o seu documento de conformidade com o prazo de 4 de maio.
+
+**Tempo total estimado: 30-45 minutos** para a maioria das PMEs. Não há taxa de registo.
+
+## Está Registado — E Agora?
+
+O registo é só o primeiro passo. A NIS2 exige medidas de segurança contínuas. Para as PMEs que acabaram de registar e ainda não têm medidas implementadas, aqui está o plano para as próximas semanas.
+
+### Prioridade 1 — Nas Próximas 48 Horas (Custo Zero)
+
+Estas medidas reduzem drasticamente o risco sem custo adicional:
+
+**MFA em todas as contas críticas**
+Email empresarial (Microsoft 365 ou Google Workspace), acesso remoto (VPN, RDP), e qualquer sistema de gestão com acesso à internet. O MFA bloqueia mais de 99% dos ataques por credenciais comprometidas. Guia detalhado: [autenticação de dois fatores para PMEs](/blog/autenticacao-dois-fatores-2fa-pme).
+
+**Backup imediato e verificado**
+Se não tem backup offsite dos dados críticos, configure agora. Microsoft 365 e Google Workspace têm recuperação de versões incluída. Adicione um segundo backup para disco externo ou cloud separada (Backblaze, pCloud, ou similar). Teste que o restauro funciona — um backup não testado é apenas uma esperança. Guia: [estratégia de backup regra 3-2-1](/blog/estrategia-backup-pme-regra-3-2-1-recuperacao).
+
+**Inventário básico de sistemas**
+Liste os sistemas críticos da empresa: email, software de gestão, servidores, sistemas de pagamento. Este inventário é necessário para a NIS2 e será útil em qualquer incidente. Guia: [inventário de ativos de TI para PMEs](/blog/inventario-ativos-ti-pme).
+
+### Prioridade 2 — Esta Semana
+
+**Gestão de passwords**
+Instale um gestor de passwords empresarial (Bitwarden Teams ou 1Password Business, ambos abaixo de €5/utilizador/mês) e comece a migrar passwords fracas ou reutilizadas. Guia: [gestão de passwords para empresas](/blog/gestor-passwords-empresa-bitwarden-1password-keeper).
+
+**Formação básica da equipa**
+Uma sessão de 30 minutos com a equipa sobre como reconhecer phishing, o que fazer se receberem email suspeito, e a quem reportar. A maior vulnerabilidade NIS2 auditada nas PMEs é a falta de formação documentada. Guia: [formação em cibersegurança para colaboradores](/blog/formacao-ciberseguranca-colaboradores-pme).
+
+**Política de cibersegurança básica**
+Não precisa de um documento de 50 páginas — uma política de 2-3 páginas que cubra passwords, updates, backup, e phishing é suficiente para demonstrar conformidade inicial. Template: [política de cibersegurança para PMEs](/blog/politica-ciberseguranca-pme-template).
+
+### Prioridade 3 — Próximas 2 a 4 Semanas
+
+**Análise de risco documentada**
+A NIS2 exige que as organizações identifiquem e documentem os seus riscos. Um processo simples: listar os ativos críticos, as ameaças plausíveis a cada um, e o que existe para as mitigar. Guia: [análise de risco de cibersegurança para PMEs](/blog/analise-risco-ciberseguranca-pme).
+
+**Plano de resposta a incidentes**
+Como a empresa responde a um ataque? Quem toma que decisões? A NIS2 obriga a notificação ao CNCS em 24 horas (alerta inicial) e 72 horas (relatório detalhado). Sem plano documentado, em situação de crise há confusão e demoras que agravam tudo. Guia: [plano de resposta a incidentes para PMEs](/blog/plano-resposta-incidentes-ciberseguranca-pme).
+
+**Gestão de fornecedores de IT**
+A NIS2 estende responsabilidades para a cadeia de fornecimento. Se usa software ou serviços de IT críticos, verifique que os contratos incluem cláusulas de notificação de incidentes. Guia: [gestão de risco de fornecedores para PMEs](/blog/gestao-risco-fornecedores-terceiros-pme).
+
+## O Que Acontece Se Não Cumprir
+
+As coimas NIS2 em Portugal são estabelecidas pelo Decreto-Lei n.º 125/2025:
+
+| Tipo de Infração | Entidades Essenciais | Entidades Importantes |
+|---|---|---|
+| Incumprimento grave (ausência de medidas, não registo) | até €10.000.000 ou 2% volume de negócios | até €7.000.000 ou 1,4% volume de negócios |
+| Incumprimento moderado | até €5.000.000 ou 1% volume de negócios | até €3.500.000 ou 0,7% volume de negócios |
+
+Para além das coimas, o CNCS pode:
+- Publicar a lista de entidades em incumprimento (dano reputacional)
+- Proibir temporariamente dirigentes de exercerem funções de gestão em organizações abrangidas
+- Exigir auditoria externa de segurança à custa da empresa
+
+**Nota de proporcionalidade**: O CNCS tem expressado publicamente que o enforcement inicial será pedagógico e focado em entidades de grande dimensão. Para PMEs de boa fé que façam o registo e demonstrem esforço de conformidade, o risco de coima imediata é baixo. Mas o não registo depois do prazo é difícil de justificar.
+
+## Checklist de Emergência NIS2 — 15 Dias
+
+### Hoje (30-45 minutos)
+- [ ] Confirmar se a empresa está abrangida (setor + dimensão)
+- [ ] Fazer o registo em riscos.cncs.gov.pt
+- [ ] Guardar comprovativo de registo
+
+### Esta Semana
+- [ ] Ativar MFA em email e acesso remoto
+- [ ] Verificar que backup existe e testar restauro de um ficheiro
+- [ ] Identificar responsável interno pela cibersegurança (pode ser o gerente)
+- [ ] Realizar sessão de formação básica com equipa (30 min)
+
+### Próximas 2 Semanas
+- [ ] Elaborar política de cibersegurança básica (2-3 páginas)
+- [ ] Documentar inventário básico de sistemas
+- [ ] Criar plano de resposta a incidentes simplificado
+- [ ] Rever contratos com fornecedores de IT críticos
+
+## Recursos Oficiais
+
+- **Portal de Registo CNCS**: riscos.cncs.gov.pt
+- **Guia NIS2 para Empresas**: cncs.gov.pt/nis2
+- **Contacto CNCS**: cncs@cncs.gov.pt / +351 21 314 6000
+- **Decreto-Lei n.º 125/2025**: diariodarepublica.pt (transposição NIS2 para Portugal)
+
+Para uma análise mais aprofundada das obrigações NIS2, consulte o nosso [guia completo NIS2 para PMEs](/blog/nis2-decreto-lei-125-2025-obrigacoes-pme) e o [guia de registo CNCS](/blog/registo-cncs-nis2-guia-completo).
+
+O prazo de 4 de maio não é o fim do processo — é o começo. O registo abre o diálogo com o CNCS e demonstra boa fé. O mais importante agora é estar registado e ter um plano. Fá-lo esta semana.`,
+    category: "legislacao",
+    categoryLabel: "Legislacao RGPD",
+    publishedAt: "2026-04-19",
+    readingTime: 10,
+    author: {
+      name: "Miguel Ferreira",
+      title: "Auditor de Compliance",
+    },
+  },
+  {
+    slug: "ciberseguranca-farmacias-portugal",
+    title: "Cibersegurança para Farmácias em Portugal: Dados de Saúde, RGPD e Como Proteger o Negócio",
+    excerpt:
+      "As farmácias tratam dados de saúde de categoria especial, usam software crítico (Sifarma) e processam pagamentos em volume. Guia prático de cibersegurança para o setor farmacêutico português.",
+    content: `As farmácias são, por definição, repositórios de informação de saúde sensível: prescrições, histórico de medicação, condições crónicas, registo de saúde familiar. A isto acresce processamento de pagamentos, integração com o SNS e sistemas de autorização de receitas, e cada vez mais serviços digitais. Para os cibercriminosos, uma farmácia é um alvo com alto valor de dados e, frequentemente, baixo nível de proteção.
+
+Em Portugal existem cerca de 2.900 farmácias. A maioria são PMEs — geridas por farmacêuticos proprietários que acumulam a gestão operacional com a direção técnica. Cibersegurança raramente é prioridade, até ao dia em que o Sifarma fica inacessível às 9h30 da manhã com clientes à espera.
+
+## Que Dados as Farmácias Tratam
+
+### Dados de Saúde — Categoria Especial
+
+O RGPD classifica dados sobre saúde como **dados de categoria especial** (artigo 9.º), sujeitos a proteções mais exigentes que os dados pessoais comuns. A base legal mais utilizada nas farmácias é a execução de cuidados de saúde (artigo 9.º, n.º 2, alínea h), mas isto não dispensa as obrigações de segurança.
+
+**O que as farmácias registam:**
+- Histórico de medicação do utente (dados de saúde per se)
+- Prescrições ativas e renovações
+- Condições crónicas identificadas pela medicação recorrente
+- Resultados de testes rápidos (glicemia, tensão arterial, testes de gravidez)
+- Alergias e intolerâncias medicamentosas
+- Registos de aconselhamento farmacêutico
+
+Estes dados são, para efeitos do RGPD, equivalentes a dados clínicos. Uma violação que exponha o histórico de medicação de 500 utentes é tão grave como uma violação num consultório médico.
+
+### Dados Financeiros e Administrativos
+
+- Dados de cartões de pagamento (processados via TPA/POS, não armazenados diretamente)
+- Dados de faturação para o SNS via SIARS
+- Acordos com seguradoras e subsistemas (ADSE, PT Seguros, etc.)
+- Dados de empregados
+- Dados de fornecedores (grossistas, laboratórios)
+
+### Integração com Sistemas Nacionais
+
+A farmácia moderna está integrada em vários sistemas externos:
+
+**SIFARMA 2000/SIFARMA Enterprise**: O software de gestão farmacêutica mais usado em Portugal (ANF). Gere dispensação, faturação ao SNS, stock, e ficha do utente. Uma vulnerabilidade ou indisponibilidade do Sifarma paralisa a farmácia.
+
+**SIARS (Sistema de Informação de Autorização e Receita Simples)**: Interface com o SNS para validação de receitas electrónicas. Requer ligação à internet.
+
+**PEM (Plataforma de Dados da Saúde)**: Portal de prescrição eletrónica. Médico prescreve, farmácia valida — via código de barras ou número de receita.
+
+**VALORMED**: Sistema de recolha de embalagens de medicamentos. Menos crítico mas envolve dados operacionais.
+
+Esta dependência de múltiplos sistemas externos torna as farmácias sensíveis não só a ataques diretos mas também a incidentes nos sistemas de terceiros.
+
+## Porquê as Farmácias São Alvos
+
+### O Valor dos Dados de Saúde
+
+No mercado negro, dados de saúde valem entre 10 e 40 vezes mais do que dados de cartões de crédito. Um registo completo de saúde com historial de medicação crónica pode ser vendido por €100-500 por utente — para uso em fraude de seguros, chantagem, ou phishing dirigido. Uma farmácia com 3.000 utentes ativos tem um ativo de dados valioso.
+
+### Dependência de Sistemas Críticos para a Operação
+
+A indisponibilidade do Sifarma ou da ligação ao SNS inviabiliza a dispensação de medicamentos sujeitos a receita. Num ataque de ransomware, a farmácia não consegue funcionar. Esta pressão operacional torna as farmácias mais propensas a pagar resgates rapidamente.
+
+### Conhecimento Limitado de Cibersegurança
+
+A formação farmacêutica não inclui cibersegurança. Os proprietários de farmácias são especialistas em medicamentos, não em redes ou segurança informática. Esta lacuna cria vulnerabilidades previsíveis: passwords por defeito, sistemas não atualizados, Wi-Fi único para tudo.
+
+### Atacantes Conhecem o Setor
+
+Os grupos de ransomware mapeiam setores. Sabem que farmácias usam Sifarma, que dependem de ligação ao SNS, e que têm recursos para pagar. Ataques dirigidos ao setor farmacêutico estão documentados em vários países europeus.
+
+## Vetores de Ataque Específicos
+
+### Phishing Direcionado ao Setor
+
+Emails a imitar a ANF (Associação Nacional de Farmácias), o INFARMED, o SNS, ou fornecedores de software. Exemplos reais reportados:
+- "Atualização urgente do Sifarma — clique aqui para instalar"
+- "Fatura ANF em atraso — aceda ao portal para regularizar"
+- "Alerta de segurança INFARMED — valide a sua conta"
+
+A qualidade destes emails melhorou com IA generativa — já não há erros ortográficos óbvios. A regra é simples: qualquer email com link ou anexo que peça ação urgente merece verificação por telefone antes de clicar.
+
+### Acesso Remoto ao Sifarma
+
+Muitos técnicos de suporte do Sifarma (e outros fornecedores de software) acedem remotamente às farmácias para instalações e manutenção. Este acesso remoto é necessário mas cria risco:
+- Credenciais de acesso remoto fracas ou partilhadas
+- Software de acesso remoto desatualizado (TeamViewer, AnyDesk)
+- Sessões de acesso remoto ativas sem monitorização
+
+**Boas práticas para acesso remoto de fornecedores:**
+- Exija que o acesso seja agendado e autorizado previamente
+- Esteja presente (ou um funcionário designado) durante a sessão
+- Registe data, hora, e finalidade de cada acesso
+- Desative acesso remoto quando não está em uso
+- Revogue credenciais de fornecedores quando o contrato terminar
+
+### Ataques à Rede Interna
+
+A farmácia típica tem uma rede com: Sifarma (1-3 postos de trabalho), TPA/POS, impressoras, câmaras de segurança, Wi-Fi de funcionários, e às vezes Wi-Fi de utentes. Se tudo está na mesma rede, qualquer dispositivo comprometido pode alcançar todos os outros.
+
+Um exemplo documentado: atacante liga-se ao Wi-Fi de utentes (password em cartão na balcão), acede à rede interna, identifica o posto Sifarma, e instala keylogger. Semanas depois, usa as credenciais capturadas para acesso remoto não autorizado.
+
+### Ransomware via Email ou RDP
+
+Os ataques de ransomware a farmácias seguem o padrão típico:
+1. Email phishing com anexo malicioso abre backdoor no posto de trabalho
+2. Atacante faz reconnaissance interno (horas a dias)
+3. Encripta o disco do Sifarma e de outros sistemas críticos
+4. Nota de resgate — tipicamente €5.000-50.000 para farmácias
+
+Sem backup offsite testado, a farmácia tem que escolher entre pagar ou reconstruir do zero.
+
+## Obrigações RGPD para Farmácias
+
+### Encarregado de Proteção de Dados (DPO)
+
+As farmácias que tratam dados de categoria especial em escala têm **obrigação legal de nomear um DPO** ao abrigo do artigo 37.º do RGPD. Para farmácias, a ANF tem um regime próprio de suporte a este requisito. O DPO pode ser interno (funcionário formado) ou externo (serviço contratado).
+
+A nomeação do DPO deve ser comunicada à CNPD (Comissão Nacional de Proteção de Dados). Sem DPO, a farmácia está em incumprimento RGPD.
+
+### Registos de Atividades de Tratamento (RAT)
+
+O farmacêutico-diretor técnico é o responsável pelo tratamento de dados. Deve manter um registo de todas as atividades de tratamento: que dados são tratados, para que finalidade, base legal, tempo de conservação, e destinatários (SNS, ADSE, grossistas, etc.).
+
+O RAT não precisa de ser documento complexo — pode ser uma tabela em Excel. Mas deve existir e estar atualizado.
+
+### Notificação de Violações
+
+Em caso de violação de dados (acesso não autorizado ao Sifarma, ransomware, perda de ficheiro com dados de utentes), a farmácia tem **72 horas** para notificar a CNPD via portal cnpd.pt. Se a violação afeta direitos dos utentes, estes também devem ser informados "sem demora injustificada".
+
+A maioria das violações em farmácias resulta de ataques de ransomware — situação em que os dados foram encriptados (e potencialmente exfiltrados). Nestes casos, a notificação é quase sempre obrigatória.
+
+### Tempo de Conservação de Dados
+
+Dados de saúde de utentes: o prazo recomendado alinha com os prazos de prescrição e renovação — tipicamente 5 anos após o último tratamento. Dados puramente administrativos (faturação) seguem prazos fiscais (10 anos).
+
+O Sifarma tem configurações de arquivo — certifique-se que os dados são eliminados quando atingem o prazo, não acumulados indefinidamente.
+
+## NIS2 e o Setor Farmacêutico
+
+A Diretiva NIS2, em vigor em Portugal desde 3 de abril de 2026, inclui o setor da saúde entre os **setores essenciais**. As farmácias enquadram-se nesta categoria por serem prestadoras de cuidados de saúde.
+
+**Critérios de dimensão para farmácias:**
+- Farmácias com ≥ 50 funcionários OU ≥ €10M de volume de negócios: **definitivamente abrangidas**
+- Farmácias menores: podem ser abrangidas se o CNCS as identificar como críticas, ou por via de grupos/cadeias farmacêuticas
+
+Para cadeias de farmácias ou grupos com dimensão média, a NIS2 acrescenta às obrigações RGPD:
+- Registo obrigatório no portal CNCS até 4 de maio de 2026
+- Gestão formal de riscos de cibersegurança (documentada)
+- Plano de resposta a incidentes com notificação ao CNCS em 24-72h
+- Gestão de segurança na cadeia de fornecimento (fornecedores de software, grossistas com acesso a sistemas)
+- Formação regular dos funcionários em cibersegurança
+
+Para farmácias individuais de menor dimensão, as obrigações NIS2 são mais ligeiras mas o RGPD aplica-se plenamente.
+
+## Checklist de Segurança para Farmácias
+
+### Acesso e Identidade
+- [ ] Password única e forte para cada funcionário no Sifarma — sem contas partilhadas
+- [ ] Desativar contas de ex-funcionários no próprio dia da saída
+- [ ] MFA ativado no email empresarial
+- [ ] Password de administrador do Sifarma diferente das passwords de utilizador regular
+- [ ] Política de bloqueio de écran após inatividade (5-10 minutos)
+
+### Rede e Infraestrutura
+- [ ] Rede interna de farmácia separada da Wi-Fi de utentes
+- [ ] Router com firmware atualizado e password alterada (não usar a do fabricante)
+- [ ] Câmaras de segurança em VLAN separada
+- [ ] Acesso remoto de fornecedores apenas quando agendado e supervisionado
+- [ ] Registo de todas as sessões de acesso remoto (data, hora, finalidade)
+
+### Backups
+- [ ] Backup diário automático do Sifarma (incluindo base de dados de utentes)
+- [ ] Cópia offsite — cloud ou disco externo fora das instalações
+- [ ] Teste mensal de restauro (verificar que o backup funciona de facto)
+- [ ] Histórico mínimo de 30 dias de backups
+
+### Atualizações e Manutenção
+- [ ] Sistema operativo Windows dos postos Sifarma com atualizações automáticas
+- [ ] Software Sifarma atualizado para versão mais recente
+- [ ] Antivírus/EDR ativo e atualizado em todos os postos de trabalho
+- [ ] Router com atualizações de firmware verificadas semestralmente
+
+### RGPD e Compliance
+- [ ] DPO nomeado e comunicado à CNPD
+- [ ] Registos de Atividades de Tratamento (RAT) documentados e atualizados
+- [ ] Política de privacidade disponível para utentes (affixada na farmácia + online)
+- [ ] Processo documentado para resposta a pedidos de utentes (acesso, apagamento)
+- [ ] Plano de notificação de violações à CNPD (72h) e utentes
+- [ ] Registo NIS2 no CNCS (para farmácias de dimensão média/grande)
+
+### Formação
+- [ ] Sessão anual de formação de todos os funcionários em phishing e cibersegurança
+- [ ] Procedimento claro: a quem reportar email suspeito ou problema de segurança
+- [ ] Simulação de phishing (pelo menos uma vez por ano)
+
+## O Que Fazer em Caso de Incidente
+
+### Sifarma Inacessível / Ransomware
+
+1. **Não pague imediatamente** — contacte primeiro o suporte ANF e uma empresa de segurança
+2. Isole os postos afetados (desconecte da rede, mas não desligue)
+3. Ative o modo de emergência manual para dispensação de medicamentos urgentes
+4. Notifique a CNPD em 72 horas se dados de utentes foram afetados
+5. Restaure a partir do backup mais recente testado
+6. Reporte à PJ/CERT.PT se for crime informático confirmado
+
+### Suspeita de Acesso Não Autorizado
+
+1. Altere imediatamente passwords de administrador do Sifarma
+2. Revogue sessões de acesso remoto ativas
+3. Contacte fornecedor do Sifarma para verificação de logs
+4. Avalie se dados de utentes foram acedidos — se sim, notificação CNPD obrigatória
+5. Verifique logs do router para tráfego anómalo
+
+## Recursos Específicos para Farmácias
+
+- **ANF — Associação Nacional de Farmácias**: anf.pt — suporte técnico e compliance para membros
+- **INFARMED**: infarmed.pt — regulador do setor
+- **CNPD**: cnpd.pt — notificação de violações e orientações RGPD para saúde
+- **CNCS/CERT.PT**: cncs.gov.pt — alertas de segurança e apoio a incidentes
+- **Modelo DPO ANF**: [contactar ANF para regime de DPO disponível para membros]
+
+Para aprofundar: [Cibersegurança para Clínicas e Serviços de Saúde](/blog/ciberseguranca-clinicas-saude-portugal), [Gestão de Passwords para PMEs](/blog/gestao-passwords-pme-guia-completo), [Backup de Dados para PMEs](/blog/backup-dados-pme-regra-3-2-1).
+
+Uma farmácia que sofre um ataque de ransomware e perde o histórico de medicação dos seus utentes enfrenta três problemas simultâneos: operacional (não consegue funcionar), legal (violação RGPD que obriga notificação), e de confiança (utentes que descobrem que os seus dados foram expostos). Os três são evitáveis com medidas básicas que custam menos de €200/mês para uma farmácia típica.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-19",
+    readingTime: 14,
+    author: {
+      name: "Carlos Miranda",
+      title: "Consultor de Cibersegurança",
+    },
+  },
+  {
     slug: "ciberseguranca-restaurantes-cafes-portugal",
     title: "Cibersegurança para Restaurantes e Cafés em Portugal: Guia Prático para Proteger o Negócio",
     excerpt:
