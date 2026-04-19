@@ -2,24 +2,16 @@ import { neon } from "@neondatabase/serverless";
 
 export const dynamic = "force-dynamic";
 
-// GET /api/stats — returns today's pageview, pricing click, and affiliate click counts
+// GET /api/stats — returns total views from page_views table
 // Called by Hive's metrics cron to collect validation metrics across companies
 export async function GET() {
   const sql = neon(process.env.DATABASE_URL!);
-  const today = new Date().toISOString().split("T")[0];
 
-  const [[views], [pricing], [affiliate]] = await Promise.all([
-    sql`SELECT COALESCE(SUM(views), 0) as total FROM page_views WHERE date = ${today}`,
-    sql`SELECT COUNT(*)::int as total FROM pricing_clicks WHERE date = ${today}`.catch(() => [{ total: 0 }]),
-    sql`SELECT COUNT(*)::int as total FROM affiliate_clicks WHERE date = ${today}`.catch(() => [{ total: 0 }]),
-  ]);
+  const [views] = await sql`SELECT COALESCE(SUM(views), 0) as total FROM page_views`;
 
   return Response.json({
     ok: true,
-    date: today,
     views: Number(views.total),
-    pricing_clicks: Number(pricing.total),
-    affiliate_clicks: Number(affiliate.total),
   });
 }
 
