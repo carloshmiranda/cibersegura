@@ -135,16 +135,7 @@ export default async function BlogPostPage({
     name: post.title,
     headline: post.title,
     description: post.excerpt,
-    author: post.author ? {
-      "@type": "Person",
-      name: post.author.name,
-      ...(post.author.bio && { description: post.author.bio }),
-      worksFor: {
-        "@type": "Organization",
-        name: "CiberPME",
-        url: baseUrl,
-      }
-    } : {
+    author: {
       "@type": "Organization",
       name: "CiberPME",
       url: baseUrl,

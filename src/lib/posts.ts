@@ -2200,6 +2200,7 @@ A NIS2 não é apenas uma obrigação legal - é uma oportunidade para fortalece
     categoryLabel: "Legislacao RGPD",
     publishedAt: "2026-03-29",
     readingTime: 12,
+    author: AUTHORS["carlos-miranda"],
   },
   {
     slug: "melhores-ferramentas-ciberseguranca-pmes-2026",
