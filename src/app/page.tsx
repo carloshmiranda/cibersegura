@@ -2,9 +2,9 @@ import Link from "next/link";
 import { posts, CATEGORIES } from "@/lib/posts";
 import { NewsletterForm } from "./newsletter-form";
 import { NIS2Banner } from "@/components/nis2-banner";
+import { SocialProof } from "@/components/social-proof";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
-import { neon } from "@neondatabase/serverless";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -29,19 +29,7 @@ export const metadata: Metadata = {
   },
 };
 
-async function getWaitlistCount() {
-  try {
-    const sql = neon(process.env.DATABASE_URL!);
-    const [{ count }] = await sql`SELECT COUNT(*) as count FROM waitlist`;
-    return Number(count);
-  } catch (error) {
-    console.error("Failed to fetch waitlist count:", error);
-    return 0;
-  }
-}
-
-export default async function HomePage() {
-  const waitlistCount = await getWaitlistCount();
+export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-bg">
@@ -80,16 +68,8 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* Social Proof — only show if we have real signups */}
-        {waitlistCount > 0 && (
-          <section className="bg-bg-subtle py-12">
-            <div className="max-w-3xl mx-auto px-6 text-center">
-              <p className="text-text-secondary text-sm">
-                Juntaram-se {waitlistCount > 1 ? <strong>{waitlistCount}</strong> : <strong>{waitlistCount}</strong>} {waitlistCount === 1 ? "empresa" : "empresas"} à nossa newsletter de cibersegurança
-              </p>
-            </div>
-          </section>
-        )}
+        {/* Social Proof — client-side rendered to avoid build errors */}
+        <SocialProof />
 
         {/* Problem — specific to Portuguese SMEs */}
         <section className="max-w-4xl mx-auto px-6 py-20">
