@@ -107,3 +107,18 @@ CREATE TABLE IF NOT EXISTS affiliate_clicks (
 );
 
 CREATE INDEX IF NOT EXISTS idx_affiliate_clicks_date ON affiliate_clicks(date);
+
+-- Affiliate impression tracking: CTA banner visibility events
+CREATE TABLE IF NOT EXISTS affiliate_impressions (
+  id              TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
+  date            DATE NOT NULL DEFAULT CURRENT_DATE,
+  article_slug    TEXT,                                  -- blog post slug where impression occurred
+  cta_position    TEXT,                                  -- position identifier of the CTA (e.g. 'banner', 'inline')
+  referrer        TEXT,                                  -- HTTP referrer header
+  link_id         TEXT NOT NULL,                         -- identifier for the affiliate banner/content
+  destination_url TEXT,                                  -- primary destination URL of the banner
+  source_path     TEXT NOT NULL DEFAULT '/',             -- page the impression came from
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_affiliate_impressions_date ON affiliate_impressions(date);
