@@ -30,10 +30,10 @@ export const nis2Tools: AffiliateTool[] = [
     recommended: true
   },
   {
-    name: "Acronis Cyber Backup",
-    description: "Solução de backup e recuperação com proteção contra ransomware e conformidade",
+    name: "Backblaze Business Backup",
+    description: "Backup em cloud seguro para empresas com proteção contínua de dados e recuperação rápida",
     category: "backup",
-    url: "https://www.acronis.com/en-us/business/cyber-backup/",
+    url: "https://www.backblaze.com/cloud-backup/business",
     recommended: true
   }
 ];
