@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import { Plus_Jakarta_Sans, Inter } from 'next/font/google';
 import "./globals.css";
@@ -94,6 +95,15 @@ export default function RootLayout({
           Saltar para o conteúdo principal
         </a>
         {children}
+
+        {/* Google AdSense */}
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-PLACEHOLDER"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
+
         <Analytics />
       </body>
     </html>
