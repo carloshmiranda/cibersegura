@@ -5,14 +5,40 @@ export const dynamic = "force-dynamic";
 // GET /api/stats — returns total views from page_views table
 // Called by Hive's metrics cron to collect validation metrics across companies
 export async function GET() {
-  const sql = neon(process.env.DATABASE_URL!);
+  // Handle development mode when DATABASE_URL is not set
+  if (!process.env.DATABASE_URL) {
+    console.log('⚠️ DATABASE_URL not set - returning mock stats for development');
 
-  const [views] = await sql`SELECT COALESCE(SUM(views), 0) as total FROM page_views`;
+    if (process.env.NODE_ENV === 'development') {
+      return Response.json({
+        ok: true,
+        views: 0,
+      });
+    }
 
-  return Response.json({
-    ok: true,
-    views: Number(views.total),
-  });
+    return Response.json({
+      ok: false,
+      error: 'Database connection not configured'
+    }, { status: 500 });
+  }
+
+  try {
+    const sql = neon(process.env.DATABASE_URL);
+
+    const [views] = await sql`SELECT COALESCE(SUM(views), 0) as total FROM page_views`;
+
+    return Response.json({
+      ok: true,
+      views: Number(views.total),
+    });
+  } catch (error) {
+    console.error('❌ Error fetching stats:', error);
+
+    return Response.json({
+      ok: false,
+      error: 'Database query failed'
+    }, { status: 500 });
+  }
 }
 
 // POST /api/stats — increment pageview counter (called from middleware)
