@@ -24976,6 +24976,487 @@ Para um programa mais abrangente, o [programa de sensibilização de 12 meses](/
       title: "Auditor de Compliance",
     },
   },
+  {
+    slug: "cryptojacking-pme-computadores-mineracao-criptomoeda",
+    title: "Cryptojacking: Quando os Computadores da Sua Empresa Trabalham para Criminosos",
+    excerpt:
+      "Computadores lentos, faturas de eletricidade infladas e hardware a aquecer sem razão aparente — estes podem ser sinais de cryptojacking. Saiba como detetar e eliminar mineradores ocultos na sua PME.",
+    content: `Os atacantes não precisam de encriptar os seus dados ou roubar as suas passwords para lhe causar danos. Existe um tipo de ataque mais silencioso, que muitas PMEs portuguesas nem sabem que sofrem: o **cryptojacking**.
+
+Em vez de destruir ou roubar, os criminosos limitam-se a usar os seus recursos — a eletricidade que paga, os processadores dos seus computadores, a largura de banda da sua ligação — para minerar criptomoedas. E o dinheiro vai direto para o bolso deles.
+
+## O Que É Cryptojacking
+
+Cryptojacking é a utilização não autorizada dos recursos computacionais de outra pessoa para minerar criptomoedas, sobretudo Monero (XMR), que foi desenhado especificamente para ser minerado em CPUs comuns (ao contrário do Bitcoin, que requer hardware especializado).
+
+O ataque pode acontecer de duas formas:
+
+**1. Malware instalado no sistema**
+Um ficheiro malicioso é executado — via phishing, download comprometido, ou vulnerabilidade explorada — e instala um minerador que corre em segundo plano. Persiste entre reinicializações, muitas vezes disfarçado como processo legítimo do Windows.
+
+**2. Cryptojacking baseado em browser (in-browser)**
+Um script JavaScript malicioso é carregado quando alguém visita um site comprometido (incluindo sites legítimos que foram hackeados). Enquanto o browser está aberto nessa página, o CPU do utilizador está a minerar. Quando fecha o tab, para.
+
+A segunda forma tem diminuído desde que a Coinhive (o serviço de mineração browser mais usado por atacantes) encerrou em 2019, mas variantes continuam a existir. A primeira forma — malware instalado — é atualmente a mais prevalente e perigosa.
+
+## Como Afeta uma PME
+
+O impacto direto não é uma perda de dados ou um ransomware de €50.000. É mais subtil — e por isso mais difícil de detetar:
+
+**Desempenho degradado**
+O minerador usa tipicamente 70-90% da capacidade do CPU em segundo plano. Os utilizadores queixam-se de computadores lentos, reuniões em vídeo com lag, tempo de abertura de ficheiros aumentado. A produtividade cai, mas ninguém percebe porquê.
+
+**Consumo energético aumentado**
+Um computador com o CPU a 90% consome significativamente mais energia. Numa empresa com 20 máquinas infetadas durante 6 meses, o impacto na fatura de eletricidade pode ser visível — mas raramente associado a um ataque.
+
+**Desgaste prematuro do hardware**
+CPUs e GPUs a funcionar continuamente a alta carga degradam-se mais rápido. Computadores que deveriam durar 5 anos precisam de substituição prematura.
+
+**Risco de comprometimento mais amplo**
+Os cibercriminosos que conseguem instalar um minerador muitas vezes têm acesso a outras capacidades na mesma máquina. O minerador é rentável mas pode coexistir com keyloggers ou backdoors.
+
+**Impacto em ambiente cloud**
+Se a empresa usa instâncias cloud (AWS, Azure, Google Cloud) com faturação por uso, um minerador pode gerar custos de cloud inesperadamente elevados. Já houve casos documentados de faturas cloud de dezenas de milhar de euros por cryptojacking em infraestrutura cloud empresarial.
+
+## Sinais de Alerta: Como Reconhecer
+
+Estes indicadores devem levantar suspeitas numa PME:
+
+### Sinais no computador individual
+- CPU consistentemente a 70-100% sem aplicações pesadas abertas
+- Ventoinhas do computador a funcionar continuamente e a alta velocidade
+- Computador quente ao toque, mesmo sem carga aparente
+- Bateria de portátil a durar muito menos do que habitual
+- Lentidão generalizada, mesmo após reinicialização
+
+### Como verificar o uso de CPU no Windows
+
+Abra o **Gestor de Tarefas** (Ctrl + Shift + Esc) → aba "Detalhes" → ordenar por uso de CPU. Procure processos com nomes incomuns ou suspeitos a usar percentagens elevadas de CPU de forma persistente. Nomes comuns de mineradores disfarçados incluem variações de: \`svchost.exe\`, \`lsass.exe\`, \`winlogon.exe\` — mas com localizações de ficheiro erradas (ex: em \`%AppData%\` em vez de \`C:\\Windows\\System32\`).
+
+No **PowerShell**, pode listar processos por uso de CPU:
+
+\`\`\`powershell
+Get-Process | Sort-Object CPU -Descending | Select-Object -First 20 Name, CPU, Id
+\`\`\`
+
+### Sinais na rede
+- Tráfego de saída persistente para IPs ou domínios desconhecidos
+- Conexões a portas não habituais (especialmente porta 3333, 4444, 5555, 7777 — usadas por pools de mineração Monero)
+- Consultas DNS para domínios associados a pools de mineração conhecidos
+
+### Sinais na fatura
+- Aumento inexplicado no consumo de eletricidade
+- Para infraestrutura cloud: custos de CPU anormalmente elevados no painel de faturação
+
+## Ferramentas de Deteção
+
+### Windows Defender / Microsoft Defender for Business
+O Microsoft Defender deteta a maioria dos mineradores conhecidos como \`Trojan:Win32/CoinMiner\` ou variações. Certifique-se de que as definições estão atualizadas e que a proteção em tempo real está ativa.
+
+Para verificar se há deteções recentes via PowerShell:
+
+\`\`\`powershell
+Get-MpThreatDetection | Where-Object {$_.ThreatName -like "*Miner*"} | Select-Object ThreatName, DetectionTime
+\`\`\`
+
+### Malwarebytes (versão gratuita para análise pontual)
+O Malwarebytes tem boa capacidade de deteção de PUPs (Potentially Unwanted Programs) incluindo mineradores. Pode ser usado para análise pontual sem necessidade de licença permanente — útil para uma PME que quer verificar um sistema específico suspeito.
+
+### Process Monitor (Sysinternals)
+Para análise mais profunda, o **Process Monitor** da Microsoft Sysinternals permite ver em tempo real todas as operações de ficheiros, registo e rede de cada processo. Útil para confirmar o que um processo suspeito está efetivamente a fazer.
+
+### Verificação de extensões de browser
+Em **Chrome**: aceda a \`chrome://extensions/\` — remova qualquer extensão desconhecida.
+Em **Edge**: aceda a \`edge://extensions/\`
+
+Extensões de browser com acesso a "todos os sites" podem executar JavaScript de mineração mesmo em páginas legítimas.
+
+### Para infraestrutura cloud
+- **AWS**: CloudWatch Metrics → EC2 → CPUUtilization — picos anómalos e persistentes
+- **Azure**: Azure Monitor → Metrics → Virtual Machines → Percentage CPU
+- Configure alertas automáticos quando o CPU médio ultrapassa 80% por mais de 30 minutos
+
+## Como Remover um Minerador
+
+Se confirmou a infeção, este é o processo recomendado:
+
+1. **Isole a máquina da rede** — desconecte do Wi-Fi/cabo Ethernet para impedir comunicação com o pool de mineração e eventual exfiltração de dados adicionais
+
+2. **Faça uma análise completa** com Windows Defender (análise offline, mais eficaz) e Malwarebytes
+
+3. **Identifique o processo malicioso** e o ficheiro associado via Gestor de Tarefas → botão direito no processo → "Abrir localização do ficheiro"
+
+4. **Verifique persistência** — procure entradas suspeitas em:
+   - Chave de registo \`HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\`
+   - Chave de registo \`HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\`
+   - Pasta de Arranque: tecla Windows + R → \`shell:startup\`
+   - Tarefas agendadas: tecla Windows + R → \`taskschd.msc\`
+
+5. **Remova o ficheiro e as entradas de persistência** após garantir que o antivírus não o faz automaticamente
+
+6. **Considere reinstalação do sistema** se a origem da infeção não for clara — um atacante que conseguiu instalar um minerador pode ter instalado mais coisas
+
+7. **Registe o incidente** — se a empresa tem mais de 50 funcionários e é abrangida pela NIS2, avalie se há obrigação de notificação
+
+## Prevenção: Medidas Práticas para PMEs
+
+### Técnicas
+- **Mantenha o antivírus atualizado** — o Microsoft Defender com definições recentes deteta a grande maioria dos mineradores conhecidos
+- **Atualize sistemas operativos e software** — a maioria dos mineradores entra através de vulnerabilidades em software desatualizado
+- **Bloqueie extensões de browser desconhecidas** via política de grupo (para ambientes Windows geridos)
+- **Implemente filtragem DNS** — soluções como Cloudflare Gateway (gratuita) podem bloquear domínios de pools de mineração conhecidos. Ver [guia de filtragem DNS para PMEs](/blog/filtragem-dns-seguranca-pme)
+- **Monitorize uso de CPU em endpoints** — o Microsoft Defender for Business (incluído no Microsoft 365 Business Premium) tem capacidade de deteção comportamental de mineradores
+
+### Procedimentos
+- Defina um **baseline de uso de CPU** normal para as máquinas da empresa — desvios significativos devem gerar alerta
+- **Não permita instalação de software não autorizado** — políticas de AppLocker ou WDAC no Windows limitam a execução de executáveis não aprovados
+- **Reveja regularmente processos em execução** em servidores críticos — um servidor que habitualmente usa 20% de CPU e passa para 80% sem mudança de carga de trabalho é suspeito
+
+### Para browser
+- **uBlock Origin** (extensão de browser) — além de bloquear anúncios, bloqueia scripts de cryptojacking conhecidos
+- Implemente uma **política de extensões de browser** — idealmente via Microsoft Intune ou política de grupo, limitando as extensões que os utilizadores podem instalar
+
+## Cryptojacking vs. Outros Ataques: Perspetiva de Risco
+
+Para uma PME que tem de priorizar onde investir em segurança, vale contextualizar:
+
+| Vetor | Impacto direto | Dificuldade de deteção | Frequência |
+|---|---|---|---|
+| Ransomware | Muito alto (negócio parado) | Baixa (imediato) | Moderada |
+| Phishing/BEC | Alto (perdas financeiras) | Moderada | Alta |
+| **Cryptojacking** | **Moderado (custos, degradação)** | **Alta (silencioso)** | **Alta** |
+| Exfiltração de dados | Alto (RGPD, reputação) | Alta | Baixa-moderada |
+
+O cryptojacking não é o pior cenário possível, mas combina **alta frequência** com **alta dificuldade de deteção** — o que significa que uma empresa pode estar infetada durante meses sem dar conta.
+
+As medidas de prevenção do cryptojacking — antivírus atualizado, patches regulares, filtragem DNS, controlo de software instalado — são exatamente as mesmas que protegem contra a maioria das outras ameaças. Não é um investimento adicional; é cibersegurança básica aplicada.
+
+Para um plano estruturado de proteção de endpoints, o guia de [gestão de patches e atualizações](/blog/gestao-patches-atualizacoes-software-pme) cobre o ciclo completo de manutenção preventiva.`,
+    category: "ameacas",
+    categoryLabel: "Ameacas",
+    publishedAt: "2026-04-20",
+    readingTime: 12,
+    author: {
+      name: "Rita Santos",
+      title: "Analista de Segurança",
+    },
+  },
+  {
+    slug: "cloudflare-zero-trust-pme-guia-implementacao-gratuita",
+    title: "Cloudflare Zero Trust para PMEs: Implementar Acesso Seguro Sem Custos",
+    excerpt:
+      "O Cloudflare Zero Trust oferece um plano gratuito até 50 utilizadores com substituição de VPN, filtragem DNS e isolamento de browser. Guia passo-a-passo para PMEs portuguesas implementarem segurança enterprise sem budget.",
+    content: `Durante anos, as tecnologias de **Zero Trust Network Access (ZTNA)** foram território exclusivo de grandes empresas com orçamentos de segurança na ordem dos seis dígitos. Isso mudou. O **Cloudflare Zero Trust** (parte da plataforma Cloudflare One) oferece um plano gratuito para até 50 utilizadores que inclui funcionalidades que até há pouco tempo custavam dezenas de milhar de euros por ano.
+
+Este guia é prático: no final, uma PME com 10-50 pessoas consegue ter acesso seguro a aplicações internas, filtragem de conteúdo web, proteção de DNS e substituição funcional de uma VPN tradicional — sem gastar um euro.
+
+## O Que o Cloudflare Zero Trust Oferece (Plano Gratuito)
+
+O plano gratuito inclui até 50 utilizadores e cobre:
+
+- **Cloudflare Access**: substituição de VPN para acesso a aplicações internas. Em vez de uma VPN que dá acesso a toda a rede, os utilizadores acedem apenas às aplicações específicas que precisam, com autenticação por identity provider (Google, Microsoft, Okta, etc.)
+- **Cloudflare Gateway**: filtragem de DNS e HTTP/HTTPS. Bloqueia malware, phishing, categorias de sites não desejados, e permite criar políticas de acesso à web por utilizador ou grupo
+- **Browser Isolation** (limitado no plano gratuito): abre sites de risco em browser remoto isolado, protegendo o endpoint
+- **WARP Client**: cliente para dispositivos (Windows, Mac, iOS, Android, Linux) que direciona o tráfego pelo Cloudflare Gateway
+- **Logs de tráfego**: visibilidade sobre o que os utilizadores acedem
+
+Aquilo que o plano gratuito **não inclui**: suporte prioritário, DLP avançado, CASB, e utilizadores acima de 50. Para PMEs em crescimento, o plano Teams (pago) começa por um valor razoável por utilizador por mês.
+
+## Pré-requisitos
+
+Antes de começar, certifique-se que tem:
+- Domínio próprio (ex: \`empresa.pt\`) — pode usar com ou sem domínio gerido no Cloudflare
+- Acesso administrativo ao identity provider (Google Workspace ou Microsoft 365)
+- Permissão para instalar software nos dispositivos dos colaboradores (para o WARP Client)
+
+## Passo 1: Criar a Conta Cloudflare Zero Trust
+
+1. Aceda a **one.cloudflare.com** e crie uma conta (pode usar uma conta Cloudflare existente se já usar o DNS deles)
+2. Na dashboard, selecione **Zero Trust** no menu lateral
+3. Escolha um nome para a sua organização (ex: \`empresa-nome\`) — este nome forma o subdomínio do portal de acesso (\`empresa-nome.cloudflareaccess.com\`)
+4. Selecione o plano **Free** (50 utilizadores)
+
+## Passo 2: Configurar o Identity Provider
+
+O Cloudflare Zero Trust precisa de saber quem são os seus utilizadores. Integre com o seu identity provider existente:
+
+### Com Microsoft 365 / Azure AD
+1. No painel Cloudflare Zero Trust: **Settings → Authentication → Add new**
+2. Selecione **Microsoft Azure AD**
+3. Siga o processo de registo de aplicação no Azure AD — o Cloudflare fornece as instruções passo-a-passo no próprio painel
+4. Precisará de: **Application (client) ID**, **Client Secret**, e **Directory (tenant) ID** — todos disponíveis no Azure AD
+
+### Com Google Workspace
+1. No painel: **Settings → Authentication → Add new**
+2. Selecione **Google**
+3. Crie uma aplicação OAuth no Google Cloud Console
+4. Copie o Client ID e Client Secret para o Cloudflare
+
+## Passo 3: Cloudflare Gateway — Filtragem DNS
+
+Este é provavelmente o componente de maior impacto imediato para PMEs: **filtrar o tráfego DNS** para bloquear malware, phishing e cryptojacking.
+
+### Configurar políticas DNS
+1. No painel: **Gateway → Firewall Policies → DNS**
+2. Crie uma nova política "Bloquear ameaças":
+   - Selecione **Security Categories**: ative todas — Malware, Phishing, Cryptomining, Command & Control, Newly Registered Domains
+   - Acção: **Block**
+
+### Ativar filtragem de DNS sem WARP (para a rede do escritório)
+Se quiser filtrar o DNS de toda a rede do escritório sem instalar o WARP em cada dispositivo:
+1. **Gateway → Locations → Add a location**
+2. Dê um nome (ex: "Escritório Lisboa")
+3. Anote os IPs de DNS que o Cloudflare fornece
+4. Configure o router do escritório para usar estes IPs como DNS upstream
+
+Todos os dispositivos na rede do escritório passarão automaticamente pelo Cloudflare Gateway. Simples e eficaz.
+
+## Passo 4: Cloudflare Access — Substituir a VPN
+
+Se a empresa tem algum recurso interno que os colaboradores precisam de aceder remotamente — servidor de ficheiros, aplicação web interna, painel de administração — o Cloudflare Access substitui a VPN de forma muito mais granular.
+
+Em vez de uma VPN que dá acesso a toda a rede, o Cloudflare Access cria um proxy reverso seguro para cada aplicação específica. O utilizador autentica com o identity provider; o Cloudflare verifica políticas; só então o acesso é concedido.
+
+### Expor uma aplicação interna via Cloudflare Tunnel
+
+Instale o daemon **cloudflared** no servidor onde corre a aplicação:
+
+\`\`\`bash
+# Instalar cloudflared (Ubuntu/Debian)
+curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
+sudo dpkg -i cloudflared.deb
+
+# Autenticar e criar o tunnel
+cloudflared tunnel login
+cloudflared tunnel create meu-tunnel-empresa
+
+# Iniciar como serviço do sistema
+cloudflared service install
+\`\`\`
+
+Depois, no painel Cloudflare Zero Trust:
+1. **Access → Applications → Add an application → Self-hosted**
+2. Defina o domínio (ex: \`app-interna.empresa.pt\`)
+3. Configure política de acesso: apenas utilizadores com email \`@empresa.pt\` podem aceder, com MFA obrigatório
+
+**Resultado**: O utilizador vai a \`app-interna.empresa.pt\`, autentica com conta Microsoft/Google, e só depois acede. Sem VPN. Sem portas expostas na firewall. O servidor nem precisa de IP público.
+
+## Passo 5: Instalar o WARP Client nos Dispositivos
+
+Para colaboradores em teletrabalho que precisam de filtragem DNS fora do escritório:
+
+1. Descarregue o **Cloudflare WARP** — disponível para Windows, Mac, iOS e Android
+2. Instale e abra o cliente
+3. Vá a configurações → **Preferences → Account → Login with Cloudflare Zero Trust**
+4. Introduza o nome da organização e autentique com o identity provider da empresa
+
+Para deployment em massa via Microsoft Intune, há um instalador MSI disponível — útil se a empresa já usa o Intune para gestão de endpoints (ver [guia Microsoft Intune para PMEs](/blog/microsoft-intune-pme-gestao-endpoints-seguranca)).
+
+## Limitações do Plano Gratuito
+
+- **50 utilizadores máximo** — suficiente para a maioria das PMEs, mas se crescer além disso precisará do plano pago
+- **Sem DLP avançado** — o plano pago permite detetar e bloquear saída de dados sensíveis
+- **Suporte apenas via comunidade** — sem suporte técnico direto da Cloudflare
+- **Logs retidos 7 dias** no plano gratuito (relevante para PMEs com obrigações NIS2 de auditoria)
+- **Browser Isolation** tem horas mensais limitadas no plano gratuito
+
+## Cloudflare Zero Trust vs. VPN Tradicional
+
+| Dimensão | VPN Tradicional | Cloudflare Zero Trust (grátis) |
+|---|---|---|
+| Custo | Hardware/licenças (€500-5000+) | Gratuito até 50 utilizadores |
+| Acesso concedido | Toda a rede | Aplicação específica apenas |
+| Se credencial for comprometida | Acesso a tudo | Acesso só à aplicação permitida |
+| Manutenção | Alta (certificados, patches) | Baixa (gerido pelo Cloudflare) |
+| Performance | Dependente do servidor VPN | Global (rede Cloudflare, 300+ PoPs) |
+| Filtragem de conteúdo | Não incluída | Incluída |
+| Visibilidade de logs | Limitada | Logs centralizados |
+
+Para uma PME sem equipa de TI dedicada, a diferença de manutenção é crítica. Uma VPN tradicional exige administração regular; o Cloudflare Zero Trust é essencialmente gerido por eles.
+
+## Próximos Passos Após Implementação Base
+
+Com o setup base funcionando, considere:
+
+1. **Políticas de dispositivo** — o Cloudflare WARP pode verificar se o dispositivo tem antivírus ativo, disco cifrado (BitLocker), e OS atualizado antes de permitir acesso
+2. **Integração com SIEM** — exportar logs do Cloudflare para um SIEM como Wazuh (ver [guia Wazuh para PMEs](/blog/siem-wazuh-pme-monitorizacao-seguranca-gratis))
+3. **Proteção de email** — o Cloudflare também oferece proteção de email anti-phishing que complementa o SPF/DKIM/DMARC
+
+O Cloudflare Zero Trust não substitui todas as camadas de segurança, mas para uma PME que hoje não tem nada além de um antivírus e uma password de Wi-Fi, representa um salto qualitativo enorme — e gratuito.`,
+    category: "ferramentas",
+    categoryLabel: "Ferramentas",
+    publishedAt: "2026-04-20",
+    readingTime: 13,
+    author: {
+      name: "Carlos Miranda",
+      title: "Consultor de Cibersegurança",
+    },
+  },
+  {
+    slug: "metricas-ciberseguranca-pme-o-que-medir-reportar-gestao",
+    title: "Métricas de Cibersegurança para PMEs: O Que Medir e Como Reportar à Gestão",
+    excerpt:
+      "Sem métricas, a cibersegurança é invisível para a gestão — e investimentos invisíveis são os primeiros a ser cortados. Guia prático sobre os KPIs essenciais que qualquer PME deve acompanhar e como apresentá-los a quem toma decisões.",
+    content: `Há um problema recorrente nas PMEs portuguesas: o responsável de TI sabe que a empresa melhorou a sua postura de segurança no último ano, mas não consegue demonstrá-lo à gestão de forma convincente. O resultado é previsível — no próximo ciclo orçamental, a cibersegurança perde para uma cadeira nova na receção.
+
+A solução não é escrever relatórios mais longos. É medir as coisas certas e apresentá-las de forma que quem toma decisões consiga agir.
+
+## Por Que as Métricas Importam numa PME
+
+Nas grandes empresas, os CISOs apresentam trimestralmente ao conselho de administração. Nas PMEs, a "gestão" pode ser um sócio-gerente que prefere falar de vendas a falar de firewalls.
+
+Mas existem três situações em que métricas de segurança são críticas para uma PME:
+
+1. **Após um incidente** — a gestão vai perguntar "o que falhou?" e "como sabemos que está resolvido?". Sem métricas de base, não há resposta.
+2. **Para justificar investimento** — "precisamos de uma ferramenta de EDR que custa €3.000/ano" é muito mais convincente com dados do que com jargão técnico.
+3. **Para conformidade** — NIS2 e ISO 27001 exigem medição e melhoria contínua. Sem métricas, não há conformidade demonstrável.
+
+## O Princípio: Métricas que Levam a Ação
+
+Uma boa métrica de segurança tem três características:
+- **Mensurável** — pode ser calculada de forma consistente e repetível
+- **Acionável** — se o valor for mau, há algo concreto para fazer
+- **Compreensível** — quem vai tomar decisões com base nela consegue entendê-la sem glossário técnico
+
+Evite métricas como "número de alertas de antivírus por mês" — é mensurável, mas não é acionável (mais alertas pode significar melhor deteção, não mais risco) e não é compreensível para um gestor.
+
+## As Métricas Essenciais para PMEs
+
+### 1. Taxa de Conformidade de Patches (Patch Compliance Rate)
+
+**O que é**: Percentagem de sistemas com todos os patches de segurança críticos aplicados dentro de um prazo definido (ex: 30 dias após lançamento).
+
+**Fórmula**: Sistemas com patches em prazo ÷ Total de sistemas geridos × 100
+
+**Referência**: 95%+ é o objetivo. Abaixo de 80% representa risco significativo.
+
+**Ferramenta para PMEs**: Microsoft Intune tem relatórios de conformidade de patches prontos a usar. Se usar apenas Windows Update sem gestão centralizada, o **Windows Admin Center** (gratuito) permite ver o estado de patches em múltiplas máquinas.
+
+**Como apresentar**: "Temos X% dos computadores da empresa com as atualizações de segurança em dia. O objetivo é 95%. [Se abaixo]: Os sistemas em falta são estes — precisamos de [ação concreta]."
+
+---
+
+### 2. Taxa de Cliques em Simulações de Phishing
+
+**O que é**: Percentagem de colaboradores que clicam em emails de phishing simulados durante exercícios de treino.
+
+**Fórmula**: Colaboradores que clicaram ÷ Total de colaboradores no exercício × 100
+
+**Referência**: A taxa inicial em PMEs sem treino regular é tipicamente 20-35%. Após 12 meses de treino, o objetivo é estar abaixo de 5%.
+
+**Ferramenta para PMEs**: O Microsoft 365 Business Premium inclui o **Attack Simulator** sem custo adicional. Para ambientes sem Microsoft 365, o GoPhish é open-source e gratuito. Ver [guia de simulação de phishing](/blog/simulacao-phishing-empresa-como-fazer-pme).
+
+**Como apresentar**: "No último exercício de phishing, X% dos colaboradores clicaram num email falso. [Se desceu]: Descemos de Y% para X% — o treino está a funcionar. [Se manteve]: Precisamos de reforçar a formação nas equipas mais afetadas."
+
+---
+
+### 3. Tempo Médio de Resposta a Incidentes (MTTR)
+
+**O que é**: Tempo médio entre a deteção de um incidente de segurança e a sua contenção.
+
+**Referência**: Para PMEs, um MTTR abaixo de 4 horas para incidentes críticos é razoável. Acima de 24 horas é preocupante.
+
+**Ferramenta para PMEs**: Um registo em Excel com data/hora de deteção e data/hora de resolução já é suficiente para começar.
+
+**Como apresentar**: "Quando detetamos um problema de segurança, demoramos em média X horas a contê-lo. O objetivo é 4 horas. Estamos [dentro/fora] do objetivo."
+
+---
+
+### 4. Cobertura de MFA
+
+**O que é**: Percentagem de contas críticas (email empresarial, sistemas financeiros, acesso remoto) com autenticação multifator ativa.
+
+**Fórmula**: Contas com MFA ativo ÷ Total de contas críticas × 100
+
+**Referência**: 100% para contas de administrador. 95%+ para todos os utilizadores. Qualquer conta administrativa sem MFA é risco inaceitável.
+
+**Ferramenta para PMEs**: No Microsoft 365, o centro de administração mostra o estado de MFA por utilizador em **Utilizadores → Utilizadores ativos → Autenticação multifator**.
+
+**Como apresentar**: "X% das contas da empresa têm autenticação a dois fatores ativa. [Se abaixo de 100% para admins]: Há Y contas de administrador sem MFA — precisa de ser resolvido esta semana."
+
+---
+
+### 5. Cobertura de Backup e Teste de Recuperação
+
+**O que é**: Duas métricas combinadas — percentagem de dados críticos com backup automático e data do último teste de recuperação bem-sucedido.
+
+**Por que duas**: Ter backup não basta. Uma PME que descobriu que os seus backups de 3 anos não restauravam durante um incidente de ransomware aprendeu isso da pior forma.
+
+**Referência**: 100% de cobertura. Teste de restore pelo menos trimestral.
+
+**Como apresentar**: "Temos backup de X% dos dados críticos da empresa. O último teste de recuperação foi [data] — conseguimos restaurar X ficheiros em Y minutos. O próximo teste está agendado para [data]."
+
+---
+
+### 6. Vulnerabilidades Abertas por Criticidade
+
+**O que é**: Número de vulnerabilidades conhecidas nos sistemas da empresa, classificadas por severidade.
+
+**Referência**: Zero vulnerabilidades críticas abertas há mais de 7 dias. Zero vulnerabilidades altas abertas há mais de 30 dias.
+
+**Ferramenta para PMEs**:
+- **Microsoft Defender Vulnerability Management** (incluído no Defender for Business)
+- **OpenVAS / Greenbone** (open-source)
+
+**Como apresentar**: "Temos atualmente X vulnerabilidades críticas e Y altas. As top 3 por risco são: [liste com o que é necessário para resolver cada uma]."
+
+## Como Estruturar um Relatório Mensal de Segurança
+
+Para uma PME, um relatório de segurança mensal não precisa de ter mais de uma página:
+
+---
+
+**Relatório de Segurança — [Mês/Ano]**
+
+**Estado Geral**: Estável / Atenção Necessária / Ação Urgente
+
+| Métrica | Este Mês | Mês Anterior | Objetivo |
+|---|---|---|---|
+| Conformidade de patches | 94% | 89% | 95% |
+| Taxa de cliques em phishing | 8% | 12% | menos de 5% |
+| Cobertura de MFA | 100% | 98% | 100% |
+| Último teste de backup | 15/04 | 12/01 | Trimestral |
+| Vulnerabilidades críticas | 0 | 2 | 0 |
+| MTTR (tempo resposta incidentes) | 3h | 6h | menos de 4h |
+
+**Incidentes do Mês**: [Número e breve descrição]
+
+**Ação Necessária**: [Máximo 3 items que precisam de decisão ou recursos]
+
+---
+
+Dois parágrafos, uma tabela, três ações concretas. Um gerente consegue ler e decidir em 5 minutos.
+
+## Armadilhas Comuns a Evitar
+
+**Medir demasiado**: 20 métricas são tão úteis quanto nenhuma. Comece com 4-5 e adicione quando o processo estiver estável.
+
+**Métricas sem contexto**: "142 tentativas de intrusão bloqueadas este mês" não significa nada sem saber se o mês anterior teve 50 ou 500. Sempre compare com base histórica.
+
+**Confundir atividade com resultado**: "Instalámos um novo firewall" é uma atividade. "Reduzimos a superfície de ataque externa de X portas expostas para Y" é um resultado.
+
+**Esconder problemas**: Se as métricas estão más, o relatório deve dizê-lo claramente com o plano de remediação. Gestores que descobrem problemas por relatórios sanitizados perdem confiança no responsável de TI muito mais do que por bad news diretas.
+
+## Ferramentas para Automatizar a Recolha
+
+Para PMEs que não têm tempo para calcular métricas manualmente todos os meses:
+
+- **Microsoft Secure Score** (incluído no Microsoft 365) — dashboard automático que pontua a postura de segurança e sugere melhorias comparáveis ao longo do tempo
+- **Microsoft Defender for Business** — relatórios de vulnerabilidades, dispositivos não conformes, ameaças detetadas
+- **Cloudflare Gateway** — logs de DNS e HTTP com filtragem por categoria
+
+Com estas ferramentas (que muitas PMEs com Microsoft 365 Business Premium já têm), a maior parte das métricas acima pode ser recolhida em menos de 30 minutos por mês.
+
+A cibersegurança sem métricas é como gerir um negócio sem demonstração financeira. Os números podem não ser os que queremos ver — mas ver é o primeiro passo para melhorar. E para uma PME que quer demonstrar conformidade com a NIS2 ou justificar o próximo investimento em segurança, um histórico de métricas bem mantido vale mais do que qualquer certificado numa parede.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-20",
+    readingTime: 13,
+    author: {
+      name: "Carlos Miranda",
+      title: "Consultor de Cibersegurança",
+    },
+  },
 ];
 
 export function getPostBySlug(slug: string): Post | undefined {
