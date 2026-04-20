@@ -9,6 +9,7 @@ import CountdownTimer from "@/components/countdown-timer";
 import AffiliateCTABanner from "@/components/affiliate-cta-banner";
 import { AuthorByline, AuthorCard } from "@/components/author-byline";
 import { getAllNIS2Tools } from "@/lib/affiliate-tools";
+import { NewsletterCapture } from "@/components/blog/newsletter-capture";
 import type { Metadata } from "next";
 import Footer from "@/components/footer";
 import AdSenseAd from "@/components/adsense-ad";
@@ -387,6 +388,9 @@ export default async function BlogPostPage({
           {renderedContent}
         </article>
 
+        {/* Newsletter capture - inline placement */}
+        <NewsletterCapture placement="inline" articleTitle={post.title} />
+
         {/* AdSense ad placement - after content */}
         <div className="my-8">
           <AdSenseAd
@@ -420,6 +424,9 @@ export default async function BlogPostPage({
             articleSlug={post.slug}
           />
         </div>
+
+        {/* Newsletter capture - footer placement */}
+        <NewsletterCapture placement="footer" />
 
         {/* Related posts */}
         <RelatedPosts currentPostSlug={post.slug} category={post.category} />
