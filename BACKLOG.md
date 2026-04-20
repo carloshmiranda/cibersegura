@@ -22,6 +22,15 @@
 ---
 
 ## Done
+
+### 2026-04-20 (session 18)
+- ✅ **growth**: Article "Colaborador Clicou Num Link de Phishing: Guia de Resposta Imediata" — `/blog/colaborador-clicou-phishing-o-que-fazer`; incident response guide from the moment of click: device isolation, session revocation, OAuth app audit, email forwarding rule check, damage assessment by scenario (credentials entered vs file downloaded vs link only), RGPD 72h CNPD notification obligation, NIS2 notification, evidence preservation for forensics and insurance, communication guidance (don't blame, encourage reporting), post-incident hardening (MFA, passkeys, phishing simulation); high search-intent article targeting businesses in active crisis
+- ✅ **growth**: Article "Fraude de Pagamento por Email: Como Evitar Transferências para IBANs Fraudulentos" — `/blog/fraude-pagamento-email-iban-como-prevenir`; three attack patterns (supplier email compromise, domain spoofing, internal BEC), IBAN verification protocol (callback on registered number), banking controls (dual approval, beneficiary whitelist, transaction limits), golden hour response after fraudulent transfer (immediate bank call, PJ queixa), email technical controls (SPF/DKIM/DMARC p=reject, external email warnings), financial team training, 9-item prevention checklist; high financial impact topic distinct from general BEC article
+- ✅ **growth**: Article "Offboarding Seguro: O Que Fazer Quando um Colaborador Sai da Empresa" — `/blog/offboarding-seguro-revogar-acessos-colaboradores-pme`; timing guidance (voluntary vs involuntary termination), complete checklist: email/identity (session revocation, OAuth apps, forwarding rules), AD/Entra account, SaaS inventory table (12 categories), shared passwords, cloud access (AWS/Azure IAM), physical access, device wipe; RGPD obligations for ex-employee data and potential data exfiltration notification; printable checklist template; SSO as long-term solution; addresses common gap where access lingers after departure
+
+---
+
+## Done
 <!-- Completed items with date -->
 
 ### 2026-04-20 (session 17)
