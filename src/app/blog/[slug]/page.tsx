@@ -11,6 +11,7 @@ import { AuthorByline, AuthorCard } from "@/components/author-byline";
 import { getAllNIS2Tools } from "@/lib/affiliate-tools";
 import type { Metadata } from "next";
 import Footer from "@/components/footer";
+import AdSenseAd from "@/components/adsense-ad";
 
 export async function generateStaticParams() {
   return posts.map((post) => ({ slug: post.slug }));
@@ -371,10 +372,30 @@ export default async function BlogPostPage({
           </div>
         )}
 
+        {/* AdSense ad placement - after intro content */}
+        <div className="my-8">
+          <AdSenseAd
+            slot="PLACEHOLDER-SLOT-1"
+            format="rectangle"
+            className="text-center"
+            style={{ display: 'block', textAlign: 'center' }}
+          />
+        </div>
+
         {/* Article content */}
         <article className="space-y-6">
           {renderedContent}
         </article>
+
+        {/* AdSense ad placement - after content */}
+        <div className="my-8">
+          <AdSenseAd
+            slot="PLACEHOLDER-SLOT-2"
+            format="horizontal"
+            className="text-center"
+            style={{ display: 'block', textAlign: 'center' }}
+          />
+        </div>
 
         {/* Author card */}
         {post.author && post.author.bio && (
