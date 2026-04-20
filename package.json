@@ -19,7 +19,9 @@
     "analyze-links": "tsx scripts/analyze-internal-linking.js",
     "analyze-links:stats": "tsx scripts/analyze-internal-linking.js --stats",
     "test-indexnow": "node scripts/test-indexnow-automation.js",
-    "test-affiliate": "node scripts/test-affiliate-tracking.js"
+    "test-affiliate": "node scripts/test-affiliate-tracking.js",
+    "audit-cwv": "node scripts/audit-core-web-vitals.js",
+    "audit-adsense": "npm run audit-cwv"
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.10.0",
