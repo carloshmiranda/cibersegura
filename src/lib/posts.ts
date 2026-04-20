@@ -46,6 +46,513 @@ export const AUTHORS: Record<string, Author> = {
 
 export const posts: Post[] = [
   {
+    slug: "ciberseguranca-industrial-ot-scada-pme",
+    title: "Cibersegurança Industrial para PMEs: Proteger Sistemas OT, SCADA e Redes de Automação",
+    excerpt:
+      "As fábricas, armazéns e instalações com automação industrial são alvos crescentes de ciberataques em Portugal. Guia prático para PMEs industriais protegerem sistemas OT, PLCs e redes SCADA sem paragens de produção.",
+    content: `A maioria dos guias de cibersegurança foca-se em computadores de escritório, email e cloud. Mas existe uma camada de tecnologia nas fábricas, armazéns e instalações industriais portuguesas que raramente aparece nessas listas — e que é cada vez mais atacada: os sistemas **OT (Operational Technology)**, incluindo PLCs, SCADA, HMIs e redes de automação.
+
+Se a sua PME produz, processa, armazena ou gere fisicamente qualquer coisa — desde alimentos a componentes industriais — este guia é para si.
+
+## IT vs. OT: Por Que São Mundos Diferentes
+
+A cibersegurança tradicional (o que chamamos de **IT — Information Technology**) protege computadores, servidores, email e dados. O objetivo é confidencialidade, integridade e disponibilidade da informação.
+
+A segurança **OT — Operational Technology** protege máquinas, processos e ambientes físicos. Aqui, a prioridade muda radicalmente:
+
+| Dimensão | IT (escritório) | OT (fábrica) |
+|---|---|---|
+| Prioridade máxima | Confidencialidade | Disponibilidade |
+| Tolerância a paragens | Horas/dias | Segundos (linha de produção) |
+| Ciclo de vida dos equipamentos | 3-5 anos | 15-30 anos |
+| Patches e atualizações | Automáticas | Planeadas com janelas de manutenção |
+| Ligação à internet | Normal | Evitada (mas crescente) |
+| Impacto de um ataque | Perda de dados | Paragem de produção, danos físicos, segurança pessoal |
+
+Esta diferença é crítica: uma atualização de segurança que reinicia um servidor de ficheiros é um inconveniente. A mesma atualização num PLC que controla uma linha de montagem pode parar a produção por horas.
+
+## Quem Está Exposto: As PMEs que Precisam Deste Guia
+
+Nem toda a PME tem risco OT. Mas se a sua empresa inclui algum destes elementos, este guia aplica-se:
+
+- **Fabricação**: linhas de produção com PLCs (Siemens S7, Allen-Bradley, Omron), robótica industrial, controlo CNC
+- **Alimentação e bebidas**: sistemas de temperatura, pasteurização, armazenamento em câmaras frigoríficas controladas digitalmente
+- **Farmacêutica e química**: reatores, sistemas de medição e dosagem automatizados
+- **Logística e armazéns**: sistemas WMS com conveyors, picking automático, portas automatizadas
+- **Instalações e facilities**: HVAC inteligente, sistemas BMS (Building Management Systems), controlo de acessos físicos ligados à rede
+- **Energia e utilities**: painéis solares com monitorização remota, geradores, sistemas de UPS geridos em rede
+- **Agricultura**: estufa com rega automatizada e controlo climático ligado à internet
+
+Se algum destes descreve a sua PME, tem tecnologia OT — e provavelmente não tem a segurança adequada para ela.
+
+## As Ameaças Reais ao OT das PMEs
+
+Os ataques a infraestrutura industrial já não são exclusivos de grandes centrais nucleares. As PMEs industriais portuguesas enfrentam três vetores principais:
+
+### 1. Ransomware que Paralisa a Produção
+
+O ransomware moderno não distingue IT de OT. Quando entra na rede de escritório (por phishing, por exemplo), propaga-se para qualquer segmento de rede alcançável — incluindo sistemas SCADA que não estejam corretamente isolados.
+
+O resultado: a linha de produção para. A empresa não consegue operar. A pressão para pagar é máxima.
+
+**Caso real (adaptado)**: Uma PME de embalagem em Portugal foi atingida por ransomware que encriptou os servidores de escritório e, por falta de segmentação de rede, chegou ao sistema SCADA que controlava as linhas. A paragem durou 4 dias e custou €180,000 em produção perdida e recuperação.
+
+### 2. Acesso Remoto Não Seguro a Sistemas de Controlo
+
+Muitos sistemas OT foram ligados à internet para permitir manutenção remota por fornecedores — durante a pandemia esta prática acelerou. O problema: muitos usam:
+- VNC sem palavra-passe ou com credenciais padrão ("admin/admin")
+- RDP exposto diretamente à internet
+- Software de acesso remoto legado (PCAnywhere, VNC antigo) sem cifra
+
+Ferramentas como Shodan e Censys indexam automaticamente estes sistemas expostos. Qualquer atacante pode encontrá-los em minutos.
+
+### 3. Ataques via Fornecedores de Manutenção
+
+O técnico que vem fazer manutenção à máquina CNC traz um portátil com software de configuração. Se esse portátil estiver comprometido, ou se usar uma pen USB sem verificação, pode introduzir malware diretamente no sistema de controlo — sem passar pelas defesas de rede.
+
+## O Risco da Convergência IT/OT
+
+O maior fator de risco nas PMEs industriais hoje é a **convergência IT/OT**: a ligação progressiva dos sistemas de fábrica às redes de escritório e à internet para ganhar eficiência (dados em tempo real, manutenção remota, integração com ERP).
+
+Esta convergência traz benefícios reais — mas transforma redes OT historicamente isoladas ("air-gapped") em alvos acessíveis através da rede corporativa.
+
+**Exemplo comum**: O sistema SCADA da linha de produção está na mesma rede plana que os computadores de escritório. O operador que usa email no mesmo PC que monitoriza a linha é um vetor de ataque direto.
+
+## Proteções Mínimas para PMEs Industriais
+
+Não esperamos que uma PME de 40 pessoas implemente um programa de segurança OT de nível enterprise. Mas estas proteções são alcançáveis e fazem diferença real:
+
+### 1. Inventário e Visibilidade
+
+Não pode proteger o que não sabe que existe. Documente:
+- Todos os dispositivos OT: PLCs, HMIs, sensores, gateways
+- Versões de firmware e sistema operativo (muitos correm Windows XP ou versões sem suporte)
+- Ligações de rede: o que comunica com quê?
+- Acesso remoto: quem tem acesso a quê, de onde?
+
+### 2. Segmentação de Rede (A Proteção Mais Importante)
+
+Separe a rede OT da rede de escritório (IT). Na prática:
+
+**Mínimo aceitável**: VLAN separada para sistemas OT, com firewall entre as redes IT e OT que bloqueie tráfego não autorizado nos dois sentidos.
+
+**Ideal**: DMZ industrial — uma zona desmilitarizada dedicada onde os dados fluem de OT para IT (histórico de produção, dados para ERP) mas o tráfego do sentido contrário é bloqueado por defeito.
+
+**O que bloquear**:
+- Acesso à internet a partir de sistemas OT (à exceção de atualizações planeadas)
+- Protocolos de escritório (SMB, RDP) na rede OT
+- Comunicação lateral entre dispositivos OT que não precisem de comunicar
+
+### 3. Acesso Remoto Seguro
+
+Se o seu fornecedor de equipamento precisa de acesso remoto para manutenção:
+
+- **Nunca** exponha RDP ou VNC diretamente à internet
+- Use uma solução VPN dedicada com autenticação forte (certificados ou MFA)
+- Considere soluções específicas para acesso remoto OT: Tosibox, Secomea, ou Cisco IE VPN
+- Active o acesso apenas quando necessário e revogue-o imediatamente após
+
+### 4. Credenciais e Autenticação
+
+- Altere TODAS as palavras-passe padrão em equipamentos OT (muitos vêm de fábrica com "admin/admin" ou sem palavra-passe)
+- Use palavras-passe únicas por dispositivo — documente-as num cofre de passwords
+- Limite o acesso a sistemas de controlo ao mínimo necessário por função
+- Monitore e registe todos os acessos remotos
+
+### 5. Gestão de Mídia Removível
+
+- Proíba pens USB não autorizadas em sistemas de controlo
+- Estabeleça um processo de higienização para pens dos fornecedores (scan de malware antes de usar)
+- Considere desativar portas USB nos equipamentos OT que não precisem delas
+
+### 6. Backups dos Sistemas de Controlo
+
+- Guarde backups das configurações de PLCs e HMIs (programas ladder, configurações SCADA)
+- Teste periodicamente a recuperação: sabe quanto tempo leva a restaurar um PLC a partir do backup?
+- Armazene backups OT offline (não na mesma rede)
+
+### 7. Patches e Atualizações
+
+O dilema OT: atualizar pode introduzir instabilidade num sistema que tem de funcionar 24/7. A abordagem pragmática:
+
+- Estabeleça janelas de manutenção planeadas para atualizações de segurança
+- Priorize patches críticos para sistemas com exposição à internet
+- Para sistemas sem suporte do fabricante (Windows XP em PLCs antigos): compense com segmentação de rede rigorosa
+
+## NIS2 e Segurança OT: Implicações para PMEs Industriais
+
+A Diretiva NIS2, transposta em Portugal pelo Decreto-Lei n.º 125/2025, inclui explicitamente o setor da **fabricação** (incluindo produção de alimentos, químicos, dispositivos médicos e eletrónica) nas entidades importantes abrangidas.
+
+Se a sua PME industrial cumpre os critérios de dimensão (≥ 50 funcionários ou ≥ €10M de volume de negócios) **e** atua num setor abrangido, as obrigações NIS2 incluem os sistemas OT — não apenas os sistemas de escritório.
+
+Isto significa:
+- Os riscos dos sistemas de controlo devem constar da sua análise de risco NIS2
+- Incidentes que afetem a produção podem ser notificáveis ao CNCS (se forem "significativos")
+- A segmentação OT/IT é uma medida técnica esperada pelo regulador
+
+Para verificar se a sua empresa está abrangida, consulte o [guia NIS2 para PMEs portuguesas](/blog/nis2-portugal-o-que-pmes-precisam-saber) e o [prazo de registo CNCS](/blog/registo-cncs-nis2-prazo-4-maio-2026).
+
+## Por Onde Começar: Plano de 90 Dias para PMEs Industriais
+
+Se está a começar do zero, este plano escalonado é realizável:
+
+**Primeiros 30 dias — Visibilidade:**
+- Inventarie todos os dispositivos OT e as suas ligações de rede
+- Identifique sistemas com acesso remoto ativo
+- Altere todas as palavras-passe padrão
+
+**30-60 dias — Separação:**
+- Implemente segmentação de rede básica (VLAN OT separada)
+- Proteja acessos remotos com VPN + autenticação forte
+- Inicie backups de configurações de PLCs e HMIs
+
+**60-90 dias — Procedimentos:**
+- Documente política de mídia removível
+- Estabeleça janelas de manutenção para patches
+- Reveja contratos de manutenção: o seu fornecedor pode introduzir riscos?
+
+## Recursos e Apoio
+
+O CNCS disponibiliza guias específicos para segurança de sistemas de controlo industrial em [cncs.gov.pt](https://cncs.gov.pt). Para frameworks mais avançadas, a norma **IEC/ISA 62443** é o standard internacional de referência para segurança OT.
+
+O [CERT.PT](https://www.cncs.gov.pt/pt/cert-pt/) pode ser contactado para aconselhamento em caso de incidente ou suspeita de comprometimento de sistemas industriais.
+
+Finalmente, muitos fornecedores de equipamento industrial (Siemens, Rockwell, Schneider Electric) disponibilizam guias de hardening específicos para os seus sistemas — vale a pena pedir ao seu integrador ou representante local.
+
+A segurança industrial não tem de ser perfeita para ser eficaz. Um atacante de oportunidade escolhe o alvo mais fácil. Segmentação básica, credenciais únicas e acesso remoto controlado elevam o custo de ataque o suficiente para que a maioria dos atacantes avance para o próximo alvo.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-20",
+    readingTime: 13,
+    author: {
+      name: "Carlos Miranda",
+      title: "Consultor de Cibersegurança",
+    },
+  },
+  {
+    slug: "mfa-fadiga-prompt-bombing-pme-como-proteger",
+    title: "Ataque de Fadiga MFA: Como os Hackers Contornam a Autenticação de Dois Fatores nas PMEs",
+    excerpt:
+      "Ativar o segundo fator de autenticação já não é garantia de segurança. O ataque de fadiga MFA (prompt bombing) bombardeia os utilizadores com notificações até um aceitar por engano. Explicamos como funciona e como proteger a sua empresa.",
+    content: `Há um paradoxo crescente na cibersegurança das PMEs: empresas que implementaram autenticação de dois fatores (MFA) continuam a ser comprometidas. Não porque o MFA falhou tecnicamente — mas porque os atacantes encontraram uma forma de contorná-lo que não exige nenhuma habilidade técnica especial.
+
+Chama-se **ataque de fadiga MFA** ou **prompt bombing**. E é simples ao ponto de ser perturbador.
+
+## O Que É o Ataque de Fadiga MFA
+
+O MFA tradicional baseado em notificações push funciona assim: o utilizador introduz as credenciais corretas, e recebe uma notificação no telemóvel a perguntar "Aprova este acesso?". A lógica é que apenas o utilizador legítimo — com o telemóvel em mão — pode aprovar.
+
+O ataque de fadiga explora precisamente este mecanismo. O atacante obtém primeiro as credenciais corretas (por phishing, compra na dark web ou data breach anterior) e depois:
+
+1. Tenta fazer login repetidamente — dezenas ou centenas de vezes
+2. Cada tentativa gera uma notificação de aprovação MFA no telemóvel da vítima
+3. A vítima recebe notificação atrás de notificação, a qualquer hora do dia ou da madrugada
+4. Eventualmente — por exasperação, confusão, ou a acreditar que é uma falha do sistema — **carrega em "Aprovar"**
+5. O atacante entra
+
+Não é phishing clássico. Não é força bruta sobre a password. É exaustão psicológica deliberada.
+
+## Por Que Funciona
+
+O ataque explora várias fraquezas humanas:
+
+**Condicionamento por repetição**: Quando o telemóvel vibra pela vigésima vez com a mesma notificação, o reflexo humano é fazer parar a perturbação. Aprovar é o caminho mais fácil.
+
+**Confusão com erros de sistema**: Muitos utilizadores, ao receber notificações MFA inesperadas, assumem que é um glitch de sincronização do dispositivo — especialmente se acabaram de fazer login legítimo pouco antes.
+
+**Hora de menor vigilância**: Os atacantes executam os ataques de madrugada, quando a vítima está a dormir. Uma notificação às 3h que acorda alguém cria confusão suficiente para uma aprovação inadvertida.
+
+**Falta de treino específico**: Os utilizadores sabem que não devem clicar em links de phishing. Mas raramente foram treinados para rejeitar ativamente notificações MFA inesperadas.
+
+## Casos Reais (Contexto Internacional)
+
+Os ataques de fadiga MFA estão documentados em incidentes de alto perfil:
+
+- **Uber (2022)**: Um contratante foi bombardeado com notificações MFA durante horas. O atacante depois contactou a vítima via WhatsApp fazendo-se passar por suporte IT da Uber, dizendo que as notificações parariam se aprovasse. A vítima aprovou. O atacante obteve acesso a sistemas internos críticos.
+- **Cisco (2022)**: Credenciais de um colaborador foram obtidas via phishing. O ataque de prompt bombing subsequente resultou em acesso à rede corporativa.
+- **Microsoft (2023)**: O grupo Lapsus$ utilizou fadiga MFA como vetor de entrada em múltiplas organizações.
+
+Estes exemplos envolvem grandes empresas — mas o vetor é idêntico em PMEs. A única diferença é que as PMEs geralmente têm menos deteção e resposta a incidentes.
+
+## Sinais de Que Está a Ser Atacado
+
+Antes de qualquer aprovação, há sinais de alerta que os utilizadores e as empresas podem detetar:
+
+**Para o utilizador:**
+- Notificações MFA que não correspondem a nenhuma ação que tomou
+- Notificações em cascata em poucos minutos
+- Notificações em horas incomuns (fora do horário de trabalho, fim de semana, madrugada)
+- Notificações de localizações ou dispositivos desconhecidos (se o MFA mostrar contexto)
+
+**Para a empresa:**
+- Logs de autenticação com múltiplas tentativas falhadas seguidas de aprovação inesperada
+- Login a partir de IP diferente do habitual do utilizador
+- Acesso a sistemas sensíveis fora do horário normal do colaborador
+
+## Como Proteger a Sua PME: Defesas Técnicas
+
+### 1. Ative o "Number Matching"
+
+O number matching é a defesa mais eficaz contra prompt bombing. Em vez de uma simples notificação "Aprovar/Rejeitar", o utilizador vê um número no ecrã de login e tem de introduzir esse mesmo número na notificação do telemóvel.
+
+Isto elimina o problema do clique acidental ou de exasperação: o utilizador tem de estar conscientemente a fazer o login para saber o número a introduzir.
+
+**Como ativar:**
+- **Microsoft Authenticator (Microsoft 365/Azure AD)**: Autenticação > Métodos de Autenticação > Microsoft Authenticator > Corresponder Número. Disponível em todas as licenças Microsoft 365.
+- **Okta**: Configurações > Autenticação > MFA > Okta Verify > Number Challenge.
+- **Google Workspace**: O Google Prompt inclui number matching por defeito em versões recentes.
+
+### 2. Limitar a Janela de Validez das Notificações
+
+Configure o sistema MFA para que as notificações de aprovação expirem ao fim de 1-2 minutos (em vez de 10-15 minutos como é habitual). Isto reduz a janela em que um utilizador confuso pode aprovar inadvertidamente.
+
+### 3. Ativar "Additional Context" nas Notificações
+
+Aplicações como o Microsoft Authenticator podem mostrar na notificação a aplicação que está a ser acedida e a localização aproximada do pedido. Se um utilizador vê "Alguém em Lagos, Nigéria quer aceder ao SharePoint", a probabilidade de aprovação acidental cai drasticamente.
+
+### 4. Implementar Políticas de Acesso Condicional
+
+No Azure AD / Microsoft Entra ID, as políticas de acesso condicional permitem bloquear automaticamente tentativas de login que:
+- Vêm de países/regiões onde a empresa não opera
+- Usam dispositivos não geridos pelo MDM da empresa
+- Excedem um número de tentativas falhadas em período curto
+
+Isto corta o ataque antes que as notificações comecem.
+
+### 5. Migrar para MFA Resistente a Phishing
+
+O MFA baseado em notificações push (o mais comum) é suscetível a fadiga. As alternativas resistentes:
+
+- **Passkeys / FIDO2 / WebAuthn**: Autenticação criptográfica ligada ao dispositivo físico. Impossível de phishing ou prompt bomb. O Microsoft Authenticator, Google, e Apple já suportam.
+- **YubiKey ou chaves de hardware**: Uma chave física USB/NFC. Sem posse física, sem acesso.
+- **Certificados de dispositivo**: O acesso só é aprovado se vier de um dispositivo gerido e certificado.
+
+Para PMEs com orçamento limitado, as passkeys gratuitas no Microsoft Authenticator ou Google Authenticator são o próximo passo natural.
+
+## Defesa Humana: Treinar a Equipa Para Resistir
+
+A tecnologia não chega. A defesa mais importante é cultural: **os utilizadores precisam de saber que nunca devem aprovar uma notificação MFA que não iniciaram eles próprios.**
+
+Regra simples para treinar a equipa:
+
+> "Se não fui eu a fazer login neste segundo, rejeito. Se chegar uma notificação inesperada, rejeito, reporto à IT, e mudo a password imediatamente."
+
+Como treinar:
+- **Comunicação clara e direta**: Envie um email explicando o ataque com exemplos visuais. Não jargão — linguagem simples.
+- **Cartaz/lembrete**: No espaço comum de trabalho ou como fundo de ecrã bloqueado: "Notificação MFA inesperada? Rejeitar e reportar."
+- **Simulação controlada**: Alguns sistemas MFA (Microsoft Entra) permitem simular prompt bombing de forma controlada para formação.
+
+O [programa de sensibilização de 12 meses para PMEs](/blog/programa-sensibilizacao-ciberseguranca-pme-12-meses) inclui um módulo específico sobre fadiga MFA.
+
+## O Que Fazer Se Alguém Aprovou uma Notificação Indevida
+
+Se um colaborador reportar que aprovou uma notificação que não devia (ou se os logs mostrarem uma aprovação suspeita):
+
+**Imediatamente (primeiros 15 minutos):**
+1. Revogar todas as sessões ativas da conta comprometida (no Microsoft 365: Admin Center > Utilizadores > Revogar sessões; no Google: Segurança > Atividade recente > Terminar todas as sessões)
+2. Forçar mudança de password imediata
+3. Revogar tokens de refresh (no Azure AD: Invalidar todos os tokens do utilizador)
+4. Verificar atividade recente da conta: emails enviados, ficheiros acedidos, regras criadas na caixa de correio
+
+**Nas primeiras horas:**
+5. Verificar se foram criadas novas contas de utilizador ou regras de reencaminhamento de email
+6. Analisar logs de acesso para identificar o que o atacante acedeu
+7. Verificar se o comprometimento se propagou (outros utilizadores com atividade anómala)
+
+Para um guia completo de resposta a conta comprometida, consulte o artigo [Conta de Email Empresarial Comprometida — O Que Fazer](/blog/conta-email-empresarial-comprometida-o-que-fazer).
+
+## Resumo: Lista de Verificação Anti-Fadiga MFA
+
+- [ ] Number matching ativado em todos os sistemas MFA críticos
+- [ ] Notificações com contexto adicional (aplicação + localização)
+- [ ] Políticas de acesso condicional com bloqueio por país/dispositivo não gerido
+- [ ] Expiração de notificações reduzida para 1-2 minutos
+- [ ] Equipa treinada: "Notificação inesperada = rejeitar e reportar"
+- [ ] Processo documentado de resposta a aprovação indevida
+- [ ] Plano de migração para FIDO2/passkeys nos sistemas mais críticos
+
+O MFA ainda é essencial — é muito melhor do que só password. Mas o MFA por notificação push, sem estas proteções adicionais, não é suficiente contra um atacante determinado que já tem as suas credenciais. O number matching, em particular, é gratuito, demora 5 minutos a ativar, e elimina o ataque de fadiga quase completamente.`,
+    category: "ameacas",
+    categoryLabel: "Ameacas",
+    publishedAt: "2026-04-20",
+    readingTime: 12,
+    author: {
+      name: "Rita Santos",
+      title: "Analista de Segurança",
+    },
+  },
+  {
+    slug: "nis2-pos-registo-proximos-passos-pme",
+    title: "Registei a Minha Empresa no CNCS — O Que Fazer a Seguir: Guia NIS2 Pós-Registo",
+    excerpt:
+      "Fez o registo NIS2 no portal CNCS antes do prazo de 4 de maio de 2026. Parabéns — mas o registo é só o início. Este guia explica as obrigações contínuas que ficaram agora ativas e como preparar a sua PME para o que vem a seguir.",
+    content: `O prazo de registo obrigatório no portal CNCS era 4 de maio de 2026. Se a sua empresa está abrangida pela NIS2 e fez o registo — parabéns. Cumpriu a primeira obrigação formal da nova legislação.
+
+Mas muitos gestores ficam a olhar para o comprovativo de registo sem saber o que se segue. O registo não é o destino — é a porta de entrada para um conjunto de obrigações contínuas que ficaram agora juridicamente ativas para a sua empresa.
+
+Este guia explica o que acontece depois do registo, por ordem de prioridade.
+
+## O Que o Registo Ativa: Uma Vista Geral
+
+Ao registar-se, a sua empresa declarou ao CNCS que é uma entidade abrangida pela NIS2. Isto tem três consequências imediatas:
+
+1. **Fica em base de dados de supervisão**: O CNCS pode contactá-la para auditoria, pedido de informação ou verificação de conformidade
+2. **As obrigações NIS2 são plenamente exigíveis**: Não pode alegar desconhecimento ou período de transição — está registada
+3. **A obrigação de notificação de incidentes está ativa**: Se houver um incidente significativo, os prazos de 24h/72h/1 mês contam a partir de hoje
+
+## Prioridade 1: Ter um Pipeline de Notificação de Incidentes
+
+Esta é a obrigação com prazos mais agressivos e coimas mais imediatas por incumprimento. Se hoje a sua empresa for alvo de um ransomware significativo, tem:
+
+- **24 horas** para enviar um alerta inicial ao CNCS (confirmação de que ocorreu um incidente, estimativa de impacto)
+- **72 horas** para a notificação formal (natureza, impacto estimado, medidas tomadas)
+- **1 mês** para o relatório final (análise completa, causa raiz, medidas corretivas)
+
+O portal de notificação é [https://riscos.cncs.gov.pt](https://riscos.cncs.gov.pt) — o mesmo onde se registou.
+
+**O que fazer agora:** Designar internamente quem é responsável por detetar, avaliar e reportar incidentes. Esta pessoa (ou função) deve saber como aceder ao portal CNCS e ter os contactos de emergência do CNCS guardados:
+- Portal: riscos.cncs.gov.pt
+- Email: cncs@cncs.gov.pt
+- Linha de emergência CERT.PT: cert@cert.pt
+
+Para um guia detalhado dos três prazos e o que entra em cada notificação, consulte [NIS2: Notificação de Incidentes — O Que Fazer nas Primeiras 24h, 72h e 1 Mês](/blog/nis2-notificacao-incidentes-pme-24-72-horas).
+
+## Prioridade 2: Análise de Risco Documentada
+
+A NIS2 exige que as entidades abrangidas realizem e documentem uma **análise de risco de cibersegurança** cobrindo os seus sistemas e serviços críticos. Esta análise deve ser revisitada pelo menos anualmente ou sempre que existam mudanças significativas.
+
+Para uma PME, uma análise de risco NIS2 não tem de ser um documento de 100 páginas. Deve cobrir:
+
+**1. Identificação de ativos críticos**
+O que é que, se ficasse indisponível ou comprometido, pararia a atividade da empresa? Exemplos típicos:
+- Sistema de gestão/ERP
+- Email empresarial
+- Ficheiros de clientes e contratos
+- Sistema de faturação
+- Base de dados de produção ou clientes
+
+**2. Ameaças relevantes**
+Quais as ameaças mais prováveis e impactantes para o seu setor e dimensão? Para a maioria das PMEs: ransomware, phishing/BEC, comprometimento de credenciais, ataque a fornecedores de cloud.
+
+**3. Avaliação de vulnerabilidades**
+Para cada ativo crítico, o que está em falta? Exemplos: backups não testados, MFA não ativado, acesso remoto sem VPN, sistemas sem atualizações.
+
+**4. Plano de tratamento**
+Para cada vulnerabilidade identificada: o que vai fazer, quem é responsável, e quando.
+
+O [template de política de cibersegurança para PMEs](/blog/politica-ciberseguranca-pme-template) inclui uma secção de análise de risco adaptada à realidade portuguesa.
+
+## Prioridade 3: Medidas Técnicas de Segurança
+
+A NIS2 (artigo 21.º) exige que as entidades implementem medidas técnicas e organizativas proporcionais ao risco. Para PMEs, o regulador espera pelo menos:
+
+### Medidas Técnicas Obrigatórias (mínimo)
+
+**Gestão de acesso:**
+- Autenticação multifator (MFA) em todos os sistemas com acesso à internet (email, VPN, portais de gestão)
+- Princípio do mínimo privilégio: cada utilizador acede apenas ao que precisa
+- Revisão periódica de acessos (pelo menos anual): contas de ex-colaboradores, fornecedores sem contrato ativo
+
+**Proteção de sistemas:**
+- Antivírus/EDR atualizado em todos os endpoints
+- Atualizações de segurança aplicadas em prazo razoável (críticas: 7 dias; importantes: 30 dias)
+- Firewall configurada e monitorizada
+
+**Continuidade:**
+- Backups regulares dos dados críticos
+- Backups testados periodicamente (sabe que consegue restaurar?)
+- Backups offline ou imutáveis (não acessíveis diretamente da rede de produção — defesa contra ransomware)
+
+**Email:**
+- SPF, DKIM e DMARC configurados para o domínio empresarial
+- Filtro anti-phishing ativo
+
+### Medidas Organizativas
+
+- Documentar os procedimentos de segurança (não tem de ser elaborado — uma página por processo chave chega)
+- Formação básica de segurança para todos os colaboradores (pelo menos anual)
+- Contrato com fornecedor de IT que inclua cláusulas de segurança e confidencialidade
+
+Para um mapeamento completo das medidas técnicas esperadas pela NIS2, consulte a [checklist NIS2 de 10 passos](/blog/checklist-nis2-10-passos-conformidade).
+
+## Prioridade 4: Formalizar a Governação de Cibersegurança
+
+A NIS2 responsabiliza os **órgãos de administração** (gerência ou conselho de administração) pela supervisão das medidas de cibersegurança. Isto é uma novidade em relação ao RGPD — já não é só "o departamento de IT" que é responsável.
+
+**O que formalizar:**
+
+1. **Responsável designado**: Quem é a pessoa da empresa responsável pela cibersegurança? Pode ser um gerente, o responsável de IT, ou um consultor externo com mandato claro. Esta pessoa deve estar identificada no registo CNCS e ter autoridade para tomar decisões.
+
+2. **Revisão de gestão anual**: Uma vez por ano, a gerência deve formalmente rever o estado da cibersegurança — análise de risco, incidentes ocorridos, medidas implementadas e plano para o ano seguinte. Documente esta revisão em ata ou relatório simples.
+
+3. **Cadeia de comunicação para incidentes**: Quem notifica o CNCS? Quem notifica os clientes afetados? Quem fala com os media se for necessário? Defina isto antes de precisar.
+
+## Prioridade 5: Gerir a Cadeia de Fornecimento
+
+A NIS2 obriga as entidades abrangidas a gerir os riscos dos seus **fornecedores e prestadores de serviços** — especialmente os que têm acesso a sistemas ou dados críticos.
+
+**Passos práticos:**
+
+1. **Inventário de fornecedores críticos**: Liste os fornecedores com acesso a sistemas, dados ou infraestrutura da empresa. O seu provedor de cloud? O fornecedor de ERP? A empresa de manutenção de equipamentos?
+
+2. **Avaliar o risco de cada fornecedor**: Têm certificações de segurança (ISO 27001, SOC 2)? Têm política de segurança documentada? Que medidas têm contra incidentes?
+
+3. **Contratos com cláusulas de segurança**: Novos contratos devem incluir obrigações de segurança, notificação de incidentes, e direito a auditoria. Reveja contratos existentes com fornecedores críticos.
+
+4. **Acesso mínimo**: Fornecedores externos não devem ter mais acessos do que o necessário. Revogue acessos de fornecedores quando o contrato terminar.
+
+Para um guia detalhado sobre gestão de fornecedores, consulte [Segurança da Cadeia de Fornecimento NIS2](/blog/nis2-cadeia-fornecimento-pme).
+
+## O Que Esperar do CNCS: Auditoria e Supervisão
+
+Após o registo, o CNCS pode contactar a sua empresa de várias formas:
+
+**Pedidos de informação**: O CNCS pode pedir evidências do cumprimento das obrigações NIS2 — análise de risco, políticas, medidas implementadas. Responda dentro do prazo indicado.
+
+**Auditoria remota**: O CNCS pode solicitar documentação por email ou via portal sem visita presencial. É a forma mais comum de supervisão para PMEs.
+
+**Inspeção presencial**: Reservada para entidades essenciais ou casos de não conformidade persistente. Para a maioria das PMEs de setores importantes, é improvável no primeiro ano.
+
+**Recomendações**: O CNCS pode emitir recomendações de melhoria. Não são coimas, mas ignorá-las cria um registo negativo que aumenta o risco de ação posterior.
+
+A melhor postura: responder prontamente, ser transparente sobre o estado de conformidade, e demonstrar que tem um plano mesmo que ainda não esteja totalmente implementado. O CNCS não espera perfeição imediata — espera boa fé e progresso documentado.
+
+## Coimas e Sanções: O Que Arrisca
+
+Entidades de setores importantes (onde se enquadra a maioria das PMEs) enfrentam coimas até **€7 milhões ou 1,4% do volume de negócios global anual** (o que for mais elevado).
+
+As principais infrações que geram coimas:
+- Não notificar um incidente significativo nos prazos definidos
+- Não implementar as medidas técnicas mínimas exigidas
+- Não responder a pedidos de informação do CNCS
+- Obstaculizar uma inspeção
+
+Para detalhes sobre o regime de coimas, consulte o artigo [Multas e Coimas NIS2 para PMEs](/blog/multas-coimas-nis2-pme).
+
+## Calendário Pós-Registo: O Que Fazer e Quando
+
+| Prazo | Ação |
+|---|---|
+| Imediatamente | Designar responsável NIS2 com contactos no portal CNCS |
+| 30 dias | Primeira análise de risco documentada (versão simplificada) |
+| 60 dias | Verificar e ativar MFA em todos os sistemas com acesso externo |
+| 60 dias | Testar backups: consegue restaurar os dados críticos? |
+| 90 dias | Rever acessos: contas ativas, fornecedores, permissões |
+| 90 dias | Política de cibersegurança interna documentada |
+| 6 meses | Formação básica de segurança para todos os colaboradores |
+| 12 meses | Revisão formal de gestão: análise de risco, incidentes, plano anual |
+
+O registo NIS2 não é o fim — é o começo de uma nova relação da sua empresa com a segurança digital. Mas o início não tem de ser avassalador. Foque-se nas prioridades 1 e 2 primeiro: saber como notificar um incidente e ter uma análise de risco básica. O resto constrói-se progressivamente.`,
+    category: "legislacao",
+    categoryLabel: "Legislacao RGPD",
+    publishedAt: "2026-04-20",
+    readingTime: 14,
+    author: {
+      name: "Miguel Ferreira",
+      title: "Auditor de Compliance",
+    },
+  },
+  {
     slug: "nis2-prazo-urgente-maio-2026-o-que-fazer-agora",
     title: "NIS2: Faltam 15 Dias para o Prazo — O Que Fazer Agora se Ainda Não Registou a Empresa",
     excerpt:
