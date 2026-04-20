@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import { Plus_Jakarta_Sans, Inter } from 'next/font/google';
+import { WebVitals } from "@/components/web-vitals";
+import { DevWebVitalsDashboard } from "@/components/web-vitals-dashboard";
 import "./globals.css";
 
 const jakartaSans = Plus_Jakarta_Sans({
@@ -112,6 +114,8 @@ export default function RootLayout({
         )}
 
         <Analytics />
+        <WebVitals />
+        <DevWebVitalsDashboard />
       </body>
     </html>
   );
