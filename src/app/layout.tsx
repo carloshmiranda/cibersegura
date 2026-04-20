@@ -32,6 +32,11 @@ export const metadata: Metadata = {
         "msvalidate.01": process.env.BING_VERIFICATION_TOKEN,
       },
     }),
+    ...(process.env.NEXT_PUBLIC_ADSENSE_VERIFICATION && {
+      other: {
+        "google-adsense-account": process.env.NEXT_PUBLIC_ADSENSE_VERIFICATION,
+      },
+    }),
   },
   openGraph: {
     title: "CiberPME — Cibersegurança para PMEs Portuguesas",
@@ -97,12 +102,14 @@ export default function RootLayout({
         {children}
 
         {/* Google AdSense */}
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-PLACEHOLDER"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
+        {process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID && (
+          <Script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID}`}
+            crossOrigin="anonymous"
+            strategy="afterInteractive"
+          />
+        )}
 
         <Analytics />
       </body>
