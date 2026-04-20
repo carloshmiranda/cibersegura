@@ -46,6 +46,473 @@ export const AUTHORS: Record<string, Author> = {
 
 export const posts: Post[] = [
   {
+    slug: "ciberseguranca-ipss-entidades-sociais-portugal",
+    title: "Cibersegurança para IPSSs e Entidades Sociais em Portugal: Proteger Dados Vulneráveis com Orçamento Limitado",
+    excerpt:
+      "IPSSs e lares tratam dados de saúde e vulnerabilidade — categoria especial RGPD. Guia de segurança prático para entidades sociais com orçamento limitado.",
+    content: `Os lares de idosos, centros de dia, misericórdias, bancos alimentares e associações de apoio social são algumas das organizações com mais dados sensíveis em Portugal — e, provavelmente, com menos investimento em cibersegurança.
+
+Uma IPSS de médio porte gere informação médica de residentes, históricos de situação financeira e social, dados de menores em acolhimento, e informação sobre vulnerabilidades familiares. Todos estes dados são **categoria especial** ao abrigo do RGPD (artigo 9.º) — o mais alto nível de proteção exigido.
+
+E no entanto, muitas destas entidades trabalham com sistemas desatualizados em computadores partilhados, sem MFA, sem backups verificados, e com voluntários a aceder a sistemas com credenciais coletivas.
+
+## Por Que as IPSSs São Alvos
+
+O setor social raramente aparece nos artigos de cibersegurança — o que é, em si mesmo, um risco. Os atacantes sabem que:
+
+**Os dados valem muito**: Registos médicos e sociais têm alto valor no mercado negro — muito mais do que dados de cartão de crédito. Um registo médico completo pode valer €250–€1.000 em fóruns de crime. Uma base de dados de um lar com 100 residentes é um ativo considerável.
+
+**A pressão para pagar é enorme**: Um ataque de ransomware a um lar pode afetar diretamente o cuidado de pessoas em situação de dependência. A pressão moral e operacional para pagar e restaurar o serviço é muito superior à de uma empresa comercial.
+
+**A segurança é fraca**: Orçamentos de TI muito limitados, voluntários sem formação em segurança, e muitas vezes um único colaborador que "sabe de informática" a gerir toda a infraestrutura.
+
+**Não reportam incidentes**: Incidentes em IPSSs raramente são tornados públicos ou notificados às autoridades, o que significa que os atacantes raramente enfrentam consequências.
+
+## As Obrigações RGPD das Entidades Sociais
+
+### Categoria Especial de Dados (Art. 9.º RGPD)
+
+As IPSSs tratam dados de **saúde**, dados relativos a **vulnerabilidade económica**, dados sobre **origem étnica** (em contextos de integração social), e em estruturas de acolhimento, dados de **menores**. Todos estes são categoria especial ou dados de menores com proteção reforçada.
+
+O tratamento de dados de saúde exige:
+- Base legal específica (Art. 9.º n.º 2) — geralmente consentimento explícito ou necessidade de prestação de cuidados
+- Medidas de segurança adequadas ao risco elevado (criptografia, controlo de acessos, logs de auditoria)
+- Registo das atividades de tratamento (Art. 30.º RGPD)
+
+### DPO (Encarregado de Proteção de Dados)
+
+**Uma IPSS que trate dados de saúde em larga escala tem obrigação de nomear um DPO** (Art. 37.º RGPD). "Larga escala" não tem um número fixo, mas um lar com 50 ou mais residentes provavelmente qualifica.
+
+O DPO pode ser externo e partilhado com outras organizações. Existem serviços especializados em entidades do setor social por €100–300/mês. A nomeação deve ser comunicada à CNPD.
+
+### Notificação de Violação de Dados
+
+Em caso de violação com risco para os titulares, a IPSS tem **72 horas** para notificar a CNPD. No caso de dados de saúde ou de menores, praticamente qualquer acesso não autorizado qualifica como violação notificável.
+
+Muitas IPSSs desconhecem esta obrigação — e a CNPD pode aplicar coimas mesmo a entidades sem fins lucrativos.
+
+## As Ameaças Mais Comuns
+
+### Phishing Direcionado ao Setor Social
+
+Os emails de phishing mais eficazes neste setor imitam:
+- Segurança Social (ISS.PT) — "atualização de dados de beneficiários" ou "nova obrigação de reporte"
+- CNPD — "notificação de auditoria" ou "incumprimento detectado"
+- Fornecedores de software de gestão social (Gestluz, SoftGestão, GerNovaSocial) — "atualização crítica de segurança"
+- Ordens profissionais (Enfermeiros, Assistentes Sociais) — "renovação de credenciais obrigatória"
+
+### Ransomware que Paralisa os Cuidados
+
+O vetor mais crítico. Uma IPSS cujos sistemas ficam encriptados não consegue aceder ao historial clínico dos residentes, à medicação, ou ao plano de cuidados. A pressão para pagar é imediata e real — não existe uma alternativa de "trabalhar offline" quando alguém precisa de saber a medicação de um residente.
+
+O cenário mais frequente em Portugal: colaborador abre anexo de email aparentemente legítimo; ransomware propaga-se pelos ficheiros partilhados em rede; operação fica paralisada.
+
+### Acesso Não Autorizado por Ex-Voluntários
+
+As IPSSs têm elevada rotação de voluntários e estagiários. Se não existe um processo de offboarding sistemático, as contas ficam ativas indefinidamente. Um ex-voluntário com acesso ativo é uma vulnerabilidade — por descuido ou intenção.
+
+### Contas Partilhadas
+
+"Todos usam o mesmo login para o sistema de gestão" é uma situação frequente. Para além de violar o RGPD (impossibilidade de auditoria individual), significa que qualquer pessoa que saia leva as credenciais consigo — e não há como saber quem acedeu a quê.
+
+## Controlos Essenciais com Orçamento Limitado
+
+O orçamento não é desculpa para ausência total de controlo. Estas medidas custam pouco ou nada:
+
+### Completamente Gratuito
+
+**MFA em email**: Microsoft e Google oferecem MFA gratuito. Forçar o authenticator app para todos os utilizadores de email leva menos de 2 horas de configuração e elimina a maioria dos ataques de phishing de credenciais.
+
+**Contas individuais**: Eliminar contas partilhadas. Cada colaborador e voluntário tem a sua conta. Fazê-lo gradualmente, começando pelos sistemas com dados mais sensíveis.
+
+**Backups com a regra 3-2-1**: Manter 3 cópias dos dados críticos, em 2 meios diferentes, com 1 off-site. O OneDrive ou Google Drive serve de segunda cópia gratuita. O ponto crítico é testar mensalmente que a restauração funciona.
+
+**Windows Update ativo**: Desativar atualizações automáticas é um erro frequente em organizações com TI limitada. As atualizações de segurança do Windows são gratuitas e devem estar sempre ativas.
+
+**Registo de ativos e utilizadores**: Uma folha de cálculo com todos os dispositivos da organização, quem os usa, e a que sistemas têm acesso. Indispensável para offboarding.
+
+### Baixo Custo (< €500/ano para uma organização de 20 pessoas)
+
+**Microsoft 365 Business Basic** (€5,10/utilizador/mês): Email Microsoft, Teams, SharePoint, e 1TB de OneDrive por utilizador. Muito mais seguro do que contas pessoais Gmail, inclui MFA centralizado via Entra ID, e cobre as necessidades de comunicação e partilha de ficheiros.
+
+**Bitwarden Teams** (€3/utilizador/mês): Gestor de passwords partilhado com cofres por departamento, auditoria de passwords fracas ou reutilizadas, e offboarding com revogação de acesso imediata.
+
+**Backup externo encriptado**: Um disco externo com BitLocker (€50–100) com backup semanal off-site, ou um serviço cloud básico (Backblaze B2 a €7/TB/mês). O que importa é que o backup seja testado regularmente.
+
+## Checklist de Segurança para IPSSs
+
+| Controlo | Custo | Prioridade |
+|---|---|---|
+| MFA ativo em email para todos | Grátis | 🔴 Crítico |
+| Contas individuais (sem partilha) | Grátis | 🔴 Crítico |
+| Backup testado e off-site | Grátis–baixo | 🔴 Crítico |
+| Windows Update e antivírus ativos | Grátis | 🔴 Crítico |
+| Registo de ativos e utilizadores | Grátis | 🟡 Importante |
+| Processo de offboarding documentado | Grátis | 🟡 Importante |
+| DPO nomeado (obrigatório se larga escala) | €100–300/mês | 🟡 Obrigação RGPD |
+| Registo de atividades de tratamento (Art. 30) | Grátis (template CNPD) | 🟡 Obrigação RGPD |
+| Formação básica anti-phishing para colaboradores | Grátis (CNCS) | 🟡 Importante |
+| Encriptação de portáteis (BitLocker) | Grátis (Win 10/11 Pro) | 🟢 Recomendado |
+| Wi-Fi de convidados separado da rede interna | Grátis (router) | 🟢 Recomendado |
+
+## Recursos Gratuitos Especificamente para IPSSs
+
+**CNCS**: O Centro Nacional de Cibersegurança (cncs.gov.pt) oferece materiais de sensibilização gratuitos e apoio a entidades do setor social. O portal CyberEdu tem formações gratuitas para colaboradores sem formação técnica.
+
+**CNPD — Templates RGPD**: A CNPD disponibiliza gratuitamente templates para o Registo de Atividades de Tratamento, Políticas de Privacidade, e modelo de notificação de violação.
+
+**Microsoft para Entidades Sem Fins Lucrativos**: O programa **Microsoft for Nonprofits** oferece Microsoft 365 Business Premium **completamente gratuito** para até 10 utilizadores e descontos significativos acima disso. Para uma IPSS com estatuto reconhecido, pode significar obter o M365 Business Premium (que inclui Entra ID P1, Intune, e Defender for Business) sem custo. Candidatura em microsoft.com/nonprofits.
+
+**Google para Nonprofits**: Google Workspace for Nonprofits oferece o plano Business Standard gratuito para entidades elegíveis, com 2TB por utilizador, Google Meet, e Drive partilhado. Candidatura em google.com/nonprofits.
+
+O programa Microsoft for Nonprofits é particularmente valioso e subutilizado pelas IPSSs portuguesas. Vale a pena verificar a elegibilidade antes de pagar por qualquer solução.
+
+---
+
+Para aprofundar as obrigações em contexto de dados de saúde, consulte o [guia de cibersegurança para clínicas e serviços de saúde](/blog/ciberseguranca-clinicas-saude-portugal) e o [guia RGPD para pequenas empresas](/blog/guia-rgpd-pequenas-empresas-portugal). O [processo de offboarding seguro](/blog/offboarding-seguro-revogar-acessos-colaboradores-pme) aplica-se igualmente a voluntários e estagiários.`,
+    category: "legislacao",
+    categoryLabel: "Legislacao RGPD",
+    publishedAt: "2026-04-20",
+    readingTime: 11,
+    author: {
+      name: "Miguel Ferreira",
+      title: "Auditor de Compliance",
+    },
+  },
+  {
+    slug: "sso-single-sign-on-pme-guia-implementacao",
+    title: "SSO para PMEs: Como o Single Sign-On Elimina a Dispersão de Passwords e Reforça a Segurança",
+    excerpt:
+      "Uma PME com 20 colaboradores gere mais de 40 contas SaaS. SSO centraliza acessos, acelera offboarding e resolve a dispersão de passwords. Guia prático com Entra ID, Google e Okta.",
+    content: `As PMEs portuguesas usam cada vez mais serviços SaaS — e o número de aplicações por colaborador é muito superior ao que a maioria dos gestores imagina. Uma empresa com 20 pessoas pode ter facilmente 40 a 60 contas ativas em serviços diferentes: email, CRM, faturação, contabilidade, gestão de projetos, videoconferência, armazenamento cloud, RH, e-commerce, e por aí fora.
+
+O resultado é uma **dispersão de passwords** que nenhum gestor de passwords resolve completamente — especialmente quando há contas partilhadas entre departamentos, contas de sistema, e contas criadas por colaboradores por iniciativa própria sem o conhecimento da TI (Shadow SaaS).
+
+O **SSO — Single Sign-On** resolve isto centralmente: o utilizador autentica-se uma vez numa plataforma central (o Identity Provider, ou IdP) e acede a todas as aplicações configuradas sem precisar de introduzir mais passwords.
+
+## Como Funciona o SSO (Explicado Simplesmente)
+
+O SSO assenta em dois protocolos principais:
+
+**SAML 2.0 (Security Assertion Markup Language)**: O mais antigo e ainda dominante em aplicações empresariais. Quando o utilizador tenta aceder a uma aplicação (o Service Provider), é redirecionado para o IdP, autentica-se, e o IdP envia uma "asserção" assinada digitalmente a confirmar a identidade. A aplicação aceita essa asserção sem pedir password.
+
+**OIDC (OpenID Connect)**: Construído sobre OAuth 2.0, mais moderno e usado em aplicações web e mobile. Funciona de forma similar ao SAML mas com tokens JWT. É o protocolo por detrás do "Entrar com Google" e "Entrar com Microsoft".
+
+Do ponto de vista do utilizador, o SSO é invisível: clica numa aplicação, já está autenticado.
+
+## Os Ganhos de Segurança do SSO
+
+O SSO não é apenas uma conveniência. É uma medida de segurança substantiva.
+
+### MFA Centralizado
+
+Em vez de ativar MFA aplicação a aplicação — esperando que cada fornecedor tenha uma implementação decente — o MFA é aplicado uma vez no IdP. Todas as aplicações ficam automaticamente protegidas com MFA forte, mesmo as que não têm essa funcionalidade nativa.
+
+### Offboarding Imediato e Completo
+
+Quando um colaborador sai, desativa a conta no IdP. O acesso a **todas** as aplicações configuradas é revogado instantaneamente — sem ter de entrar em 40 sistemas diferentes e lembrar de todos. Esta é provavelmente a maior vantagem prática para PMEs: o [offboarding seguro](/blog/offboarding-seguro-revogar-acessos-colaboradores-pme) deixa de depender de memória humana.
+
+### Auditoria Centralizada
+
+Todos os logins passam pelo IdP, que regista quem acedeu a quê e quando. Um único sítio para verificar atividade suspeita, em vez de consultar logs em dezenas de sistemas separados.
+
+### Eliminação de Passwords Fracas ou Reutilizadas
+
+Os utilizadores deixam de precisar de gerir dezenas de passwords. Uma password forte (ou passkey) no IdP é suficiente. Reduz drasticamente o risco de credential stuffing e de passwords reutilizadas comprometidas em violações de dados.
+
+## As Principais Opções para PMEs Portuguesas
+
+### Microsoft Entra ID (anterior Azure AD)
+
+Se a sua empresa já usa Microsoft 365 Business Premium (ou qualquer plano E1/E3/E5), o **Microsoft Entra ID** está incluído e é o IdP mais simples de adotar para empresas no ecossistema Microsoft.
+
+**O que suporta**: Mais de 3.400 aplicações pré-configuradas na galeria da Microsoft (Salesforce, Slack, Dropbox, DocuSign, HubSpot, QuickBooks, Workday, e muitas mais). Aplicações sem integração nativa podem ser configuradas com SSO personalizado via SAML.
+
+**Como configurar SSO numa aplicação**:
+1. No portal Entra ID (entra.microsoft.com), vá a **Enterprise applications** → **New application**
+2. Pesquise a aplicação na galeria (ex: "Slack") e adicione-a
+3. Em **Single sign-on**, selecione **SAML**
+4. Configure os identificadores (Entity ID e Reply URL fornecidos pela app de destino)
+5. Transfira o certificado e configure-o na aplicação de destino
+6. Atribua utilizadores ou grupos que terão acesso
+
+A integração com grupos do Entra ID permite controlo granular: apenas o grupo "Vendas" acede ao CRM, apenas "Contabilidade" acede ao software de faturação.
+
+**Conditional Access**: Com Entra ID P1 (incluído no Business Premium), pode criar políticas que exigem MFA, dispositivo conforme com Intune, ou localização conhecida antes de permitir acesso a aplicações críticas.
+
+**Custo**: Incluído no M365 Business Premium (€22/utilizador/mês). Se já usa, não tem custo adicional de IdP.
+
+### Google Workspace como IdP
+
+Se a empresa usa Google Workspace, o Google funciona como IdP para aplicações externas através de SAML. A configuração é semelhante: **Admin Console** → **Apps** → **Web and mobile apps** → **Add app** → **Add custom SAML app**.
+
+O Google Workspace suporta 2SV (verificação em dois passos) centralizado — quando forçado no Admin Console, aplica-se a todos os logins Google e, por extensão, a todos os serviços federados.
+
+**Limitação**: O Google como IdP tem menos funcionalidades avançadas (Conditional Access granular, políticas por grupo complexas) do que o Entra ID. Para PMEs com ambiente Google simples, é suficiente.
+
+### Okta Free (até 5 aplicações)
+
+Para PMEs que não usam nem Microsoft nem Google como base, ou que têm um ambiente misto, o **Okta** oferece um plano gratuito para até 5 aplicações SAML/OIDC com até 100 utilizadores.
+
+A Okta tem décadas de foco exclusivo em identidade e acesso — a qualidade da integração com as suas aplicações é excelente. O plano pago começa em $3/utilizador/mês (Workforce Identity Cloud Starter).
+
+**Melhor para**: PMEs com ambiente multi-cloud que precisam de uma solução de identidade agnóstica e independente do fornecedor de email.
+
+### Authentik (Open Source, Self-Hosted)
+
+Para PMEs com capacidade técnica interna e preocupações com custo, o **Authentik** é uma alternativa open source de qualidade. Pode ser instalado num servidor próprio e oferece SSO via SAML, OIDC e Proxy, gestão de utilizadores, MFA e LDAP.
+
+\`\`\`bash
+# Instalação via Docker Compose
+curl -o docker-compose.yml https://goauthentik.io/docker-compose.yml
+# Configure o .env com domínio e secret key
+docker compose up -d
+\`\`\`
+
+**Custo**: Apenas o custo do servidor (um VPS de €10–15/mês serve uma PME de 50 utilizadores).
+
+**Cuidado**: Self-hosted significa que a sua equipa é responsável por atualizações, backups e disponibilidade. Se não tem capacidade técnica interna, use Entra ID ou Okta.
+
+## O Que Fazer com Apps que Não Suportam SSO
+
+Nem todas as aplicações suportam SAML ou OIDC — especialmente software mais antigo, ERPs legados, ou ferramentas de nicho. Para estes casos:
+
+**Gestor de passwords com cofres partilhados**: Bitwarden Teams ou 1Password Business para armazenar e preencher as credenciais destas aplicações. Não é SSO verdadeiro, mas centraliza as passwords e permite offboarding via remoção de acesso às cofres partilhadas.
+
+**Entra ID com password-based SSO**: O Entra ID suporta "password-based SSO" para aplicações web antigas — o Entra armazena e injeta as credenciais, sem a aplicação precisar de suportar SAML.
+
+**Pressão junto do fornecedor**: Muitos fornecedores de software adicionam SSO quando os clientes pedem. Vale a pena exigir nas renovações de contrato — é um critério de seleção cada vez mais standard.
+
+## Plano de Implementação para uma PME
+
+### Fase 1 — Auditoria (1 semana)
+Inventariar todas as aplicações SaaS em uso (pedir lista ao departamento financeiro — todas as subscrições com fatura). Identificar quais suportam SAML/OIDC (geralmente na secção Security ou Integrations das aplicações). Escolher o IdP adequado.
+
+### Fase 2 — Configuração do IdP (1 semana)
+Forçar MFA para todos os utilizadores no IdP. Configurar grupos por departamento ou função. Configurar as primeiras 3–5 aplicações críticas (email, ficheiros, CRM).
+
+### Fase 3 — Expansão Gradual (1 mês)
+Adicionar as restantes aplicações que suportam SSO. Comunicar a mudança aos utilizadores — link de acesso único ao portal do IdP. Rever e revogar contas antigas e "órfãs" encontradas durante a auditoria.
+
+### Fase 4 — Automatização com SCIM (opcional)
+O SCIM (System for Cross-domain Identity Management) provisiona e remove automaticamente utilizadores nas aplicações quando se cria ou desativa uma conta no IdP. Disponível no Entra ID, Okta, e em muitas aplicações grandes (Slack, Salesforce, Dropbox). Elimina completamente o risco de esquecimento no offboarding.
+
+## Erros Comuns
+
+**Não forçar MFA no IdP**: SSO sem MFA é uma porta única que, comprometida, dá acesso a tudo. MFA no IdP é obrigatório — não opcional.
+
+**Manter contas locais nas aplicações**: Muitos colaboradores têm contas criadas diretamente nas aplicações antes do SSO ser configurado. Estas contas locais precisam de ser revistas, migradas para SSO, ou removidas.
+
+**Não testar o offboarding**: Antes de comunicar o SSO como processo de onboarding/offboarding, simule uma saída e verifique que o acesso a todas as aplicações foi efetivamente revogado.
+
+**Não documentar o processo**: SSO depende de configuração que precisa de ser documentada — certificados com data de expiração, URLs de metadados, mapeamento de atributos. Um ficheiro de documentação simples evita problemas quando o certificado expira.
+
+---
+
+O SSO é uma das medidas de segurança com melhor relação custo-benefício para PMEs que já usam múltiplos SaaS. Para empresas no ecossistema Microsoft, o Entra ID já está disponível sem custo adicional no plano Business Premium — o investimento é apenas de configuração.
+
+Para complementar o SSO, consulte o guia de [gestão de identidade e acessos (IAM) para PMEs](/blog/gestao-identidade-acessos-iam-pme) e o guia de [passkeys para eliminar passwords](/blog/passkeys-autenticacao-sem-senha-pme). O [gestor de passwords para empresas](/blog/gestor-passwords-empresa-bitwarden-1password-keeper) cobre os casos onde SSO não está disponível.`,
+    category: "ferramentas",
+    categoryLabel: "Ferramentas",
+    publishedAt: "2026-04-20",
+    readingTime: 12,
+    author: {
+      name: "Carlos Miranda",
+      title: "Consultor de Cibersegurança",
+    },
+  },
+  {
+    slug: "protecao-ddos-pme-cloudflare-guia-pratico",
+    title: "Proteção contra Ataques DDoS para PMEs: Guia Prático com Cloudflare e Soluções Acessíveis",
+    excerpt:
+      "Ataques DDoS atingem cada vez mais PMEs para extorsão e disrupção. Configure Cloudflare gratuito, rate limiting e prepare um plano de resposta eficaz.",
+    content: `Um ataque DDoS — Distributed Denial of Service — tem um objetivo simples: tornar um serviço inacessível através do volume. Centenas ou milhares de máquinas comprometidas (ou VMs alugadas) enviam tráfego até o servidor ou a ligação à internet não conseguir responder a pedidos legítimos.
+
+Durante anos, os ataques DDoS eram um problema de grandes empresas e infraestruturas críticas. Em 2026, a realidade é diferente: ferramentas de DDoS-as-a-service custam €5 por ataque no mercado negro, e as PMEs tornaram-se alvos habituais — precisamente porque geralmente não têm proteção.
+
+## Por Que as PMEs São Atacadas
+
+Ao contrário do que se pensa, os ataques DDoS a PMEs raramente são motivados por hacktivismo ou espionagem. Os três cenários mais comuns em Portugal:
+
+**Extorsão por interrupção**: O atacante derruba o site ou serviço por algumas horas e depois contacta a empresa a exigir um pagamento (tipicamente €500–5.000) para parar. É o DDoS como ransomware sem encriptar nada — apenas interromper.
+
+**Concorrência desleal**: Uma empresa contrata um serviço de DDoS para derrubar um concorrente durante um período crítico (Black Friday, lançamento de produto, processo de licitação pública). Acontece mais do que seria desejável e é difícil de provar.
+
+**Cobertura para outro ataque**: Menos frequente em PMEs, mas um ataque DDoS pode ser usado para distrair a equipa de TI enquanto um ataque mais sofisticado ocorre noutro vetor — acesso remoto, phishing, ou exploração de vulnerabilidade.
+
+## Os Três Tipos de Ataque DDoS
+
+Não é apenas "muito tráfego". Existem tipos distintos com soluções diferentes:
+
+### Volumétrico (Camada 3/4)
+
+Satura a largura de banda da ligação à internet com tráfego UDP flood, ICMP flood, ou amplificação DNS/NTP. Uma ligação de 1Gbps pode ser saturada por um ataque de 100Gbps ou mais através de técnicas de amplificação.
+
+**Impacto**: O servidor fica inacessível não porque está sobrecarregado, mas porque a ligação à internet está completamente saturada.
+
+**Solução necessária**: Mitigação upstream — Cloudflare, OVHCloud, ou proteção ao nível do ISP.
+
+### Protocolo (Camada 3/4)
+
+SYN flood: o atacante envia milhares de pedidos TCP SYN que nunca completam o handshake de três vias, esgotando as tabelas de conexões do servidor ou da firewall.
+
+**Impacto**: O servidor fica sem recursos para processar ligações legítimas mesmo que a largura de banda não esteja saturada.
+
+**Solução**: SYN cookies no sistema operativo, rate limiting no firewall.
+
+### Aplicação (Camada 7)
+
+HTTP flood: pedidos GET/POST aparentemente legítimos em grande volume que sobrecarregam o servidor web, a base de dados, ou a aplicação. Mais difícil de distinguir de tráfego real.
+
+**Impacto**: O site fica lento ou indisponível sem saturar a largura de banda — muitas ferramentas de monitorização de uptime não detectam bem este tipo de ataque.
+
+**Solução**: WAF (Web Application Firewall), rate limiting, challenge pages.
+
+## Cloudflare: A Melhor Proteção Gratuita para a Maioria das PMEs
+
+Para websites e APIs expostos à internet, o **Cloudflare** é a resposta mais acessível — e genuinamente eficaz. O plano gratuito inclui proteção DDoS ilimitada sem volume máximo garantido.
+
+### Como Funciona
+
+Quando configura o Cloudflare, os DNS do seu domínio passam a apontar para os servidores Cloudflare em vez do seu servidor diretamente. O tráfego entra pela rede Cloudflare (270+ data centers globais), é inspecionado e filtrado, e apenas o tráfego considerado legítimo chega ao seu servidor de origem.
+
+### Configuração Passo a Passo
+
+**1. Criar conta e adicionar o domínio**
+
+Registe em cloudflare.com (gratuito). Adicione o seu domínio — o Cloudflare importa automaticamente os registos DNS existentes. Altere os nameservers do domínio para os fornecidos pelo Cloudflare no seu registador de domínio (propagação em até 24h).
+
+**2. Verificar que os registos têm proxy ativo**
+
+No DNS do Cloudflare, os registos A/AAAA com o ícone laranja (proxied) passam pelo Cloudflare — o IP real do servidor não fica exposto. Mantenha apenas o proxy nos registos web; registos MX e de verificação devem ficar sem proxy.
+
+**3. Configurar as definições de segurança base**
+
+Em **Security** → **Settings**:
+- Security Level: **Medium** (pode subir para High durante um ataque ativo)
+- Challenge Passage: **30 minutes**
+- Browser Integrity Check: **On**
+
+**4. WAF — Web Application Firewall**
+
+O plano gratuito inclui um WAF básico. Ative o OWASP Core Ruleset e as Cloudflare Managed Rules. Se usar WordPress, ative também o ruleset específico para WordPress.
+
+**5. Rate Limiting**
+
+Em **Security** → **WAF** → **Rate limiting rules**, crie regras para limitar requests por IP nos endpoints mais vulneráveis:
+- \`/wp-login.php\`, \`/login\`, \`/admin\` — limite de 10 requests por 10 segundos
+- \`/api/\` — limite ajustado ao volume esperado da API
+
+**6. Modo "Under Attack"**
+
+Se estiver a ser atacado neste momento:
+- Ative em **Security** → **Settings** → **Security Level** → **I'm Under Attack**
+- O Cloudflare apresenta um desafio JavaScript a todos os visitantes antes de os deixar passar
+- Reduz dramaticamente o tráfego ilegítimo em segundos
+
+### Limitações do Plano Gratuito
+
+- Rate limiting avançado (por cabeçalho, por corpo de request) requer plano Pro (€20/mês)
+- Cloudflare Workers para lógica personalizada são pagos
+- Para serviços que não são web (MySQL direto, SMTP, RDP), o proxy Cloudflare não se aplica
+
+## OVHCloud Anti-DDoS
+
+Se o servidor está na OVHCloud — comum em Portugal para servidores dedicados e VPS — a OVH inclui proteção DDoS Anti-flood em todos os produtos sem custo adicional.
+
+O sistema VAC (Vacuuming and Cleansing) da OVH mitiga ataques volumétricos a nível de rede antes de chegarem ao servidor. Isto cobre ataques de camada 3/4 mas **não** ataques de camada 7 (HTTP flood).
+
+Para proteção completa num servidor OVH, combine as duas soluções:
+- OVH Anti-DDoS (gratuito, ativo automaticamente) — proteção L3/L4
+- Cloudflare como proxy na frente — proteção L7 e WAF
+
+## Proteção do Servidor em Si
+
+Mesmo com Cloudflare, o servidor precisa de proteções locais:
+
+**Fail2ban para SSH e serviços**:
+\`\`\`bash
+apt install fail2ban
+
+# /etc/fail2ban/jail.local
+[sshd]
+enabled = true
+maxretry = 5
+bantime = 3600
+\`\`\`
+
+**Rate limiting no Nginx**:
+\`\`\`nginx
+limit_req_zone $binary_remote_addr zone=api:10m rate=10r/s;
+
+server {
+    location /api/ {
+        limit_req zone=api burst=20 nodelay;
+        limit_req_status 429;
+    }
+}
+\`\`\`
+
+**Fechar portas não utilizadas**:
+\`\`\`bash
+ufw default deny incoming
+ufw allow 80/tcp
+ufw allow 443/tcp
+ufw allow 22/tcp
+ufw enable
+\`\`\`
+
+Se o servidor só deve receber tráfego do Cloudflare, dê um passo adicional: bloqueie todo o tráfego direto e permita apenas os IP ranges publicados pelo Cloudflare. Isto impede atacantes de contornar o Cloudflare contactando diretamente o IP do servidor.
+
+## Plano de Resposta a um Ataque DDoS
+
+### Nos primeiros 5 minutos
+
+1. Confirmar que é DDoS e não um problema técnico normal (usar um serviço de uptime externo, ver Cloudflare analytics)
+2. Ativar "I'm Under Attack" mode no Cloudflare
+3. Verificar métricas do servidor (CPU, memória, largura de banda) para perceber o tipo de ataque
+
+### Se receber uma exigência de pagamento
+
+**Não pague.** Não há garantia de que o ataque para, e sinaliza que o método funciona — o que normalmente resulta em mais ataques no futuro.
+
+Documente tudo: emails, mensagens, timestamps. Apresente queixa na **PJ Cibercrime** (www.policiajudiciaria.pt) — ataques DDoS são criminalmente puníveis como sabotagem informática ao abrigo do artigo 5.º da Lei do Cibercrime.
+
+### Comunicação durante o ataque
+
+- Se o site for público, publique um aviso de manutenção nas redes sociais
+- Se for um serviço B2B, informe os clientes afetados proativamente e com honestidade
+- Não mencione "ataque DDoS" publicamente enquanto a situação não estiver sob controlo
+
+### Pós-incidente
+
+Analise os logs para perceber o vetor e a origem do ataque. Reveja e reforce as regras de proteção no Cloudflare. Documente o incidente — pode ser relevante para o [seguro de cibersegurança](/blog/seguro-ciberseguranca-pme-portugal) e para a notificação NIS2 se a empresa estiver no âmbito.
+
+## Resumo de Custos
+
+| Solução | Proteção | Custo |
+|---|---|---|
+| Cloudflare Free | L7 DDoS, WAF básico, proxy | Grátis |
+| Cloudflare Pro | L7 avançado, rate limiting completo | €20/mês |
+| OVH Anti-DDoS | L3/L4 volumétrico | Incluído em VPS/dedicados |
+| Azure DDoS Basic | L3/L4 para recursos Azure | Grátis |
+| Azure DDoS Network Protection | SLA, telemetria, suporte | ~€2.500/mês (overkill para PME) |
+
+Para a grande maioria das PMEs portuguesas, **Cloudflare gratuito + boas práticas de servidor** é proteção suficiente e pode ser implementado em menos de uma hora.
+
+---
+
+Para aprofundar a segurança do servidor subjacente, consulte o [guia de hardening Linux para PMEs](/blog/linux-hardening-servidores-pme-ubuntu-debian) e o [guia de gestão de certificados SSL/TLS](/blog/gestao-certificados-ssl-tls-pme-guia-completo). Se a sua presença online inclui uma loja, veja também o [guia de segurança para e-commerce](/blog/seguranca-ecommerce-loja-online-pme-portugal).`,
+    category: "ameacas",
+    categoryLabel: "Ameacas",
+    publishedAt: "2026-04-20",
+    readingTime: 11,
+    author: {
+      name: "Rita Santos",
+      title: "Analista de Segurança",
+    },
+  },
+  {
     slug: "ciberseguranca-industrial-ot-scada-pme",
     title: "Cibersegurança Industrial para PMEs: Proteger Sistemas OT, SCADA e Redes de Automação",
     excerpt:
