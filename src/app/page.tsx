@@ -58,6 +58,12 @@ export default function HomePage() {
               >
                 Avaliar a Minha Empresa
               </Link>
+              <Link
+                href="/reportar-incidente"
+                className="px-8 py-3 bg-error text-white rounded-lg font-bold hover:opacity-90 transition"
+              >
+                Reportar Incidente (72h)
+              </Link>
               <a
                 href="#newsletter"
                 className="px-8 py-3 border border-white/20 text-white rounded-lg font-medium hover:bg-white/10 transition"

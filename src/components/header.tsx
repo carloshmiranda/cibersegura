@@ -26,18 +26,18 @@ export default function Header({ currentPath }: HeaderProps) {
             Avaliação
           </Link>
           <Link
+            href="/reportar-incidente"
+            className={currentPath === "/reportar-incidente" ? "text-brand font-bold" : "hover:text-brand transition"}
+            aria-current={currentPath === "/reportar-incidente" ? "page" : undefined}
+          >
+            Reportar Incidente
+          </Link>
+          <Link
             href="/recursos"
             className={currentPath === "/recursos" ? "text-brand font-bold" : "hover:text-brand transition"}
             aria-current={currentPath === "/recursos" ? "page" : undefined}
           >
             Recursos
-          </Link>
-          <Link
-            href="/recursos/nis2"
-            className={currentPath === "/recursos/nis2" ? "text-brand font-bold" : "hover:text-brand transition"}
-            aria-current={currentPath === "/recursos/nis2" ? "page" : undefined}
-          >
-            Recursos NIS2
           </Link>
           <Link
             href="/blog"
