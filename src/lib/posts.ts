@@ -26037,6 +26037,586 @@ O custo de não implementar os controlos básicos é ordens de magnitude superio
       title: "Consultor de Cibersegurança",
     },
   },
+  {
+    slug: "colaborador-clicou-phishing-o-que-fazer",
+    title: "Colaborador Clicou Num Link de Phishing: Guia de Resposta Imediata",
+    excerpt:
+      "Aconteceu — alguém na equipa clicou num link de phishing. Os próximos 30 minutos são críticos. Este guia percorre o que fazer imediatamente, como avaliar o dano e quando notificar a CNPD e o CERT.PT.",
+    content: `Aconteceu. Um colaborador clicou num link de phishing. Talvez fosse um email que parecia vir do gestor, do Microsoft, do DHL ou da AT. Agora o dispositivo está à sua frente e a pergunta é: o que fazemos agora?
+
+Os próximos 30 minutos determinam se este incidente fica contido num único dispositivo ou se se propaga pela rede.
+
+## Antes de Entrar em Pânico: As Primeiras Duas Perguntas
+
+A gravidade do incidente depende de **o que aconteceu depois do clique**. Há uma diferença enorme entre estes cenários:
+
+| O que aconteceu | Gravidade |
+|---|---|
+| Abriu o link mas não fez mais nada | Baixa — pode ter sido apenas rastreamento |
+| Abriu um site e introduziu credenciais | Alta — conta comprometida |
+| Descarregou e abriu um ficheiro | Muito alta — possível malware instalado |
+| Introduziu dados bancários ou de cartão | Crítica — contactar banco de imediato |
+| Autorizou uma app OAuth | Alta — acesso persistente à conta |
+
+A primeira coisa a perceber é qual destes cenários se aplica. Pergunte ao colaborador o que fez depois de clicar — sem julgamento, com calma. A honestidade neste momento é essencial para responder corretamente.
+
+---
+
+## Os Primeiros 5 Minutos
+
+### 1. Isolar o Dispositivo da Rede
+
+Se o colaborador descarregou e abriu um ficheiro desconhecido, o dispositivo pode estar comprometido com malware. O primeiro passo é **cortar a ligação à rede** para impedir que o malware comunique com servidores externos ou se propague pela rede interna:
+
+- **Desligar o cabo de rede** (se ligado por cabo)
+- **Desativar o Wi-Fi** (não apenas mudar de rede — desativar completamente)
+- **Não desligar o computador** — manter ligado preserva evidências em memória
+
+Se o colaborador apenas clicou num link e voltou atrás sem fazer mais nada, o isolamento pode não ser necessário, mas é prudente.
+
+### 2. Não Entrar Em Nenhuma Conta a Partir do Dispositivo Afetado
+
+Se o dispositivo pode estar comprometido, qualquer credencial inserida nele após o clique também está comprometida. Diga ao colaborador para não aceder a email, banca ou outros serviços a partir desse dispositivo até ser avaliado.
+
+---
+
+## Os Primeiros 30 Minutos: Conter o Dano
+
+### Se o Colaborador Introduziu Credenciais
+
+Este é o cenário mais comum. O link levava a uma página falsa que pedia o email e password (muitas vezes copiando o aspeto da página de login da Microsoft, Google, ou outro serviço). O que fazer:
+
+**1. Alterar a password da conta afetada imediatamente**
+A partir de um dispositivo diferente e seguro, aceder à conta e alterar a password. Se a conta pertence ao Microsoft 365 ou Google Workspace, o administrador pode forçar o reset para toda a organização.
+
+**2. Revogar todas as sessões ativas**
+- **Microsoft 365:** Entra ID > Utilizadores > [conta] > Revogar sessões
+- **Google Workspace:** Admin > Utilizadores > [conta] > Segurança > Sessões ativas > Terminar todas
+
+Isto desconecta qualquer atacante que já tenha entrado com as credenciais roubadas.
+
+**3. Verificar regras de reencaminhamento de email**
+Um dos primeiros passos de um atacante após aceder a uma conta de email é criar regras que reencaminham uma cópia de toda a correspondência para uma conta externa. Verificar:
+- **Microsoft 365:** Exchange Admin Center > Mail Flow > Regras. Também verificar as configurações da caixa individual em Outlook.
+- **Google Workspace:** Gmail Settings > Ver todas as definições > Encaminhamento e POP/IMAP
+
+**4. Verificar aplicações OAuth com acesso à conta**
+O link de phishing pode ter levado a uma página que pediu autorização para uma app de terceiros (aparentemente legítima) aceder à conta. Verificar apps autorizadas:
+- **Microsoft 365:** myapps.microsoft.com > Apps
+- **Google:** myaccount.google.com > Segurança > Apps de terceiros com acesso à conta
+
+Revogar qualquer app que não reconheça.
+
+**5. Ativar MFA se ainda não estiver ativo**
+Se a conta não tinha autenticação de dois fatores, este incidente é o momento para ativar. Com MFA ativo, mesmo que a password tenha sido roubada, o atacante não consegue aceder sem o segundo fator.
+
+### Se o Colaborador Descarregou e Abriu um Ficheiro
+
+**1. Manter o dispositivo isolado da rede**
+
+**2. Executar uma análise de malware completa**
+- Windows Defender (scan completo, não rápido)
+- Malwarebytes Free (segunda opinião, descarregar e executar de pen USB num outro computador)
+
+**3. Verificar processos em execução suspeitos**
+No Task Manager (Ctrl+Shift+Esc), procurar processos desconhecidos com uso elevado de CPU ou ligações de rede. Se houver dúvida, pesquisar o nome do processo online.
+
+**4. Se houver suspeita de ransomware:**
+- Não reiniciar — o ransomware pode estar à espera da próxima inicialização
+- Contactar suporte IT ou um MSSP imediatamente
+- Verificar se os ficheiros nas pastas partilhadas têm extensões desconhecidas
+
+---
+
+## Primeira Hora: Avaliar o Alcance
+
+Depois de conter o dispositivo imediato, avaliar se o ataque se propagou:
+
+**Verificar o email enviado durante a janela de comprometimento**
+Se as credenciais foram roubadas, o atacante pode ter enviado emails de phishing aos contactos da vítima usando a sua conta. Verificar a pasta "Enviados" para emails não reconhecidos.
+
+**Verificar outros dispositivos do mesmo utilizador**
+Se o utilizador usa o mesmo email e password noutros dispositivos ou serviços, todos estão em risco.
+
+**Verificar se a password comprometida era reutilizada**
+A reutilização de passwords é um problema comum. Se a mesma password era usada noutros serviços (banca, outros SaaS empresariais), esses também devem ser alterados.
+
+**Informar a equipa IT**
+Mesmo que o incidente pareça contido, a equipa IT deve ser informada. Pode haver indicadores de comprometimento que só são visíveis nos logs centralizados.
+
+---
+
+## Obrigações Legais: Quando Notificar
+
+### CNPD — 72 Horas (RGPD Art. 33º)
+
+Se o incidente envolveu acesso a dados pessoais de clientes, fornecedores ou colaboradores, a empresa pode ter obrigação de notificar a Comissão Nacional de Proteção de Dados (CNPD) **no prazo de 72 horas** a partir do momento em que tomou conhecimento do incidente.
+
+Isto aplica-se quando há probabilidade de o incidente afetar os direitos e liberdades das pessoas cujos dados foram expostos. A notificação é feita em [cnpd.pt](https://www.cnpd.pt) (Notificações > Violação de Dados Pessoais).
+
+Informações a recolher para a notificação:
+- Quando foi detetado o incidente
+- Que dados foram potencialmente acedidos (categorias e número aproximado de registos)
+- Que medidas foram tomadas para conter o incidente
+- Nome e contacto do responsável de proteção de dados (ou do gestor responsável)
+
+### CNCS — Para Entidades NIS2
+
+Se a empresa está abrangida pela NIS2 (setores essenciais ou importantes), existe obrigação de notificação inicial ao CNCS/CERT.PT em **24 horas** após tomar conhecimento do incidente significativo.
+
+Contacto: cert@cncs.gov.pt | +351 214 004 040
+
+---
+
+## Como Recolher Evidências (Antes de Limpar o Sistema)
+
+Se houver suspeita de compromisso real, não limpe imediatamente o sistema. Primeiro preserve:
+
+- **Print screens** do email de phishing (com cabeçalhos completos visíveis)
+- **URL completo** do link de phishing (pode estar na barra de endereço do browser no histórico)
+- **Logs de eventos do Windows** — copiar para pen USB: \`C:\\Windows\\System32\\winevt\\Logs\`
+- **Lista de processos em execução** no momento: \`tasklist > processos.txt\` no CMD
+- **Conexões de rede ativas**: \`netstat -ano > conexoes.txt\` no CMD
+
+Estas evidências são úteis para análise forense e podem ser pedidas por seguradoras de ciber-risco.
+
+---
+
+## Comunicação Interna
+
+### O Que Dizer ao Colaborador
+
+O colaborador que clicou no link provavelmente sente-se culpado. A resposta de gestão correta:
+
+1. **Não culpar** — os ataques de phishing modernos enganam profissionais de segurança experientes
+2. **Agradecer pela honestidade** — reportar imediatamente é o comportamento certo
+3. **Envolver na resposta** — o colaborador conhece o contexto e pode ajudar a avaliar o dano
+4. **Usar como aprendizagem** — com a sua permissão, partilhar o caso (anonimizado) com a equipa
+
+Culpar colaboradores por clicarem em phishing leva a que futuros incidentes não sejam reportados por medo — o pior resultado possível.
+
+### O Que Dizer à Gestão
+
+Comunicar de forma factual e concisa:
+- O que aconteceu (link de phishing clicado, em que conta/sistema)
+- O que foi feito (password alterada, sessões revogadas, dispositivo isolado)
+- O que está a ser investigado (alcance do comprometimento)
+- Próximos passos e prazo estimado
+
+---
+
+## Depois do Incidente: Prevenir a Recorrência
+
+O incidente fechado é uma oportunidade de melhoria:
+
+**Activar ou reforçar MFA em toda a organização** — se este utilizador não tinha MFA, esta é a razão para ativar para todos.
+
+**Configurar phishing-resistant authentication** — as [passkeys](/blog/passkeys-autenticacao-sem-senha-pme) são imunes a phishing porque verificam o domínio do site antes de autenticar.
+
+**Configurar Microsoft Defender ou Google Safe Browsing** para bloquear URLs maliciosos conhecidos antes do clique.
+
+**Realizar uma simulação de phishing** — [simular ataques de phishing controlados](/blog/simulacao-phishing-empresa-como-fazer-pme) é a forma mais eficaz de treinar a equipa de forma realista.
+
+**Rever a política de acesso** — se um colaborador com acesso limitado tivesse clicado neste link, qual seria o impacto máximo? Reduzir o impacto potencial de qualquer conta comprometida através do [princípio do mínimo privilégio](/blog/gestao-identidade-acessos-iam-pme).
+
+---
+
+O incidente de phishing é, infelizmente, quase inevitável em qualquer organização com email. O que diferencia as empresas resilientes não é nunca clicar — é saber o que fazer quando acontece.`,
+    category: "ameacas",
+    categoryLabel: "Ameacas",
+    publishedAt: "2026-04-20",
+    readingTime: 11,
+    author: {
+      name: "Rita Santos",
+      title: "Analista de Segurança",
+    },
+  },
+  {
+    slug: "fraude-pagamento-email-iban-como-prevenir",
+    title: "Fraude de Pagamento por Email: Como Evitar Transferências para IBANs Fraudulentos",
+    excerpt:
+      "Todos os anos, PMEs portuguesas perdem dezenas de milhares de euros em transferências para IBANs falsos enviados por email. Saiba como funcionam estes ataques e que controlos implementar para nunca pagar para a conta errada.",
+    content: `Uma empresa de construção em Braga aguardava a fatura do seu fornecedor habitual de materiais. Quando chegou o email com a fatura — mesmo logótipo, mesmo endereço, mesma linguagem — o departamento financeiro processou o pagamento de €23.000 sem hesitar. O dinheiro foi para uma conta bancária na Bulgária. O fornecedor real nunca recebeu nada.
+
+Este cenário repete-se centenas de vezes por ano em Portugal. A fraude de pagamento por email — tecnicamente conhecida como **Business Email Compromise (BEC)** com foco em desvio de pagamentos — é uma das formas mais rentáveis de fraude empresarial e uma das mais difíceis de recuperar.
+
+## Como Funciona a Fraude de IBAN
+
+Existem três formas principais como os atacantes desviam pagamentos:
+
+### 1. Comprometimento de Email do Fornecedor
+
+O atacante compromete a caixa de email do fornecedor (via phishing ou brute force) e monitoriza a correspondência durante semanas. Quando deteta uma fatura pendente, envia um email da conta legítima do fornecedor — com o IBAN alterado para a conta controlada pelo atacante.
+
+Do lado da empresa pagadora, o email parece absolutamente legítimo porque **é** o email do fornecedor. Não há sinais de alerta óbvios.
+
+### 2. Email Spoofing / Domínio Similar
+
+O atacante não compromete o email real, mas cria um domínio visualmente semelhante:
+
+| Domínio real | Domínio fraudulento |
+|---|---|
+| fornecedora.pt | fornecedora.com |
+| materiais-sa.pt | materials-sa.pt |
+| constru-lda.pt | constru-lda.net |
+| joão@empresa.pt | joao@empresa.pt (sem acento) |
+
+O email de phishing vem deste domínio alternativo, com a fatura e IBAN fraudulentos. Sem inspecionar cuidadosamente o endereço de email completo, a mensagem parece legítima.
+
+### 3. Comprometimento Interno (BEC Clássico)
+
+O atacante compromete o email de um executivo interno (CEO, CFO) e envia instruções urgentes ao departamento financeiro para processar uma transferência para um novo fornecedor ou conta alternativa — muitas vezes com apelo à confidencialidade ("não mencione a outros").
+
+---
+
+## Os Sinais de Alerta a Nunca Ignorar
+
+Qualquer um destes elementos numa mensagem sobre pagamentos deve ativar o protocolo de verificação:
+
+- **Pedido de alteração de IBAN** — seja por email, WhatsApp, telefone, ou qualquer canal
+- **Urgência** — "precisa de ser processado hoje", "prazo a expirar"
+- **Pedido de confidencialidade** — "não partilhe com outros"
+- **Email de endereço ligeiramente diferente do habitual** — verificar cada letra
+- **Fatura de valor invulgarmente elevado** para o fornecedor em questão
+- **Primeira fatura** de um novo fornecedor
+- **Fatura após período de silêncio** do fornecedor (pode ter havido comprometimento entretanto)
+
+---
+
+## O Protocolo de Verificação de IBAN
+
+Esta é a medida mais importante e a única que realmente previne o pagamento fraudulento:
+
+**Regra absoluta: qualquer alteração de IBAN só é válida após confirmação telefónica para um número previamente registado.**
+
+O que isto significa na prática:
+
+1. **Antes de qualquer alteração de IBAN:** ligar para o fornecedor usando o número de telefone que já está registado nos vossos sistemas (não o número que aparece no email ou na fatura com o IBAN novo).
+
+2. **Confirmar a alteração diretamente com a pessoa responsável** — não com quem atende o telefone que não conhece, mas com o contacto habitual.
+
+3. **Documentar a confirmação** — anotar data, hora, nome da pessoa que confirmou e número chamado.
+
+4. **Só depois processar o pagamento.**
+
+Este processo acrescenta 5 minutos. Previne perdas de dezenas de milhar de euros.
+
+### O Que Fazer Quando o IBAN Não Muda
+
+Mesmo sem alteração de IBAN, na primeira fatura de um fornecedor novo ou para faturas de valor elevado incomum, a verificação telefónica é boa prática.
+
+---
+
+## Controlos Financeiros que Reduzem o Risco
+
+### Aprovação Dupla para Transferências Acima de um Limiar
+
+Definir um valor (por exemplo, €2.000 ou €5.000 dependendo do volume habitual da empresa) acima do qual qualquer transferência requer aprovação de duas pessoas distintas. Isto garante que uma única pessoa enganada não pode autorizar um pagamento de elevado valor.
+
+A maioria dos bancos empresariais em Portugal oferece esta funcionalidade — verificar com o gestor de conta.
+
+### Limites de Transferência no Portal Bancário
+
+Configurar no portal da banca empresarial:
+- **Limite diário de transferências** — adequado ao volume normal de operações
+- **Lista de beneficiários aprovados** — apenas IBANs pré-aprovados podem receber acima de certo valor sem aprovação adicional
+- **Alertas por SMS/email** para qualquer transferência acima de um limiar
+
+### Processo Separado para Novos Beneficiários
+
+Criar internamente um processo de aprovação para adicionar um IBAN novo aos sistemas de pagamento. Este processo deve incluir verificação telefónica obrigatória e aprovação de um segundo responsável.
+
+---
+
+## Se o Dinheiro Já Foi Transferido: A Hora de Ouro
+
+Após uma transferência fraudulenta, o tempo é crítico. Os bancos têm capacidade de tentar reverter transferências nas primeiras horas se o banco de destino cooperar.
+
+**No momento em que detetar a fraude:**
+
+1. **Ligar imediatamente ao banco** — não enviar email, ligar. Pedir para bloquear ou reverter a transferência. Mencionar que foi fraude e dar o IBAN de destino.
+
+2. **Guardar todos os elementos** — email fraudulento (com cabeçalhos completos), comprovativos de transferência, qualquer comunicação com o suposto fornecedor.
+
+3. **Contactar o fornecedor legítimo** pelo canal habitual — confirmar que não enviaram o email e perceber se a sua caixa de email foi comprometida.
+
+4. **Apresentar queixa na PSP/PJ** — a Unidade Nacional de Combate ao Cibercrime e à Criminalidade Tecnológica (UNC3T) da Polícia Judiciária trata estes casos. A queixa é necessária para o processo de recuperação e para efeitos de seguro.
+
+5. **Verificar obrigação de notificação CNPD** — se houve comprometimento de dados pessoais (email comprometido com dados de clientes, por exemplo), pode existir obrigação de notificação em 72 horas.
+
+A taxa de recuperação é baixa — menos de 10% dos casos — mas quanto mais rápido for o reporte ao banco, maiores as hipóteses.
+
+---
+
+## Medidas Técnicas de Proteção de Email
+
+### Verificar o Estado SPF, DKIM e DMARC do Domínio
+
+Estes três registos DNS protegem o domínio da empresa de ser usado em ataques de spoofing contra os seus clientes e fornecedores. Verificar o estado atual em [mxtoolbox.com](https://mxtoolbox.com/dmarc.aspx) ou [dmarcian.com](https://dmarcian.com/dmarc-inspector/).
+
+Um DMARC em modo \`p=reject\` impede que atacantes usem o seu domínio para enviar emails fraudulentos. Para configuração detalhada, consulte o [guia SPF/DKIM/DMARC](/blog/spf-dkim-dmarc-seguranca-email-pme).
+
+### Ativar Avisos de Email Externo no Microsoft 365
+
+No Exchange Admin, configurar regras que adicionam um aviso visível no topo de emails externos:
+
+> ⚠️ Este email foi enviado de fora da organização.
+
+Este aviso, tão simples quanto parece, aumenta significativamente a taxa de deteção de spoofing — especialmente quando o email parece vir de um colega ou da direção.
+
+### Verificar o Domínio do Remetente Antes de Processar Faturas
+
+Treinar a equipa financeira a inspecionar o endereço de email completo (não apenas o nome de exibição) antes de processar qualquer fatura. No Outlook, clicar no nome do remetente para ver o endereço completo. No Gmail, o endereço aparece diretamente.
+
+---
+
+## Formação da Equipa Financeira
+
+A equipa que processa pagamentos é o alvo primário destes ataques. A formação deve cobrir:
+
+- **Demonstração ao vivo** de como um email fraudulento parece idêntico ao legítimo
+- **Prática do protocolo de verificação** — simular um cenário de pedido de alteração de IBAN
+- **Exemplos reais** de fraudes em Portugal (sem expor empresas, a imprensa cobre casos regularmente)
+- **Autorização explícita** para atrasar um pagamento enquanto verifica — o colaborador não deve sentir que vai ser penalizado por ser cuidadoso
+
+A mensagem central: **não existe urgência legítima que justifique pagar sem verificar.**
+
+---
+
+## Checklist de Prevenção de Fraude de Pagamento
+
+- [ ] Protocolo escrito de verificação de IBAN documentado e partilhado com a equipa financeira
+- [ ] Número de telefone registado para cada fornecedor habitual (independente do email)
+- [ ] Limite de aprovação dupla configurado no portal bancário
+- [ ] Lista de beneficiários pré-aprovados no portal bancário
+- [ ] Avisos de email externo ativados no Microsoft 365 / Google Workspace
+- [ ] DMARC em modo enforce no domínio da empresa
+- [ ] Processo documentado para adicionar novos IBANs (com aprovação dupla)
+- [ ] Formação anual da equipa financeira com simulação de cenário
+- [ ] Seguro de ciber-risco com cobertura de BEC/fraude de transferência
+
+Verificar o [guia sobre fraude CEO e BEC](/blog/fraude-ceo-bec-pme-portugal) para aprofundar os ataques que comprometem contas de executivos para ordenar transferências fraudulentas — outra face desta mesma ameaça.`,
+    category: "ameacas",
+    categoryLabel: "Ameacas",
+    publishedAt: "2026-04-20",
+    readingTime: 10,
+    author: {
+      name: "Carlos Miranda",
+      title: "Consultor de Cibersegurança",
+    },
+  },
+  {
+    slug: "offboarding-seguro-revogar-acessos-colaboradores-pme",
+    title: "Offboarding Seguro: O Que Fazer Quando um Colaborador Sai da Empresa",
+    excerpt:
+      "Cada saída de colaborador é um evento de segurança. Contas não revogadas, passwords partilhadas ainda válidas e acesso a SaaS esquecidos são vulnerabilidades que muitas PMEs deixam abertas durante meses. Checklist completo de offboarding.",
+    content: `A maioria das PMEs tem um processo de onboarding — criar o email, dar acesso ao servidor, instalar o computador. Mas o **offboarding** — o que acontece quando um colaborador sai — raramente tem o mesmo rigor. E é um problema de segurança real.
+
+Segundo dados do Ponemon Institute, 59% das empresas que sofreram violações de dados por insiders reportaram que o acesso do colaborador ou ex-colaborador ainda estava ativo quando o incidente ocorreu. Em Portugal, vários casos reportados de acesso indevido após saída envolveram colaboradores que continuaram a aceder a sistemas durante semanas porque ninguém revogou o acesso.
+
+## Por Que o Offboarding é um Evento de Segurança
+
+Quando um colaborador sai, leva consigo:
+- **Conhecimento de passwords** de sistemas onde nunca existiu MFA
+- **Acesso ativo a contas SaaS** que continuam funcionais
+- **Cópia local de ficheiros** que pode ter feito antes de sair
+- **Tokens de sessão** em dispositivos pessoais que permanecem válidos
+- **Conhecimento da infraestrutura** — onde estão os backups, que sistemas existem, as palavras-passe de sistemas críticos
+
+Se a saída for amigável, o risco é menor mas não nulo (um colaborador insatisfeito meses depois pode usar acesso esquecido). Se a saída for conflituosa — despedimento, litígio, divergências — o risco é imediato e real.
+
+A regra geral: **revogar acessos no último dia de trabalho, ou antes, no caso de saídas involuntárias.**
+
+---
+
+## Quando Revogar: O Timing Certo
+
+### Saída Voluntária (resignação)
+
+O colaborador avisa com antecedência. O offboarding pode ser planeado:
+- Revogar acessos **no final do último dia de trabalho**
+- Fazer a transferência de conhecimento e documentação durante o período de aviso
+- Preparar a checklist com antecedência para executar de forma eficiente
+
+### Saída Involuntária (despedimento, extinção de posto)
+
+O risco de ação maliciosa é mais elevado. A prática recomendada:
+- **Revogar acessos imediatamente** no momento da comunicação da saída
+- Fazer o offboarding técnico **antes ou simultaneamente** à conversa de despedimento
+- Acompanhar o colaborador durante a recolha dos seus pertences pessoais
+- Não deixar o colaborador regressar à sua secretária sem supervisão após a comunicação
+
+Esta abordagem pode parecer dura, mas protege a empresa e — ao evitar incidentes — protege também o ex-colaborador de acusações de acesso indevido posterior.
+
+---
+
+## A Checklist Completa de Offboarding de Segurança
+
+### 1. Conta de Email Empresarial
+
+- [ ] **Desativar o acesso à caixa de correio** — não apenas a conta, mas o acesso ativo
+- [ ] **Configurar mensagem de ausência** informando o novo contacto interno
+- [ ] **Redirecionar o email** para o responsável da área durante o período de transição
+- [ ] **Verificar regras de reencaminhamento** que possam ter sido configuradas (reencaminhamento para email pessoal é comum)
+- [ ] **Revogar todas as sessões ativas** no Microsoft 365 (Entra ID > Utilizadores > Revogar sessões) ou Google Workspace (Admin > Utilizadores > Segurança)
+- [ ] **Verificar aplicações OAuth** autorizadas pela conta — revogar todas as apps de terceiros
+- [ ] Decidir prazo para desativação total da caixa (manter activa 30-90 dias para não perder emails importantes é prática comum)
+
+### 2. Active Directory / Microsoft Entra ID / Google Workspace
+
+- [ ] **Desativar a conta** (não apagar imediatamente — preservar para auditoria)
+- [ ] **Remover de todos os grupos de segurança**
+- [ ] **Remover permissões de administrador** (se aplicável)
+- [ ] **Verificar se a conta tem direitos de serviço** ou está configurada como conta de serviço em algum sistema
+- [ ] **Apagar tokens de aplicação** e chaves API gerados pela conta
+
+### 3. Aplicações e Serviços SaaS
+
+Este é normalmente o passo mais difícil — descobrir todos os SaaS que o colaborador usava.
+
+**Lista típica de serviços a verificar:**
+
+| Categoria | Exemplos |
+|---|---|
+| Comunicação | Slack, Microsoft Teams, WhatsApp Business |
+| Gestão de projetos | Notion, Trello, Asana, Monday.com, ClickUp |
+| Repositórios de código | GitHub, GitLab, Bitbucket |
+| CRM | Salesforce, HubSpot, Zoho CRM |
+| Cloud storage | Dropbox, Google Drive, OneDrive, Box |
+| Contabilidade | Sage, Primavera, Xero, QuickBooks |
+| RH | Factorial, BambooHR, Personio |
+| Design | Figma, Canva for Teams |
+| Marketing | Mailchimp, RD Station, Semrush |
+| Acesso remoto | VPN, TeamViewer, AnyDesk |
+| Serviços cloud | AWS, Azure, GCP (consolas e IAM keys) |
+| Redes sociais | LinkedIn Company Page, Meta Business Manager, Instagram |
+
+Para cada serviço: desativar a conta, remover de grupos/equipas, revogar tokens de API.
+
+**Problema frequente:** não existe inventário centralizado de SaaS. A solução é pedir ao colaborador que liste os serviços que usa durante o período de offboarding. Para empresas com SSO (Single Sign-On), o offboarding é simples — desativar a conta central revoga o acesso a tudo.
+
+### 4. Passwords Partilhadas
+
+Muitas PMEs têm passwords partilhadas por equipas — conta de email genérica, acesso ao site, portal de fornecedor, router de escritório. Quando um colaborador com conhecimento dessas passwords sai:
+
+- [ ] **Identificar todas as passwords partilhadas** que o colaborador conhecia
+- [ ] **Alterar todas essas passwords** imediatamente
+- [ ] **Revogar e re-emitir chaves API partilhadas** (se existirem)
+- [ ] **Alterar passwords de redes Wi-Fi** se o colaborador conhecia as credenciais
+
+Um gestor de passwords empresarial como o [Bitwarden](/blog/gestor-passwords-empresa-bitwarden-1password-keeper) torna este processo gerível — permite ver quais passwords o utilizador tinha acesso e revocar o acesso sem precisar de alterar todas as passwords (numa conta de organização, o acesso é por utilizador).
+
+### 5. Acesso Físico
+
+- [ ] **Recolher chaves de escritório** e cartões de acesso
+- [ ] **Desativar crachás de acesso eletrónico** nos sistemas de controlo de acesso
+- [ ] **Alterar código de alarme** se o colaborador o conhecia
+- [ ] **Verificar se tem acesso remoto à sede** via câmeras IP ou sistemas de monitorização
+
+### 6. Dispositivos Empresariais
+
+- [ ] **Recolher computador portátil, telemóvel e outros dispositivos da empresa**
+- [ ] **Fazer backup dos dados** do dispositivo antes de reconfigurar
+- [ ] **Executar wipe seguro** se o dispositivo vai ser reutilizado
+- [ ] **Verificar se o BitLocker/FileVault está ativo** — se o dispositivo não foi devolvido, os dados estão protegidos
+- [ ] Para dispositivos BYOD geridos por MDM: executar **Retire** (não Wipe) para remover apenas os dados empresariais, respeitando o RGPD
+
+### 7. Serviços de Acesso Remoto
+
+- [ ] **Revogar acesso VPN** (certificado, perfil de utilizador, licença)
+- [ ] **Remover de grupos de acesso** no Cloudflare Access, Zscaler, ou similar
+- [ ] **Verificar sessões ativas** de acesso remoto e terminar
+- [ ] **Revogar chaves SSH** em servidores onde tinha acesso
+
+---
+
+## Como Gerir o RGPD dos Dados do Ex-Colaborador
+
+### Dados do Colaborador que Sai
+
+Quando um colaborador sai, a empresa deve:
+- **Reter os dados necessários por obrigações legais** (contrato de trabalho, recibos de vencimento — 5 anos; dados de acidentes de trabalho — 10 anos)
+- **Eliminar dados desnecessários** após os prazos legais
+- **Informar o colaborador** sobre a política de retenção e tratamento dos seus dados pessoais após a saída (pode ser incluído na documentação de offboarding)
+
+### Dados de Clientes que o Colaborador Pode Ter
+
+Se houver suspeita de que o colaborador exportou dados de clientes antes de sair (lista de clientes do CRM, base de dados de emails, documentos confidenciais):
+
+- Este é um potencial **incidente de violação de dados** sob o RGPD
+- Pode exigir **notificação à CNPD em 72 horas** se houver risco para os titulares dos dados
+- Verificar logs de acesso e download no período anterior à saída (Google Drive activity, SharePoint audit logs, CRM export history)
+
+---
+
+## Detetar Contas Esquecidas: Auditoria de Acessos
+
+Para PMEs que nunca fizeram um inventário, o ponto de partida é uma auditoria:
+
+1. **Listar todos os colaboradores atuais e respetivas contas**
+2. **Listar todas as contas ativas nos sistemas principais**
+3. **Comparar as duas listas** — contas que existem nos sistemas mas não na lista de colaboradores ativos são candidatas a remoção
+
+Ferramentas que facilitam:
+- **Microsoft Entra ID Access Reviews** — revisão periódica automática de acessos
+- **Google Workspace Reports** — histórico de atividade por utilizador
+- **SSO (Single Sign-On)** — se toda a autenticação passa por um ponto central, o offboarding é um único passo
+
+Para SaaS sem SSO, a única forma é auditoria manual periódica. Estabelecer um processo trimestral de verificação de contas ativas contra a lista de RH.
+
+---
+
+## Modelo de Checklist para Imprimir
+
+Criar um documento físico (ou digital no gestor de projetos) com a seguinte estrutura:
+
+\`\`\`
+OFFBOARDING DE SEGURANÇA — [NOME DO COLABORADOR]
+Data de saída: ___________
+Motivo: Voluntário / Involuntário
+Responsável pelo offboarding: ___________
+
+EMAIL & IDENTIDADE
+[ ] Email desativado / redirecionado
+[ ] Sessões revogadas (Microsoft/Google)
+[ ] Apps OAuth revogadas
+[ ] Conta AD/Entra desativada
+
+APLICAÇÕES (listagem completa):
+[ ] _____________ — revogado em ___/___/___
+[ ] _____________ — revogado em ___/___/___
+
+PASSWORDS PARTILHADAS ALTERADAS
+[ ] _____________ — alterada em ___/___/___
+
+DISPOSITIVOS
+[ ] Portátil recolhido / wipe executado
+[ ] Telemóvel recolhido / wipe MDM executado
+
+ACESSO FÍSICO
+[ ] Chaves / cartão recolhidos
+[ ] Código alarme alterado
+
+Offboarding concluído em: ___/___/___
+Assinatura: ___________
+\`\`\`
+
+Este documento serve de evidência de que o processo foi executado e é útil em caso de incidente posterior.
+
+---
+
+O offboarding correto demora entre 30 minutos e 2 horas, dependendo do número de sistemas. É tempo bem investido — um único acesso não revogado que seja explorado pode custar ordens de magnitude mais do que qualquer processo de saída bem feito.
+
+Para completar a gestão do ciclo de vida de acessos, consulte o [guia de gestão de identidade e acessos para PMEs](/blog/gestao-identidade-acessos-iam-pme) que cobre também o onboarding e a gestão de privilégios.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-20",
+    readingTime: 12,
+    author: {
+      name: "Miguel Ferreira",
+      title: "Auditor de Compliance",
+    },
+  },
 ];
 
 export function getPostBySlug(slug: string): Post | undefined {
