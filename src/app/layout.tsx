@@ -30,6 +30,14 @@ export const metadata: Metadata = {
     ...(process.env.BING_VERIFICATION_TOKEN && {
       other: {
         "msvalidate.01": process.env.BING_VERIFICATION_TOKEN,
+        ...(process.env.GOOGLE_ADSENSE_VERIFICATION && {
+          "google-adsense-account": process.env.GOOGLE_ADSENSE_VERIFICATION,
+        }),
+      },
+    }),
+    ...(process.env.GOOGLE_ADSENSE_VERIFICATION && !process.env.BING_VERIFICATION_TOKEN && {
+      other: {
+        "google-adsense-account": process.env.GOOGLE_ADSENSE_VERIFICATION,
       },
     }),
   },
@@ -97,12 +105,14 @@ export default function RootLayout({
         {children}
 
         {/* Google AdSense */}
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-PLACEHOLDER"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
+        {process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID && (
+          <Script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID}`}
+            crossOrigin="anonymous"
+            strategy="afterInteractive"
+          />
+        )}
 
         <Analytics />
       </body>
