@@ -9,6 +9,7 @@ import CountdownTimer from "@/components/countdown-timer";
 import AffiliateCTABanner from "@/components/affiliate-cta-banner";
 import { AuthorByline, AuthorCard } from "@/components/author-byline";
 import { getAllNIS2Tools } from "@/lib/affiliate-tools";
+import { ArticleTopBanner, ArticleInlineBanner, ArticleBottomBanner } from "@/components/adsense-banner";
 import type { Metadata } from "next";
 import Footer from "@/components/footer";
 
@@ -331,6 +332,9 @@ export default async function BlogPostPage({
           />
         </div>
 
+        {/* Top article ad */}
+        <ArticleTopBanner className="mb-8" />
+
         {/* Download section for SPF/DKIM/DMARC article */}
         {post.slug === 'spf-dkim-dmarc-seguranca-email-pme' && (
           <div className="mb-8 p-6 bg-accent-light border border-accent rounded-lg">
@@ -376,12 +380,18 @@ export default async function BlogPostPage({
           {renderedContent}
         </article>
 
+        {/* Inline article ad */}
+        <ArticleInlineBanner className="my-8" />
+
         {/* Author card */}
         {post.author && post.author.bio && (
           <div className="mt-12 mb-12">
             <AuthorCard author={post.author} />
           </div>
         )}
+
+        {/* Bottom article ad */}
+        <ArticleBottomBanner className="my-8" />
 
         {/* Affiliate CTA for all blog articles */}
         <div className="mt-12 mb-12">
