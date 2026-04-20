@@ -23905,6 +23905,570 @@ A gestão eficaz de uma crise cibernética não depende de tecnologia sofisticad
       title: "Analista de Segurança",
     },
   },
+  {
+    slug: "smishing-vishing-ataques-telefonicos-pme-portugal",
+    title: "Smishing e Vishing: Os Ataques por SMS e Telefone que Já Estão a Atingir PMEs Portuguesas",
+    excerpt:
+      "Falsas mensagens de texto do banco, chamadas de 'suporte técnico' e clonagem de voz por IA para imitar o CEO — smishing e vishing estão a crescer em Portugal. Guia prático para reconhecer, bloquear e responder.",
+    content: `O phishing por email já é conhecido de quase toda a gente. Mas os atacantes adaptaram-se: quando os filtros de email melhoraram, mudaram para o SMS e para o telefone. Smishing (SMS phishing) e vishing (voice phishing) são hoje dois dos vetores de ataque que mais crescem contra empresas portuguesas — e os que menos atenção recebem nos planos de segurança das PMEs.
+
+Este guia explica como funcionam estes ataques, com exemplos reais adaptados ao contexto português, e o que a sua empresa pode fazer para se proteger.
+
+## O Que São Smishing e Vishing
+
+**Smishing** é phishing por SMS. O atacante envia uma mensagem de texto que parece vir de uma entidade legítima — banco, CTT, AT, operadora — com um link para um site falso ou um pedido de ação urgente.
+
+**Vishing** é phishing por voz — chamadas telefónicas falsas. O atacante faz-se passar por suporte técnico, banco, CNCS, ou até por um colega ou gestor da empresa.
+
+A razão por que estes canais são tão eficazes é simples: as pessoas baixam a guarda no telemóvel de formas que não baixariam no email. Uma mensagem de texto parece mais pessoal e urgente. Uma chamada telefónica cria pressão em tempo real que um email não consegue replicar.
+
+## Smishing: Como Funciona na Prática
+
+### Padrões Mais Comuns em Portugal
+
+**Falsas notificações bancárias**
+"O seu acesso ao MB Way foi suspenso por segurança. Clique em [link] para reativar." O link leva a uma réplica do site do banco que rouba credenciais e OTP.
+
+**Falsas notificações de entrega**
+"A sua encomenda CTT está retida. Pague €2,99 de taxas alfandegárias: [link]." A taxa é falsa; o objetivo é roubar o cartão de crédito ou instalar malware no telemóvel.
+
+**Falsas comunicações da AT ou SEF**
+"A Autoridade Tributária detetou irregularidades na sua declaração IRS. Regularize em 24h: [link]." Cria urgência e medo para forçar clique imediato.
+
+**Smishing de RH direcionado a empresas**
+Mais sofisticado e específico para PMEs: "Olá [Nome], sou da [Nome da empresa]. O processamento de salários esta semana tem um problema. Clique aqui para confirmar os seus dados bancários." O atacante investigou a empresa antes — sabe o nome do colaborador e o nome da empresa.
+
+### Sinais de Alerta num SMS
+
+- URL encurtada (bit.ly, tinyurl) ou domínio estranho (ctt-entregas-pt.com em vez de ctt.pt)
+- Urgência artificial ("24 horas", "imediatamente", "hoje")
+- Pedido de informação sensível (IBAN, senha, cartão)
+- Erros ortográficos subtis ou fraseado artificial
+- Número de origem desconhecido ou com prefixo estrangeiro (+44, +1)
+- SMS sobre encomendas que não fez ou taxas que não esperava
+
+### Proteção contra Smishing
+
+**Para colaboradores individualmente:**
+- Nunca clicar em links de SMS sem verificar o domínio completo primeiro
+- Para qualquer SMS bancário, aceder diretamente à app ou site oficial — nunca pelo link do SMS
+- Ligar diretamente para a entidade remetente se houver dúvida (usando o número oficial, não o que vem no SMS)
+- Ativar filtros de spam de SMS na operadora (NOS, MEO, Vodafone têm esta opção)
+
+**Para a empresa:**
+- Incluir smishing na formação de segurança — muitos colaboradores sabem o que é phishing de email mas nunca ouviram falar de smishing
+- Estabelecer um canal claro para reportar SMS suspeitos (ex: email seguranca@empresa.pt)
+- Se a empresa usa SMS como canal de comunicação interna, criar uma convenção que os colaboradores reconheçam (ex: nunca pedir dados por SMS)
+
+## Vishing: Chamadas Telefónicas como Arma
+
+### Como Os Atacantes Preparam Um Ataque de Vishing
+
+Ao contrário do smishing em massa, o vishing bem executado é direcionado e requer preparação. Antes de ligar, o atacante já fez OSINT (pesquisa de fontes abertas) sobre a empresa:
+
+- LinkedIn: nomes e cargos de colaboradores, incluindo quem é o CFO, diretor financeiro, ou responsável de IT
+- Website da empresa: lista de contactos, forma de contacto, áreas de negócio
+- Redes sociais: contexto sobre a empresa (obras, mudanças, parcerias recentes)
+- Registos comerciais: nome dos sócios, sede, volume de negócios
+
+Com esta informação, a chamada parece legítima porque o atacante sabe coisas que uma pessoa aleatória não saberia.
+
+### Padrões Mais Comuns de Vishing em PMEs
+
+**"Suporte técnico" de Microsoft, Google, ou operadora**
+"Bom dia, falo da Microsoft. Os nossos sistemas detetaram que o computador da sua empresa tem um vírus grave. Preciso de instalar uma ferramenta de remoção — pode dar-me acesso remoto?" A Microsoft não liga espontaneamente para empresas. Ninguém do suporte técnico pede acesso remoto desta forma.
+
+**Falso banco ou multibanco**
+"Falo do departamento de fraude do [banco]. Detetámos uma transação suspeita na sua conta empresarial. Para proteger os fundos, precisamos de validar os dados. Pode confirmar o número de conta e a senha?" Os bancos nunca pedem senhas por telefone.
+
+**Fraude BEC por telefone**
+Combinação de email e chamada: o atacante envia um email falso do CEO a pedir transferência urgente, seguido de chamada do "CEO" a confirmar. O colaborador de finanças, pressionado por dois canais simultâneos, executa a transferência. Guia detalhado: [fraude CEO e BEC em PMEs](/blog/fraude-ceo-bec-pme-portugal).
+
+**Falso fornecedor a atualizar IBAN**
+"Bom dia, sou do departamento de contabilidade da [Fornecedor X]. Mudámos de banco. As próximas faturas devem ser pagas para o novo IBAN: PT50..." O IBAN novo pertence ao atacante. A empresa paga — e o fornecedor real nunca recebeu.
+
+### A Nova Ameaça: Clonagem de Voz por IA
+
+Em 2025 e 2026, os ataques de vishing evoluíram com ferramentas de síntese de voz por IA. Com menos de 30 segundos de áudio de uma pessoa (facilmente obtido de vídeos do YouTube, podcasts, ou redes sociais), ferramentas como ElevenLabs ou Resemble AI conseguem gerar voz sintética convincente.
+
+Na prática, isto significa que um atacante pode ligar para o CFO usando a voz clonada do CEO a pedir uma transferência urgente. O CFO reconhece "a voz" e executa.
+
+**Como detetar voz clonada:**
+- Atrasos ou pausas artificiais no ritmo da fala
+- Falta de entoação natural em expressões regionais ou gíria portuguesa
+- Perguntas que a pessoa real saberia responder mas a IA não (ex: "Lembras-te do restaurante onde jantámos na última reunião de equipa?")
+- Recusa em ser visto por videochamada
+
+**Protocolo anti-deepfake voice para empresas:**
+1. Para pedidos financeiros urgentes por telefone, exigir sempre confirmação por um segundo canal (email assinado, mensagem em plataforma interna como Teams/Slack)
+2. Definir uma palavra-código interna para verificar identidade em situações suspeitas
+3. Ter uma regra clara: nenhuma transferência acima de X euros por um único canal de aprovação
+
+### Proteção contra Vishing
+
+**Politicas que funcionam:**
+- **Regra dos dois canais**: qualquer pedido urgente de pagamento, transferência, ou acesso a sistemas deve ser confirmado por um segundo canal independente (não o mesmo número de telefone)
+- **Verificação de IBAN**: qualquer alteração de IBAN de fornecedor requer confirmação telefónica para o número oficial do fornecedor (não o número que ligou) e validação documental
+- **Listas de chamadas aprovadas**: para sistemas críticos (ex: acesso VPN, reset de passwords), criar lista de números autorizados a solicitar suporte
+
+**Formação específica:**
+- Treinar os colaboradores mais expostos: receção, financeiro, IT, e gestão
+- Incluir chamadas de teste de vishing na formação (tal como se faz phishing simulado para email) — guia: [simulações de phishing para PMEs](/blog/simulacao-phishing-empresa-como-fazer-pme)
+- Ensinar que dizer "Vou verificar e ligo-lhe de volta" nunca é rude — é o procedimento correto
+
+## O Que Fazer Se a Empresa For Vítima
+
+### Smishing com clique em link suspeito
+
+1. Não introduzir mais informação no site que abriu
+2. Fechar o browser e não guardar dados de login
+3. Se introduziu credenciais: mudar imediatamente a password e ativar MFA na conta afetada
+4. Se introduziu dados de cartão: ligar ao banco e bloquear o cartão
+5. Fazer scan ao dispositivo com antivírus atualizado
+6. Reportar ao CERT.PT (cert@cncs.gov.pt) e ao banco se relevante
+
+### Vishing com transferência executada
+
+1. **Contactar o banco imediatamente** — nas primeiras horas há hipótese de reversão da transferência
+2. Solicitar bloqueio/contestação da transação e referência de caso
+3. Fazer queixa na GNR/PSP ou PJ (crime de burla informática/fraude)
+4. Se houve acesso remoto ao computador: desligar da rede, mudar todas as passwords de contas acedidas, reinstalar o sistema operativo
+5. Notificar a CNPD se dados de clientes foram expostos (prazo 72 horas — obrigação RGPD)
+6. Se no âmbito NIS2, notificar o CNCS
+
+### Smishing com instalação de app suspeita
+
+Se foi convencido a instalar uma app, pode ter um stalkerware, infostealer, ou trojan bancário no telemóvel:
+
+1. Remover imediatamente a app
+2. Fazer scan com antivírus móvel (Malwarebytes, Bitdefender)
+3. Mudar as passwords de todas as contas acedidas a partir do telemóvel
+4. Considerar factory reset do dispositivo
+5. Verificar extratos bancários nos dias seguintes
+
+## Checklist de Prevenção para PMEs
+
+### Políticas e procedimentos
+- [ ] Regra dos dois canais para transferências e pedidos urgentes
+- [ ] Processo de verificação de alteração de IBAN de fornecedores
+- [ ] Canal de reporte de SMS e chamadas suspeitas para colaboradores
+- [ ] Lista de números oficiais de entidades bancárias e parceiros críticos
+
+### Formação
+- [ ] Incluir smishing e vishing na formação de cibersegurança
+- [ ] Treino específico para departamento financeiro e receção
+- [ ] Protocolo escrito para resposta a chamadas de "suporte técnico" externo
+- [ ] Sensibilização para ataques de voz por IA/deepfake
+
+### Técnico
+- [ ] MFA em todas as contas (protege mesmo se credenciais forem roubadas por smishing)
+- [ ] Filtros de spam SMS ativados nas operadoras
+- [ ] Mobile Device Management (MDM) nos telemóveis de empresa — guia: [segurança de dispositivos móveis](/blog/seguranca-dispositivos-moveis-pme)
+- [ ] Gestão de passwords empresarial — guia: [gestor de passwords para PMEs](/blog/gestor-passwords-empresa-bitwarden-1password-keeper)
+
+Smishing e vishing não requerem sofisticação técnica por parte do atacante — requerem engenharia social bem executada. A defesa mais eficaz é igualmente não-técnica: procedimentos claros, cultura de verificação, e colaboradores que sabem que podem e devem questionar pedidos urgentes, mesmo quando parecem legítimos.`,
+    category: "ameacas",
+    categoryLabel: "Ameacas",
+    publishedAt: "2026-04-20",
+    readingTime: 10,
+    author: {
+      name: "Rita Santos",
+      title: "Analista de Segurança",
+    },
+  },
+  {
+    slug: "conta-email-empresarial-comprometida-o-que-fazer",
+    title: "Conta de Email Empresarial Comprometida: O Que Fazer nas Primeiras Horas",
+    excerpt:
+      "Alguém acedeu à conta de email da sua empresa. O que fazer agora? Guia passo a passo para conter o dano, investigar o que aconteceu, notificar quem é preciso, e impedir que aconteça outra vez.",
+    content: `Uma conta de email empresarial comprometida é uma das situações de crise mais comuns nas PMEs portuguesas — e uma das mais mal geridas. Na confusão do momento, as empresas ou fazem demasiado pouco (mudam a password e rezam para que acabou) ou demasiado nada (ficam paralisadas sem saber por onde começar).
+
+Este guia é um plano de ação sequencial para os primeiros momentos depois de perceber que uma conta foi comprometida. Cobre desde a contenção imediata até à notificação legal e ao hardening pós-incidente.
+
+## Como Reconhecer uma Conta Comprometida
+
+Às vezes é óbvio — a pessoa recebe alertas de login de localizações estranhas, os clientes reportam emails suspeitos vindos da conta, ou o próprio utilizador está bloqueado da sua conta. Outras vezes os sinais são mais subtis:
+
+**Sinais diretos:**
+- Alertas de login de IP estrangeiro ou dispositivo desconhecido
+- Emails na pasta Enviados que o utilizador não enviou
+- Regras de reencaminhamento criadas sem que o utilizador saiba (ex: todos os emails a ir para gmail.com externo)
+- Password repentinamente inválida
+- Clientes ou parceiros a reportar emails estranhos vindos da conta
+
+**Sinais indiretos:**
+- Tentativas de acesso a outros sistemas usando as mesmas credenciais (gestor de passwords envia alertas)
+- Fornecedores a receber pedidos de alteração de IBAN "em nome da empresa"
+- Emails na caixa de entrada que parecem respostas a conversas que o utilizador não iniciou
+- Filtros ou regras de email modificados (ex: emails de uma entidade específica a ir para lixo)
+
+**Nota sobre regras de reencaminhamento**: este é o sinal mais insidioso. O atacante entra, cria uma regra para copiar todos os emails recebidos para uma conta externa, e depois sai. A vítima recupera acesso e pensa que o problema acabou — mas o atacante continua a receber todos os emails em tempo real, incluindo comunicações com clientes, dados financeiros, e links de reset de password de outros serviços.
+
+## Plano de Ação: As Primeiras 2 Horas
+
+### Passo 1 — Revogar todas as sessões ativas (primeiros 5 minutos)
+
+Antes de mudar a password, revogar sessões. Se mudar a password primeiro sem revogar sessões, o atacante pode manter sessões ativas durante horas.
+
+**Microsoft 365:**
+- Admin Center → Utilizadores → selecionar o utilizador → "Revogar sessões" (ou em PowerShell: \`Revoke-AzureADUserAllRefreshToken -ObjectId <userId>\`)
+- Depois: mudar a password
+
+**Google Workspace:**
+- Admin Console → Utilizadores → selecionar utilizador → "Repor sessão de início de sessão"
+- Depois: mudar a password
+
+**Email genérico (cPanel, Plesk):**
+- Mudar a password imediatamente — o servidor invalida sessões IMAP/SMTP automaticamente
+
+### Passo 2 — Mudar a password por canal seguro
+
+A nova password deve ser mudada por alguém que confirme que está a fazê-lo a partir de um dispositivo limpo (não o dispositivo que pode estar comprometido). Use o gestor de passwords da empresa para gerar uma password forte. Guia: [gestão de passwords para PMEs](/blog/gestao-passwords-pme-guia-completo).
+
+Se o utilizador estava bloqueado da conta, usar o processo de recovery oficial da plataforma — nunca links de "recuperação" que chegam por email não solicitado.
+
+### Passo 3 — Ativar ou verificar MFA
+
+Se a conta não tinha MFA, ativar agora. Se tinha, verificar se o atacante adicionou um segundo método MFA (ex: o seu próprio número de telefone ou app de autenticação) — remover qualquer método que não seja reconhecido. Guia: [autenticação de dois fatores para PMEs](/blog/autenticacao-dois-fatores-2fa-pme).
+
+### Passo 4 — Auditoria de regras de reencaminhamento e filtros
+
+Este passo é crítico e frequentemente esquecido.
+
+**Microsoft 365 / Outlook:**
+- Entrar nas definições de email → Correio → Regras de Caixa de Entrada
+- Verificar se existe alguma regra criada sem ser pelo utilizador
+- Em Exchange Admin Center, verificar também reencaminhamento SMTP (Mail Flow → Connectors)
+
+**Google Workspace:**
+- Gmail → Definições → Filtros e Endereços Bloqueados
+- Verificar também: Gmail → Definições → Contas e Importação → Enviar email como (pode ter sido adicionado um alias)
+- Admin Console: verificar reencaminhamento ao nível do domínio
+
+**Eliminar imediatamente** qualquer regra ou reencaminhamento não reconhecido.
+
+### Passo 5 — Verificar aplicações OAuth conectadas
+
+Em contas Microsoft 365 e Google, atacantes por vezes autorizam aplicações OAuth maliciosas que mantêm acesso mesmo depois de a password ser mudada.
+
+**Microsoft 365:**
+- myapps.microsoft.com → verificar todas as aplicações com acesso à conta
+- Revogar qualquer app não reconhecida
+
+**Google:**
+- myaccount.google.com → Segurança → Aplicações de terceiros com acesso à conta
+- Remover qualquer app não reconhecida
+
+## Investigação: O Que Acederam e Enviaram?
+
+Com a conta contida, é hora de perceber o alcance do comprometimento. Isto informa as notificações legais que podem ser necessárias.
+
+### Que emails foram enviados?
+
+Verificar a pasta Enviados no período de comprometimento suspeito. Se o atacante apagou emails enviados, a maioria das plataformas mantém logs:
+
+**Microsoft 365:**
+- Security & Compliance Center → Pesquisa de Auditoria → filtrar por "Sent message" e pelo período suspeito
+- Exchange Admin Center → Mail Flow → Message Trace
+
+**Google Workspace:**
+- Admin Console → Relatórios → Auditoria → Gmail
+
+Identificar: para quem foram enviados emails? Que informação foi partilhada? Havia attachments com dados sensíveis?
+
+### A que pastas tiveram acesso?
+
+**Microsoft 365:**
+- Purview Compliance Portal → Auditoria → filtrar "MailboxLogin" e "MailItemsAccessed"
+- Isto mostra quais as pastas acedidas e quando
+
+### O comprometimento foi mais além?
+
+Uma conta de email comprometida é frequentemente um ponto de entrada para mais:
+- O atacante usou a conta para pedir reset de password de outros serviços?
+- Foram recebidos emails de confirmação de criação de contas em serviços não reconhecidos?
+- Há acessos a SharePoint, OneDrive, ou sistemas de gestão via SSO a partir da conta comprometida?
+
+Verificar também outros utilizadores: phishing interno a partir da conta comprometida pode ter resultado em outras contas comprometidas.
+
+## Notificações Legais Obrigatórias
+
+### RGPD — CNPD (prazo: 72 horas)
+
+Se a investigação concluir que houve acesso a dados pessoais de clientes, funcionários, ou outros indivíduos (emails com dados de identificação, IBAN, saúde, etc.), existe obrigação de notificação à CNPD no prazo de 72 horas após tomar conhecimento da violação.
+
+A notificação à CNPD deve incluir:
+- Natureza da violação (acesso não autorizado a conta de email)
+- Categorias e número aproximado de titulares afetados
+- Provável consequência da violação
+- Medidas tomadas ou propostas para remediar
+
+Formulário disponível em cnpd.pt. Guia: [RGPD para pequenas empresas](/blog/guia-rgpd-pequenas-empresas-portugal).
+
+### NIS2 — CNCS (se abrangido)
+
+Se a empresa está abrangida pela NIS2, um comprometimento de conta de email que causou disrução significativa ou exposição de dados de serviços críticos deve ser notificado ao CNCS:
+- Alerta inicial: 24 horas após tomar conhecimento
+- Notificação completa: 72 horas
+- Relatório final: 1 mês
+
+Guia detalhado: [notificação de incidentes NIS2](/blog/nis2-notificacao-incidentes-pme-24-72-horas).
+
+### Comunicação aos afetados
+
+Se clientes ou parceiros receberam emails fraudulentos vindos da conta comprometida (ex: pedidos de alteração de IBAN, links de phishing), comunicar diretamente:
+- Email de alerta claro: "A nossa conta [email] foi comprometida entre [data] e [data]. Se recebeu um email nesse período com pedido de [X], ignore-o. Não executou nenhuma transferência ou ação?"
+- Telefonema para clientes de alto valor ou situações de risco elevado
+- Ser direta e factual — não tentar minimizar ou esconder
+
+## Hardening Pós-Incidente
+
+Depois de contido e investigado o incidente, implementar medidas para que não volte a acontecer.
+
+### MFA obrigatório para todos
+
+Se MFA não estava ativo, implementar agora para toda a organização — não apenas para o utilizador afetado. Um comprometimento é sinal de que a política de segurança precisa de ser alargada. Guia: [MFA para PMEs](/blog/autenticacao-dois-fatores-2fa-pme).
+
+### Revisão de passwords
+
+Forçar reset de password para todos os utilizadores (não apenas o afetado), especialmente se havia reutilização de passwords. Usar gestor de passwords empresarial: [Bitwarden, 1Password ou Keeper](/blog/gestor-passwords-empresa-bitwarden-1password-keeper).
+
+### Conditional Access (Microsoft 365 / Google Workspace)
+
+Configurar políticas que bloqueiem login de países onde a empresa não opera, ou que exijam MFA para logins de localizações novas. No Microsoft 365: Entra ID → Security → Conditional Access. No Google Workspace: Admin Console → Segurança → Controlos de acesso de contexto.
+
+### Monitorização de alertas
+
+Configurar alertas automáticos para:
+- Login de novo dispositivo ou localização
+- Criação de regras de reencaminhamento de email
+- Logins fora do horário normal
+- Volume anormal de emails enviados
+
+No Microsoft 365: Defender for Office 365 → Políticas de Alerta. No Google Workspace: Admin Console → Alertas.
+
+### Formação direcionada
+
+O comprometimento teve origem em quê? Se foi phishing, o utilizador precisa de formação específica. Se foi password fraca ou reutilizada, a empresa precisa de rever a política de passwords. Não resolver o problema de origem garantidamente resulta em reincidência.
+
+## Checklist de Resposta a Conta Comprometida
+
+### Contenção imediata (primeiros 30 minutos)
+- [ ] Revogar todas as sessões ativas da conta
+- [ ] Mudar a password da conta (dispositivo limpo)
+- [ ] Verificar e ativar/corrigir MFA
+- [ ] Eliminar regras de reencaminhamento ou filtros não reconhecidos
+- [ ] Revogar aplicações OAuth não reconhecidas
+
+### Investigação (2-4 horas)
+- [ ] Verificar emails enviados durante o período de comprometimento
+- [ ] Verificar logs de acesso (pastas acedidas, logins)
+- [ ] Identificar dados pessoais possivelmente expostos
+- [ ] Verificar se outros utilizadores foram afetados (phishing interno)
+- [ ] Verificar acesso a outros sistemas via SSO
+
+### Notificação (primeiras 72 horas)
+- [ ] CNPD se houve exposição de dados pessoais (72 horas)
+- [ ] CNCS se empresa abrangida NIS2 e incidente significativo
+- [ ] Comunicação direta a clientes/parceiros afetados
+
+### Hardening (primeira semana)
+- [ ] MFA para todos os utilizadores
+- [ ] Reset de passwords generalizado
+- [ ] Configuração de alertas de segurança
+- [ ] Revisão de Conditional Access
+- [ ] Formação direcionada ao tipo de ataque que aconteceu
+
+Um comprometimento de email é stressante, mas é gerível se houver um plano. O maior erro que as PMEs cometem é demorar a agir — cada hora que passa é uma hora que o atacante pode usar para aprofundar o acesso, exfiltrar dados, ou executar fraude financeira.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-20",
+    readingTime: 12,
+    author: {
+      name: "Carlos Miranda",
+      title: "Consultor de Cibersegurança",
+    },
+  },
+  {
+    slug: "ameacas-internas-pme-riscos-dados-funcionarios",
+    title: "Ameaças Internas nas PMEs: Como Identificar e Mitigar Riscos de Segurança por Parte de Colaboradores",
+    excerpt:
+      "Não são só os hackers externos que ameaçam os dados da empresa. Colaboradores negligentes, ex-funcionários ressentidos, e contas internas comprometidas são riscos reais. Guia prático para PMEs portuguesas.",
+    content: `Quando as PMEs pensam em cibersegurança, o imaginário é quase sempre externo: hackers, ransomware, phishing de fora. Mas os dados mostram sistematicamente que uma parte significativa dos incidentes de segurança tem origem interna — colaboradores atuais ou recentes, prestadores de serviços com acesso, ou contas internas comprometidas por atacantes externos.
+
+Isto não significa que os funcionários são inimigos. Significa que o risco interno precisa de ser gerido de forma intencional, com controlos proporcionais, e sem criar um ambiente de desconfiança.
+
+## Os Três Tipos de Ameaça Interna
+
+Não é tudo igual. Confundir os três tipos leva a respostas erradas:
+
+### 1. O Colaborador Negligente (o mais comum)
+
+Responsável pela maioria dos incidentes de origem interna. Não tem má intenção — simplesmente não sabe, não presta atenção, ou segue o caminho de menor resistência.
+
+**Exemplos:**
+- Enviar ficheiro com dados de clientes para email pessoal para trabalhar em casa
+- Usar a mesma password do email empresarial no Netflix (que sofreu breach)
+- Deixar o computador desbloqueado em espaço público
+- Responder a phishing sem perceber que é phishing
+- Fazer download de software não autorizado que traz malware
+- Partilhar ficheiro do SharePoint como "qualquer pessoa com o link" em vez de apenas colegas
+
+**Resposta adequada:** formação, procedimentos claros, controlos técnicos que tornem o caminho correto mais fácil que o incorreto (ex: MFA que não se pode desativar, DLP que bloqueia envio de ficheiros grandes para email pessoal).
+
+### 2. O Colaborador Mal-Intencionado (raro, mas de alto impacto)
+
+Funcionário atual ou recente que deliberadamente rouba ou sabota dados ou sistemas. Motivação mais comum: saída conflituosa, preparação para trabalhar num concorrente, ou vendetta.
+
+**Exemplos:**
+- Exportar a base de dados de clientes antes de sair para a empresa concorrente
+- Apagar ficheiros críticos no dia da saída
+- Partilhar credenciais de acesso com um terceiro
+- Exfiltrar propriedade intelectual (designs, código, estratégias comerciais)
+
+**Resposta adequada:** controlos de acesso por necessidade (least privilege), monitorização de comportamento anómalo, revogação imediata de acesso na saída, e processos de offboarding rigorosos.
+
+### 3. A Conta Interna Comprometida (frequentemente subestimada)
+
+O colaborador não tem qualquer intenção maliciosa — mas a sua conta foi comprometida por um atacante externo. O atacante usa as credenciais internas para se mover lateralmente nos sistemas com privilégios legítimos.
+
+**Exemplo:** Um colaborador de contabilidade cai num phishing. O atacante obtém as suas credenciais de Microsoft 365. A partir daí, acede a emails, ficheiros partilhados, e sistemas de faturação como se fosse o colaborador legítimo.
+
+**Resposta adequada:** MFA (torna as credenciais roubadas inutilizáveis sem o segundo fator), monitorização de logins anómalos (horário, localização, volume).
+
+## Por Que as PMEs São Especialmente Vulneráveis
+
+Nas PMEs, os controlos de acesso são frequentemente frouxos por razões práticas:
+
+- Todos partilham as mesmas credenciais de contas críticas ("a password do banco é X, fica guardado aqui")
+- Não há processo formal de offboarding — a conta do colaborador que saiu fica ativa por semanas
+- Ex-colaboradores continuam a ter acesso a Google Drive, Dropbox ou sistemas de gestão porque ninguém revogou
+- Administradores locais em todos os computadores, porque "é mais fácil para instalar software"
+- Acesso a toda a informação da empresa por todos os colaboradores ("somos pequenos, confiamos uns nos outros")
+
+A confiança está bem — mas sistemas que dependem exclusivamente de confiança não resistem a saídas conflituosas, erros humanos, ou comprometimentos externos.
+
+## Controlos Preventivos Proporcionais para PMEs
+
+### Princípio do Menor Privilégio
+
+Cada colaborador deve ter acesso apenas ao que precisa para fazer o seu trabalho. Na prática para uma PME:
+
+- Assistente administrativo: acesso a agenda, email próprio, e ficheiros do departamento administrativo
+- Comercial: acesso ao CRM, email próprio, e pasta de propostas — não ao software de contabilidade
+- Diretor financeiro: acesso ao sistema de contabilidade e banca — não necessariamente à base de dados de RH
+- IT: acesso aos sistemas que gere — com auditoria de ações privilegiadas
+
+Isto não é paranoia — é o que reduz o raio de blast quando algo corre mal, seja por erro humano, saída mal gerida, ou comprometimento externo.
+
+Guia completo: [gestão de identidade e acessos para PMEs](/blog/gestao-identidade-acessos-iam-pme).
+
+### Processo de Offboarding Rigoroso
+
+O offboarding é onde as PMEs mais falham no controlo de ameaças internas. Um colaborador que saiu há 6 meses e ainda tem acesso ao email empresarial e ao Google Drive é um risco que persiste no tempo.
+
+**Checklist de offboarding (a executar no próprio dia de saída):**
+- [ ] Revogar acesso ao email e plataformas de colaboração (Microsoft 365, Google Workspace)
+- [ ] Revogar acesso ao sistema de gestão/ERP/CRM
+- [ ] Revogar acesso VPN e sistemas de acesso remoto
+- [ ] Revogar acesso a contas bancárias online
+- [ ] Revogar acesso a gestores de passwords partilhados (mudar passwords partilhadas que o colaborador conhecia)
+- [ ] Revogar acesso a redes sociais empresariais (LinkedIn Company Page, Meta Business Manager)
+- [ ] Solicitar devolução de equipamentos (portátil, telemóvel, tokens de acesso físico)
+- [ ] Verificar se criou regras de reencaminhamento de email
+- [ ] Mudar passwords de contas partilhadas conhecidas pelo colaborador
+
+Para automação: em Microsoft 365 com Entra ID, o processo de desativação de conta pode ser parcialmente automatizado. Em Google Workspace, existe opção de suspender conta mantendo dados. Guia: [gestão de identidade e acessos](/blog/gestao-identidade-acessos-iam-pme).
+
+### Separação de Funções nas Tarefas Financeiras
+
+Para transações financeiras de alto valor, implementar separação de funções:
+
+- A pessoa que cria a ordem de pagamento não deve ser a mesma que a aprova
+- Para pagamentos acima de um limite definido, exigir aprovação de um segundo responsável
+- Novos IBAN de fornecedores requerem validação independente (telefonema para número oficial do fornecedor)
+
+Esta separação protege contra o colaborador mal-intencionado e também contra phishing/vishing direcionado. Guia sobre fraude financeira: [fraude CEO e BEC em PMEs](/blog/fraude-ceo-bec-pme-portugal).
+
+### Monitorização Comportamental (com Respeito pela Privacidade)
+
+Monitorizar o comportamento de colaboradores é uma área sensível em Portugal, com restrições claras no RGPD e no Código do Trabalho.
+
+**O que é permitido:**
+- Monitorização de sistemas e logs de acesso *da empresa* (não conteúdo privado)
+- Alertas automáticos sobre comportamentos anómalos (ex: download de volume anormal de dados às 2h da manhã)
+- Auditoria de ações em sistemas críticos (quem acedeu a que ficheiro, quando)
+- DLP que bloqueia ou alerta sobre partilha de ficheiros sensíveis para fora da empresa
+
+**O que requer cuidado:**
+- Monitorização de conteúdo de emails pessoais no dispositivo da empresa
+- Registo contínuo de atividade de ecrã (keylogging, screenshots)
+- Vigilância de comunicações privadas
+
+**Regra prática**: focar em *o que saiu da empresa* (exfiltração de dados) e *o que foi acedido fora do horário normal* em vez de monitorizar atividade contínua. Configure ferramentas de DLP (Data Loss Prevention) para alertar quando ficheiros com dados sensíveis são enviados para email pessoal ou serviços de cloud não autorizados. Guia: [DLP para PMEs](/blog/dlp-prevencao-perda-dados-pme).
+
+**Obrigação RGPD**: se monitorizar sistemas, informar os colaboradores — por exemplo, na política de uso aceitável dos recursos de IT. A monitorização oculta é, em geral, ilegal.
+
+### Controlo de Dispositivos Amovíveis
+
+Uma das formas mais simples de exfiltração de dados é a pen USB. Controlar o uso de dispositivos amovíveis nos computadores da empresa:
+
+- Microsoft 365 Business Premium com Intune: bloquear ou limitar escrita em dispositivos USB
+- Ferramenta de DLP para alertar sobre cópias para pen de ficheiros classificados
+
+Não precisa de bloquear completamente — pode apenas registar e alertar sobre uso de USB em contextos suspeitos.
+
+## Deteção: Sinais de Alerta de Ameaça Interna
+
+Nenhum controlo técnico substitui a atenção. Sinais que merecem investigação:
+
+**Comportamentais:**
+- Colaborador descontente, em conflito com a gestão, ou que recebeu notificação de saída
+- Pedidos incomuns de acesso a sistemas fora do âmbito normal
+- Trabalho fora de horas habituais, especialmente perto da data de saída
+- Perguntas sobre onde ficam guardados determinados dados ou quem tem acesso a quê
+
+**Técnicos:**
+- Volume anormal de downloads de ficheiros
+- Acessos a pastas ou sistemas fora do âmbito normal
+- Logins a horas incomuns (madrugada, fins de semana em empresa que não trabalha nesses períodos)
+- Criação de contas externas ou regras de reencaminhamento de email
+- Conexão de dispositivos USB não habituais
+- Instalação de software de cloud pessoal (Dropbox, Google Drive pessoal) em computadores da empresa
+
+## O Que Fazer Quando Suspeita de Ameaça Interna
+
+A gestão de uma suspeita de ameaça interna é legalmente sensível em Portugal. Algumas orientações:
+
+1. **Não confrontar imediatamente** o colaborador suspeito — isso pode levar à destruição de evidências
+2. **Preservar evidências** antes de qualquer ação: fazer imagem forense do dispositivo se possível, guardar logs de acesso
+3. **Envolver jurídico antes de agir** — despedir alguém com base em suspeita sem evidências pode ser despedimento sem justa causa
+4. **Revogar acesso de forma discreta** antes de confronto, se a ameaça for imediata
+5. **Contactar a PJ / UNC3T** se houver crime informático (acesso indevido, sabotagem, furto de dados)
+6. **CNPD** se houve exfiltração de dados pessoais de clientes ou colaboradores (72 horas)
+
+## Proporção é Chave
+
+A segurança interna não deve criar um ambiente de desconfiança ou vigilância que destrua a cultura da empresa. Para uma PME com 10 pessoas, implementar o nível de monitorização de um banco não faz sentido — e seria contraproducente.
+
+O objetivo é ter controlos mínimos eficazes:
+- Cada pessoa só acede ao que precisa
+- A saída de alguém não deixa portas abertas
+- Comportamentos muito anómalos criam alertas automáticos
+- Há separação de funções em transações financeiras
+
+Com estes quatro pilares, uma PME está protegida contra a grande maioria dos riscos internos — negligentes e intencionais — de forma proporcional ao seu tamanho e recursos.
+
+Para um programa mais abrangente, o [programa de sensibilização de 12 meses](/blog/programa-sensibilizacao-ciberseguranca-pme-12-meses) inclui módulos específicos sobre proteção de dados internos e cultura de segurança.`,
+    category: "ameacas",
+    categoryLabel: "Ameacas",
+    publishedAt: "2026-04-20",
+    readingTime: 11,
+    author: {
+      name: "Miguel Ferreira",
+      title: "Auditor de Compliance",
+    },
+  },
 ];
 
 export function getPostBySlug(slug: string): Post | undefined {
