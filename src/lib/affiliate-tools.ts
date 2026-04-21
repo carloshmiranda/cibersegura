@@ -6,35 +6,70 @@ export interface AffiliateTool {
   recommended?: boolean;
 }
 
-// NIS2-focused affiliate tools
+export interface AffiliateTool {
+  name: string;
+  description: string;
+  category: "siem" | "passwords" | "email" | "backup";
+  url: string;
+  affiliateUrl: string; // Direct affiliate URL for redirects
+  recommended?: boolean;
+  commission?: string; // Expected commission rate for transparency
+}
+
+// NIS2-focused affiliate tools with tracking redirects
 export const nis2Tools: AffiliateTool[] = [
   {
     name: "Wazuh",
     description: "SIEM open-source para monitorização de segurança e deteção de ameaças em tempo real",
     category: "siem",
-    url: "https://wazuh.com/",
+    url: "/go/wazuh",
+    affiliateUrl: "https://wazuh.com/?utm_source=ciberpme&utm_medium=affiliate&utm_campaign=siem-guide",
     recommended: true
   },
   {
     name: "1Password Business",
     description: "Gestor de palavras-passe empresarial com autenticação multi-fator e políticas centralizadas",
     category: "passwords",
-    url: "https://1password.com/business/",
-    recommended: true
+    url: "/go/1password",
+    affiliateUrl: "https://start.1password.com/sign-up/business?utm_source=ciberpme&utm_medium=affiliate&utm_campaign=password-guide",
+    recommended: true,
+    commission: "30% recurring"
   },
   {
     name: "Proton Business",
     description: "Email empresarial seguro e VPN com encriptação end-to-end para comunicações protegidas",
     category: "email",
-    url: "https://proton.me/business",
-    recommended: true
+    url: "/go/proton",
+    affiliateUrl: "https://proton.me/business?ref=ciberpme&utm_source=ciberpme&utm_medium=affiliate&utm_campaign=email-security",
+    recommended: true,
+    commission: "25% recurring"
   },
   {
     name: "Acronis Cyber Protect",
     description: "Solução de backup e proteção com IA integrada contra ransomware e conformidade",
     category: "backup",
-    url: "https://www.acronis.com/en/products/cyber-protect/components/",
-    recommended: true
+    url: "/go/acronis",
+    affiliateUrl: "https://www.acronis.com/products/cyber-protect/?utm_source=ciberpme&utm_medium=affiliate&utm_campaign=backup-guide",
+    recommended: true,
+    commission: "Up to 50%"
+  },
+  {
+    name: "Bitwarden Business",
+    description: "Gestor de palavras-passe open-source com auditoria de segurança e conformidade avançada",
+    category: "passwords",
+    url: "/go/bitwarden",
+    affiliateUrl: "https://bitwarden.com/products/business/?utm_source=ciberpme&utm_medium=affiliate&utm_campaign=password-alternative",
+    recommended: false,
+    commission: "20% recurring"
+  },
+  {
+    name: "Backblaze B2",
+    description: "Armazenamento cloud seguro para backups offsite com encriptação e imutabilidade",
+    category: "backup",
+    url: "/go/backblaze",
+    affiliateUrl: "https://www.backblaze.com/b2/cloud-storage.html?utm_source=ciberpme&utm_medium=affiliate&utm_campaign=cloud-backup",
+    recommended: false,
+    commission: "Variable"
   }
 ];
 

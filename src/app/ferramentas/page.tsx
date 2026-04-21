@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { NewsletterForm } from "../newsletter-form";
+import RecommendedSoftware from "@/components/recommended-software";
 
 export const metadata: Metadata = {
   title: "Ferramentas Práticas de Cibersegurança — CiberPME",
@@ -407,6 +408,21 @@ export default function FerramentasPage() {
             </div>
           </div>
         </div>
+
+        {/* Recommended Software */}
+        <section className="mb-20">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-brand mb-4 text-balance font-display">
+              Software Recomendado para PMEs
+            </h2>
+            <p className="text-text-secondary text-lg max-w-3xl mx-auto text-pretty">
+              Soluções de cibersegurança testadas e aprovadas que oferecem a melhor
+              relação qualidade-preço para pequenas e médias empresas portuguesas.
+            </p>
+          </div>
+
+          <RecommendedSoftware />
+        </section>
 
         {/* Tool Categories */}
         <div className="space-y-20">
