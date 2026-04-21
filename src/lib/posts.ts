@@ -46,6 +46,574 @@ export const AUTHORS: Record<string, Author> = {
 
 export const posts: Post[] = [
   {
+    slug: "honeypots-canarytokens-pme-detetar-intrusos",
+    title: "Honeypots para PMEs: Detetar Intrusos com Canarytokens e OpenCanary",
+    excerpt:
+      "Um honeypot é um alarme silencioso — quando um atacante o toca, você sabe imediatamente que há uma intrusão. Guia prático com Canarytokens, OpenCanary e decoys gratuitos para PMEs.",
+    content: `A maior vantagem de um honeypot sobre qualquer outra ferramenta de segurança é o número de falsos positivos: zero. Nenhum utilizador legítimo acede a um servidor que não existe, abre um ficheiro chamado "Palavras-passe Backup 2024.xlsx" guardado numa pasta obscura, ou resolve um hostname DNS inventado. Quando o honeypot é ativado, é porque algo está errado.
+
+Esta propriedade torna os honeypots particularmente adequados para PMEs: não exigem analistas SOC a monitorizar alertas continuamente, não geram dezenas de notificações por dia que acabam por ser ignoradas, e não precisam de infraestrutura cara. As ferramentas gratuitas que existem hoje permitem a qualquer empresa configurar uma rede de decoys em menos de uma tarde.
+
+## O Que É um Honeypot (e o Que Não É)
+
+Um honeypot é um recurso deliberadamente falso — um servidor, ficheiro, credencial, ou URL — criado para atrair atacantes. O seu único propósito é parecer legítimo e valioso. Não tem utilizadores reais. Não tem tráfego legítimo. Qualquer interação com ele é, por definição, suspeita.
+
+Existem dois tipos fundamentais:
+
+**Honeypots de baixa interação** — simulam serviços ou recursos sem executar software real. Registam a tentativa de ligação e alertam. São seguros, fáceis de manter e adequados para a maioria das PMEs.
+
+**Honeypots de alta interação** — sistemas operativos e serviços reais, expostos deliberadamente. Permitem observar o comportamento do atacante em detalhe. São complexos, exigem isolamento rigoroso, e são mais adequados para investigação de segurança do que para PMEs.
+
+Para uso prático numa PME, o foco deve estar nas ferramentas de baixa interação e nos **honeytokens** — recursos digitais (ficheiros, credenciais, URLs) que notificam quando são usados.
+
+## Canarytokens: A Ferramenta Mais Simples e Eficaz
+
+O **Canarytokens** (canarytokens.org), desenvolvido pela Thinkst, é um serviço gratuito que permite criar tokens que "chamam para casa" quando são ativados. Não requer instalação, não precisa de servidor, e os alertas chegam por email ou webhook em segundos.
+
+### Tipos de Tokens Disponíveis
+
+**URL / Web Bug** — Um link único que regista quem o abre, de que IP, com que browser. Ideal para incluir em documentos ou emails de decoy.
+
+**Documento Word/Excel** — Um ficheiro Office que notifica quando é aberto. Funciona através de uma imagem remota incorporada. Quando o Word carrega a imagem para pré-visualização, o token é ativado.
+
+**Credenciais AWS** — Uma chave de acesso AWS falsa (access key ID + secret key) que notifica quando alguém tenta usá-la. Se o atacante encontrar estas credenciais num repositório de código ou ficheiro de configuração e as tentar usar, recebe um alerta imediato.
+
+**DNS Token** — Um hostname único que notifica quando é resolvido. Útil para detetar exfiltração de dados DNS ou beaconing de malware.
+
+**Entra ID / Office 365 Token** — Uma conta M365 falsa que notifica quando alguém tenta fazer login. Ideal para detetar movimentação lateral dentro de um ambiente comprometido.
+
+**MySQL Token** — Uma credencial de base de dados que notifica quando alguém tenta ligar.
+
+**WireGuard Config** — Um ficheiro de configuração VPN que notifica quando é importado.
+
+### Como Criar e Distribuir um Canarytoken
+
+Aceda a canarytokens.org, selecione o tipo de token, introduza o seu email para alertas e uma nota descritiva, e clique em "Generate Token". O serviço devolve o token pronto a usar.
+
+Para um token de ficheiro Word:
+1. Selecione "MS Word Document"
+2. Email: o seu endereço de alertas (use um dedicado — por exemplo alerts-honeypot@empresa.pt)
+3. Nota: "Decoy-Passwords-SharePoint-Q1-2025" (identificação para o alerta)
+4. Faça download do ficheiro gerado
+5. Coloque-o numa pasta partilhada com nome apelativo: "Passwords Antigas/", "Backup Credenciais/", "Acesso Admin/"
+
+Para um token de credenciais AWS:
+1. Selecione "AWS Keys"
+2. Faça download das credenciais geradas
+3. Coloque-as em ficheiros que atacantes costumam procurar: \`~/.aws/credentials\`, \`config.env\`, \`terraform.tfvars\`, num repositório Git interno
+
+### Onde Colocar os Tokens
+
+A localização é determinante. Os tokens devem estar em sítios onde um atacante legítimo procuraria recursos valiosos, mas onde utilizadores normais nunca teriam razão para ir.
+
+**Partilhas de rede** — Crie uma pasta "IT_Admin/Passwords/" ou "Backup_Credenciais_2023/" numa partilha interna. Coloque lá um ficheiro Word ou Excel com um token.
+
+**Repositórios Git internos** — Num repositório de código, adicione um ficheiro \`config.sample.env\` com credenciais AWS falsas.
+
+**Email de administração** — Envie a si próprio um email com um "link de acesso de emergência" que seja um URL token. Se alguém aceeder ao email e clicar no link, saberá imediatamente.
+
+**Servidor web interno** — Crie uma página \`/admin-backup/\` ou \`/phpinfo.php\` que seja um URL token. Qualquer scan de vulnerabilidades ou navegação manual irá ativá-lo.
+
+**Ficheiros de configuração** — Em servidores Linux, coloque um ficheiro \`/etc/db-credentials.conf\` com credenciais MySQL falsas (Canarytoken MySQL).
+
+## OpenCanary: Serviços Falsos na Rede Interna
+
+O **OpenCanary** (github.com/thinkst/opencanary) é um daemon Python que simula serviços de rede reais: SSH, FTP, HTTP, SMB, RDP, MySQL, entre outros. Quando alguém tenta ligar a um destes serviços falsos, o OpenCanary regista a tentativa e pode enviar um alerta.
+
+É particularmente eficaz para detetar:
+- **Reconhecimento interno** — após uma intrusão inicial, o atacante vai fazer scan da rede interna à procura de mais sistemas. Se varrer o intervalo de IPs e encontrar um SSH a ouvir, tentará ligar.
+- **Movimentação lateral** — tentativas de acesso a serviços administrativos (SMB, RDP, MySQL) que não existem.
+- **Ferramentas de ataque automáticas** — worms e frameworks de ataque que tentam explorar serviços comuns em todos os IPs descobertos.
+
+### Instalação do OpenCanary
+
+Num servidor Linux dedicado (pode ser uma VM leve, Raspberry Pi, ou contentor Docker):
+
+\`\`\`bash
+pip install opencanary
+opencanaryd --copyconfig
+# Editar /etc/opencanaryd/opencanary.conf
+opencanaryd --start
+\`\`\`
+
+### Configuração Mínima
+
+No ficheiro de configuração, ative os módulos mais relevantes para uma rede de escritório:
+
+\`\`\`json
+{
+  "device.node_id": "honeypot-escritorio-01",
+  "ssh.enabled": true,
+  "ssh.port": 22,
+  "http.enabled": true,
+  "http.port": 80,
+  "smb.enabled": true,
+  "ftp.enabled": true,
+  "ftp.port": 21,
+  "rdp.enabled": true,
+  "rdp.port": 3389,
+  "logger": {
+    "class": "PyLogger",
+    "kwargs": {
+      "handlers": {
+        "SMTP": {
+          "class": "logging.handlers.SMTPHandler",
+          "mailhost": ["smtp.empresa.pt", 587],
+          "fromaddr": "honeypot@empresa.pt",
+          "toaddrs": ["alerts@empresa.pt"],
+          "subject": "[ALERTA] Honeypot ativado"
+        }
+      }
+    }
+  }
+}
+\`\`\`
+
+Atribua ao servidor OpenCanary um hostname apelativo na rede interna — por exemplo \`srv-backup-antigo\`, \`nas-rh\`, ou \`fileserver-2019\`. Isto aumenta a probabilidade de um atacante que está a fazer reconnaissance o selecionar como alvo.
+
+### Integração com Wazuh
+
+Se já tiver o [Wazuh SIEM instalado](/blog/siem-wazuh-pme-monitorizacao-seguranca-gratis), o OpenCanary pode enviar logs via syslog para o Wazuh Manager. Configure uma regra personalizada para alertar com nível máximo de prioridade em qualquer evento OpenCanary:
+
+\`\`\`xml
+<rule id="100500" level="15">
+  <decoded_as>json</decoded_as>
+  <field name="logtype">^2[0-9]{3}$</field>
+  <description>OpenCanary: Honeypot activado - $(src_host)</description>
+</rule>
+\`\`\`
+
+## Estratégia de Deployment para uma PME
+
+Não é necessário nem recomendado distribuir honeypots por toda a infraestrutura de uma vez. Uma abordagem faseada é mais eficaz.
+
+**Fase 1 — Tokens imediatos (1 hora de trabalho)**
+
+Comece com Canarytokens, sem instalação nenhuma:
+- 1 ficheiro Word num servidor de ficheiros ou SharePoint, numa pasta com nome apelativo
+- 1 token de credenciais AWS num repositório Git interno ou ficheiro de configuração
+- 1 URL token como "link de recuperação de emergência" num email de administração
+
+**Fase 2 — Honeypot de rede (meio dia de trabalho)**
+
+Instale o OpenCanary num Raspberry Pi 4 (€60) ou VM leve, configure SSH + SMB + RDP, e atribua um hostname interno apelativo.
+
+**Fase 3 — Cobertura alargada**
+
+Adicione tokens em cada ambiente crítico: tokens DNS para detetar beaconing em endpoints, tokens de conta M365 para detetar credential stuffing interno, tokens MySQL em servidores de base de dados.
+
+## Considerações RGPD
+
+Os honeypots registam endereços IP, timestamps e, no caso de honeypots de alta interação, credenciais inseridas por atacantes. Estes dados são dados pessoais ao abrigo do RGPD se o atacante for identificável.
+
+Para honeypots de baixa interação como o Canarytokens e o OpenCanary, o logging é mínimo (IP de origem, timestamp, tipo de acesso) e a base legal é o interesse legítimo da empresa na sua segurança (artigo 6.º, n.º 1, alínea f)). Documente esta base legal na sua política de segurança e não conserve logs de honeypot por mais tempo do que o necessário (90 dias é suficiente para a maioria dos cenários).
+
+Não crie honeypots que capturem credenciais reais de utilizadores legítimos. O objetivo é detetar atacantes, não monitorizar colaboradores.
+
+## Resposta Quando o Honeypot É Ativado
+
+Quando receber um alerta de honeypot, trate como um incidente de segurança confirmado — não como um possível positivo. A probabilidade de um utilizador legítimo ter ativado o token é próxima de zero.
+
+**Nos primeiros 15 minutos:**
+1. Identifique o IP de origem do alerta. É interno ou externo?
+2. Se interno: identifique que dispositivo tem esse IP (verifique o DHCP/Active Directory). Isole o dispositivo da rede.
+3. Se externo: o atacante está a tentar acesso de fora. Investigue que serviços estão expostos nesse IP.
+
+**Nas próximas horas:**
+1. Reveja os logs de acesso dos sistemas adjacentes ao honeypot — o que mais é que o atacante tentou aceder?
+2. Verifique se há outros sinais de comprometimento: contas criadas, ficheiros modificados, processos estranhos.
+3. Se houver dados pessoais envolvidos, avalie a obrigação de notificação à CNPD (72 horas).
+
+Para um protocolo de resposta mais detalhado, consulte o [guia de resposta a incidentes para PMEs](/blog/gestao-crise-ciberataque-comunicacao-notificacao-pme).
+
+## Checklist de Honeypots para PMEs
+
+| Ação | Prioridade |
+|------|-----------|
+| Criar ficheiro decoy com Canarytoken Word/Excel em partilha de rede | 🔴 Crítico |
+| Criar token de credenciais AWS e colocar em repositório/config interno | 🔴 Crítico |
+| Configurar email de alertas dedicado para notificações de honeypot | 🔴 Crítico |
+| Instalar OpenCanary em VM ou Raspberry Pi com SSH + SMB + RDP | 🟡 Importante |
+| Atribuir hostname apelativo ao honeypot (ex: srv-backup-antigo) | 🟡 Importante |
+| Criar URL token numa página administrativa interna | 🟡 Importante |
+| Criar token de conta M365 para detetar credential stuffing | 🟢 Recomendado |
+| Integrar alertas OpenCanary com SIEM/Wazuh | 🟢 Recomendado |
+| Documentar base legal RGPD para logging de honeypots | 🟢 Recomendado |
+| Definir procedimento de resposta a alertas de honeypot | 🟢 Recomendado |
+
+---
+
+Os honeypots invertem a assimetria habitual da segurança: em vez de tentar detetar o atacante num oceano de eventos legítimos, obrigam-no a revelar-se ao tocar num recurso que nenhum utilizador legítimo tocaria. Uma PME com três Canarytokens bem colocados pode detetar uma intrusão que passaria completamente despercebida num SIEM mal configurado — e fazê-lo com zero custo e zero falsos positivos. Para contexto sobre outras ferramentas de monitorização, consulte o [guia de inventário de ativos de TI](/blog/inventario-ativos-ti-pme) e o [guia SIEM com Wazuh](/blog/siem-wazuh-pme-monitorizacao-seguranca-gratis).`,
+    category: "ferramentas",
+    categoryLabel: "Ferramentas",
+    publishedAt: "2026-04-21",
+    readingTime: 11,
+    author: {
+      name: "Rita Santos",
+      title: "Analista de Segurança",
+    },
+  },
+  {
+    slug: "password-spray-credential-stuffing-protecao-contas-empresa",
+    title: "Password Spray e Credential Stuffing: Como os Atacantes Tomam Contas Cloud e Como Parar",
+    excerpt:
+      "Password spray e credential stuffing são ataques silenciosos que evitam bloqueios por tentarem apenas uma ou duas passwords por conta. Aprenda a reconhecê-los e a bloqueá-los com MFA, Entra ID Protection e políticas de autenticação.",
+    content: `Em outubro de 2023, a Microsoft publicou um relatório sobre o grupo Midnight Blizzard (APT29, ligado ao SVR russo) que comprometeu a sua própria infraestrutura corporativa. O vetor de entrada foi um ataque de **password spray** contra uma conta de teste sem MFA. O grupo tentou uma única password comum contra centenas de contas — pacientemente, ao longo de vários dias, sem acionar bloqueios automáticos. Quando encontraram uma conta que funcionava, entraram.
+
+Se este tipo de ataque funciona contra a Microsoft, funciona contra qualquer PME que não tenha os controlos certos.
+
+## Três Ataques Que Parecem Semelhantes Mas São Diferentes
+
+**Força Bruta** — o atacante tenta muitas passwords contra uma conta específica. É o mais fácil de detetar e bloquear: políticas de bloqueio após 5-10 tentativas falham este ataque de forma eficaz.
+
+**Password Spray** — o atacante inverte a lógica. Em vez de muitas passwords contra uma conta, testa **uma ou duas passwords contra muitas contas**. Se uma organização tem 200 contas de email e o atacante testa "Setembro2025!" (uma password que é historicamente comum em Portugal no outono), há uma probabilidade real de uma ou duas contas usarem exatamente essa password — e nunca é acionado o bloqueio, porque cada conta só recebeu uma tentativa.
+
+**Credential Stuffing** — o atacante usa listas de pares username/password reais, obtidas em breaches anteriores (LinkedIn 2012, RockYou2024, etc.). A premissa é que muitas pessoas reutilizam passwords. Se a Joana da contabilidade usa a mesma password no LinkedIn e no M365 da empresa, e o par foi exposto num breach do LinkedIn, o atacante pode entrar diretamente.
+
+Nos três casos, o objetivo é o mesmo: acesso não autorizado a contas. A diferença está na deteção.
+
+## Como Funciona um Ataque de Password Spray na Prática
+
+Um atacante que quer comprometer contas M365 de uma empresa portuguesa começa por recolher endereços de email. Estes estão frequentemente disponíveis no website da empresa, no LinkedIn, ou em breaches anteriores. Com uma lista de 50-300 endereços, o ataque segue este padrão:
+
+**Dia 1, segunda-feira de manhã**: testa "Empresa2025!" contra todas as contas. Uma tentativa por conta. Aguarda.
+
+**Dia 3, quarta-feira**: testa "Setembro2025" contra todas as contas. Uma tentativa por conta.
+
+**Semana seguinte**: testa "Password1", "Welcome1", o nome da empresa com o ano.
+
+As passwords escolhidas não são aleatórias. Os atacantes usam listas calibradas para o país alvo — em Portugal, passwords sazonais com o nome do mês, passwords que incluem "PT" ou o nome da empresa, e passwords de breaches anteriores de organizações portuguesas. Ferramentas como o **Spray** ou o **MSOLSpray** automatizam este processo contra M365 e Azure AD.
+
+O intervalo entre tentativas é calculado para evitar os limites de rate limiting do tenant. Com 200 contas e um teste por conta a cada 15 segundos, o atacante percorre toda a lista em menos de uma hora — sem acionar qualquer alerta de "muitas tentativas falhas" na mesma conta.
+
+## Por Que as PMEs São Alvo Frequente
+
+A maioria das grandes empresas já tem MFA obrigatório e políticas de Acesso Condicional maduras. As PMEs são frequentemente alvo precisamente porque:
+
+- Têm email empresarial exposto (website, LinkedIn) — a lista de alvos é trivial de construir
+- Muitas ainda não têm MFA obrigatório para todos os utilizadores
+- Ainda existem contas com **autenticação legacy** ativa (IMAP, POP3, SMTP AUTH) — protocolos que contornam o MFA
+- As passwords não são geridas por um gestor centralizado, favorecendo reutilização e passwords previsíveis
+
+Uma única conta comprometida numa PME pode dar acesso a email de gestão, ficheiros partilhados, informação de clientes, e serve como ponto de entrada para ataques BEC.
+
+## A Defesa Essencial: MFA Para Todas as Contas
+
+O MFA bloqueia 99,9% dos ataques de password spray e credential stuffing. Mesmo que o atacante descubra a password correta, não consegue completar a autenticação sem o segundo fator.
+
+**No Microsoft 365**:
+- Aceda ao Centro de Administração M365 → Segurança → MFA
+- Ative os **Predefinições de Segurança** (Security Defaults) — isto ativa MFA para todos os utilizadores com o Microsoft Authenticator
+- Se tiver Microsoft Entra ID P1/P2 (incluído no Business Premium), use Acesso Condicional em vez das Security Defaults para maior flexibilidade
+
+**No Google Workspace**:
+- Consola de Administração → Segurança → Verificação em 2 passos
+- Selecione "Obrigatório" para todas as unidades organizacionais
+
+**Para contas privilegiadas** (administradores, diretores, financeiro), considere chaves de segurança físicas FIDO2 (YubiKey, Google Titan) — são imunes a phishing e impossíveis de usar remotamente.
+
+## Bloquear Autenticação Legacy: O Passo Ignorado
+
+MFA só protege protocolo modernos. Se tiver autenticação legacy ativa — IMAP, POP3, SMTP AUTH, autenticação básica — o atacante pode contornar o MFA completamente ligando diretamente ao serviço de email via IMAP.
+
+Muitos ataques de password spray bem-sucedidos usam exatamente esta via: testam a password contra o endpoint IMAP ou Autodiscover, que não exige MFA.
+
+**No Entra ID / M365**, bloqueie autenticação legacy com uma política de Acesso Condicional:
+
+1. Entra ID → Segurança → Acesso Condicional → Nova política
+2. Utilizadores: Todos os utilizadores
+3. Condições → Aplicações de cliente → Selecione "Clientes de autenticação legacy"
+4. Controlos de acesso → Conceder → Bloquear acesso
+5. Ative a política
+
+Antes de ativar, execute em modo **Só de relatório** durante uma semana para identificar utilizadores ou aplicações que ainda usam autenticação legacy e precisam de ser migrados.
+
+## Entra ID Protection: Deteção Automática de Spray
+
+O **Microsoft Entra ID Protection** (incluído no Entra ID P2, ou seja, no Microsoft 365 Business Premium) analisa padrões de início de sessão e deteta automaticamente ataques de password spray.
+
+Quando deteta um padrão de spray (muitas tentativas falhadas distribuídas por muitas contas), gera um alerta de **risco de início de sessão** com nível "Alto". Com uma política de risco configurada, pode forçar automaticamente o utilizador a fazer MFA extra ou bloquear o acesso até que um administrador reveja.
+
+**Configurar política de risco de início de sessão**:
+1. Entra ID → Proteção → Identity Protection → Política de risco de início de sessão
+2. Nível de risco de início de sessão: Médio e superior
+3. Controlos: Exigir autenticação multifator
+4. Ative a política
+
+Para contas de administrador, considere bloquear o acesso em vez de apenas exigir MFA adicional.
+
+## Entra ID Password Protection: Banir Passwords Previsíveis
+
+A **Proteção de Passwords do Entra ID** mantém uma lista global de passwords proibidas (milhares de passwords comuns e variações) e permite adicionar uma lista personalizada com termos específicos da sua organização (nome da empresa, cidade, setor).
+
+Quando um utilizador tenta definir uma password que está na lista proibida, o sistema recusa — mesmo que cumpra os requisitos de comprimento e complexidade.
+
+**Ativar no Entra ID**:
+Entra ID → Proteção → Métodos de autenticação → Proteção de passwords → Ativar proteção personalizada e adicionar termos relevantes (nome da empresa, cidade, setor).
+
+Para ambientes com Active Directory on-premises, o agente de Proteção de Passwords do Entra ID pode ser instalado nos Domain Controllers para aplicar as mesmas políticas localmente.
+
+## Acesso Condicional: Detetar Impossível e Localização Suspeita
+
+Com o Acesso Condicional (Entra ID P1, incluído no Business Premium), pode configurar políticas que detetam comportamentos anómalos:
+
+**Viagem impossível** — se uma conta faz login em Lisboa às 9h e em São Paulo às 10h, é impossível fisicamente. Esta condição pode acionar exigência de MFA adicional ou bloqueio.
+
+**Países desconhecidos** — bloqueie logins de países de onde nunca há acesso legítimo. Se a sua empresa só opera em Portugal, considere criar uma política que bloqueia logins fora da União Europeia.
+
+**Dispositivos não conformes** — se usar o Intune, exija que os dispositivos estejam conformes (BitLocker ativo, OS atualizado, sem jailbreak) para aceder a dados corporativos.
+
+Estas políticas não eliminam o spray, mas reduzem drasticamente o valor de uma conta comprometida — mesmo que o atacante entre, as restrições geográficas e de dispositivo limitam o que pode fazer.
+
+## Monitorização: O Que Procurar nos Logs
+
+Mesmo sem Entra ID Protection, pode detetar sinais de password spray nos logs de início de sessão:
+
+**No M365 / Entra ID**:
+Portal Entra ID → Monitorização → Inícios de sessão → Filtre por "Estado: Falha" e ordene por data. Um spray aparece como muitas falhas de contas diferentes num intervalo de tempo curto, com IPs externos semelhantes.
+
+**No Wazuh** (se tiver o SIEM instalado):
+Configure uma regra que detete Event ID 4625 (falha de autenticação Windows) ou o equivalente nos logs M365, agrupado por intervalo de tempo e número de contas únicas afetadas.
+
+**KQL no Microsoft Sentinel / Log Analytics**:
+\`\`\`
+SigninLogs
+| where ResultType != 0
+| where TimeGenerated > ago(1h)
+| summarize FailedAttempts=count(), UniqueAccounts=dcount(UserPrincipalName) by IPAddress, bin(TimeGenerated, 15m)
+| where UniqueAccounts > 10 and FailedAttempts > 20
+| order by FailedAttempts desc
+\`\`\`
+Esta query deteta IPs que falharam logins em mais de 10 contas distintas numa janela de 15 minutos — padrão típico de spray.
+
+## Passkeys: A Solução Permanente
+
+As defesas descritas acima são eficazes, mas têm uma limitação: todas dependem de passwords que podem ser adivinhadas ou roubadas. A solução definitiva para password spray e credential stuffing é eliminar as passwords.
+
+As **passkeys** (FIDO2/WebAuthn) substituem a password por um par de chaves criptográficas — uma privada que nunca sai do dispositivo, uma pública registada no serviço. Não há password para pulverizar nem para reutilizar num breach. Um atacante com a lista completa de pares username/password de todos os breaches da história da internet não consegue entrar numa conta protegida com passkeys.
+
+O [guia de passkeys para PMEs](/blog/passkeys-autenticacao-sem-senha-pme) detalha como implementar no Microsoft Entra ID e Google Workspace.
+
+## Checklist Anti-Password Spray
+
+| Controlo | Prioridade |
+|----------|-----------|
+| Ativar MFA para todos os utilizadores (Security Defaults ou CA) | 🔴 Crítico |
+| Bloquear autenticação legacy no Entra ID / M365 | 🔴 Crítico |
+| Ativar Entra ID Password Protection (banir passwords comuns) | 🟡 Importante |
+| Configurar política de risco de início de sessão (Identity Protection) | 🟡 Importante |
+| Configurar Acesso Condicional geográfico (bloquear fora da UE) | 🟡 Importante |
+| Monitorizar logs de inícios de sessão falhados semanalmente | 🟡 Importante |
+| Migrar contas de administrador para passkeys ou chaves FIDO2 | 🟢 Recomendado |
+| Rever contas inativas e desativar as que não têm utilizador ativo | 🟢 Recomendado |
+| Configurar alerta de Entra ID Protection para risco Alto | 🟢 Recomendado |
+
+---
+
+Password spray e credential stuffing são ataques de volume baixo e precisão cirúrgica — difíceis de detetar sem os controlos certos, devastadores quando funcionam. A boa notícia é que a defesa mais eficaz — MFA obrigatório para todos — é gratuita nas Security Defaults do M365 e elimina a esmagadora maioria destes ataques. Os controlos adicionais (bloquear legacy auth, Identity Protection, Acesso Condicional) estão incluídos no Microsoft 365 Business Premium sem custo adicional. Para aprofundar a gestão de identidade, consulte o [guia de IAM para PMEs](/blog/gestao-identidade-acessos-iam-pme) e o [guia de SSO para PMEs](/blog/sso-single-sign-on-pme-guia-implementacao).`,
+    category: "ameacas",
+    categoryLabel: "Ameaças",
+    publishedAt: "2026-04-21",
+    readingTime: 12,
+    author: {
+      name: "Rita Santos",
+      title: "Analista de Segurança",
+    },
+  },
+  {
+    slug: "seguranca-telemoves-tablets-ios-android-pme",
+    title: "Segurança em Telemóveis e Tablets nas PMEs: Guia Prático para iOS e Android",
+    excerpt:
+      "O telemóvel corporativo tem email, ficheiros e acesso a sistemas da empresa — e é um endpoint que a maioria das PMEs não protege. Guia prático de hardening iOS e Android, Intune MAM sem MDM, e o que fazer quando um dispositivo é perdido.",
+    content: `O telemóvel que um colaborador usa para ler email da empresa, aceder ao SharePoint, aprovar faturas no ERP ou comunicar no Teams é tão crítico para a segurança quanto o portátil de escritório — com uma diferença: provavelmente não tem as mesmas proteções.
+
+Segundo dados da Verizon Mobile Security Index, **mais de 40% das organizações reportaram ter sofrido um compromisso de segurança mobile**. Os vetores mais comuns são: dispositivo perdido ou roubado sem cifragem adequada, instalação de apps maliciosas fora do mercado oficial, e phishing via SMS (smishing) ou aplicações de mensagens. Para PMEs onde o telemóvel pessoal do colaborador acede a email e dados corporativos, o risco é ainda mais elevado.
+
+Este guia cobre os controlos práticos para iOS e Android, a gestão de apps corporativas em dispositivos pessoais (Intune MAM), e o procedimento quando um dispositivo é perdido.
+
+## Os Riscos Específicos do Mobile
+
+**Dispositivo perdido ou roubado** — um telemóvel sem bloqueio de ecrã ou sem cifragem dá acesso imediato a email, documentos, e potencialmente aplicações bancárias ou ERP. É o risco mais comum e com impacto mais direto.
+
+**Apps maliciosas** — aplicações com código malicioso que roubam credenciais, capturam ecrã, ou enviam dados para servidores externos. Mais frequente em Android com "Unknown Sources" ativo, mas casos em iOS existem (especialmente via TestFlight ou perfis MDM falsos).
+
+**Ataques em redes Wi-Fi públicas** — hotéis, aeroportos, cafés. Sem VPN, o tráfego HTTP ou apps que não implementam certificate pinning podem ser intercetados. Um ataque de SSL stripping pode expor credenciais.
+
+**Smishing e phishing via apps** — ataques de phishing via SMS, WhatsApp, ou Teams mobile são cada vez mais sofisticados, com páginas falsas que imitam o portal M365 ou o site bancário. O ecrã pequeno dificulta a verificação de URLs.
+
+**Jailbreak/root** — dispositivos com jailbreak (iOS) ou root (Android) têm as proteções de segurança do sistema operativo contornadas. Apps maliciosas num dispositivo com jailbreak têm acesso a dados que de outra forma seriam protegidos.
+
+## Hardening iOS
+
+O iOS tem uma postura de segurança forte por omissão, mas existem configurações que precisam de verificação explícita.
+
+### Bloqueio de Ecrã e Cifragem
+
+**Código de acesso obrigatório**: Definições → Face ID e Código → Ativar Código. Use um código de 6 dígitos no mínimo; um código alfanumérico é mais seguro para quem tem acesso a dados sensíveis.
+
+**Cifragem automática**: O iOS cifra todos os dados do dispositivo quando o código de acesso está ativo e o ecrã está bloqueado. Não há configuração adicional — verifique apenas que o código de acesso está ativo.
+
+**Auto-apagar após 10 tentativas**: Definições → Face ID e Código → Apagar Dados → Ativar. Após 10 tentativas de código falhadas, o iPhone apaga todos os dados. Ative apenas em dispositivos com backup iCloud ativo.
+
+**Proteção de Dispositivo Roubado** (iOS 17.3+): Definições → Face ID e Código → Proteção de Dispositivo Roubado. Quando ativada, ações críticas (alterar a password do Apple ID, desativar o Find My, apagar o iPhone) exigem autenticação biométrica e impõem um atraso de segurança de uma hora quando o dispositivo está fora de localizações conhecidas. Protege contra o cenário em que um ladrão observa o PIN e rouba o telemóvel.
+
+### Permissões de Aplicações
+
+Reveja regularmente (cada 6 meses) as permissões das apps instaladas: Definições → Privacidade e Segurança. Foque nas categorias de maior risco:
+
+- **Localização**: apenas apps que genuinamente precisam (maps, entrega). Evite "Sempre" — use "Quando a app está em uso".
+- **Microfone e Câmara**: apenas apps de videoconferência e comunicação.
+- **Contactos**: apps de negócios só devem ter acesso se for estritamente necessário.
+- **Acesso a todas as fotos vs. fotos selecionadas**: prefira acesso limitado a fotos selecionadas.
+
+### iCloud Backup e Partilha de Dados
+
+O backup iCloud é valioso para recuperação após perda ou avaria, mas implica que dados do dispositivo estão armazenados nos servidores da Apple. Para dados de alta sensibilidade, considere:
+
+- **Backup corporativo via MDM/Intune** em vez de iCloud pessoal
+- Desativar iCloud Drive para apps corporativas específicas se usar MAM: as apps geridas podem ser configuradas para não fazer backup para iCloud pessoal
+
+### VPN Sempre Ativa
+
+Para colaboradores que acedem regularmente a dados corporativos a partir de redes externas, configure um perfil VPN:
+
+- Definições → Geral → VPN e Gestão de Dispositivos → Adicionar Configuração VPN
+- Ou distribua o perfil via MDM para configuração automática
+
+O perfil VPN pode ser configurado como "always-on" (ligação automática quando não está em Wi-Fi corporativo) através de MDM, garantindo que todo o tráfego passa pela infraestrutura corporativa.
+
+### Find My iPhone
+
+Definições → [Nome do utilizador] → Find My → Find My iPhone → Ativar. Certifique-se também que "Enviar Localização Mesmo sem Bateria" está ativo — permite localizar o dispositivo até alguns minutos após a bateria esgotar.
+
+Ative o **Modo Perdido** remotamente via icloud.com/find se o dispositivo desaparecer — bloqueia o ecrã com um número de contacto, impede o uso de Apple Pay, e continua a registar a localização.
+
+## Hardening Android
+
+O Android tem maior fragmentação do que o iOS — as definições variam entre fabricantes (Samsung, Xiaomi, Huawei, etc.) — mas os princípios de segurança são os mesmos.
+
+### Bloqueio de Ecrã e Cifragem
+
+**PIN ou padrão forte**: Definições → Segurança → Bloqueio de Ecrã. Use um PIN de 6 dígitos ou uma password, não um padrão de arrastar — os padrões deixam marcas na tela e são fáceis de observar.
+
+**Cifragem**: O Android 10 e versões posteriores cifram o armazenamento interno por omissão. Verifique em Definições → Segurança → Encriptação e Credenciais. Se o dispositivo mostrar "Encriptado", está protegido.
+
+**Auto-bloqueio**: Configure o ecrã para bloquear automaticamente após 30 segundos de inatividade (máximo 1 minuto em dispositivos usados intensivamente).
+
+### Google Play Protect
+
+O Google Play Protect é o antivírus integrado do Android — analisa apps instaladas em busca de malware e verifica novas instalações.
+
+Definições → Segurança → Google Play Protect → Verificar se está ativo. Toque em "Verificar" para forçar uma análise imediata.
+
+**Desativar "Origens Desconhecidas"**: Definições → Segurança → Instalar apps desconhecidas. Certifique-se de que nenhuma app tem permissão para instalar APKs externos. Apps corporativas devem ser distribuídas via Google Play (versão gerida) ou via Intune.
+
+### Opções de Programador
+
+Definições → Sobre o Telefone → Número de compilação (toque 7 vezes para ativar o modo de programador). Se não precisar do modo programador, certifique-se de que está desativado: Definições → Opções de Programador → Desativar. O modo de programador expõe funcionalidades de depuração (ADB) que podem ser exploradas.
+
+### DNS Privado (DNS sobre HTTPS)
+
+Definições → Rede e Internet → DNS Privado → Ativar com hostname \`cloudflare-dns.com\` ou \`dns.google\`. Garante que as consultas DNS são cifradas, dificultando ataques de interceção em redes públicas. Para filtrar malware e phishing ao nível do DNS, use o hostname do [Cloudflare Gateway](/blog/filtragem-dns-seguranca-pme).
+
+### Google Find My Device
+
+Certifique-se que a conta Google associada ao dispositivo tem Find My Device ativo: myaccount.google.com → Segurança → Find My Device. Permite localizar, bloquear e apagar o dispositivo remotamente.
+
+## Intune MAM: Proteger Dados Corporativos em Dispositivos Pessoais
+
+Nem sempre é possível ou desejável inscrever o dispositivo pessoal de um colaborador no MDM corporativo — implica visibilidade sobre o dispositivo completo e levanta questões de privacidade RGPD. A alternativa é o **Mobile Application Management (MAM) sem inscrição de dispositivo**: proteger apenas as apps corporativas, sem tocar nas apps pessoais.
+
+Com o **Intune App Protection Policies**, pode:
+- Exigir PIN ou biometria para abrir apps M365 (Outlook, Teams, SharePoint)
+- Impedir copiar/colar entre apps corporativas e apps pessoais
+- Impedir capturas de ecrã em apps corporativas
+- Exigir cifragem de dados das apps corporativas
+- Executar um **selective wipe** (apagar só os dados corporativos) sem tocar nos dados pessoais
+
+### Configurar App Protection Policy no Intune
+
+1. Centro de Administração Intune (intune.microsoft.com) → Apps → Políticas de Proteção de Apps → Criar Política (iOS ou Android)
+2. Apps: selecione Microsoft Outlook, Teams, SharePoint, OneDrive, Edge
+3. Proteção de Dados:
+   - Impedir cópia de dados corporativos para apps não geridas: **Sim**
+   - Guardar cópias dos dados da organização: **Bloquear** (ou permitir apenas OneDrive/SharePoint)
+   - Cifrar dados da organização: **Sim**
+   - Captura de ecrã e assistente do Google: **Bloquear** (Android)
+4. Requisitos de Acesso:
+   - PIN para acesso: **Necessário** (6 dígitos)
+   - Credenciais corporativas para acesso: **Sim** (exige autenticação uma vez por dia)
+5. Avaliação do Estado de Funcionamento do Dispositivo:
+   - Dispositivos com jailbreak/root: **Bloquear acesso**
+
+Esta política aplica-se automaticamente quando um utilizador instala o Outlook ou Teams no dispositivo pessoal e inicia sessão com a conta corporativa — sem precisar de inscrever o dispositivo no MDM.
+
+### Wipe Seletivo de Dados Corporativos
+
+Quando um colaborador sai da empresa ou perde o telemóvel, pode executar um wipe seletivo que remove apenas os dados e apps geridos pelo Intune:
+
+Centro de Administração Intune → Dispositivos → Todos os dispositivos → [Dispositivo] → Extinguir
+
+O dispositivo recebe o comando na próxima vez que se ligar à internet. Os dados pessoais ficam intactos; os dados corporativos são removidos. Esta distinção é importante do ponto de vista RGPD — um full wipe num dispositivo pessoal pode apagar dados pessoais do colaborador, o que levanta questões legais.
+
+## Microsoft Defender for Endpoint Mobile
+
+O Microsoft Defender for Endpoint tem agentes para iOS e Android incluídos no **Microsoft 365 Business Premium**. Estes agentes fornecem:
+
+**Proteção anti-phishing**: analisa URLs em tempo real quando o utilizador toca num link no email, SMS, ou browser. Bloqueia páginas de phishing conhecidas e páginas com características suspeitas.
+
+**Deteção de jailbreak/root**: reporta ao Intune se o dispositivo foi comprometido. Permite criar uma política de Acesso Condicional que bloqueia acesso a dados corporativos em dispositivos com jailbreak.
+
+**Proteção de rede**: em Android, deteta ataques man-in-the-middle e certificados SSL suspeitos em redes Wi-Fi.
+
+**Distribuição**:
+- iOS: via Intune, distribuído como app gerida (sem precisar de inscrição MDM completa com MAM)
+- Android: via Google Play gerido ou como perfil de trabalho Android Enterprise
+
+## O Que Fazer Quando um Dispositivo É Perdido ou Roubado
+
+A rapidez de resposta é determinante — um dispositivo sem bloqueio pode dar acesso a email e sistemas em minutos.
+
+**Nos primeiros 30 minutos:**
+1. Tente localizar o dispositivo remotamente (Find My iPhone / Google Find My Device)
+2. Ative o Modo Perdido (iOS) ou bloqueie o dispositivo remotamente (Android) — exibe mensagem de contacto e bloqueia o ecrã
+3. Se tiver certeza que foi roubado (e não apenas perdido): execute o wipe seletivo Intune (remove dados corporativos) ou full wipe se for dispositivo corporativo
+4. Revogue as sessões ativas da conta Microsoft/Google do utilizador: Centro de Administração M365 → Utilizadores → [Utilizador] → Revogar sessões
+
+**Nas horas seguintes:**
+1. Mude a password do utilizador no M365/Active Directory
+2. Reveja os logs de início de sessão para atividade suspeita nas horas anteriores ao reporte
+3. Se o dispositivo tinha acesso a dados RGPD, avalie se constitui violação de dados (artigo 33.º do RGPD — notificação CNPD em 72 horas se houver risco para os titulares)
+
+## Checklist de Segurança Mobile para PMEs
+
+| Controlo | iOS | Android | Prioridade |
+|----------|-----|---------|-----------|
+| Código de acesso/PIN ativo | Definições → Face ID e Código | Definições → Segurança | 🔴 Crítico |
+| Cifragem de armazenamento ativa | Automático com PIN | Verificar em Segurança | 🔴 Crítico |
+| Find My / Find My Device ativo | iCloud.com/find | myaccount.google.com | 🔴 Crítico |
+| Proteção de Dispositivo Roubado (iOS 17.3+) | Definições → Face ID e Código | N/A | 🔴 Crítico |
+| Intune App Protection Policy ativa | Intune | Intune | 🔴 Crítico |
+| Apps de "Origens Desconhecidas" desativadas | N/A (iOS não permite) | Definições → Segurança | 🟡 Importante |
+| Google Play Protect ativo | N/A | Definições → Segurança | 🟡 Importante |
+| DNS Privado/Cloudflare configurado | Perfil VPN | Definições → Rede | 🟡 Importante |
+| Microsoft Defender for Endpoint Mobile | Via Intune | Via Intune | 🟡 Importante |
+| Wipe seletivo testado antes de incidente | Intune | Intune | 🟢 Recomendado |
+| Política de uso aceitável mobile documentada | Política de segurança | Política de segurança | 🟢 Recomendado |
+
+---
+
+O telemóvel é o endpoint mais difícil de controlar — está fora da rede corporativa 90% do tempo, muitas vezes pertence ao colaborador, e a proteção nativa varia entre sistemas operativos e versões. A abordagem mais pragmática para uma PME é combinar hardening básico do sistema operativo (PIN, cifragem, Find My) com Intune MAM para proteger as apps corporativas sem invadir o espaço pessoal — e garantir que a resposta a dispositivo perdido é um processo definido, não uma improvise. Para contexto sobre a gestão de dispositivos em maior escala, consulte o [guia de Microsoft Intune para PMEs](/blog/microsoft-intune-pme-gestao-endpoints-seguranca) e a [política BYOD](/blog/byod-politica-dispositivos-pessoais-trabalho-pme).`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Práticas",
+    publishedAt: "2026-04-21",
+    readingTime: 13,
+    author: {
+      name: "Carlos Miranda",
+      title: "Consultor de Cibersegurança",
+    },
+  },
+  {
     slug: "seguranca-rdp-acesso-remoto-windows-pme",
     title: "Segurança RDP: Como Proteger o Acesso Remoto ao Windows nas PMEs",
     excerpt:
