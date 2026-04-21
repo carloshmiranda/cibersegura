@@ -12,21 +12,14 @@ export default function RecommendedSoftware() {
     { name: "siem", label: "Monitorização", icon: "🛡️" },
   ];
 
-  const handleToolClick = async (tool: AffiliateTool, position: string) => {
-    try {
-      await fetch('/api/affiliate/click', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          article_slug: null,
-          cta_position: `ferramentas-${position}`,
-          link_id: tool.name.toLowerCase().replace(/\s+/g, '-'),
-          destination_url: tool.affiliateUrl,
-        }),
-      });
-    } catch (error) {
-      console.error('Error tracking affiliate click:', error);
-    }
+  // Helper to build redirect URL with tracking parameters
+  const buildTrackingUrl = (tool: AffiliateTool, position: string): string => {
+    const toolSlug = tool.name.toLowerCase().replace(/\s+/g, '-');
+    const params = new URLSearchParams({
+      source: 'ferramentas',
+      pos: position,
+    });
+    return `/go/${toolSlug}?${params.toString()}`;
   };
 
   return (
@@ -70,8 +63,7 @@ export default function RecommendedSoftware() {
             {/* CTA */}
             <div className="text-center">
               <a
-                href={recommendedTool.url}
-                onClick={() => handleToolClick(recommendedTool, category.name)}
+                href={buildTrackingUrl(recommendedTool, category.name)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-block w-full px-4 py-3 bg-accent text-white rounded-lg font-medium hover:opacity-90 transition text-sm"

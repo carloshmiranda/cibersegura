@@ -3,14 +3,6 @@ export interface AffiliateTool {
   description: string;
   category: "siem" | "passwords" | "email" | "backup";
   url: string;
-  recommended?: boolean;
-}
-
-export interface AffiliateTool {
-  name: string;
-  description: string;
-  category: "siem" | "passwords" | "email" | "backup";
-  url: string;
   affiliateUrl: string; // Direct affiliate URL for redirects
   recommended?: boolean;
   commission?: string; // Expected commission rate for transparency
