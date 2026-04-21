@@ -46,6 +46,631 @@ export const AUTHORS: Record<string, Author> = {
 
 export const posts: Post[] = [
   {
+    slug: "osint-defensivo-pme-reduzir-exposicao-digital",
+    title: "OSINT Defensivo: Como os Atacantes Pesquisam a Sua Empresa (e Como Limitar a Exposição)",
+    excerpt:
+      "Antes de lançar qualquer ataque, os hackers pesquisam a empresa durante dias. Saiba exatamente o que encontram — empregados, tecnologias, subdomínios, credenciais expostas — e como auditar e reduzir a sua superfície de exposição pública.",
+    content: `Antes de enviar o primeiro email de phishing ou tentar a primeira password, um atacante profissional passa horas a recolher informação pública sobre o alvo. Este processo chama-se OSINT — Open Source Intelligence — e usa apenas ferramentas gratuitas e dados que a própria empresa expõe sem perceber.
+
+A boa notícia: as mesmas ferramentas que os atacantes usam estão disponíveis para si. Fazer um audit OSINT à sua própria empresa leva menos de duas horas e revela problemas que nenhum antivírus deteta.
+
+## O Que os Atacantes Encontram numa Pesquisa de 30 Minutos
+
+### LinkedIn: O Diretório de Colaboradores da Empresa
+
+O LinkedIn é, inadvertidamente, o maior recurso de reconhecimento para atacantes. Com uma pesquisa por empresa, é possível ver:
+
+- **Nomes e cargos** de todos os colaboradores — incluindo o CFO, o responsável de IT, a assistente de direção
+- **Tecnologias usadas** reveladas nos perfis ("implementei Azure Defender", "certificado em Microsoft 365 Business Premium")
+- **Estrutura organizacional** — quem reporta a quem, quais os departamentos
+- **Padrão de emails** — basta encontrar um email num perfil público (joao.silva@empresa.pt) para deduzir o formato de todos os outros
+
+Com esta informação, um atacante constrói uma lista de alvos para phishing direcionado e sabe exatamente como se impersonar numa fraude BEC.
+
+**O que fazer**: reveja o que os perfis dos colaboradores revelam sobre tecnologias internas. Não é preciso apagar tudo — mas evite que perfis publicamente visíveis listem versões específicas de software ou configurações internas.
+
+### Anúncios de Emprego: O Manual de IT da Empresa
+
+Os anúncios de emprego são uma fonte extraordinária de inteligência técnica. Um anúncio para "Técnico de Sistemas" pode revelar:
+
+- Que usam VMware vSphere 7.0
+- Que têm Active Directory com Windows Server 2019
+- Que o ERP é o PHC CS
+- Que o firewall é pfSense
+- Que o backup é feito com Veeam
+
+Para um atacante, isto é um mapa. Sabe exatamente quais as CVEs a pesquisar, quais os exploits a preparar.
+
+**O que fazer**: nos anúncios de emprego, descreva competências genéricas ("experiência em sistemas Windows Server", "familiaridade com soluções de backup enterprise") em vez de nomear produtos e versões específicas.
+
+### DNS e Certificados: Mapeamento de Toda a Infraestrutura
+
+#### Subdomínios via Certificate Transparency
+
+Sempre que um certificado TLS é emitido, fica registado publicamente em logs de Certificate Transparency. O site **crt.sh** permite pesquisar todos os certificados emitidos para um domínio:
+
+\`\`\`
+Pesquisa: %.empresa.pt
+Resultado típico:
+  empresa.pt
+  www.empresa.pt
+  mail.empresa.pt
+  vpn.empresa.pt          ← servidor VPN
+  erp.empresa.pt          ← ERP acessível online
+  backup.empresa.pt       ← sistema de backup
+  dev.empresa.pt          ← ambiente de desenvolvimento
+  staging.empresa.pt      ← servidor de staging
+\`\`\`
+
+Cada subdomínio é uma potencial entrada. O servidor de staging pode ter sofware desatualizado. O servidor de VPN pode ter vulnerabilidades conhecidas. O ambiente de desenvolvimento pode ter credenciais hardcoded.
+
+**O que fazer**: aceda a crt.sh e pesquise o seu domínio. Para cada subdomínio encontrado, verifique se realmente precisa de ser acessível publicamente. O ambiente de staging não precisa de estar na internet.
+
+#### Registos DNS: Revelam os Seus Fornecedores
+
+Os registos DNS MX (email) e TXT (incluindo SPF) revelam quais os serviços cloud que usa:
+
+- \`MX: mail.protection.outlook.com\` → Microsoft 365
+- \`MX: aspmx.l.google.com\` → Google Workspace
+- \`TXT: include:_spf.salesforce.com\` → usa Salesforce
+- \`TXT: include:sendgrid.net\` → usa SendGrid para email
+- \`TXT: include:zoho.com\` → Zoho CRM
+
+Com esta informação, o atacante sabe exatamente quais os portais de login a falsificar numa campanha de phishing.
+
+**O que fazer**: faça uma pesquisa DNS ao seu domínio com \`dig TXT empresa.pt\` ou com ferramentas como DNSDumpster. Verifique se não há serviços esquecidos ainda referenciados.
+
+### Shodan: Os Serviços Expostos à Internet
+
+O Shodan é um motor de busca que indexa dispositivos e serviços acessíveis na internet. Para uma PME típica, uma pesquisa pelo IP público pode revelar:
+
+- Portas abertas desnecessariamente (3389/RDP, 23/Telnet, 21/FTP)
+- Câmaras IP com painel de administração público
+- Impressoras de rede com firmware desatualizado
+- NAS Synology ou QNAP com CVEs conhecidas
+- Router com interface de gestão exposta
+
+A pesquisa é simples: \`shodan search org:"Nome da Empresa"\` ou uma pesquisa pelo IP público.
+
+**O que fazer**: crie uma conta gratuita em shodan.io e pesquise pelo nome da empresa e pelo IP público. Configure alertas para receber notificações quando novos serviços forem detetados no seu IP.
+
+### Google Dorking: Documentos e Ficheiros Expostos
+
+O Google indexa muito mais do que páginas web. Com operadores avançados, é possível encontrar:
+
+\`\`\`
+Ficheiros sensíveis expostos acidentalmente:
+  site:empresa.pt filetype:pdf
+  site:empresa.pt filetype:xlsx
+  site:empresa.pt filetype:docx
+  site:empresa.pt "confidencial"
+  site:empresa.pt "password" OR "senha"
+
+Diretórios abertos:
+  site:empresa.pt intitle:"index of"
+
+Páginas de login expostas:
+  site:empresa.pt inurl:admin
+  site:empresa.pt inurl:login
+\`\`\`
+
+É comum encontrar propostas comerciais, recibos de vencimento, relatórios internos ou ficheiros com credenciais que foram colocados num servidor web por engano.
+
+**O que fazer**: execute estas pesquisas no Google com o seu domínio. Se encontrar ficheiros sensíveis indexados, remova-os do servidor e submeta um pedido de remoção no Google Search Console.
+
+### WHOIS: Informação do Registante
+
+O WHOIS revela quem registou o domínio. Para domínios .pt geridos pela FCCN, o registo pode incluir o nome do responsável técnico, email e, em alguns casos, morada.
+
+**O que fazer**: verifique os dados WHOIS do seu domínio em whois.pt. Considere usar uma morada de escritório em vez de morada pessoal.
+
+### GitHub e Repositórios Públicos: Credenciais Esquecidas
+
+Se a empresa tem developers ou usa código-fonte, é frequente encontrar em repositórios GitHub:
+
+- Ficheiros \`.env\` com credenciais de base de dados
+- API keys de serviços cloud (AWS, Azure, Stripe) hardcoded no código
+- Passwords de serviços internos em ficheiros de configuração
+- Chaves privadas SSH
+
+O Google Drive e o Pastebin também são fontes comuns de credenciais acidentalmente partilhadas.
+
+**O que fazer**: pesquise no GitHub por \`org:nome-da-empresa\` ou pelo domínio da empresa. Use a ferramenta \`trufflehog\` para fazer um scan de repositórios em busca de segredos expostos. Se encontrar credenciais expostas, revogue-as imediatamente e não se limite a apagar o commit — a história do repositório mantém o segredo visível.
+
+### HaveIBeenPwned e Infostealers: Credenciais Comprometidas
+
+Muitas credenciais empresariais chegam ao mercado negro através de:
+
+1. **Data breaches** de serviços onde os colaboradores se registaram com o email empresarial (LinkedIn 2021, Adobe 2013, etc.)
+2. **Infostealers** — malware que rouba passwords guardadas no browser e as vende em mercados como o Russian Market ou o Genesis Market
+
+**O que fazer**: em haveibeenpwned.com, existe um serviço gratuito para verificar um domínio inteiro. Introduza o seu domínio e verá todos os emails da empresa que aparecem em breaches conhecidos. Se encontrar emails comprometidos, force a alteração de password nesses utilizadores e verifique que não usaram a mesma password noutros sistemas.
+
+## Como Fazer o Seu Próprio Audit OSINT
+
+Este processo demora menos de 2 horas e não requer conhecimentos técnicos avançados:
+
+### 1. LinkedIn e Anúncios de Emprego (15 minutos)
+- Pesquise a empresa no LinkedIn
+- Liste os cargos e tecnologias mencionadas nos perfis públicos
+- Pesquise anúncios de emprego ativos — o que revelam sobre a stack tecnológica?
+
+### 2. DNS e Certificados (20 minutos)
+- Aceda a crt.sh e pesquise \`%.seudominio.pt\`
+- Liste todos os subdomínios encontrados
+- Verifique quais estão realmente acessíveis (curl ou browser)
+- Use dnsdumpster.com para um mapa visual do DNS
+
+### 3. Shodan (10 minutos)
+- Crie conta gratuita em shodan.io
+- Pesquise pelo IP público (\`dig +short seudominio.pt\`)
+- Pesquise pelo nome da empresa
+- Configure alerta para o seu IP: recebe email quando algo novo é detetado
+
+### 4. Google Dorking (20 minutos)
+- Execute as queries da secção anterior com o seu domínio
+- Documente cada ficheiro ou página sensível encontrada
+- Submeta pedidos de remoção no Google Search Console para o que não devia estar indexado
+
+### 5. HaveIBeenPwned (5 minutos)
+- Aceda a haveibeenpwned.com/DomainSearch
+- Introduza o domínio da empresa
+- Identifique emails comprometidos e respetivos serviços afetados
+
+### 6. GitHub (10 minutos)
+- Pesquise no GitHub pelo domínio da empresa e por variantes do nome
+- Verifique repositórios públicos de developers da empresa
+
+## O Que Fazer com o Que Encontrar
+
+Organize os achados numa tabela de risco simples:
+
+| Achado | Risco | Ação |
+|--------|-------|------|
+| Subdomínio staging.empresa.pt com Joomla 2.5 | Alto | Desligar ou atualizar |
+| RDP exposto na porta 3389 | Crítico | Fechar imediatamente, usar VPN |
+| Ficheiro proposta-comercial-confidencial.pdf indexado | Médio | Remover do servidor + Google |
+| 3 emails em haveibeenpwned | Alto | Forçar reset de password + ativar MFA |
+| Job posting revela versão PHC CS | Baixo | Atualizar anúncio |
+
+## Redução Contínua da Superfície de Ataque
+
+O OSINT não é um exercício de uma vez. Os atacantes fazem reconhecimento contínuo. Alguns automatismos úteis:
+
+- **Shodan Monitor** (gratuito): alertas por email quando novos serviços aparecem no seu IP
+- **Google Alerts**: configure alerta para o nome da empresa — apanha menções em Pastebin, fóruns de hacking, etc.
+- **HaveIBeenPwned domain notifications**: alertas automáticos quando o domínio aparece num novo breach
+- **Certificados**: configure alertas no crt.sh via RSS para novos certificados emitidos para o seu domínio (pode indicar phishing com subdomínios falsos)
+
+O objetivo não é tornar-se invisível — isso é impossível. É garantir que o que está exposto é o que escolheu expor, e que não há portas abertas por descuido.`,
+    category: "ameacas",
+    categoryLabel: "Ameacas",
+    publishedAt: "2026-04-21",
+    readingTime: 14,
+    author: {
+      name: "Carlos Miranda",
+      title: "Consultor de Cibersegurança",
+    },
+  },
+  {
+    slug: "whatsapp-business-seguranca-rgpd-pme-portugal",
+    title: "WhatsApp Business em PMEs: Segurança da Conta e Conformidade RGPD",
+    excerpt:
+      "O WhatsApp Business é usado por milhões de empresas portuguesas para comunicar com clientes — mas poucos configuram a segurança da conta ou sabem o que o RGPD exige. Guia prático para não perder a conta nem cair em incumprimento.",
+    content: `O WhatsApp Business está instalado em praticamente todas as PMEs portuguesas. É rápido, os clientes adoram, e funciona. O problema é que a maioria das empresas usa a conta sem qualquer configuração de segurança — e ignora completamente as obrigações RGPD associadas a comunicar com clientes por esta via.
+
+Este guia trata de ambas as questões de forma prática.
+
+## Os Riscos Reais de uma Conta WhatsApp Business não Segura
+
+### Roubo de Conta via SIM Swap
+
+O método de ataque mais comum em Portugal: o atacante liga à operadora (MEO, NOS, Vodafone, NOWO) fazendo-se passar pelo titular do número, pede uma segunda via do SIM com o argumento de perda ou dano, e em minutos recebe um novo SIM com o número da empresa.
+
+Com o número ativo no novo SIM, recebe o SMS de verificação do WhatsApp, entra na conta, altera o email de recuperação e bloqueia o acesso ao legítimo proprietário.
+
+A partir daqui, o atacante tem acesso ao histórico completo das conversas, aos contactos de clientes e pode enviar mensagens em nome da empresa — pedindo pagamentos, transferências, ou dados pessoais.
+
+**O que fazer contra SIM swap**: ative a Verificação em Dois Passos no WhatsApp Business (explicado abaixo). Com este PIN ativo, o acesso à conta exige o PIN mesmo depois de verificar o número — o SIM swap sozinho não é suficiente.
+
+### Sessões WhatsApp Web Abertas em Computadores Partilhados
+
+Um colaborador acede ao WhatsApp Web no computador da receção e não fecha a sessão. Qualquer pessoa que use esse computador depois tem acesso à conta.
+
+**O que fazer**: configure o timeout automático de sessões e, no final do dia, feche as sessões ativas em Configurações → Aparelhos Ligados.
+
+### Transferência da Conta para o Telemóvel de um Ex-Colaborador
+
+Quando o colaborador responsável pela conta sai da empresa, leva o número pessoal — e se a conta WhatsApp Business estava associada ao número dele, a empresa perde o acesso.
+
+**O que fazer**: a conta WhatsApp Business deve estar sempre associada a um número da empresa (número fixo VOIP ou número de telemóvel em cartão corporativo). Nunca use o número pessoal de um colaborador para a conta oficial da empresa.
+
+### Phishing "A Sua Conta Será Suspensa"
+
+Esquema muito frequente: a empresa recebe uma mensagem ou email a dizer que a conta WhatsApp Business foi reportada e será suspensa em 24 horas, com um link para "verificar a conta". O link leva a uma página falsa da Meta que rouba o código de verificação.
+
+**O que fazer**: a Meta nunca pede o código de verificação via mensagem. Se receber este tipo de mensagem, ignore e reporte como spam.
+
+## Configuração de Segurança: Passo a Passo
+
+### 1. Verificação em Dois Passos (obrigatório)
+
+A Verificação em Dois Passos adiciona um PIN de 6 dígitos que é pedido periodicamente e sempre que a conta é transferida para um novo dispositivo.
+
+**Como ativar**:
+1. Abra o WhatsApp Business
+2. Menu → Configurações → Conta → Verificação em dois passos
+3. Toque em "Ativar"
+4. Defina um PIN de 6 dígitos que a empresa consiga memorizar
+5. Associe um email de recuperação corporativo (não o email pessoal do gerente)
+
+**Guarde o PIN em lugar seguro** — num gestor de passwords corporativo como o Bitwarden. Se esquecer o PIN, o processo de recuperação é lento e pode deixar a conta inacessível durante dias.
+
+### 2. Gerir Aparelhos Ligados
+
+O WhatsApp Business permite até 4 aparelhos adicionais além do telemóvel principal (Multi-Device). Cada aparelho tem acesso completo às conversas.
+
+**Como auditar**:
+1. Menu → Configurações → Aparelhos Ligados
+2. Verifique se reconhece todos os aparelhos listados
+3. Remova qualquer aparelho desconhecido
+
+Faça esta verificação mensalmente e sempre que um colaborador sai da empresa.
+
+### 3. Backup de Conversas: Segurança e RGPD
+
+O WhatsApp Business faz backup automático para o Google Drive (Android) ou iCloud (iOS). Este backup contém todas as mensagens de clientes — incluindo dados pessoais — e por default é feito sem encriptação adicional.
+
+**O que configurar**:
+- **Android**: vá ao Google Drive e verifique a frequência de backup (recomendado: desativar ou limitar a backups manuais com encriptação ativada)
+- **iOS**: certifique-se de que o iCloud está protegido com 2FA forte
+
+Do ponto de vista RGPD: se o backup vai para o Google Drive ou iCloud, os dados dos clientes estão a ser processados por essas plataformas. Verifique se os seus termos de serviço e DPA cobrem este processamento.
+
+### 4. Perfil da Empresa e Informação Pública
+
+No WhatsApp Business, o perfil da empresa é público. Verifique que:
+- O email de contacto listado é um email corporativo, não pessoal
+- A morada está correta e é a morada comercial, não pessoal
+- O catálogo de produtos/serviços não contém preços ou condições que não queira tornar públicas
+
+### 5. Privacidade das Mensagens de Status
+
+As mensagens de Status (semelhante aos Stories) do WhatsApp Business são visíveis para todos os contactos guardados. Se partilhar informação interna por engano neste formato, qualquer cliente que tenha o número guardado vê.
+
+**Configuração**: Menu → Configurações → Privacidade → Status → "Os meus contactos exceto..." para limitar a audiência.
+
+## Conformidade RGPD: O Que Precisa de Saber
+
+### O WhatsApp como Subcontratante
+
+Quando usa o WhatsApp Business para comunicar com clientes, a Meta processa dados pessoais desses clientes (nome no contacto, número de telemóvel, conteúdo das mensagens) em seu nome. Nos termos do RGPD, a Meta atua como subcontratante — e precisa de ter um DPA (Data Processing Agreement) com ela.
+
+**O que fazer**: a Meta disponibiliza os termos de processamento de dados para o WhatsApp Business. Aceda ao Gestor Comercial do WhatsApp em business.whatsapp.com e reveja os termos de serviço. Para a versão API (com BSP), o DPA está nos termos de serviço do BSP escolhido.
+
+### Base Legal para Comunicar com Clientes
+
+Para enviar mensagens de marketing ou notificações proativas via WhatsApp, precisa de uma base legal RGPD:
+
+- **Execução de contrato** (Art. 6(1)(b)): confirmações de encomenda, atualizações de entrega — não precisa de consentimento separado
+- **Interesse legítimo** (Art. 6(1)(f)): follow-up pós-venda, pesquisas de satisfação — requer análise de balanceamento
+- **Consentimento** (Art. 6(1)(a)): marketing direto, promoções — precisa de consentimento explícito e documentado
+
+**O que fazer**: se usa o WhatsApp para enviar promoções ou newsletters, implemente um mecanismo de opt-in documentado. Um simples "Quer receber as nossas promoções por WhatsApp? Responda SIM para confirmar" não é suficiente — precisa de registar o momento e modo de obtenção do consentimento.
+
+### Direito ao Apagamento
+
+Se um cliente pedir para apagar os seus dados (Art. 17 RGPD), isso inclui as mensagens trocadas via WhatsApp. O problema: não é possível apagar mensagens seletivamente do lado da empresa sem as apagar para o cliente também.
+
+**Procedimento recomendado**: ao receber um pedido de apagamento, apague a conversa com esse cliente e assegure que o backup do Google Drive/iCloud também é atualizado (o que pode implicar aguardar o próximo ciclo de backup ou forçar um backup manual e apagar o anterior).
+
+### Transferências Internacionais
+
+Os servidores do WhatsApp estão nos Estados Unidos. O RGPD exige que transferências de dados para fora do Espaço Económico Europeu tenham uma salvaguarda adequada. A Meta usa Cláusulas Contratuais Tipo (SCCs) aprovadas pela Comissão Europeia como base para as transferências — isto está coberto nos seus termos de serviço.
+
+No entanto, a empresa deve documentar esta dependência no seu Registo de Atividades de Tratamento (RAT), identificando o WhatsApp como ferramenta de comunicação com clientes e a Meta como subcontratante.
+
+### Retenção de Dados
+
+As mensagens WhatsApp com clientes são dados pessoais. Quanto tempo as deve guardar?
+
+- **Mensagens de suporte**: o suficiente para resolver o caso + eventual período de garantia (tipicamente 1-3 anos)
+- **Confirmações de encomenda**: 10 anos (obrigação fiscal)
+- **Mensagens de marketing**: apagar após desativação do opt-in ou após o cliente deixar de ser cliente
+
+**O que fazer**: inclua o WhatsApp Business no programa de limpeza periódica de dados da empresa. Arquivo ou apagamento de conversas antigas com base nos prazos definidos.
+
+## WhatsApp Business App vs API: Quando Mudar
+
+A maioria das PMEs usa a **WhatsApp Business App** (gratuita), que suporta:
+- 1 número, até 5 aparelhos
+- Respostas automáticas básicas (mensagem de ausência, saudação automática)
+- Catálogo de produtos
+- Etiquetas para organizar conversas
+
+Quando a operação cresce, faz sentido migrar para a **WhatsApp Business API** (paga, via BSP — Business Solution Provider), que oferece:
+- Múltiplos agentes a responder em simultâneo
+- CRM integrado
+- Templates de mensagens aprovados pela Meta
+- Chatbots
+- Analíticas
+
+Em Portugal, os BSPs mais usados incluem a Twilio, a Vonage e soluções locais de helpdesk como a Zendesk ou a Freshdesk com integração WhatsApp.
+
+A migração para a API implica um processo de verificação da conta pela Meta — mais difícil de hackear, mas também mais burocrático de configurar.
+
+## Checklist de Segurança WhatsApp Business
+
+- [ ] Verificação em dois passos ativa com PIN memorizado/guardado no gestor de passwords
+- [ ] Email de recuperação é um email corporativo
+- [ ] Conta associada a número corporativo (não número pessoal de colaborador)
+- [ ] Aparelhos ligados auditados mensalmente
+- [ ] Backup de conversas configurado com encriptação ou desativado
+- [ ] Perfil não revela informação pessoal do gestor/dono
+- [ ] WhatsApp identificado no RAT como ferramenta de comunicação com clientes
+- [ ] Base legal para mensagens proativas documentada
+- [ ] Procedimento definido para responder a pedidos de apagamento RGPD`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-21",
+    readingTime: 13,
+    author: {
+      name: "Rita Santos",
+      title: "Analista de Segurança",
+    },
+  },
+  {
+    slug: "sharepoint-onedrive-partilha-documentos-seguranca-m365",
+    title: "SharePoint e OneDrive: Como Controlar a Partilha de Documentos no Microsoft 365",
+    excerpt:
+      "A maioria das PMEs com Microsoft 365 partilha demasiado — links 'qualquer pessoa', ficheiros confidenciais em sites públicos, convidados com acesso permanente. Guia para auditar e bloquear a partilha excessiva antes que cause um incidente.",
+    content: `Existe um problema silencioso em praticamente todas as empresas que usam Microsoft 365: a partilha excessiva de documentos. Não é maliciosa — é resultado dos defaults permissivos do SharePoint, da facilidade de criar links "qualquer pessoa pode ver" e da ausência de uma política de partilha definida.
+
+O problema tornou-se mais urgente com a adoção do Microsoft 365 Copilot: o Copilot acede a todos os ficheiros que o utilizador tem permissão para ver. Numa empresa onde tudo está partilhado com todos, o Copilot expõe salários, contratos e informação estratégica a qualquer colaborador que faça a pergunta certa.
+
+Este guia mostra como auditar o estado atual e configurar a partilha de forma adequada.
+
+## Entender a Hierarquia de Partilha
+
+As permissões no SharePoint/OneDrive funcionam em camadas — cada nível pode ser mais restritivo que o anterior, mas não mais permissivo:
+
+\`\`\`
+Tenant (Global)
+  └── Site SharePoint
+        └── Biblioteca de Documentos
+              └── Pasta
+                    └── Ficheiro
+\`\`\`
+
+A configuração no centro de administração define o máximo permitido. Um utilizador não pode criar um link de partilha mais permissivo do que o definido pelo administrador.
+
+## Passo 1: Auditar o Estado Atual
+
+### Centro de Administração do SharePoint
+
+1. Aceda ao **SharePoint Admin Center** em admin.microsoft.com → SharePoint
+2. Vá a **Reports → Sharing activity** — mostra os últimos 30 dias de partilhas
+3. Em **Sites**, filtre por "External sharing" para ver todos os sites com partilha externa ativa
+4. Procure sites com o estado "Anyone" — estes permitem links sem login
+
+### Relatório de Acesso de Convidados
+
+No centro de administração do Microsoft 365:
+1. Vá a **Reports → Usage → SharePoint activity**
+2. Filtre por "Sharing activity"
+3. Exporte para Excel e procure partilhas com domínios externos
+
+### PowerShell: Inventário Rápido de Sites com Partilha Externa
+
+\`\`\`powershell
+# Instalar módulo se necessário
+Install-Module -Name PnP.PowerShell -Force
+
+# Ligar ao tenant
+Connect-PnPOnline -Url "https://empresa-admin.sharepoint.com" -Interactive
+
+# Listar todos os sites com partilha externa ativa
+Get-PnPTenantSite -IncludeOneDriveSites |
+  Where-Object { $_.SharingCapability -ne "Disabled" } |
+  Select-Object Url, Title, SharingCapability |
+  Export-Csv -Path "partilha-externa.csv" -NoTypeInformation
+\`\`\`
+
+Este script produz um ficheiro CSV com todos os sites e o seu nível de partilha — uma visão de conjunto que não existe no portal.
+
+### Encontrar Links "Anyone" Ativos
+
+\`\`\`powershell
+# Listar ficheiros partilhados com links anónimos em todo o tenant
+Get-PnPTenantSite | ForEach-Object {
+  $siteUrl = $_.Url
+  Connect-PnPOnline -Url $siteUrl -Interactive
+  Get-PnPList | ForEach-Object {
+    $list = $_
+    Get-PnPListItem -List $list -Fields "FileRef","SharedWithUsers","SharedWithDetails" |
+      Where-Object { $_["SharedWithDetails"] -ne $null }
+  }
+}
+\`\`\`
+
+Para tenants grandes, use o relatório de Partilha no Purview Compliance Portal → Data → Content explorer, que é mais eficiente.
+
+## Passo 2: Configurar as Definições do Tenant
+
+### Definições Globais de Partilha
+
+No **SharePoint Admin Center → Policies → Sharing**:
+
+**Partilha externa — recomendação por tipo de empresa**:
+- **Empresa sem colaboração externa**: "Only people in your organization" para SharePoint e OneDrive
+- **Empresa com colaboração pontual**: "New and existing guests" (os convidados confirmam o email)
+- **Empresa com colaboração frequente**: "New and existing guests" com controlos adicionais
+
+**Nunca use "Anyone"** em produção, a não ser para materiais de marketing público deliberadamente escolhidos.
+
+### Links de Partilha: Mudar o Default
+
+Por default, ao partilhar um ficheiro, o M365 sugere "Anyone with the link". Mude isto:
+
+1. SharePoint Admin Center → Policies → Sharing
+2. Em "File and folder links", mude de "Anyone" para **"Only people in your organization"** ou "Specific people"
+3. Isto não impede criar links externos quando necessário — apenas muda o default
+
+### Expiração de Links
+
+Para links externos que precise de criar:
+
+1. SharePoint Admin Center → Policies → Sharing
+2. Em "Choose expiration and permissions options for Anyone links"
+3. Configure: "These links must expire within this many days" → **30 dias**
+4. Configure: "These links can only give these permissions" → View only (impede downloads por default)
+
+### Partilha de Domínios Específicos
+
+Se colabora regularmente com empresas parceiras específicas, pode restringir a partilha externa apenas a domínios permitidos:
+
+1. SharePoint Admin Center → Policies → Sharing
+2. "Limit external sharing by domain" → Adicione os domínios dos parceiros
+3. Utilizadores só podem partilhar externamente com emails nesses domínios
+
+## Passo 3: Configurar a Partilha por Site
+
+Cada site SharePoint pode ter configurações mais restritivas que o tenant.
+
+### Sites com Informação Sensível
+
+Para sites com contratos, recursos humanos, financeiro ou dados de clientes:
+
+1. SharePoint Admin Center → Sites → Active sites
+2. Selecione o site → Settings → External sharing
+3. Mude para "Only people in your organization"
+4. Em "Advanced settings", ative "Prevent downloading files from this site" se necessário
+
+### Classificação de Sites
+
+Implemente uma nomenclatura clara para sites SharePoint:
+
+- **[PÚBLICO]**: materiais de marketing, manuais de utilizador
+- **[INTERNO]**: documentação geral da empresa
+- **[CONFIDENCIAL]**: contratos, financeiro, RH
+- **[RESTRITO]**: direção, auditoria
+
+A classificação ajuda os colaboradores a perceber o que podem partilhar — e facilita a revisão de permissões.
+
+## Passo 4: Gerir Acesso de Convidados
+
+### Revisão Periódica de Convidados
+
+Os convidados (guests) acumulam-se ao longo do tempo — colaboradores de projetos terminados, fornecedores que já não trabalham com a empresa, contactos de ex-colaboradores.
+
+No **Microsoft Entra Admin Center → Users → All users**:
+1. Filtre por "User type: Guest"
+2. Verifique a coluna "Last sign-in activity"
+3. Remova convidados que não acedem há mais de 90 dias
+
+Automatize com uma Access Review:
+1. Entra ID P2 ou Governance (incluído no M365 Business Premium com algumas limitações)
+2. **Identity Governance → Access reviews → New access review**
+3. Configure revisão trimestral de todos os convidados
+4. Os revisores recebem email para confirmar quem deve manter acesso
+
+### Expiração Automática de Contas de Convidado
+
+No Entra Admin Center → External Identities → External collaboration settings:
+- "Guest user access expires" → configure para 365 dias (ou menos)
+- Convidados não confirmados em 30 dias perdem automaticamente o acesso
+
+## Passo 5: OneDrive — Bloquear Sincronização com Contas Pessoais
+
+Um problema frequente: o colaborador sincroniza o OneDrive da empresa com a sua conta pessoal em casa, e os ficheiros ficam também no Google Drive pessoal ou no iCloud.
+
+Para bloquear sincronização apenas para dispositivos da organização:
+
+1. SharePoint Admin Center → Settings → OneDrive → Sync
+2. Ative "Allow syncing only on computers joined to specific domains"
+3. Adicione o GUID do domínio da empresa (ou o Tenant ID do Entra ID)
+
+Via Intune (se usar gestão de dispositivos):
+1. Crie uma política de configuração de aplicação OneDrive
+2. Defina \`AllowTenantList\` com o Tenant ID da empresa — bloqueia sincronização de outros tenants
+
+## Passo 6: Sensitivity Labels — Proteção que Segue o Ficheiro
+
+As Sensitivity Labels (etiquetas de confidencialidade) do Microsoft Purview permitem classificar ficheiros de forma que a proteção segue o ficheiro mesmo quando sai da empresa.
+
+**Como funciona**: um ficheiro marcado como "Confidencial — Interno" pode ser configurado para:
+- Não ser partilhado externamente
+- Ser encriptado com chave da empresa
+- Expirar ao fim de X dias
+- Requerer autenticação para abrir
+
+**Configuração básica**:
+1. Purview Compliance Portal (compliance.microsoft.com)
+2. Information Protection → Labels → Create label
+3. Defina a hierarquia: Público → Interno → Confidencial → Altamente Confidencial
+4. Em "Encryption": para "Confidencial", ative encriptação com permissões "Co-Owner" apenas para utilizadores internos
+
+**Publicar as labels**:
+1. Information Protection → Label policies → Publish label
+2. Selecione as labels a publicar
+3. Aplique a "All users" — os utilizadores passam a ver as etiquetas em Office
+
+Com labels ativas, mesmo que um colaborador tente enviar um ficheiro "Confidencial" por email para um endereço externo, o Purview DLP pode bloquear automaticamente.
+
+## Microsoft 365 Copilot e Oversharing: A Urgência Real
+
+Se a empresa usa ou planeia usar o Microsoft 365 Copilot, a partilha excessiva torna-se um problema crítico:
+
+O Copilot responde com base em todos os ficheiros que o utilizador tem permissão para aceder. Se um colaborador de vendas perguntar "Qual é o salário dos meus colegas?", e os ficheiros de RH estiverem partilhados com todos os utilizadores da organização, o Copilot pode responder com os dados reais.
+
+**Ferramenta de diagnóstico**: no Purview Compliance Portal, existe o **Data Access Governance** (em pré-visualização para M365 Business Premium), que identifica especificamente:
+- Ficheiros com dados sensíveis acessíveis a demasiadas pessoas
+- Sites com oversharing sistémico
+- Utilizadores com acesso a mais informação do que o cargo justifica
+
+Antes de ativar o Copilot para toda a empresa, execute esta análise e corrija o oversharing encontrado.
+
+## Política de Partilha: O Que Comunicar aos Colaboradores
+
+Os controlos técnicos funcionam melhor com uma política clara. Comunique aos colaboradores:
+
+**O que podem partilhar diretamente** (sem aprovação):
+- Documentos classificados como Público ou Interno, apenas com colegas da empresa
+
+**O que requer aprovação do gestor**:
+- Qualquer partilha com externos
+- Documentos classificados como Confidencial
+
+**O que nunca partilhar via SharePoint/OneDrive**:
+- Contratos não assinados
+- Dados de pagamento
+- Credenciais de sistemas
+
+**Como partilhar temporariamente com externos**:
+1. Crie um link com prazo de expiração (30 dias máximo)
+2. Use View-only quando o destinatário só precisa de consultar
+3. Envie o link por canal separado das credenciais (ex: link por email, password por SMS)
+
+## Checklist de Partilha Segura
+
+- [ ] Partilha global não permite "Anyone" links em SharePoint e OneDrive
+- [ ] Default de criação de links mudado para "Only people in your organization"
+- [ ] Links externos têm expiração máxima de 30 dias configurada
+- [ ] Sites com informação sensível (RH, financeiro, jurídico) têm partilha externa desativada
+- [ ] Convidados revistos trimestralmente, inativos há 90 dias removidos
+- [ ] Sincronização OneDrive limitada a dispositivos da empresa
+- [ ] Sensitivity labels publicadas e colaboradores formados sobre a classificação
+- [ ] Relatório de partilha externa revisto mensalmente no Admin Center`,
+    category: "ferramentas",
+    categoryLabel: "Ferramentas",
+    publishedAt: "2026-04-21",
+    readingTime: 14,
+    author: {
+      name: "Carlos Miranda",
+      title: "Consultor de Cibersegurança",
+    },
+  },
+  {
     slug: "entra-id-hardening-pme-microsoft-365",
     title: "Microsoft Entra ID: Guia de Hardening para PMEs com Microsoft 365",
     excerpt:
