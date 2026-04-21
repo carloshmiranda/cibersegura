@@ -46,6 +46,671 @@ export const AUTHORS: Record<string, Author> = {
 
 export const posts: Post[] = [
   {
+    slug: "seguranca-faturacao-moloni-invoicexpress-saft-pme",
+    title: "Segurança em Plataformas de Faturação: Moloni, InvoiceXpress e SAF-T para PMEs",
+    excerpt:
+      "A plataforma de faturação da sua empresa contém dados de todos os clientes, histórico de compras e credenciais bancárias. Saiba como proteger contas Moloni e InvoiceXpress, gerir acessos de contabilistas e proteger os ficheiros SAF-T exportados.",
+    content: `A plataforma de faturação é um dos sistemas mais sensíveis de qualquer PME — e um dos menos protegidos. Contém o histórico completo de clientes, montantes de transações, NIFs e IBANs de fornecedores. Se for comprometida, um atacante pode alterar IBANs de faturas, exfiltrar a base de clientes ou usar os dados para fraude fiscal em nome da empresa.
+
+Em Portugal, as plataformas mais usadas são o Moloni e o InvoiceXpress (ambas certificadas pela AT), mas a segurança da conta raramente recebe a mesma atenção que a segurança do email ou dos computadores.
+
+## Porque as Plataformas de Faturação São Alvos Atrativos
+
+### Dados de Alto Valor
+
+Ao contrário de um servidor de ficheiros genérico, a plataforma de faturação tem dados estruturados e imediatamente monetizáveis:
+
+- **NIFs de clientes** — usados em fraudes de identidade e declarações fiscais falsas
+- **IBANs de fornecedores** — se alterados nas fichas de fornecedores, os pagamentos vão para conta do atacante
+- **Histórico de transações** — revela volume de negócio real, clientes estratégicos, sazonalidade
+- **Dados de contacto** — lista de clientes para campanhas de phishing direcionado
+
+### Vetores de Ataque Comuns
+
+**Phishing de credenciais**: Emails falsos a imitar notificações do Moloni ou InvoiceXpress (alertas de fatura, convites de colaboração) que redirecionam para páginas de login falsas. O design é convincente porque as plataformas têm templates de notificação bem conhecidos.
+
+**Credential stuffing**: Se as credenciais da plataforma de faturação são as mesmas de outro serviço comprometido (o que é comum), os atacantes testam-nas automaticamente. O HaveIBeenPwned tem centenas de milhões de credenciais de brechas anteriores.
+
+**Acesso indevido por contabilistas**: Muitos contabilistas externos têm acesso permanente à plataforma. Quando a relação termina, o acesso raramente é revogado.
+
+**Malware infostealer**: Software malicioso que corre em segundo plano e extrai credenciais guardadas no browser ou na aplicação de desktop.
+
+## Moloni: Configurações de Segurança Essenciais
+
+### Ativar Autenticação de Dois Fatores
+
+O Moloni suporta 2FA via aplicação TOTP (Google Authenticator, Microsoft Authenticator, Aegis). Para ativar:
+
+1. Aceda a **Perfil → Segurança → Autenticação de Dois Fatores**
+2. Digitalize o QR code com a aplicação de autenticação
+3. Guarde os códigos de recuperação num gestor de passwords (não em papel nem em email)
+4. Ative e confirme com um código
+
+Isto é a medida mais importante. Com 2FA ativo, uma password comprometida não é suficiente para aceder à conta.
+
+### Gerir Utilizadores e Permissões
+
+No menu **Configurações → Utilizadores**, reveja quem tem acesso. Para cada utilizador:
+
+- **Função** deve ser o mínimo necessário: um funcionário que cria faturas não precisa de acesso a relatórios financeiros ou configurações da empresa
+- **Contabilista externo**: crie um acesso específico com permissões de leitura apenas para o período necessário — não use a conta principal
+- **Colaboradores que saíram**: elimine ou desative imediatamente após a saída
+
+O Moloni tem funções predefinidas (Administrador, Contabilista, Comercial) — use-as em vez de dar acesso de Administrador a toda a gente.
+
+### Auditar Acessos Recentes
+
+Em **Configurações → Histórico de Acessos** (disponível nos planos pagos), pode ver os últimos logins: IP de origem, data e hora, dispositivo. Reveja mensalmente e alerte-se para:
+
+- Acessos a horas incomuns (madrugada, fim de semana fora do habitual)
+- IPs de países estrangeiros não esperados
+- Múltiplos logins falhados seguidos de sucesso
+
+### Proteger as Chaves API
+
+Se usar o Moloni através de integração com outra plataforma (CRM, e-commerce, ERP), provavelmente tem chaves API configuradas. Em **Integrações → Aplicações**:
+
+- Reveja que aplicações têm acesso e que permissões têm
+- Elimine integrações que já não são usadas
+- Nunca partilhe chaves API — cada integração deve ter a sua própria chave
+- Se uma chave for comprometida, revogue-a imediatamente em vez de apenas alterar a password
+
+## InvoiceXpress: Configurações de Segurança Essenciais
+
+### Two-Factor Authentication
+
+O InvoiceXpress tem 2FA disponível nas definições de conta:
+
+1. Aceda a **Conta → Segurança**
+2. Ative **Autenticação em Dois Passos**
+3. Use uma aplicação TOTP (não SMS — SIM swap é um vetor real)
+4. Guarde os códigos de backup de forma segura
+
+### Gestão de Utilizadores por Função
+
+Em **Empresa → Utilizadores**, o InvoiceXpress distingue entre:
+
+- **Administrador**: acesso total, incluindo configurações de empresa e exportação de dados
+- **Utilizador**: criação e edição de documentos
+- **Contabilista**: acesso de leitura para exportação de dados
+
+Para contabilistas externos, crie um acesso com o papel "Contabilista". Quando a relação terminar, desative o utilizador em vez de o eliminar (preserva o histórico de auditoria).
+
+### API Keys do InvoiceXpress
+
+O InvoiceXpress usa API keys para integrações. Em **Conta → API**:
+
+- Cada integração deve usar a sua própria chave
+- Não inclua a API key em código-fonte (repositórios GitHub de PMEs de tecnologia frequentemente expõem credenciais inadvertidamente)
+- Se a key for exposta, gere uma nova imediatamente
+- Considere usar variáveis de ambiente ou um secret manager em vez de configuração em texto simples
+
+## Proteção dos Ficheiros SAF-T
+
+O SAF-T (Standard Audit File for Tax) é um ficheiro XML que as empresas exportam mensalmente para a AT. Contém o historial completo de faturação: todos os clientes, todas as transações, todos os produtos e preços.
+
+### Riscos dos Ficheiros SAF-T
+
+- **Exposição de dados de clientes**: Um SAF-T anual de uma PME típica contém NIFs, moradas e histórico de compras de centenas de clientes
+- **Informação concorrencial**: Revela volume de negócio real, margens implícitas, clientes-chave
+- **Obrigação RGPD**: O SAF-T contém dados pessoais — a sua proteção é uma obrigação legal
+
+### Boas Práticas para SAF-T
+
+**Armazenamento seguro**: Não guarde ficheiros SAF-T em pastas partilhadas de uso geral ou no ambiente de trabalho. Crie uma pasta com acesso restrito a quem realmente precisa (geralmente só a gestão e o contabilista).
+
+**Encriptação em trânsito**: Quando envia o SAF-T ao contabilista, use canais encriptados:
+- Email com anexo não é seguro para ficheiros tão sensíveis — use o SharePoint/OneDrive com link de acesso protegido
+- Se usar email, proteja o ficheiro ZIP com password (e envie a password por um canal diferente, como SMS)
+- Plataformas como Solicitador Digital ou e-Fatura têm canais seguros para submissão
+
+**Retenção e eliminação**: O código fiscal obriga à conservação durante 10 anos, mas não é necessário guardar cópias em múltiplos locais. Defina uma localização única e autorizada, e elimine cópias desnecessárias.
+
+**Monitorizar acesso**: Se os ficheiros SAF-T estão num servidor ou SharePoint, ative os logs de acesso. Saberá se foram acedidos por alguém não autorizado.
+
+## Fraude de Alteração de IBAN em Faturas
+
+Uma das fraudes mais sofisticadas e lucrativas consiste em comprometer a plataforma de faturação ou o email, alterar os dados bancários nas fichas de fornecedores, e aguardar que a empresa efetue pagamentos para o IBAN fraudulento.
+
+### Como Acontece
+
+1. Atacante compromete credenciais da plataforma de faturação (phishing, credential stuffing)
+2. Acede ao painel e identifica fornecedores com pagamentos regulares
+3. Altera o IBAN registado na ficha do fornecedor
+4. As próximas faturas desse fornecedor têm o IBAN alterado
+5. A empresa paga sem verificar — o dinheiro vai para conta do atacante
+
+Variante mais sofisticada: o atacante interceta um email de fatura, altera o IBAN no documento PDF, e reencaminha-o para a empresa. Não precisa sequer de acesso à plataforma.
+
+### Prevenção
+
+- **Verificação telefónica de novos IBANs**: Qualquer alteração de IBAN de fornecedor deve ser confirmada por telefone no número registado previamente (não no número que acompanha o pedido de alteração)
+- **Dupla aprovação para alterações**: Exija que alterações de dados bancários de fornecedores sejam aprovadas por dois utilizadores
+- **Notificação de alteração**: Configure alertas para quando um IBAN é alterado no sistema
+- **Auditoria periódica**: Mensalmente, compare os IBANs registados na plataforma com os IBAN das últimas faturas recebidas
+
+## Gestão de Acessos de Contabilistas e TOCs
+
+A maioria das PMEs tem pelo menos um contabilista externo com acesso à plataforma. Este acesso é necessário, mas precisa de ser gerido.
+
+### Criar Acessos Específicos
+
+Nunca partilhe as credenciais principais da empresa com um contabilista. Em vez disso:
+
+1. Crie um utilizador específico com o email profissional do contabilista
+2. Atribua apenas o papel necessário (normalmente "Contabilista" ou "Leitura")
+3. Documente quem tem acesso e desde quando
+
+### Offboarding de Contabilistas
+
+Quando muda de contabilista ou encerra o serviço:
+
+1. Aceda aos utilizadores da plataforma e **desative ou elimine** o acesso imediatamente
+2. Se partilhou credentials principais (evite no futuro), altere a password imediatamente
+3. Reveja as integrações API — o contabilista pode ter configurado integrações com sistemas próprios
+4. Confirme que nenhuma exportação automática continua a ser enviada para o endereço do antigo contabilista
+
+### Para Escritórios de Contabilidade com Múltiplos Clientes
+
+Se gere a faturação de vários clientes, use contas separadas para cada cliente — não use uma conta partilhada. Uma brecha num cliente não deve comprometer os dados de todos os outros.
+
+## Checklist de Segurança para Plataformas de Faturação
+
+\`\`\`
+AUDITORIA DE SEGURANÇA — PLATAFORMA DE FATURAÇÃO
+[ ] 2FA ativo para todos os utilizadores com acesso administrativo
+[ ] Utilizadores revistos: apenas quem precisa tem acesso
+[ ] Contabilistas/TOC externos têm acesso próprio (não credenciais partilhadas)
+[ ] Passwords únicas e fortes (gestor de passwords)
+[ ] API keys auditadas: apenas integrações ativas têm chaves válidas
+[ ] Histórico de acessos revisto no último mês
+[ ] Ficheiros SAF-T armazenados em local seguro e de acesso restrito
+[ ] Procedure documentada para verificar IBANs de fornecedores antes de pagar
+[ ] Processo de offboarding inclui revogar acesso à plataforma de faturação
+[ ] Contactos de suporte das plataformas registados para resposta a incidentes
+\`\`\`
+
+## Resposta a Incidentes: Conta Comprometida
+
+Se suspeitar que a conta de faturação foi comprometida:
+
+1. **Imediatamente**: altere a password e revogue todas as sessões ativas
+2. **Seguinte 30 minutos**: audite o histórico de acessos e identifique o período de compromisso
+3. **Verifique alterações**: IBANs de fornecedores, dados de empresa, utilizadores criados, integrações adicionadas
+4. **Notifique clientes** se os dados deles puderem ter sido acedidos (obrigação RGPD se houver violação de dados)
+5. **Contacte a plataforma**: tanto o Moloni como o InvoiceXpress têm suporte de segurança e podem ajudar a identificar atividade suspeita
+6. **Verifique pagamentos recentes**: confirme que os últimos pagamentos a fornecedores foram para IBANs legítimos
+
+---
+
+A plataforma de faturação merece o mesmo nível de atenção de segurança que o email corporativo. Vinte minutos a configurar 2FA, rever utilizadores e auditar acessos protegem um dos ativos de dados mais sensíveis da empresa.
+
+Para contexto sobre fraudes de pagamento por email que frequentemente acompanham compromissos de plataformas de faturação, consulte o guia sobre [fraude de pagamento por email e IBANs fraudulentos](/blog/fraude-pagamento-email-iban-como-prevenir). Para proteger os acessos de todos os sistemas empresariais com uma solução centralizada, veja o guia de [SSO para PMEs](/blog/sso-single-sign-on-pme-guia-implementacao).`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-21",
+    readingTime: 14,
+    author: {
+      name: "Carlos Miranda",
+      title: "Consultor de Cibersegurança",
+    },
+  },
+  {
+    slug: "automatizacao-segura-make-zapier-power-automate-pme",
+    title: "Automatização Segura com Make, Zapier e Power Automate: O Que a Sua PME Precisa de Saber",
+    excerpt:
+      "Zapier, Make e Power Automate automatizam tarefas e poupam horas por semana — mas também movem dados sensíveis entre sistemas sem supervisão. Saiba quais os riscos de segurança e RGPD nestas plataformas e como configurá-las de forma segura.",
+    content: `As plataformas de automação de processos tornaram-se infraestrutura invisível em milhares de PMEs portuguesas. O Zapier liga o formulário do site ao CRM. O Make envia notificações de vendas para o Slack. O Power Automate aprova pedidos de férias e arquiva documentos no SharePoint. Funcionam em segundo plano, sem supervisão, a mover dados entre sistemas 24 horas por dia.
+
+O problema: a maior parte das automações foram configuradas com rapidez, focadas em fazer o fluxo funcionar, sem pensar no que acontece se aquela ligação for comprometida, que dados estão a sair da empresa, ou se o fluxo cumpre o RGPD.
+
+## O Que Está Realmente a Acontecer nas Suas Automações
+
+Antes de falar de segurança, vale a pena perceber o modelo de funcionamento. Quando configura uma automação no Zapier ou Make, está a:
+
+1. **Conceder acesso OAuth** aos sistemas de origem e destino — a plataforma de automação recebe tokens que lhe permitem ler e escrever dados em seu nome
+2. **Definir gatilhos e ações** que movem dados entre esses sistemas
+3. **Armazenar os dados** temporariamente na infraestrutura da plataforma durante a execução do fluxo
+
+O ponto 3 é muitas vezes ignorado. Os dados que passam por uma automação — incluindo campos de email, nomes de clientes, valores de transações — ficam armazenados nos servidores do Zapier (nos EUA) ou Make (na UE para clientes europeus) durante algum tempo. Dependendo das definições, podem ficar guardados por dias ou semanas nos logs de execução.
+
+## Riscos de Segurança Específicos
+
+### 1. OAuth Scope Creep
+
+Quando conecta um serviço ao Zapier ou Make, concede permissões OAuth. O problema é que muitas integrações pedem permissões muito mais amplas do que necessitam:
+
+- Uma automação que só precisa de **ler** emails novos pode pedir permissão para **ler, enviar e eliminar** todos os emails
+- Uma integração com o CRM que só precisa de criar contactos pode pedir acesso a todos os registos, incluindo oportunidades e faturação
+
+Estas permissões excessivas significam que, se a conta da plataforma de automação for comprometida, o atacante tem acesso muito mais amplo do que o necessário.
+
+**Verificação**: Reveja as permissões concedidas em cada serviço ligado. No Google Workspace, aceda a **Conta → Segurança → Apps com acesso à conta**. No Microsoft 365, veja **Entra ID → Aplicações Empresariais**.
+
+### 2. Webhooks Sem Autenticação
+
+Os webhooks são URLs que recebem dados de outros sistemas para desencadear automações. Por defeito, qualquer pessoa com o URL do webhook pode enviar dados e acionar a automação.
+
+Um webhook exposto pode ser abusado para:
+- Injectar dados falsos no sistema de destino
+- Disparar ações indesejadas (envio de emails, criação de registos)
+- Causar custos por execuções excessivas
+
+**Proteção**: Use sempre assinaturas HMAC ou tokens secretos nos webhooks. Tanto o Make como o Zapier suportam verificação de payload com secret. Configure-o para cada webhook.
+
+Exemplo de verificação em Make: nas definições do webhook, ative **Data Structure Validation** e configure um **Secret token** partilhado com o sistema emissor.
+
+### 3. Credenciais em Texto Simples
+
+É comum ver automações onde as credenciais são passadas diretamente como texto nos campos da automação — API keys, passwords, tokens — em vez de usarem as ligações autenticadas da plataforma.
+
+O problema: esses valores ficam visíveis nos logs de execução, que qualquer utilizador com acesso à conta pode ver. Se a conta tiver múltiplos utilizadores, todos veem as credenciais.
+
+**Prática correta**:
+- Use sempre as **conexões autenticadas** da plataforma (não campos de texto para credenciais)
+- No Power Automate, use **variáveis de ambiente** para valores sensíveis
+- Nunca coloque passwords ou API keys em campos de dados de automações
+
+### 4. Conta de Serviço Partilhada
+
+Muitas automações são criadas com a conta pessoal do fundador ou do responsável de IT. O problema:
+
+- Quando essa pessoa sai, as automações dependem da conta dela
+- Todos os logs de execução aparecem em nome dessa pessoa
+- Não há separação entre ações humanas e ações automáticas nos logs
+
+**Solução**: Crie uma conta de serviço dedicada para automações (por exemplo, \`automacoes@empresa.pt\`). As conexões ficam nessa conta, e é fácil auditar e controlar.
+
+### 5. Dados Pessoais em Fluxos de Automação
+
+Se as suas automações processam dados pessoais de clientes ou colaboradores (emails, nomes, NIFs, localização), isso tem implicações RGPD.
+
+Perguntas a fazer para cada automação com dados pessoais:
+- **Existe base legal** para este processamento? (Consentimento, execução de contrato, interesse legítimo?)
+- **Os dados saem da UE?** Zapier e Make têm servidores nos EUA — transferência internacional requer SCCs ou adequação
+- **Por quanto tempo ficam guardados nos logs?** Configure a retenção mínima necessária
+- **Está documentado no registo de atividades de tratamento?** O RGPD exige que este registo inclua todos os processamentos
+
+## Zapier: Configurações de Segurança
+
+### Controlo de Acesso à Conta
+
+Em **Settings → Members** (nos planos Team), reveja quem tem acesso à conta Zapier da empresa:
+- Use o plano Team em vez de partilhar credenciais pessoais
+- Cada membro deve ter o próprio acesso — não partilhe a conta principal
+- Quando um colaborador sai, remova o acesso imediatamente
+
+### Minimizar Retenção de Dados
+
+Por defeito, o Zapier guarda os logs de execução (Task History) indefinidamente. Para dados sensíveis:
+
+1. Aceda a **Settings → Data Management**
+2. Configure a retenção de Task History para o mínimo necessário (30 dias é razoável para a maioria dos casos)
+3. Para automações com dados sensíveis, considere desativar os logs de execução detalhados
+
+### Rever Conexões Ativas
+
+Em **Settings → Connected Accounts**, veja todas as ligações OAuth ativas. Regularmente:
+- Elimine conexões de serviços que já não usa
+- Verifique as permissões de cada conexão
+- Renove tokens que estejam próximos do prazo de validade
+
+### Localização de Dados (RGPD)
+
+O Zapier é uma empresa americana. Os dados que passam pelo Zapier podem ser processados em servidores nos EUA. Para cumprir o RGPD:
+
+- Verifique os termos de privacidade e o DPA do Zapier (disponível para planos pagos)
+- Para dados altamente sensíveis, considere alternativas com servidores na UE
+- Documente esta transferência internacional no registo de atividades de tratamento
+
+## Make (Integromat): Configurações de Segurança
+
+O Make tem a vantagem de ter data centers na UE (disponíveis para clientes europeus), o que simplifica a conformidade RGPD.
+
+### Configurar a Organização Corretamente
+
+Em **Organization → Members**, gerencie quem tem acesso:
+- Crie roles com o mínimo de permissões necessárias
+- Separe cenários críticos de negócio dos cenários de teste
+- Use Teams para separar áreas da empresa com diferentes necessidades de acesso
+
+### Data Encryption e Retenção
+
+Em **Organization → Settings → Data**:
+- Configure o período de retenção de execuções (execution history)
+- Para dados sensíveis, use a opção **Don't store data** nos módulos — as execuções acontecem mas os dados não ficam guardados nos logs
+- Considere o plano com **data encryption at rest** para cenários com dados sensíveis
+
+### Verificação de Webhooks
+
+Em cada webhook no Make, configure:
+1. **IP restrictions** se o sistema emissor tiver IP fixo
+2. **Data structure** para validar o formato dos dados recebidos
+3. **Secret token** para autenticar que o pedido vem do sistema legítimo
+
+O Make permite também restringir de onde um cenário pode ser acionado, o que limita o impacto de um URL de webhook exposto.
+
+## Power Automate: A Opção Mais Segura para M365
+
+Para empresas que já usam Microsoft 365, o Power Automate tem vantagens de segurança significativas face ao Zapier e Make:
+
+### Dados Dentro do Tenant
+
+Quando as automações envolvem apenas serviços Microsoft (SharePoint, Teams, Outlook, Dataverse), os dados **ficam dentro do tenant M365** — não saem para infraestrutura de terceiros. Isto simplifica enormemente o RGPD para dados internos.
+
+### Data Loss Prevention (DLP) Nativo
+
+Em **Power Platform Admin Center → Data policies**, pode configurar políticas que:
+- **Bloqueiam conexões** entre serviços de negócio (SharePoint, Exchange) e serviços consumidor (Gmail, Dropbox pessoal)
+- **Separam conectores** por nível de sensibilidade
+- **Controlam quais serviços externos** os flows podem usar
+
+Isto é uma camada de controlo que não existe no Zapier ou Make — um utilizador não pode inadvertidamente criar um flow que envie dados corporativos para um serviço não aprovado.
+
+### Variáveis de Ambiente
+
+Para credenciais e configurações sensíveis em Power Automate, use **Environment Variables** em vez de valores hardcoded nos flows. Facilita a gestão de secrets e evita que valores sensíveis apareçam nos logs.
+
+### Auditoria no Microsoft 365 Compliance Center
+
+Todas as execuções de flows do Power Automate são auditáveis no **Microsoft Purview → Audit**. Para investigar um incidente, pode ver exatamente quais dados foram acedidos e quando.
+
+## Auditoria de Automações Existentes
+
+Se nunca fez uma auditoria de segurança das automações da empresa, aqui está como começar:
+
+### Inventário de Automações
+
+1. Reúna um responsável de cada área de negócio
+2. Liste todas as automações ativas em cada plataforma
+3. Para cada automação, documente:
+   - Dados pessoais que processa
+   - Serviços ligados (origem e destino)
+   - Quem criou e quem é responsável
+   - Base legal RGPD se aplicável
+
+### Avaliação de Risco
+
+Para cada automação, classifique o risco:
+
+| Critério | Risco Baixo | Risco Alto |
+|----------|-------------|------------|
+| Dados envolvidos | Internos, não sensíveis | Dados pessoais de clientes |
+| Serviços externos | Dentro do tenant | Plataformas de terceiros |
+| Direção dos dados | Entra na empresa | Sai da empresa |
+| Volumes | Baixo volume | Alto volume ou frequência |
+
+### Ação por Nível de Risco
+
+**Risco alto**: Reveja OAuth scopes, configure retentção mínima de logs, documente no registo RGPD, confirme DPA com a plataforma de automação, verifique autenticação de webhooks.
+
+**Risco baixo**: Reveja anualmente, garanta que o responsável está identificado.
+
+## Checklist de Segurança para Automações
+
+\`\`\`
+AUDITORIA DE SEGURANÇA — PLATAFORMAS DE AUTOMAÇÃO
+[ ] Inventário completo de todas as automações ativas
+[ ] Conta de serviço dedicada (não conta pessoal) para automações
+[ ] OAuth scopes revistos: permissões mínimas necessárias
+[ ] Webhooks com autenticação (HMAC secret, IP restriction)
+[ ] Sem credenciais em texto nos campos de dados
+[ ] Retenção de logs configurada para o mínimo necessário
+[ ] Conexões de ex-colaboradores eliminadas
+[ ] Automações com dados pessoais documentadas no registo RGPD
+[ ] DPA assinado com Zapier/Make para dados de clientes UE
+[ ] Power Automate: DLP policies configuradas (se M365)
+[ ] Revisão de automações activas programada (trimestral)
+\`\`\`
+
+## Quando Substituir uma Plataforma por Outra
+
+A escolha entre Zapier, Make e Power Automate deve considerar o contexto de segurança:
+
+**Power Automate** é a melhor opção se a empresa já tem M365. Os dados ficam dentro do tenant, as políticas de DLP da empresa aplicam-se, e a auditoria está integrada com o Compliance Center.
+
+**Make** é preferível ao Zapier para empresas europeias que não usam M365, porque oferece data centers na UE como opção, simplificando o RGPD.
+
+**Zapier** é aceitável para automações de baixo risco que não envolvam dados pessoais sensíveis, e onde o ecossistema de integrações (mais de 6.000 apps) seja determinante.
+
+---
+
+As automações não são infraestrutura invisível — são pipelines de dados que merecem a mesma atenção de segurança que qualquer outro sistema. Uma revisão trimestral das automações ativas, combinada com uma política de DLP no Power Automate ou retenção mínima de logs no Make, reduz significativamente o risco com pouco esforço adicional.
+
+Para proteger os dados corporativos que fluem entre serviços cloud, consulte o artigo sobre [segurança no Google Workspace](/blog/seguranca-google-workspace-pme-guia-completo) e [segurança no Microsoft 365](/blog/microsoft-365-email-security-anti-phishing-safe-links-bec). Para gerir acessos OAuth de forma centralizada, veja o guia de [SSO para PMEs](/blog/sso-single-sign-on-pme-guia-implementacao).`,
+    category: "ferramentas",
+    categoryLabel: "Ferramentas",
+    publishedAt: "2026-04-21",
+    readingTime: 13,
+    author: {
+      name: "Rita Santos",
+      title: "Analista de Segurança",
+    },
+  },
+  {
+    slug: "seguranca-voip-centralita-ip-pme-sip-pbx",
+    title: "Segurança em VoIP e Centralita IP: Como Proteger as Comunicações de Voz da Sua PME",
+    excerpt:
+      "A migração de linhas telefónicas tradicionais para VoIP traz custos mais baixos, mas também novos riscos. Toll fraud, SIP brute-force e escutas são ameaças reais para PMEs com centralitas IP expostas. Saiba como proteger o seu sistema.",
+    content: `Quando uma PME substitui as linhas fixas tradicionais por uma centralita IP (VoIP), reduz significativamente os custos de comunicações. Mas a linha telefónica deixa de ser um circuito físico controlado pela operadora e passa a ser software na rede da empresa — e software exposto à internet tem vulnerabilidades que os atacantes exploram ativamente.
+
+A ameaça mais imediata é o **toll fraud**: atacantes que comprometem a centralita e fazem milhares de chamadas para números premium (audiotext, números internacionais de alto custo) em poucas horas. Uma PME pode receber uma fatura de vários milhares de euros num fim de semana — e as operadoras não estão obrigadas a abater esses custos se a falha foi no sistema do cliente.
+
+## Como Funciona uma Centralita IP
+
+A maioria das PMEs portuguesas usa uma das seguintes soluções:
+
+- **3CX** — solução popular, disponível como software Windows/Linux ou cloud hospedada; muito usada em Portugal
+- **FreePBX/Asterisk** — open source, geralmente self-hosted, configuração mais complexa
+- **Centralitas Yealink/Fanvil baseadas em Asterisk** — hardware dedicado com software integrado
+- **Teams Calling** (Microsoft) — extensão de chamadas de voz ao Microsoft Teams via Calling Plans ou Direct Routing
+- **Serviços cloud de operadoras** — Vodafone One, MEO Empresas, NOS com softphone
+
+Todas usam o protocolo **SIP (Session Initiation Protocol)** para estabelecer chamadas. O SIP comunica geralmente na porta 5060 (UDP/TCP) ou 5061 (TLS).
+
+## Toll Fraud: A Ameaça Mais Cara
+
+### Como os Atacantes Encontram Centrais Vulneráveis
+
+Ferramentas como o SIPVicious e scanners automatizados procuram ativamente portas SIP abertas na internet. Um servidor com a porta 5060 exposta recebe tentativas de autenticação SIP em minutos após a instalação — não é preciso que a empresa seja um alvo específico, basta ter a porta visível.
+
+Após encontrar o servidor, os atacantes tentam:
+1. **Brute force de extensões**: testam combinações de username/password para extensões comuns (100, 200, 1000, admin, test)
+2. **Autenticação com credenciais padrão**: muitas centrais têm extensões criadas com passwords iguais ao número da extensão
+3. **Exploração de vulnerabilidades conhecidas**: versões antigas do Asterisk ou FreePBX têm CVEs com exploits públicos
+
+Quando obtêm acesso, registam um softphone em nome da extensão comprometida e fazem chamadas até serem detetados — ou até a fatura chegar.
+
+### Dimensão Real do Problema
+
+O toll fraud de VoIP é um negócio de centenas de milhões de euros por ano. Em Portugal, casos com faturas de €5.000 a €50.000 num fim de semana não são incomuns. As operadoras cobram o tráfego porque tecnicamente as chamadas foram iniciadas pelo equipamento do cliente.
+
+## Configurações de Segurança para Centralitas SIP
+
+### 1. Nunca Expor a Porta SIP Diretamente à Internet
+
+A regra mais importante: a porta SIP (5060/5061) **não deve ser acessível diretamente da internet** a menos que seja estritamente necessário para um caso de uso específico.
+
+Para acesso remoto (colaboradores a trabalhar de casa):
+- Use uma **VPN** antes de ligar ao servidor SIP — o colaborador liga à VPN e depois o softphone liga à centralita dentro da rede privada
+- Em alternativa, use **SIP over TLS/SRTP** com autenticação forte, mas só com IP allowlisting e fail2ban ativo
+
+Para troncos SIP com a operadora:
+- Configure o firewall para **só aceitar tráfego SIP do IP da operadora** (ranges de IPs publicados por cada operadora)
+- Bloqueia todo o resto na porta 5060
+
+### 2. Passwords Fortes em Todas as Extensões
+
+Este é o ponto de falha mais comum. Extensões criadas com password igual ao número (ext. 100, password "100") são comprometidas em segundos.
+
+Regras para passwords de extensões SIP:
+- Mínimo 12 caracteres
+- Combinação de letras, números e caracteres especiais
+- Nunca igual ao número da extensão
+- Nunca passwords padrão do fabricante
+
+No 3CX: **Users → selecionar extensão → SIP Password** (deve ser gerada automaticamente e guardada num gestor de passwords)
+
+No FreePBX: **Applications → Extensions → SIP Credentials**
+
+### 3. Fail2ban para SIP
+
+O fail2ban é um daemon que monitoriza logs de autenticação e bloqueia IPs que fazem múltiplas tentativas falhadas. Para Asterisk/FreePBX:
+
+\`\`\`bash
+# Instalar fail2ban (se não estiver instalado)
+apt install fail2ban
+
+# Criar jail para Asterisk em /etc/fail2ban/jail.local
+[asterisk]
+enabled  = true
+filter   = asterisk
+action   = iptables-allports[name=ASTERISK]
+logpath  = /var/log/asterisk/messages
+maxretry = 5
+bantime  = 86400  # 24 horas
+findtime = 600    # janela de 10 minutos
+\`\`\`
+
+Para 3CX, o sistema tem proteção contra brute-force integrada: em **Security → Anti-Hacking**, configure:
+- **Max failed logins**: 3-5
+- **Blacklist duration**: 24 horas ou permanente
+- **Country blacklisting**: bloqueie países de onde não espera chamadas
+
+### 4. Limites de Chamadas e Destinos
+
+Configure limites que tornam o toll fraud economicamente inviável mesmo que a extensão seja comprometida:
+
+No 3CX: **Outbound Rules → Edit** — configure:
+- **Limitar chamadas internacionais** apenas às extensões que realmente precisam
+- **Horário de funcionamento**: bloquear chamadas fora do horário de trabalho exceto números de emergência
+- **Prefixos bloqueados**: 900/960 (audiotext), 707 (tarifa especial), e prefixos internacionais não usados
+
+No FreePBX: **Outbound Routes** com restrições por extensão e horário (módulo Time Conditions).
+
+Este é o controlo mais eficaz contra toll fraud: mesmo com uma extensão comprometida, o atacante não consegue ligar para destinos de alto custo.
+
+### 5. Encriptação TLS/SRTP
+
+Por defeito, as chamadas SIP viajam sem encriptação — o sinalização e o áudio podem ser intercetados numa rede não segura.
+
+Para proteger as comunicações:
+- Use **SIP sobre TLS** (porta 5061) para a sinalização
+- Use **SRTP** para encriptar o áudio
+- No 3CX: **Settings → SIP → Enable TLS** — o sistema gera certificados automaticamente ou use um certificado Let's Encrypt
+- No Asterisk: configure o transport TLS em \`sip.conf\` ou \`pjsip.conf\`
+
+Especialmente importante para empresas que discutem informação confidencial por telefone (advocacia, medicina, serviços financeiros).
+
+## Microsoft Teams Calling: Modelo de Segurança
+
+O Teams Calling (via Calling Plans ou Direct Routing) tem um modelo de segurança diferente das centralitas tradicionais:
+
+### Vantagens de Segurança
+
+- **Autenticação via Entra ID**: nenhuma extensão SIP exposta — o acesso é por conta Microsoft com MFA
+- **Sem servidor exposto**: para Calling Plans, a infraestrutura SIP está na Microsoft
+- **Politicas de uso**: pode limitar chamadas internacionais por utilizador ou grupo no Teams Admin Center
+- **Auditoria completa**: todas as chamadas ficam registadas no Microsoft Purview
+
+### Direct Routing: Pontos de Atenção
+
+Se usa Direct Routing (ligação ao SIP trunk de uma operadora portuguesa via Session Border Controller), os riscos são maiores:
+- O **Session Border Controller (SBC)** é exposto à internet para comunicar com a Microsoft e com a operadora
+- O SBC deve estar sempre atualizado e com configurações de segurança reforçadas
+- Recomendação: use SBCs de fornecedores certificados pela Microsoft (AudioCodes, Ribbon, Oracle) e siga os hardening guides do fabricante
+
+### Configurações no Teams Admin Center
+
+Em **Teams Admin Center → Voice**:
+- **Calling policies**: limite chamadas internacionais apenas aos utilizadores que precisam
+- **Emergency calling**: configure os números de emergência locais (112 em Portugal)
+- **Caller ID policies**: controle como o número da empresa aparece para chamadas externas
+
+## RGPD e Gravação de Chamadas
+
+Se a empresa grava chamadas telefónicas (para formação, prova de contrato ou conformidade), existem obrigações RGPD:
+
+### Base Legal para Gravação
+
+As bases legais mais comuns para gravação de chamadas são:
+- **Consentimento**: a pessoa é informada e consente antes da gravação começar ("Esta chamada pode ser gravada para fins de formação e qualidade")
+- **Interesse legítimo**: para fins de prova em disputas contratuais — mas deve ser documentado no registo de atividades de tratamento
+- **Obrigação legal**: em setores regulados (financeiro, etc.) onde a gravação é exigida por lei
+
+### Obrigações Práticas
+
+- **Informar antes de gravar**: a mensagem "esta chamada pode ser gravada" não é apenas cortesia — é obrigatória para cumprir o RGPD
+- **Período de retenção**: defina e documente por quanto tempo as gravações são conservadas (tipicamente 90 dias para formação, mais para casos em litígio)
+- **Acesso restrito**: as gravações devem ser acessíveis apenas a quem tem necessidade legítima
+- **Direito de acesso**: se um cliente pedir as gravações das suas chamadas, a empresa é obrigada a facultar (Art. 15 RGPD)
+- **Direito ao apagamento**: em princípio, um cliente pode pedir a eliminação das gravações se não houver base legal para continuar a guardar
+
+### Configuração no 3CX
+
+O 3CX tem gestão de gravações integrada:
+- **Settings → Recording**: configure quem pode ativar gravações, onde ficam armazenadas, e o período de retenção automático
+- Use a opção **Automatic recording per inbound rule** para aplicar políticas consistentes
+
+## Segmentação de Rede para VoIP
+
+A rede de VoIP deve estar separada da rede de dados por VLAN. Isto serve dois propósitos:
+
+1. **QoS (Quality of Service)**: o tráfego de voz precisa de baixa latência — na mesma VLAN que transferências de ficheiros grandes, a qualidade da chamada degrada
+2. **Isolamento de incidentes**: se um computador da rede de dados for comprometido, não deve conseguir interceptar ou manipular as chamadas de voz
+
+Configuração típica:
+- **VLAN 10**: dados (computadores, servidores)
+- **VLAN 20**: VoIP (telefones IP, servidor da centralita)
+- Regras de firewall inter-VLAN: computadores **não** podem aceder diretamente à porta SIP da centralita (só a VLAN 20)
+
+Para telefones Yealink, Snom, ou Grandstream: os switches geridos permitem configurar a VLAN de dados e voz por porta, mesmo com telefones que têm porta de passagem para o computador.
+
+## Checklist de Segurança para VoIP
+
+\`\`\`
+AUDITORIA DE SEGURANÇA — CENTRALITA VoIP
+[ ] Porta SIP (5060) não exposta diretamente à internet
+[ ] Passwords de todas as extensões: fortes e únicas (não = número da extensão)
+[ ] Fail2ban ou proteção anti-brute-force ativa
+[ ] Chamadas internacionais limitadas a utilizadores que precisam
+[ ] Chamadas bloqueadas fora do horário de trabalho (exceto emergências)
+[ ] Tronco SIP com a operadora: só aceita tráfego do IP da operadora
+[ ] Encriptação TLS/SRTP ativa (especialmente para setores regulados)
+[ ] Software da centralita atualizado para versão mais recente
+[ ] Política de retenção de gravações documentada (se aplicável)
+[ ] Informação de gravação em mensagem automática (RGPD)
+[ ] VLAN separada para VoIP
+[ ] Alertas de volume de chamadas configurados (para detetar toll fraud)
+[ ] Conta administrador da centralita com MFA (se suportado)
+\`\`\`
+
+## Resposta a Incidente: Suspeita de Toll Fraud
+
+Se a empresa recebe uma fatura de comunicações anormalmente elevada, ou a operadora alerta para tráfego suspeito:
+
+1. **Imediatamente**: bloqueie todas as chamadas de saída (bloquear o tronco SIP na operadora ou desligar o servidor se necessário)
+2. **Identifique a extensão comprometida**: nos logs do Asterisk (\`/var/log/asterisk/cdr-csv\`) ou no 3CX (Call Log Report), procure chamadas para destinos internacionais fora do horário normal
+3. **Altere credenciais**: mude a password da extensão comprometida e de todas as extensões por precaução
+4. **Reporte à operadora**: algumas operadoras em Portugal (MEO, Vodafone, NOS) têm processos para contestação de tráfego fraudulento — contacte imediatamente e solicite bloqueio de destinos premium
+5. **Reporte à PJ Cibercrime**: registe queixa, especialmente se os valores forem significativos
+6. **Analise o vetor**: como a extensão foi comprometida? Password fraca, porta SIP exposta, exploit de software antigo?
+
+---
+
+A migração para VoIP é quase inevitável para PMEs que queiram reduzir custos de comunicações, mas deve ser feita com consciência dos riscos. As medidas de proteção — não expor a porta SIP, passwords fortes, fail2ban e limites de chamadas — são simples de implementar e eliminam a grande maioria das ameaças.
+
+Para proteger a infraestrutura de rede onde a centralita VoIP opera, consulte o guia sobre [segmentação de redes com VLANs](/blog/segmentacao-redes-vlans-pme). Para colaboradores que acedem à centralita remotamente, veja as boas práticas de [teletrabalho seguro](/blog/teletrabalho-seguro-pme-trabalho-remoto).`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-21",
+    readingTime: 15,
+    author: {
+      name: "Carlos Miranda",
+      title: "Consultor de Cibersegurança",
+    },
+  },
+  {
     slug: "osint-defensivo-pme-reduzir-exposicao-digital",
     title: "OSINT Defensivo: Como os Atacantes Pesquisam a Sua Empresa (e Como Limitar a Exposição)",
     excerpt:
