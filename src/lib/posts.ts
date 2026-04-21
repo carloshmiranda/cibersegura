@@ -46,6 +46,655 @@ export const AUTHORS: Record<string, Author> = {
 
 export const posts: Post[] = [
   {
+    slug: "entra-id-hardening-pme-microsoft-365",
+    title: "Microsoft Entra ID: Guia de Hardening para PMEs com Microsoft 365",
+    excerpt:
+      "O Entra ID é a identidade central de qualquer empresa que use Microsoft 365 — e quando falha, tudo falha. Guia prático de hardening: Conditional Access, Identity Protection, PIM, contas de emergência e Secure Score.",
+    content: `O Microsoft Entra ID (anteriormente Azure Active Directory) é o serviço que autentica todos os utilizadores do Microsoft 365. Cada login no Outlook, Teams, SharePoint ou OneDrive passa pelo Entra ID. Se um atacante compromete uma conta no Entra ID, tem acesso a todos esses serviços — incluindo email, ficheiros e dados de clientes.
+
+Ao contrário do Active Directory on-premise, o Entra ID não exige servidores físicos nem infraestrutura adicional. Está incluído no Microsoft 365 Business Basic, Standard e Premium. O problema é que os defaults de segurança são insuficientes para a maioria das PMEs, e as configurações mais importantes estão enterradas no portal de administração.
+
+Este guia cobre as configurações de maior impacto, por ordem de prioridade.
+
+## Security Defaults vs Conditional Access
+
+O Entra ID tem dois modos de segurança base:
+
+**Security Defaults** — Ativado automaticamente em tenants criados após outubro de 2019. Obriga MFA para administradores e para utilizadores quando o risco é detetado. Bloqueia autenticação legacy. É um bom ponto de partida mas não permite customização.
+
+**Conditional Access** — Disponível no Entra ID P1 (incluído no Microsoft 365 Business Premium) e permite políticas granulares: exigir MFA para todos os utilizadores, bloquear acessos de países específicos, requerer dispositivo compliant, e muito mais.
+
+**A regra prática**: se tem Microsoft 365 Business Basic ou Standard, ative os Security Defaults se ainda não estiverem ativos. Se tem Business Premium, migre para Conditional Access e desative os Security Defaults — não podem coexistir.
+
+Para verificar o estado atual:
+1. Aceda a [entra.microsoft.com](https://entra.microsoft.com)
+2. Vá a **Properties** (no menu lateral, em Overview)
+3. Procure "Manage Security defaults"
+
+## Conditional Access: As Políticas Essenciais
+
+Se tem Microsoft 365 Business Premium, estas são as políticas mínimas a implementar.
+
+### 1. Exigir MFA para Todos os Utilizadores
+
+\`\`\`
+Nome: CA001 - Require MFA for All Users
+Utilizadores: All users (excluir contas de emergência)
+Cloud apps: All cloud apps
+Condições: — (sem exceções de localização)
+Grant: Require multifactor authentication
+Modo: Enable (começar em Report-only para validar)
+\`\`\`
+
+Esta é a política mais importante. Sozinha reduz em 99,9% o risco de comprometimento de conta por password roubada, segundo dados da Microsoft.
+
+### 2. Bloquear Autenticação Legacy
+
+Protocolos antigos (IMAP, POP3, SMTP AUTH, autenticação básica) não suportam MFA. Se estiverem ativos, um atacante com a password correta entra diretamente, ignorando o Conditional Access.
+
+\`\`\`
+Nome: CA002 - Block Legacy Authentication
+Utilizadores: All users
+Cloud apps: All cloud apps
+Condições: Client apps → Exchange ActiveSync clients + Other clients (marcar ambos)
+Grant: Block access
+\`\`\`
+
+**Aviso**: antes de ativar, verifique se há sistemas legados (impressoras com SMTP, aplicações antigas) que usem autenticação básica. O relatório de Sign-in logs no Entra ID mostra logins por protocol.
+
+### 3. Exigir MFA para Gestores do Azure (Privileged Roles)
+
+Cobre o cenário de contas de administrador comprometidas:
+
+\`\`\`
+Nome: CA003 - Require MFA for Azure Management
+Utilizadores: All users
+Cloud apps: Microsoft Azure Management
+Grant: Require MFA
+\`\`\`
+
+### 4. Bloquear Acesso de Países de Alto Risco (Opcional)
+
+Se o negócio opera exclusivamente em Portugal, bloquear logins de países sem utilizadores legítimos é uma medida simples e eficaz:
+
+\`\`\`
+Nome: CA004 - Block Access from High-Risk Countries
+Utilizadores: All users
+Condições: Locations → Include "All locations" / Exclude "Portugal + países onde há utilizadores"
+Grant: Block access
+\`\`\`
+
+Crie primeiro um Named Location com Portugal e quaisquer outros países relevantes (e.g., UK para empresas com filiais).
+
+## Identity Protection: Detetar Contas Comprometidas
+
+O **Microsoft Entra ID Protection** (incluído no P2, disponível no Microsoft 365 Business Premium através do Entra ID P1 add-on) monitoriza padrões de login e atribui um nível de risco a cada sessão.
+
+Se não tem P2, pode ativar proteção básica via Conditional Access com condições de risco (disponível no P1):
+
+### Política de Risco de Utilizador
+
+\`\`\`
+Nome: CA005 - User Risk Policy
+Utilizadores: All users
+Condições: User risk → High
+Grant: Require password change + MFA
+\`\`\`
+
+### Política de Risco de Sessão
+
+\`\`\`
+Nome: CA006 - Sign-in Risk Policy
+Utilizadores: All users
+Condições: Sign-in risk → Medium and above
+Grant: Require MFA
+\`\`\`
+
+O Entra ID considera "high risk" situações como: credenciais encontradas em leaks de dados, login de IP de botnet conhecido, ou padrão de acesso impossível (login de Lisboa às 9h e de Moscovo às 10h).
+
+## Privileged Identity Management (PIM)
+
+O PIM resolve um problema crítico em PMEs: contas de administrador permanentemente ativas. Quando um Global Admin tem as permissões 24/7, qualquer comprometimento dessa conta dá ao atacante acesso total imediato.
+
+Com o PIM, os administradores têm permissões **eligible** (elegíveis) em vez de **active** (ativas). Para elevar os privilégios, têm de:
+1. Ir ao Entra ID → Identity Governance → Privileged Identity Management
+2. Pedir ativação justificando o motivo
+3. Aprovar (pode ser self-approve ou requerer aprovação de segundo administrador)
+4. A ativação expira automaticamente (tipicamente 1-8 horas)
+
+**Como implementar**:
+1. No Entra ID, vá a **Identity Governance → Privileged Identity Management**
+2. Em **Azure AD roles**, clique em "Manage"
+3. Selecione o papel "Global Administrator"
+4. Em "Assignments", mude os admins de "Active" para "Eligible"
+5. Configure a duração máxima de ativação (recomendo 4 horas)
+6. Ative aprovação se tiver mais de um administrador
+
+O PIM está incluído no Entra ID P2 — disponível com o Microsoft 365 E3 ou como add-on. Se não tiver P2, a alternativa é criar uma conta de administrador separada que só usa quando necessário, e uma conta normal para email e trabalho diário.
+
+## Contas de Emergência (Break-Glass)
+
+Um risco negligenciado em PMEs: se o único Global Admin fica bloqueado por MFA (perdeu o telemóvel, trocou de número, o token expirou), a empresa pode perder acesso ao tenant inteiro.
+
+**A solução são contas de emergência**:
+
+1. Crie **duas** contas com usernames do tipo \`emergencia1@dominio.com\` e \`emergencia2@dominio.com\`
+2. Atribua a função Global Administrator
+3. Use passwords longas e complexas — guarde numa cofre físico (cofre de segurança, não gestão de passwords digital)
+4. **Exclua estas contas das políticas de Conditional Access** (especialmente da política de MFA obrigatório)
+5. **Exclua dos Security Defaults**
+6. Configure um alerta para quando estas contas fazem login — qualquer uso deve ser investigado imediatamente
+
+No Entra ID, pode criar um alerta via **Monitoring → Sign-in logs** com filtro para estas contas específicas, ou usar Microsoft Sentinel se disponível.
+
+## Password Protection
+
+O Entra ID Password Protection bloqueia passwords fracas mesmo que cumpram os requisitos mínimos de comprimento. Uma password como "Empresa2024!" parece complexa mas existe em dicionários de ataque.
+
+Para ativar:
+1. Vá a **Protection → Authentication methods → Password protection**
+2. Em **Custom banned passwords**, adicione o nome da empresa, nome de domínio, e variações comuns (e.g., "Empresa", "empresa123", nome do CEO)
+3. Ative **Enforce custom list: Yes**
+4. Para ambientes hybrid com AD on-premise, instale o **Entra ID Password Protection agent** nos Domain Controllers
+
+## Self-Service Password Reset (SSPR)
+
+O SSPR permite que utilizadores redefinam as suas próprias passwords sem contactar o helpdesk — e mais importante do ponto de vista de segurança, garante que os utilizadores verificaram o seu segundo fator de autenticação.
+
+**Configuração recomendada**:
+1. **Security info registration** → Ativado e combinado com a política de MFA para que os utilizadores registem os métodos numa só sessão
+2. **Number of methods required to reset**: 2 (email + TOTP app, ou telemóvel + backup email)
+3. **Evitar** SMS como único método — SIM swapping é uma ameaça real
+
+## Named Locations
+
+Named Locations permitem definir redes de confiança (o escritório, VPN corporativa) e usá-las em políticas de Conditional Access. Útil para:
+- Exigir MFA apenas quando fora da rede corporativa (reduz fricção para utilizadores internos)
+- Bloquear acesso de países não relacionados com o negócio
+
+Para criar:
+1. **Protection → Conditional Access → Named locations**
+2. Adicione o IP público do escritório como "IP ranges location" e marque como "Mark as trusted location"
+3. Use esta location como exclusão nas políticas de MFA se quiser reduzir a frequência de desafios na rede interna
+
+## Audit Logs e Sign-in Logs
+
+O Entra ID mantém logs de auditoria por 30 dias (planos básicos) ou 90 dias (P1/P2). Para PMEs sem SIEM, o mínimo é rever os sign-in logs semanalmente:
+
+1. Vá a **Monitoring → Sign-in logs**
+2. Filtre por **Status: Failure** para ver tentativas falhadas
+3. Procure padrões: muitas falhas do mesmo IP, logins de países inesperados, logins fora do horário de trabalho normal
+4. Configure **Diagnostic settings** para exportar para um Storage Account se quiser retenção superior a 30/90 dias
+
+**Alertas úteis via Microsoft 365 Defender ou Entra ID**:
+- Login de utilizador bloqueado pelo Conditional Access (pode indicar credenciais comprometidas)
+- Adição de novo método MFA para conta de administrador
+- Alteração de papel (role assignment) fora do horário normal
+- Login da conta de break-glass
+
+## Microsoft Secure Score para Identidade
+
+O **Secure Score** (disponível em [security.microsoft.com](https://security.microsoft.com)) agrega recomendações de segurança e pondera o impacto de cada configuração. É o melhor ponto de partida para PMEs que não sabem por onde começar.
+
+Para aceder ao componente de identidade: **Secure Score → Recommended actions → Filter: Identity**.
+
+As recomendações com maior impacto em pontuação costumam incluir:
+- Ativar MFA para admins (impacto alto)
+- Bloquear autenticação legacy (impacto alto)
+- Ativar self-service password reset (impacto médio)
+- Usar roles com princípio de menor privilégio (impacto médio)
+
+## Plano de Implementação para PMEs
+
+**Semana 1 — Fundação**:
+- Verificar/ativar Security Defaults (se não tem P1) ou ativar primeiro Conditional Access em Report-only
+- Criar duas contas de break-glass e excluir das políticas
+- Identificar todos os administradores e rever se todos precisam de Global Admin
+
+**Semana 2 — Conditional Access**:
+- Ativar políticas CA001 (MFA para todos) e CA002 (bloquear legacy auth) em Report-only durante 1 semana
+- Rever relatório de impacto — quantos logins seriam bloqueados?
+- Corrigir exceções legítimas (sistemas legados que precisam de migração)
+- Migrar para modo "Enabled"
+
+**Semana 3 — Elevação de Privilégios**:
+- Implementar PIM para Global Admins (se tem P2)
+- Ou criar contas admin separadas sem caixa de correio ativa
+
+**Semana 4 — Monitorização**:
+- Configurar exportação de logs para retenção alargada
+- Rever Secure Score e priorizar as recomendações de maior impacto
+- Documentar o que foi implementado e quando rever
+
+## Checklist de Hardening do Entra ID
+
+\`\`\`
+ENTRA ID — VERIFICAÇÃO DE SEGURANÇA
+[ ] Security Defaults ativo (se não tem P1) OU Conditional Access configurado
+[ ] MFA obrigatório para todos os utilizadores
+[ ] Autenticação legacy bloqueada
+[ ] Duas contas de break-glass criadas, excluídas das políticas, passwords em cofre físico
+[ ] Alerta configurado para logins das contas de emergência
+[ ] PIM ativo para Global Admins (se P2 disponível)
+[ ] Password Protection com lista de palavras banidas da empresa
+[ ] SSPR ativo com 2 métodos de verificação
+[ ] Sign-in logs revistos mensalmente
+[ ] Secure Score de identidade acima de 70%
+[ ] Logins de países sem utilizadores legítimos bloqueados
+\`\`\`
+
+---
+
+O Entra ID é provavelmente o sistema de segurança mais crítico de qualquer PME que use Microsoft 365 — e é também onde mais atacantes concentram esforços, precisamente porque é o acesso a tudo. Estas configurações não exigem consultores externos nem infraestrutura adicional; exigem apenas tempo e atenção ao que já existe no tenant.
+
+Para configurar a segurança dos dispositivos que acedem ao Entra ID, consulte o guia sobre [Microsoft Intune para PMEs](/blog/microsoft-intune-pme-gestao-endpoints-seguranca). Para o Active Directory on-premise integrado com Entra ID, veja o [guia de hardening do Active Directory](/blog/active-directory-hardening-pme).`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-21",
+    readingTime: 14,
+    author: {
+      name: "Carlos Miranda",
+      title: "Consultor de Cibersegurança",
+    },
+  },
+  {
+    slug: "phishing-at-financas-burlas-fiscais-portugal-pme",
+    title: "Phishing em Nome da AT e das Finanças: Como Identificar Burlas Fiscais",
+    excerpt:
+      "A Autoridade Tributária é uma das marcas mais imitadas em Portugal. Emails falsos de reembolso de IVA, notificações urgentes do Portal das Finanças e pedidos de atualização de IBAN — como identificar e o que fazer.",
+    content: `A Autoridade Tributária e Aduaneira (AT) é, consistentemente, uma das marcas mais impersonificadas em ataques de phishing dirigidos a empresas portuguesas. A razão é simples: todas as empresas têm obrigações fiscais, todas comunicam com a AT, e a maioria dos contabilistas e gestores abre imediatamente qualquer email que pareça oficial das Finanças.
+
+Esta combinação — relevância universal, urgência percebida e potencial para consequências legais — torna a AT um veículo ideal para fraude. Este guia explica como estes ataques funcionam, como os identificar, e o que fazer quando um colaborador clica.
+
+## Como Funcionam os Ataques de Phishing Fiscal
+
+Os atacantes não inventam pretextos ao acaso. Exploram eventos reais do calendário fiscal — início de entregas de IRS, prazo de IVA, notificações de coima — para criar urgência e verossimilhança.
+
+### Tipo 1: Email de "Reembolso Disponível"
+
+O padrão mais comum. O email informa que a empresa tem um reembolso de IVA ou IRS disponível para levantamento. Para receber, é necessário "confirmar ou atualizar os dados bancários" através de um link.
+
+O link leva a uma página que imita o Portal das Finanças (at.gov.pt), pede as credenciais de acesso, e depois pede o IBAN para "onde transferir o reembolso". O resultado: credenciais do Portal das Finanças comprometidas e IBAN da empresa entregue ao atacante (que passa a receber reembolsos legítimos futuros).
+
+**Indicadores**: A AT nunca pede IBAN por email. Reembolsos são processados para o IBAN registado na conta, que só pode ser alterado com autenticação forte no portal ou presencialmente.
+
+### Tipo 2: Notificação de Coima ou Infração
+
+Email urgente a informar que a empresa tem uma coima pendente, uma declaração em falta, ou uma notificação de inspeção. Inclui um link para "consultar o processo" ou "apresentar reclamação" até uma data limite.
+
+O objetivo pode ser:
+- Roubar credenciais do Portal das Finanças
+- Instalar malware através de um "documento de notificação" em anexo (PDF ou Word com macros)
+- Convencer o utilizador a efectuar um pagamento imediato via link de pagamento fraudulento
+
+**Indicadores**: A AT notifica por correio registado para processos de coima. Notificações digitais chegam através do Portal das Finanças diretamente, não por email externo a solicitar login.
+
+### Tipo 3: Pedido de Atualização de Dados
+
+Email a informar que é necessário atualizar dados da empresa (morada, NIF, representante legal, IBAN) para "evitar interrupções no serviço". O processo "demorado de atualização presencial" pode ser feito "mais rapidamente" através do link em anexo.
+
+**Indicadores**: A AT não aceita atualizações de dados por email. Qualquer alteração de dados cadastrais exige autenticação com Chave Móvel Digital, Cartão de Cidadão ou advogado/contabilista com procuração.
+
+### Tipo 4: Falsa Fatura ou IBAN de Fornecedor
+
+Variante mais sofisticada: o atacante compromete o email de um contabilista externo ou parceiro da empresa e envia, em nome dessa pessoa de confiança, uma instrução de pagamento com IBAN alterado. O email parece legítimo — vem da conta real, com histórico de conversa — mas o IBAN foi trocado.
+
+Este ataque específico não é phishing clássico mas Business Email Compromise (BEC) com contexto fiscal. Já foi documentado em Portugal em casos envolvendo empresas de contabilidade.
+
+## Como Identificar um Email Falso das Finanças
+
+### Verificar o Domínio Remetente
+
+O domínio legítimo da AT em email é **@at.gov.pt**. Outros domínios são sempre fraudulentos, independentemente de como o nome do remetente apareça:
+
+| Domínio remetente | Legítimo? |
+|---|---|
+| notificacoes@at.gov.pt | Sim |
+| at.gov.pt@gmail.com | Não |
+| portal-financas.pt@outlook.com | Não |
+| at-portugal.com | Não |
+| financas-portugal.net | Não |
+| notificacao@financas-pt.eu | Não |
+
+Em qualquer cliente de email, clique no nome do remetente para ver o endereço completo. No Outlook, basta passar o rato por cima do nome de exibição.
+
+### Verificar o URL Antes de Clicar
+
+O portal legítimo da AT é **www.portaldasfinancas.gov.pt**. Todos os domínios .gov.pt são geridos pelo Estado português. Se o link no email aponta para qualquer outro domínio, é fraudulento.
+
+Antes de clicar, passe o rato por cima do link (sem clicar) e observe o URL na barra de estado do browser ou no tooltip. Procure variações como:
+- portalfinancas.pt (sem "das")
+- portal-das-financas.com
+- at-financas.gov.pt.login-seguro.com (o .gov.pt aqui é um subdomínio do domínio fraudulento)
+
+Neste último exemplo — um truque comum — o domínio real é \`login-seguro.com\`, e \`.gov.pt\` é apenas parte do subdomínio.
+
+### Sinais de Alerta no Conteúdo
+
+- **Urgência artificial**: "Prazo de 24/48 horas", "conta bloqueada", "ação imediata necessária"
+- **Pedido de credenciais ou dados bancários por email**: A AT nunca pede isto
+- **Português imperfeito**: Erros gramaticais, acentuação incorreta, frases estranhas — frequentes em campanhas mal localizadas
+- **Anexos não solicitados**: PDFs ou Word com nomes como "notificacao_coima.pdf", "fatura.docx" — podem conter malware
+- **Link que não corresponde ao texto**: O texto diz "www.portaldasfinancas.gov.pt" mas o link real aponta para outro sítio
+
+## O Que a AT Realmente Envia por Email
+
+A AT utiliza email principalmente para:
+- **Notificações de disponibilidade de documentos** na Caixa Postal Eletrónica (e-fatura, notificações de IRS) — sem pedido de login no email
+- **Lembretes de prazo** (entregas de IRS, IVA) — informativos, sem links de ação
+- **Confirmações de submissão** de declarações
+
+A AT **não envia por email**:
+- Pedidos de credenciais de acesso
+- Pedidos de atualização de IBAN ou dados bancários
+- Links diretos para login no Portal das Finanças com urgência
+- Faturas ou documentos de cobrança direta
+
+Quando tem dúvida sobre uma comunicação, aceda diretamente ao portal digitando **www.portaldasfinancas.gov.pt** no browser — nunca através de links de email.
+
+## O Que Fazer se Clicou ou Forneceu Dados
+
+### Clicou Num Link mas Não Introduziu Dados
+
+1. Feche o browser imediatamente
+2. Faça scan ao computador com o antivírus (Microsoft Defender ou equivalente)
+3. Se o link desencadeou um download, não abra o ficheiro e elimine-o
+4. Monitorize nos dias seguintes se surgirem comportamentos anómalos no computador
+
+### Introduziu as Credenciais do Portal das Finanças
+
+**Nas primeiras horas**:
+1. Aceda imediatamente ao **www.portaldasfinancas.gov.pt** (diretamente, sem usar o link do email)
+2. Faça login e altere a palavra-passe
+3. Verifique em "Dados da Conta" se o IBAN ou outros dados foram alterados
+4. Consulte o histórico de acessos — o portal mostra os últimos logins
+
+**Contacte a AT**:
+- Linha de apoio: **217 206 707** (dias úteis)
+- Centro de atendimento online: **www.portaldasfinancas.gov.pt** → "Contactar"
+- Informe que as credenciais foram comprometidas e peça bloqueio preventivo ou auditoria da conta
+
+**Reporte à GNS/CERT.PT**:
+- Formulário em **www.cncs.gov.pt/pt/incidente/**
+- Ou por email: **cert@cert.pt**
+
+### Fez um Pagamento para IBAN Fraudulento
+
+**Tempo é crítico — os primeiros 60 minutos determinam se o dinheiro pode ser recuperado**:
+
+1. Ligue imediatamente ao banco (número no cartão ou no contrato) e peça cancelamento da transferência. Se ainda não foi processada, pode ser revertida
+2. Se o banco não puder reter, peça que notifiquem o banco receptor (contrapartida)
+3. Apresente queixa na **PJ Cibercrime**: [cibercrime.ministeriopublico.pt](https://cibercrime.ministeriopublico.pt) ou na esquadra mais próxima
+4. Se a transferência foi em nome da empresa, notifique o seguro se tiver cobertura para fraude
+
+## Medidas de Prevenção para PMEs
+
+### Formação da Equipa Financeira e Contabilidade
+
+Estas funções têm acesso ao Portal das Finanças e processam pagamentos. São o alvo primário. Algumas práticas específicas:
+- Nunca alterar IBAN de fornecedores ou da empresa por email sem confirmação telefónica no número registado no sistema
+- Portal das Finanças: ativar autenticação com Chave Móvel Digital ou cartão de cidadão (não apenas NIF + senha)
+- Senha do Portal das Finanças nunca deve ser a mesma que outras contas da empresa
+
+### Autenticação Forte no Portal das Finanças
+
+O Portal das Finanças suporta autenticação com:
+- **Chave Móvel Digital** — recomendado, exige telemóvel como segundo fator
+- **Cartão de Cidadão** com leitora
+- **NIF + Senha** — evitar como único método, é o mais vulnerável
+
+Para ativar a Chave Móvel Digital: **cmd.autenticacao.gov.pt**. É gratuito e requer presença física num balcão ou via app CMD.
+
+### Políticas Técnicas
+
+- **SPF/DKIM/DMARC** no domínio da empresa — impede que os atacantes enviem emails falsificados com o domínio da empresa para os vossos fornecedores
+- **Filtro anti-phishing** no email corporativo (Microsoft Defender para o M365, ou equivalente) — bloqueia automaticamente muitos destes emails antes de chegarem à caixa de entrada
+- **Verificação de remetente** em clientes de email — configurar o Outlook para mostrar sempre o endereço completo (e não apenas o nome de exibição)
+
+### Procedimento de Verificação para Pedidos Financeiros
+
+Para qualquer instrução de pagamento ou alteração de dados bancários que chegue por email — independentemente de parecer da AT ou de um fornecedor conhecido:
+
+1. **Não processe diretamente** a partir do email
+2. **Confirme por telefone** usando o número que tem registado nos vossos sistemas (não o número que está no email)
+3. **Documente a confirmação** — quem verificou, quando, com quem falou
+
+Esta regra simples elimina a maioria dos ataques BEC e phishing fiscal.
+
+---
+
+Os ataques em nome da AT são eficazes precisamente porque exploram a seriedade com que as empresas tratam as obrigações fiscais. A defesa não é tecnológica — é comportamental: verificar antes de agir, confirmar antes de pagar. Treinar a equipa financeira com exemplos reais é mais eficaz do que qualquer filtro de email.
+
+Para um guia mais amplo sobre prevenção de fraude de pagamento por email, consulte o artigo sobre [fraude de pagamento via IBAN](/blog/fraude-pagamento-email-iban-como-prevenir). Para saber o que fazer após um colaborador clicar num link suspeito, veja [o que fazer quando um colaborador clica num phishing](/blog/colaborador-clicou-phishing-o-que-fazer).`,
+    category: "ameacas",
+    categoryLabel: "Ameacas",
+    publishedAt: "2026-04-21",
+    readingTime: 11,
+    author: {
+      name: "Rita Santos",
+      title: "Analista de Segurança",
+    },
+  },
+  {
+    slug: "seguranca-software-gestao-erp-phc-primavera-pme",
+    title: "Segurança no Software de Gestão: PHC, Primavera e ERPs para PMEs Portuguesas",
+    excerpt:
+      "PHC e Primavera são o coração financeiro de milhares de PMEs portuguesas — e os atacantes sabem isso. Guia prático de segurança para ERP: contas de utilizador, base de dados SQL, acesso remoto, backups e integrações com a AT.",
+    content: `O software de gestão — PHC, Primavera BSS, Sage, Artsoft, TOConline — contém toda a informação financeira, de clientes e de fornecedores da empresa. Faturas, saldos, contratos, histórico de transações, dados pessoais de colaboradores. Se um atacante compromete o servidor do ERP, tem acesso a tudo.
+
+A maioria das PMEs portuguesas usa estes sistemas há anos com a mesma instalação, as mesmas contas de utilizador, e a mesma palavra-passe de base de dados que foi definida na instalação inicial. Este guia cobre as áreas de maior risco e as medidas de mitigação específicas para o contexto dos ERPs mais usados em Portugal.
+
+## Por Que os ERPs São Alvos Prioritários
+
+Num ataque de ransomware, o ERP é normalmente o terceiro ou quarto sistema a ser comprometido — depois do acesso inicial e do Active Directory. A razão é que os atacantes sabem que cifrar o ERP maximiza a pressão para pagar: sem acesso ao software de gestão, a empresa não consegue emitir faturas, processar pagamentos, ou consultar saldos.
+
+Além do ransomware, os ERPs são alvo de:
+- **Exfiltração de dados de clientes e fornecedores** — para venda ou extorsão
+- **Manipulação de dados financeiros** — alteração de IBANs de fornecedores para desviar pagamentos
+- **Acesso a integrações com a AT** — as credenciais configuradas no ERP para comunicação com o Portal das Finanças (e-fatura, SAFT) são um vetor de ataque
+
+## Gestão de Contas de Utilizador
+
+### Criar Contas Individuais
+
+É comum encontrar PMEs onde toda a equipa partilha o mesmo utilizador e password no PHC ou Primavera. Isto elimina completamente a rastreabilidade: quando ocorre um erro ou manipulação de dados, é impossível determinar quem fez o quê.
+
+**A solução é criar contas individuais para cada utilizador**. Os principais ERPs suportam autenticação integrada com Active Directory ou Entra ID — o utilizador faz login com as suas credenciais Windows/M365, sem password separada para o ERP.
+
+Para PHC:
+- Módulo de Segurança → Utilizadores → criar conta por utilizador, mapear para utilizador Windows
+- Definir perfil de acesso (ver secção abaixo)
+
+Para Primavera BSS:
+- Administrador → Utilizadores → criar conta, associar a utilizador de domínio
+
+### Princípio de Menor Privilégio
+
+Defina perfis de acesso que correspondam às funções reais:
+
+| Função | Acesso necessário |
+|---|---|
+| Contabilidade | Lançamentos, faturas, extratos — SEM acesso a configurações |
+| Comercial | Clientes, propostas, encomendas — SEM contabilidade |
+| Gestão | Relatórios, consultas — SEM emissão de documentos financeiros |
+| Administrador TI | Manutenção técnica — SEM acesso a dados financeiros |
+| Super-admin (ERP) | Acesso total — apenas para situações específicas, conta separada |
+
+Evite que a conta usada para trabalho diário tenha permissões de administrador no ERP.
+
+### Processo de Offboarding
+
+Quando um colaborador sai, a remoção do acesso ao ERP é frequentemente esquecida. Ao contrário do email e do M365 — que têm processos de offboarding mais estabelecidos — o acesso ao ERP pode permanecer ativo durante meses.
+
+**Inclua explicitamente na checklist de offboarding**:
+- Desativar conta no PHC/Primavera
+- Alterar passwords de contas partilhadas que o colaborador conhecia
+- Revogar acesso à VPN se era necessária para aceder ao ERP remotamente
+
+## Segurança da Base de Dados SQL
+
+Os ERPs portugueses correm tipicamente sobre Microsoft SQL Server. A base de dados contém todos os dados do ERP e é geralmente o arquivo mais valioso da empresa.
+
+### Verificar as Credenciais de Administrador SQL
+
+Na instalação, muitos ERPs criam uma instância SQL com conta \`sa\` (System Administrator) ativa e com password que pode ser simples. Para verificar:
+
+\`\`\`sql
+-- No SQL Server Management Studio (SSMS)
+SELECT name, is_disabled, LOGINPROPERTY(name, 'IsExpired')
+FROM sys.sql_logins
+WHERE name = 'sa'
+\`\`\`
+
+**Se a conta \`sa\` está ativa**:
+1. Altere a password para algo longo e aleatório (32+ caracteres)
+2. Guarde no gestor de passwords corporativo
+3. Idealmente, desative a conta \`sa\` e use autenticação Windows para gestão
+
+### Autenticação Windows vs SQL
+
+O SQL Server suporta dois modos:
+- **Windows Authentication Mode** — os utilizadores autenticam com as suas credenciais Windows/AD. É mais seguro porque herda as políticas de password e MFA do Active Directory
+- **Mixed Mode** — aceita tanto autenticação Windows como SQL (user/password separados)
+
+Se o ERP suportar, prefira Windows Authentication Mode. Verifique nas propriedades do servidor SQL (botão direito → Properties → Security).
+
+### Backup da Base de Dados SQL
+
+O backup do ERP tem duas componentes que devem ser feitas separadamente:
+1. **Backup do ficheiro de dados da aplicação** (instalação, configurações)
+2. **Backup da base de dados SQL** — o mais crítico
+
+Para configurar backups automáticos da base SQL:
+
+\`\`\`sql
+-- Script básico de backup full diário (executar no SQL Server Agent)
+BACKUP DATABASE [NomeDaBaseDeDados]
+TO DISK = N'C:\\Backups\\ERP_Full_' + CONVERT(NVARCHAR, GETDATE(), 112) + '.bak'
+WITH COMPRESSION, STATS = 10
+\`\`\`
+
+Configure o SQL Server Agent para executar este script diariamente fora do horário de trabalho. Guarde os backups em localização separada do servidor (NAS, cloud) — backups no mesmo disco que os dados não protegem contra ransomware.
+
+## Acesso Remoto ao ERP
+
+Muitas PMEs acedem ao PHC/Primavera remotamente via RDP (Remote Desktop Protocol) diretamente para o servidor. Esta configuração tem riscos elevados — o RDP com porta 3389 exposta é o vetor de entrada mais comum em ransomware.
+
+### Arquitetura Segura de Acesso Remoto
+
+**Opção 1 — VPN obrigatória**:
+- Instale uma solução VPN (OpenVPN, WireGuard, ou solução do router empresarial)
+- O acesso RDP ao servidor do ERP só é possível através da VPN
+- A porta 3389 não deve estar acessível diretamente da Internet
+
+**Opção 2 — Remote Desktop Gateway**:
+- O Windows Server tem um componente RD Gateway que publica o RDP através de HTTPS (porta 443)
+- Mais complexo de configurar mas elimina a exposição da porta 3389
+- Suporta MFA integrado com Entra ID
+
+**Opção 3 — Cloudflare Tunnel (Zero Trust)**:
+- Para PMEs sem servidor Windows dedicado, o Cloudflare Tunnel permite publicar o acesso RDP sem abrir portas no firewall
+- Gratuito para uso básico
+
+**Independentemente da solução escolhida**:
+- Autenticação de dois fatores obrigatória para acesso remoto
+- Política de lockout: 5 tentativas falhadas = bloqueio por 15 minutos
+- Network Level Authentication (NLA) ativado no servidor RDP
+
+### O Risco do Acesso do Fornecedor do ERP
+
+Os fornecedores de ERP (PHC, Primavera, Artsoft) e as empresas de assistência técnica frequentemente acedem remotamente para suporte. Este acesso deve ser gerido:
+
+- **Nunca dar a password de administrador ao fornecedor** — crie uma conta temporária com permissões adequadas
+- **Desative o acesso após a sessão de suporte** — não deixe contas de fornecedor permanentemente ativas
+- **Use ferramentas de acesso remoto com sessão gravada** (TeamViewer com auditoria, ou equivalente) para poder rever o que foi feito
+- **Registe quem acedeu, quando, e para quê** em log de manutenção
+
+## Integrações com a AT e e-Fatura
+
+O PHC e Primavera comunicam diretamente com a AT para comunicação de faturas (e-fatura), exportação SAFT-T, e integração com o Portal das Finanças. Estas integrações usam credenciais que estão configuradas no sistema.
+
+### Credenciais de Comunicação com a AT
+
+No PHC e Primavera, as credenciais usadas para comunicação com a AT (NIF + senha do portal, ou certificado digital) estão armazenadas nas configurações do sistema. Qualquer utilizador com acesso de administrador ao ERP pode ver estas credenciais.
+
+**Medidas**:
+- Use uma conta de utilizador da AT dedicada para integrações (não as credenciais pessoais do gerente ou do contabilista)
+- Certifique-se de que esta conta tem apenas as permissões necessárias para comunicação de faturas
+- Altere a password desta conta quando o contabilista externo ou responsável muda
+
+### SAFT-T: Controlo de Quem Tem Acesso
+
+O ficheiro SAFT-T contém toda a faturação do período — é um ficheiro de alto valor para atacantes que querem perceber a dimensão financeira da empresa antes de negociar um resgate.
+
+A exportação SAFT-T deve estar restrita no perfil de acesso a apenas os utilizadores que precisam (tipicamente contabilidade e gestão). Verifique nas configurações de segurança do ERP quem tem permissão para exportar este relatório.
+
+## Patch Management do ERP
+
+Os ERPs têm atualizações regulares que corrigem não só funcionalidades mas também vulnerabilidades de segurança. As atualizações do PHC e Primavera incluem frequentemente correções para:
+- Vulnerabilidades no motor de relatórios
+- Falhas de autenticação
+- Vulnerabilidades no componente de comunicação com a AT (protocolo TLS, certificados)
+
+**Boas práticas**:
+- Subscreva as notificações de atualização do fornecedor
+- Teste as atualizações num ambiente de staging antes de aplicar em produção (se possível)
+- Aplique atualizações de segurança críticas no prazo de 30 dias
+- Mantenha o SQL Server atualizado independentemente do ERP — as atualizações SQL Server são separadas
+
+## Checklist de Segurança para ERP
+
+\`\`\`
+SEGURANÇA DO SOFTWARE DE GESTÃO — VERIFICAÇÃO
+CONTAS DE UTILIZADOR
+[ ] Contas individuais para cada utilizador (sem partilha)
+[ ] Perfis de acesso com menor privilégio por função
+[ ] Contas de ex-colaboradores desativadas
+[ ] Password de administrador ERP diferente das contas pessoais
+
+BASE DE DADOS SQL
+[ ] Conta 'sa' com password forte ou desativada
+[ ] Backup diário da base de dados configurado
+[ ] Backup guardado fora do servidor (NAS ou cloud)
+[ ] Último backup testado (restauro verificado)
+
+ACESSO REMOTO
+[ ] Porta RDP (3389) não exposta diretamente à Internet
+[ ] Acesso remoto apenas via VPN ou solução Zero Trust
+[ ] MFA obrigatório para acesso remoto
+[ ] Lockout policy ativada (5 tentativas / 15 min bloqueio)
+
+FORNECEDORES
+[ ] Contas de acesso de suporte temporárias e desativadas após uso
+[ ] Registo de acessos de fornecedor documentado
+[ ] Credenciais da AT nunca partilhadas diretamente
+
+INTEGRAÇÕES AT
+[ ] Conta AT dedicada para integrações ERP (não credenciais pessoais)
+[ ] Exportação SAFT-T restrita a utilizadores autorizados
+[ ] Credenciais AT armazenadas com acesso controlado
+
+ATUALIZAÇÕES
+[ ] ERP atualizado para versão mais recente
+[ ] SQL Server com patches de segurança aplicados
+[ ] Processo documentado de aplicação de updates
+\`\`\`
+
+---
+
+O software de gestão é frequentemente o sistema mais desprotegido das PMEs precisamente porque "sempre funcionou assim" — instalado pelo fornecedor, configurado uma vez, e nunca mais revisto do ponto de vista de segurança. Uma auditoria de segurança ao ERP raramente demora mais de meio dia e descobre quase sempre contas de utilizadores que já saíram, passwords de base de dados nunca alteradas, e acesso RDP direto à Internet.
+
+Para um guia mais abrangente sobre gestão de acesso remoto seguro, consulte o artigo sobre [segurança RDP para PMEs](/blog/seguranca-rdp-acesso-remoto-windows-pme). Para proteger a base SQL Server subjacente, o guia de [hardening Windows 11 para empresas](/blog/windows-11-hardening-seguranca-pme) inclui configurações de segurança relevantes para servidores Windows.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-21",
+    readingTime: 13,
+    author: {
+      name: "Carlos Miranda",
+      title: "Consultor de Cibersegurança",
+    },
+  },
+  {
     slug: "honeypots-canarytokens-pme-detetar-intrusos",
     title: "Honeypots para PMEs: Detetar Intrusos com Canarytokens e OpenCanary",
     excerpt:
