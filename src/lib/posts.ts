@@ -32949,6 +32949,970 @@ Para apoio especializado em Portugal: CERT.PT (\`cncs.gov.pt\`), e empresas naci
       title: "Consultor de Cibersegurança",
     },
   },
+  {
+    slug: "gestao-acessos-privilegiados-pam-pme",
+    title: "Gestão de Acessos Privilegiados (PAM) para PMEs: Controlar Contas Admin sem Gastar Muito",
+    excerpt:
+      "As contas de administrador são o prémio máximo para um atacante. Um domínio comprometido transforma um incidente de phishing numa catástrofe total. Este guia mostra como as PMEs podem implementar controlo de acessos privilegiados com ferramentas gratuitas e built-in.",
+    content: `As contas de administrador são o prémio maior que um atacante pode conquistar dentro de uma rede empresarial. Com uma conta de Domain Admin comprometida, um ransomware pode cifrar todos os servidores em simultâneo, eliminar os backups ligados à rede e paralisar a empresa em minutos. O problema é que a maioria das PMEs tem demasiadas contas com demasiados privilégios — e raramente sabe exatamente quantas existem.
+
+Gestão de Acessos Privilegiados (PAM, do inglês Privileged Access Management) é o conjunto de políticas, processos e ferramentas que controlam quem tem acesso de administrador, quando, a quê, e com que supervisão. Não é uma solução cara reservada a grandes empresas — as PMEs podem implementar 80% dos controlos com ferramentas gratuitas já incluídas no Windows e no Microsoft 365.
+
+## Porque as Contas Privilegiadas São o Principal Alvo
+
+Em praticamente todos os incidentes de ransomware graves investigados nos últimos anos, o atacante obteve primeiro acesso inicial com credenciais normais (phishing, credential stuffing, RDP exposto) e depois escalou privilégios para domínio admin antes de desencadear a cifra. O intervalo entre o acesso inicial e a execução do ransomware é frequentemente de dias ou semanas — tempo suficiente para explorar a rede, identificar os backups e comprometer os sistemas de backup também.
+
+O que torna as contas privilegiadas tão atrativas:
+
+**Volume de dano possível**: Uma conta de utilizador normal compromete os dados de uma pessoa. Uma conta de Domain Admin compromete toda a organização.
+
+**Persistência facilitada**: Admins podem criar novas contas, modificar políticas de auditoria para se esconderem, e instalar serviços que sobrevivem a reboots.
+
+**Movimento lateral simples**: Com credenciais admin, o atacante passa de máquina em máquina sem precisar de explorar vulnerabilidades — usa as ferramentas de administração legítimas (PsExec, WMI, PowerShell Remoting).
+
+## Inventário: Saber Quantas Contas Privilegiadas Existem
+
+O primeiro passo é descobrir o que já existe. A maioria das PMEs fica surpreendida com o resultado.
+
+### Enumeração em Active Directory
+
+Em domínios Windows, este PowerShell lista todos os membros do grupo Domain Admins:
+
+\`\`\`powershell
+Get-ADGroupMember -Identity "Domain Admins" -Recursive |
+  Select-Object Name, SamAccountName, objectClass |
+  Format-Table -AutoSize
+\`\`\`
+
+E para ver todos os grupos com privilégios elevados:
+
+\`\`\`powershell
+$groups = @("Domain Admins", "Enterprise Admins", "Schema Admins",
+            "Administrators", "Account Operators", "Backup Operators",
+            "Server Operators", "Print Operators")
+
+foreach ($group in $groups) {
+    Write-Host "=== $group ===" -ForegroundColor Yellow
+    Get-ADGroupMember -Identity $group -Recursive -ErrorAction SilentlyContinue |
+        Select-Object Name, SamAccountName | Format-Table
+}
+\`\`\`
+
+### Administradores Locais nas Workstations
+
+Este script verifica os administradores locais de todos os computadores no domínio:
+
+\`\`\`powershell
+$computers = Get-ADComputer -Filter * | Select-Object -ExpandProperty Name
+foreach ($computer in $computers) {
+    try {
+        $admins = Invoke-Command -ComputerName $computer -ScriptBlock {
+            net localgroup Administrators
+        } -ErrorAction Stop
+        Write-Host "$computer\`: $($admins -join ', ')"
+    } catch {
+        Write-Host "$computer\`: Inacessível"
+    }
+}
+\`\`\`
+
+O resultado típico em PMEs é chocante: fornecedores de software que instalaram o seu produto há dois anos e ficaram com admin local permanente, ex-funcionários de TI que nunca foram removidos, contas de serviço com permissões de admin desnecessárias.
+
+### Contas de Serviço
+
+Procure contas cujo nome sugere automação ou serviço:
+
+\`\`\`powershell
+Get-ADUser -Filter {ServicePrincipalName -ne "$null"} -Properties ServicePrincipalName |
+  Select-Object Name, SamAccountName, ServicePrincipalName
+\`\`\`
+
+Contas de serviço com SPNs (Service Principal Names) são alvo de ataques Kerberoasting — os atacantes pedem tickets de serviço Kerberos e tentam quebrar a password offline. Se a password da conta de serviço for fraca, é comprometida em horas.
+
+## Os Cinco Controlos Fundamentais de PAM
+
+### 1. Separação de Contas Admin e Utilizador Normal
+
+O erro mais comum é usar a conta de administrador para o dia-a-dia. O administrador de TI lê emails, navega na internet e usa o Word com a mesma conta que tem Domain Admin. Quando clicar num link de phishing, o malware executa com privilégios máximos.
+
+**Regra**: Cada pessoa com responsabilidades de admin tem duas contas separadas:
+- Conta normal (joao.silva@empresa.pt) — para email, Office, internet
+- Conta privilegiada (adm.joao.silva@empresa.pt) — só usada para tarefas administrativas específicas
+
+A conta privilegiada não deve ter licença de email, não deve ter acesso à internet, e deve estar excluída de políticas de Group Policy que se aplicam a utilizadores normais.
+
+### 2. Microsoft LAPS — Passwords Únicas em Cada Máquina
+
+LAPS (Local Administrator Password Solution) é gratuito, incluído no Windows desde a versão Server 2019 e Windows 10 20H2, e resolve um problema crítico: a maioria das PMEs tem a mesma password de administrador local em todas as workstations. Se um atacante comprometer uma máquina e descobrir essa password, tem acesso imediato a todas as outras.
+
+Com LAPS, o Active Directory gera e armazena uma password aleatória única por máquina, e roda essa password automaticamente. Só utilizadores autorizados no AD podem ver a password de uma máquina específica.
+
+**Configuração LAPS (Windows LAPS nativo desde 2023):**
+
+\`\`\`powershell
+# Verificar se LAPS está disponível (Windows Server 2019+ ou com atualização)
+Get-WindowsFeature LAPS
+
+# Ativar o schema do AD para LAPS
+Update-LapsADSchema
+
+# Configurar permissões no AD (substituir pela sua OU)
+Set-LapsADComputerSelfPermission -Identity "OU=Workstations,DC=empresa,DC=pt"
+
+# Definir quem pode ler as passwords (grupo de admins de TI)
+Set-LapsADReadPasswordPermission -Identity "OU=Workstations,DC=empresa,DC=pt" \`
+    -AllowedPrincipals "GRP-TI-Admins"
+
+# GPO: Computer Configuration → Administrative Templates →
+# System → LAPS → Configure password backup directory = Active Directory
+# Enable password encryption = Enabled
+# Password complexity: 4 (letters + digits + specials)
+# Password length: 20
+# Password age (days): 30
+\`\`\`
+
+### 3. Entra PIM — Just-In-Time Access para Microsoft 365
+
+Se a empresa usa Microsoft 365 com licenças Business Premium ou E3/E5, o Entra Privileged Identity Management (PIM) está incluído no Entra ID P2.
+
+PIM implementa acesso Just-In-Time (JIT): em vez de ter a role de Global Admin atribuída permanentemente, o administrador tem uma "elegibilidade" que lhe permite ativar a role por um período limitado (ex: 1 hora), com aprovação e justificação obrigatórias. Após o período expirar, os privilégios são automaticamente revogados.
+
+**Configuração do PIM:**
+
+1. Aceda a **portal.azure.com → Microsoft Entra ID → Privileged Identity Management**
+2. Em **Microsoft Entra roles**, selecione **Global Administrator**
+3. Em **Assignments**, adicione os administradores como **Eligible** (não **Active**)
+4. Configure **Activation settings**:
+   - Activation maximum duration: 1 hora
+   - Require justification on activation: Sim
+   - Require approval: Sim (com aprovador designado)
+   - Require MFA on activation: Sim
+   - Require ticket information: Sim (número de ticket de suporte)
+5. Configure **Notification settings** para alertas de ativação
+
+Quando um administrador precisar de fazer uma tarefa que requer Global Admin, vai ao portal PIM, ativa a role, escreve a justificação, aguarda aprovação (se configurado), completa a tarefa, e a role expira automaticamente.
+
+Isto é transformador: mesmo que as credenciais do administrador sejam comprometidas, o atacante não tem privilégios automáticos — precisaria também de passar pelo processo de aprovação.
+
+### 4. Gestão de Contas de Serviço com Group Managed Service Accounts
+
+Contas de serviço normais (contas AD com passwords que expiram ou que não expiram) são problemáticas: se a password não expira, fica desatualizada e difícil de rodar; se expira, os serviços quebram. A solução da Microsoft são as Group Managed Service Accounts (gMSA).
+
+Com gMSAs, o próprio AD gera e roda a password automaticamente a cada 30 dias — as aplicações nunca "sabem" a password, e não há risco de Kerberoasting sobre passwords fracas.
+
+\`\`\`powershell
+# Criar a KDS Root Key (necessária uma vez por domínio)
+Add-KdsRootKey -EffectiveImmediately
+
+# Criar a gMSA
+New-ADServiceAccount -Name "svc-backup" \`
+    -DNSHostName "svc-backup.empresa.pt" \`
+    -PrincipalsAllowedToRetrieveManagedPassword "GRP-Backup-Servers" \`
+    -Description "Service account para Veeam Backup"
+
+# Instalar a gMSA no servidor
+Install-ADServiceAccount -Identity "svc-backup"
+
+# Configurar o serviço Veeam para usar a gMSA
+# No campo username: empresa\svc-backup$
+# No campo password: deixar em branco (gerido pelo AD)
+\`\`\`
+
+Para contas de serviço que não podem usar gMSA (ex: aplicações legadas), use passwords de pelo menos 30 caracteres geradas aleatoriamente, armazenadas no gestor de passwords da empresa, e revistas trimestralmente.
+
+### 5. Auditoria e Alertas de Uso Privilegiado
+
+Implementar controlos sem monitorização é construir uma fechadura sem câmara. Configure o Windows para registar e alertar sobre eventos de uso privilegiado:
+
+**Política de auditoria via GPO:**
+
+\`\`\`
+Computer Configuration → Windows Settings → Security Settings → Advanced Audit Policy
+
+Account Logon:
+  - Credential Validation: Success, Failure
+  - Kerberos Authentication Service: Success, Failure
+
+Account Management:
+  - Security Group Management: Success
+  - User Account Management: Success, Failure
+
+Logon/Logoff:
+  - Logon: Success, Failure
+  - Special Logon: Success
+
+Policy Change:
+  - Authentication Policy Change: Success
+  - Audit Policy Change: Success
+
+Privilege Use:
+  - Sensitive Privilege Use: Success, Failure
+\`\`\`
+
+**Event IDs críticos para monitorizar:**
+
+| Event ID | Significado | Urgência |
+|----------|-------------|----------|
+| 4720 | Conta de utilizador criada | Alta |
+| 4728 | Membro adicionado a grupo de segurança global | Alta |
+| 4732 | Membro adicionado a grupo de segurança local | Alta |
+| 4756 | Membro adicionado a grupo de segurança universal | Alta |
+| 4648 | Logon com credenciais explícitas (pass-the-hash suspeito) | Muito alta |
+| 4672 | Privilégios especiais atribuídos ao logon | Alta |
+| 4698 | Scheduled task criada | Média |
+| 4946 | Regra de firewall adicionada | Média |
+
+Para encaminhar estes logs para um SIEM gratuito, o Wazuh (coberto em artigo dedicado) consegue alertar em tempo real.
+
+## Soluções PAM para PMEs sem Budget de Enterprise
+
+### Microsoft Entra ID Free / P1
+
+Com licenças gratuitas ou M365 Business Basic/Standard:
+- LAPS (gratuito, built-in Windows)
+- Conditional Access (limitado no P1, mas suficiente para MFA obrigatório)
+- Security Defaults (proteção básica para todas as contas admin)
+- Self-Service Password Reset
+
+### Microsoft Entra ID P2 / M365 Business Premium
+
+Inclui o essencial de PAM sem custo adicional:
+- PIM (Privileged Identity Management) — JIT access, aprovações, histórico
+- Identity Protection — detecção de risky sign-ins e risky users
+- Access Reviews — revisão periódica de membros de grupos privilegiados
+- Entitlement Management — workflows de pedido e aprovação de acesso
+
+**Custo**: Incluído no M365 Business Premium (€22/utilizador/mês em 2026). Para uma empresa de 20 utilizadores com 3 admins, o custo incremental de upgradar os 3 admins para Business Premium é cerca de €66/mês — muito menos do que qualquer solução PAM dedicada.
+
+### CyberArk Privilege Cloud — Tier Gratuito
+
+A CyberArk disponibiliza uma tier gratuita do Privilege Cloud para até 5 utilizadores/vaults. Para PMEs pequenas, cobre:
+- Cofre de passwords para credenciais privilegiadas
+- Session recording para sessões admin
+- Password rotation automática para contas de serviço
+- Acesso Just-In-Time básico
+
+### HashiCorp Vault Community
+
+Para empresas com competências técnicas e infraestrutura Linux/cloud, o Vault Community é open-source e gratuito:
+
+\`\`\`bash
+# Instalar Vault no Ubuntu
+wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/hashicorp.list
+apt update && apt install vault
+
+# Iniciar e configurar
+vault operator init
+vault operator unseal  # 3x com 3 unseal keys diferentes
+
+# Criar política de acesso mínimo
+vault policy write app-db - <<EOF
+path "database/creds/app-role" {
+  capabilities = ["read"]
+}
+EOF
+\`\`\`
+
+O Vault gere credenciais dinâmicas para bases de dados (MySQL, PostgreSQL) — as aplicações pedem credenciais temporárias ao Vault, que as cria no momento com TTL de 1 hora. Nunca há uma password de base de dados "fixa" para vazar.
+
+## Casos de Uso por Perfil de PME
+
+### PME sem Active Directory (só cloud, M365 ou Google Workspace)
+
+Prioridades:
+1. Activar PIM no Entra ID (se Business Premium) ou pelo menos rever e minimizar Global Admins
+2. Criar conta de admin separada da conta do dia-a-dia para os administradores
+3. MFA em todas as contas admin (chave FIDO2 ou aplicação, não SMS)
+4. Excluir contas admin de políticas que permitem acesso a email pessoal ou recursos não geridos
+
+### PME com Active Directory On-Premises
+
+Prioridades:
+1. Auditoria de Domain Admins e remoção de contas desnecessárias
+2. LAPS em todas as workstations
+3. Contas de admin separadas do dia-a-dia
+4. gMSA para contas de serviço
+5. Auditoria de eventos críticos para ficheiro centralizado ou SIEM
+
+### PME Híbrida (AD + Azure/M365)
+
+Prioridades:
+1. Tudo do ponto anterior
+2. PIM no Entra ID para roles cloud
+3. Entra ID Protection para risky sign-ins
+4. Conditional Access: bloquear acesso admin fora do escritório sem MFA adicional
+5. Entra Access Reviews trimestrais para grupos de admin
+
+## Checklist de Implementação
+
+**Semana 1: Visibilidade**
+- [ ] Listar todos os membros de grupos privilegiados (Domain Admins, Global Admins, etc.)
+- [ ] Identificar contas de serviço e verificar se têm MFA ativo (não devem — use gMSA)
+- [ ] Verificar administradores locais nas workstations (via LAPS ou script)
+- [ ] Documentar todas as contas com acesso privilegiado numa folha de inventário
+
+**Semana 2-3: Limpeza**
+- [ ] Remover da Domain Admins todos os que não precisam de ser Domain Admins
+- [ ] Criar contas de admin separadas para os que realmente precisam de privilégios
+- [ ] Migrar contas de serviço críticas para gMSA onde possível
+- [ ] Rever e revogar acessos de fornecedores externos sem atividade recente
+
+**Semana 4: Ferramentas**
+- [ ] Implementar Windows LAPS (ou Legacy LAPS se versão mais antiga)
+- [ ] Ativar PIM no Entra ID se disponível (Business Premium)
+- [ ] Configurar auditoria de eventos privilegiados no AD
+- [ ] Definir alerta para adição ao grupo Domain Admins
+
+**Mês 2+: Maturidade**
+- [ ] Access Reviews trimestrais para grupos privilegiados
+- [ ] Rever e renovar acessos de fornecedores trimestral
+- [ ] Formação anual sobre engenharia social direcionada a admins (spear phishing)
+- [ ] Testar procedimento de conta de emergência (break-glass)
+
+## A Conta de Emergência (Break-Glass)
+
+Uma boa prática final frequentemente esquecida: a conta de emergência. Se os sistemas de MFA falharem ou o IdP ficar indisponível, como acede ao sistema?
+
+Configure duas contas de break-glass no Entra ID:
+- Nomes que não identifiquem pessoas (ex: \`emergency-001@empresa.pt\`)
+- Passwords extremamente longas (50+ caracteres) geradas aleatoriamente
+- Guardadas em papel, em dois locais físicos seguros (ex: cofre do escritório e cofre do CEO)
+- Excluídas de todas as políticas de Conditional Access (incluindo MFA)
+- Alerta configurado para qualquer logon destas contas — se acionar fora de uma emergência declarada, é um incidente de segurança
+
+Reveja e teste estas contas uma vez por ano (verificar que a password ainda funciona e que o alerta dispara).
+
+A gestão de acessos privilegiados não é um projeto com fim — é um processo contínuo de descoberta, limpeza e monitorização. Mas os primeiros 30 dias de implementação reduzem dramaticamente o raio de explosão de qualquer incidente.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-22",
+    readingTime: 18,
+    author: {
+      name: "Miguel Ferreira",
+      title: "Auditor de Compliance",
+    },
+  },
+  {
+    slug: "seguranca-apis-integracoes-webhooks-pme",
+    title: "Segurança em APIs para PMEs: Proteger Integrações, Webhooks e Chaves de API",
+    excerpt:
+      "A maioria das PMEs usa dezenas de APIs sem saber — nos formulários do website, nas integrações entre sistemas, nos webhooks do Stripe e do WhatsApp. Quando mal configuradas, estas ligações são portas abertas para fuga de dados e fraude.",
+    content: `A maioria das PMEs usa APIs sem sequer conhecer o termo. Quando o website envia um pedido de contacto para o CRM, está a usar uma API. Quando o Stripe notifica a loja online de um pagamento, usa um webhook (um tipo de API). Quando o Make ou Zapier ligam o formulário do website ao Google Sheets, estão a encadear chamadas de API. Estas ligações são invisíveis quando funcionam — e catastróficas quando são mal configuradas.
+
+Ao contrário dos websites que têm interfaces visíveis, as APIs são expostas na internet de forma mais silenciosa. Não há formulário de login visível, não há layout gráfico que dê pistas. São URLs que aceitam dados e devolvem respostas, muitas vezes documentadas publicamente, e constantemente varridas por scanners automáticos à procura de endpoints desprotegidos.
+
+## O Que São APIs e Por Que Importam para a Segurança
+
+Uma API (Application Programming Interface) é um contrato que permite a duas aplicações comunicar. O website de e-commerce pergunta à API do Stripe "este cartão é válido?". O Stripe responde sim ou não. Nem o website sabe os dados do cartão (que ficam no Stripe), nem o Stripe sabe o que o utilizador comprou (que fica no website).
+
+Este modelo de separação é também o modelo de segurança — cada sistema deve saber apenas o mínimo necessário para fazer o seu trabalho. Quando este princípio é violado (quando a API devolve mais dados do que devia, ou quando qualquer pessoa pode chamar a API sem autenticação), surgem os problemas.
+
+### Por Que as APIs São Alvos Frequentes
+
+**Exposição direta na internet**: APIs são acessíveis via URLs HTTP/HTTPS como qualquer outro recurso. Scanners automáticos encontram endpoints em minutos após a publicação.
+
+**Documentação pública**: Muitas APIs usam formatos standard como OpenAPI/Swagger. Se a documentação for acessível publicamente, os atacantes sabem exatamente que parâmetros aceitar e que respostas esperar.
+
+**Esquecimento pós-implementação**: Uma integração configurada há dois anos por um fornecedor externo pode ainda estar ativa com uma chave de API que nunca foi rotada, com permissões que foram expandidas e nunca revisitadas.
+
+**Dados ricos sem interface**: Uma API de clientes pode devolver nome, email, morada, NIF e histórico de compras num único pedido JSON. Sem autenticação adequada, qualquer pessoa com a URL pode extrair toda a base de clientes.
+
+## OWASP API Top 10: Os Riscos Mais Comuns para PMEs
+
+O OWASP (Open Web Application Security Project) publica uma lista das vulnerabilidades de API mais prevalentes. Traduzida para o contexto das PMEs:
+
+### API1: Autorização Quebrada ao Nível do Objeto (BOLA)
+
+O problema mais comum: a API usa o ID do objeto na URL sem verificar se o utilizador atual tem direito de aceder a esse objeto.
+
+Exemplo: A loja online usa a URL \`/api/pedidos/12345\` para mostrar detalhes de uma encomenda. Se qualquer utilizador autenticado pode ver qualquer pedido mudando o número, há uma vulnerabilidade BOLA. Um cliente curioso muda \`12345\` para \`12346\` e vê a encomenda de outro cliente — com os seus dados pessoais e morada de entrega.
+
+**Como detetar**: Substitua IDs nas URLs das suas APIs por outros IDs (de outros registos) e veja se obtém dados.
+
+**Como corrigir**: Cada pedido à API deve verificar "este utilizador tem permissão para este objeto específico?", não apenas "este utilizador está autenticado?".
+
+### API2: Autenticação Quebrada
+
+APIs com autenticação fraca ou ausente:
+- Chaves de API sem expiração e sem rotação
+- Tokens JWT com algoritmo "none" aceite (desativa verificação de assinatura)
+- Endpoints sem autenticação que deviam ser protegidos
+- Rate limiting ausente (permite força bruta de credenciais ou chaves)
+
+**Como verificar**: Faça um pedido à API sem a chave de API. Recebe erro 401? Bom. Recebe uma resposta com dados? Problema grave.
+
+### API3: Exposição Excessiva de Dados
+
+A API devolve muito mais informação do que o consumidor precisa.
+
+Exemplo comum: A API de lista de utilizadores para o dashboard interno devolve o objeto completo de cada utilizador, incluindo hash de password, número de segurança social, e dados de pagamento — quando o dashboard só precisa do nome e email.
+
+A tentação de "devolver o objeto todo e filtrar no frontend" é tecnicamente mais rápida de implementar mas expõe dados através de chamadas diretas à API.
+
+**Como detetar**: Examine as respostas JSON das suas APIs. Contêm campos que o frontend não usa? Contêm campos sensíveis que poderiam ser omitidos?
+
+### API5: Autorização Quebrada ao Nível da Função
+
+A API expõe funcionalidades administrativas que utilizadores normais não deviam poder aceder.
+
+Exemplo: A API tem um endpoint \`/api/admin/exportar-clientes\` que não tem verificação de role admin — qualquer utilizador autenticado consegue chamar e exportar toda a base de dados.
+
+### API8: Configuração de Segurança Incorreta
+
+- CORS demasiado permissivo (\`Access-Control-Allow-Origin: *\`) em APIs que deviam ser privadas
+- Cabeçalhos de segurança HTTP ausentes
+- Verbose error messages que expõem stack traces com caminhos de ficheiros e versões de software
+- APIs de debug deixadas ativas em produção
+- Versões antigas da API sem descomissionamento
+
+## Gestão de Chaves de API: O Básico que Muitos Ignoram
+
+As chaves de API são como passwords — e merecem o mesmo cuidado. Na prática, é comum encontrar chaves de API:
+- Partilhadas em emails ou Slack
+- Incluídas em código que foi depois publicado no GitHub
+- Com mais permissões do que o necessário
+- Que nunca foram rotadas desde a criação
+- Partilhadas entre múltiplas integrações (uma comprometida afeta todas)
+
+### Regras para Gestão de Chaves de API
+
+**Uma integração, uma chave**: O Make e o Zapier não devem partilhar a mesma chave de API do CRM. Se a integração Make for comprometida, apenas essa chave precisa de ser revogada.
+
+**Mínimo de permissões**: Ao criar uma chave, selecione apenas as permissões estritamente necessárias. Uma chave para sincronizar contactos não precisa de permissão para eliminar registos ou aceder a dados financeiros.
+
+**Rotação periódica**: Defina uma data de expiração para chaves de API críticas e rode-as trimestralmente. Muitas plataformas permitem criar a nova chave antes de revogar a antiga, evitando interrupção.
+
+**Inventário de chaves**: Mantenha um registo (no gestor de passwords da empresa) de todas as chaves de API ativas, a que serviço pertencem, para que integração são usadas, e quando foram criadas/rodadas.
+
+**Nunca em código**: As chaves de API não devem estar em código fonte. Use variáveis de ambiente ou um cofre de secrets:
+
+\`\`\`bash
+# Errado — a chave está no código
+API_KEY = "sk_live_abc123xyz789"
+
+# Certo — a chave vem do ambiente
+import os
+API_KEY = os.environ.get("STRIPE_API_KEY")
+\`\`\`
+
+Para projetos no GitHub, ative o GitHub Secret Scanning — notifica automaticamente se uma chave de API conhecida for commitada acidentalmente.
+
+### Verificar Se Chaves Foram Expostas
+
+Se suspeitar que uma chave pode ter sido exposta (ex: repositório GitHub que ficou público temporariamente, email enviado para a pessoa errada):
+
+1. **Revogar imediatamente** — não "ver se foi mesmo usada" antes. Revogar primeiro, investigar depois.
+2. Verificar os logs de uso da chave nas últimas 24-72 horas
+3. Se houve atividade suspeita, rever que dados foram acedidos
+4. Criar nova chave e atualizar todas as integrações
+5. Documentar o incidente
+
+## Segurança de Webhooks: Verificar Que os Dados São Legítimos
+
+Um webhook é uma API invertida: em vez de o seu sistema perguntar "houve um evento?", a outra plataforma notifica o seu sistema quando o evento ocorre. O Stripe envia um webhook quando um pagamento é aprovado. O WhatsApp Business API envia um webhook quando chega uma mensagem.
+
+O problema: o endpoint de webhook é uma URL pública que aceita dados de qualquer origem. Se não verificar que o pedido vem realmente do Stripe (e não de alguém que descobriu a URL), pode processar eventos falsos — fingir pagamentos aprovados, fingir mensagens recebidas, ou enviar dados maliciosos para injeção.
+
+### Verificação de Assinatura HMAC
+
+A solução padrão é a assinatura HMAC: a plataforma assina o payload com um segredo partilhado, e o seu código verifica a assinatura antes de processar.
+
+**Stripe (exemplo em Node.js):**
+
+\`\`\`javascript
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+app.post('/webhook/stripe', express.raw({type: 'application/json'}), (req, res) => {
+  const sig = req.headers['stripe-signature'];
+
+  let event;
+  try {
+    // Stripe verifica a assinatura e a timestamp (previne replay attacks)
+    event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
+  } catch (err) {
+    console.log(\`Webhook signature verification failed: \${err.message}\`);
+    return res.status(400).send(\`Webhook Error: \${err.message}\`);
+  }
+
+  // Processar o evento apenas se a assinatura for válida
+  if (event.type === 'payment_intent.succeeded') {
+    const paymentIntent = event.data.object;
+    fulfillOrder(paymentIntent);
+  }
+
+  res.json({received: true});
+});
+\`\`\`
+
+**Verificação manual de HMAC (para plataformas sem SDK):**
+
+\`\`\`python
+import hmac
+import hashlib
+
+def verify_webhook(payload_body: bytes, signature: str, secret: str) -> bool:
+    expected = hmac.new(
+        secret.encode('utf-8'),
+        payload_body,
+        hashlib.sha256
+    ).hexdigest()
+
+    # Comparação segura contra timing attacks
+    return hmac.compare_digest(expected, signature)
+\`\`\`
+
+**Proteção adicional contra replay attacks**: Muitas plataformas incluem uma timestamp no payload assinado. Rejeite webhooks com timestamps superiores a 5 minutos no passado — mesmo que a assinatura seja válida, um webhook de 2 horas atrás pode ser uma tentativa de replay.
+
+### Separar Webhook de Lógica de Negócio
+
+Um padrão de arquitetura recomendado para webhooks:
+
+1. O endpoint de webhook verifica a assinatura e guarda o evento numa fila (Redis, SQS, BullMQ)
+2. Um worker processa a fila de forma assíncrona
+3. O endpoint responde \`200 OK\` imediatamente (a plataforma retenta se não receber 200)
+
+Este padrão evita que processamento lento ou erros na lógica de negócio causem timeouts que levam a reprocessamento de eventos.
+
+## Inventário de APIs: O Que Usar e Expor
+
+Muitas PMEs não têm uma lista completa das APIs que usam ou expõem. Um inventário simples cobre:
+
+**APIs que a empresa consome (terceiros):**
+| Plataforma | Propósito | Chave criada em | Última rotação | Permissões | Responsável |
+|------------|-----------|-----------------|----------------|------------|-------------|
+| Stripe | Pagamentos | 2024-01 | Pendente | Leitura + cobrança | IT |
+| HubSpot | CRM | 2023-06 | Nunca | Admin total | Marketing |
+| Mailchimp | Email | 2024-03 | 2025-03 | Campanhas | Marketing |
+| Google Maps | Mapas no site | 2022-11 | Nunca | Places API | Dev |
+
+**APIs que a empresa expõe (próprias):**
+| Endpoint | Autenticação | Dados expostos | Utilizadores | Monitorização |
+|----------|-------------|----------------|--------------|---------------|
+| /api/contacto | API Key | Nome, email | Website público | Sim |
+| /api/clientes | JWT | Dados completos | CRM interno | Não |
+| /webhook/pagamento | HMAC | Eventos Stripe | Stripe | Sim |
+
+## Rate Limiting: Prevenir Abuso e Enumeração
+
+Sem rate limiting, qualquer endpoint de API pode ser chamado milhões de vezes por dia. Isto permite:
+- **Enumeração de dados**: chamar \`/api/clientes/1\`, \`/api/clientes/2\`, etc. para extrair toda a base de dados
+- **Força bruta de credenciais**: tentar milhares de combinações de passwords
+- **Card testing**: testar dezenas de números de cartão até um ser aceite (ataque comum em lojas online)
+
+Implementação básica de rate limiting em Express.js:
+
+\`\`\`javascript
+const rateLimit = require('express-rate-limit');
+
+// Limite global: 100 pedidos por 15 minutos por IP
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: { error: 'Demasiados pedidos. Tente novamente mais tarde.' }
+});
+
+// Limite restrito para endpoints sensíveis: 5 pedidos por hora
+const strictLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 5
+});
+
+app.use('/api/', globalLimiter);
+app.use('/api/auth/login', strictLimiter);
+app.use('/api/auth/reset-password', strictLimiter);
+\`\`\`
+
+Em Nginx, pode implementar rate limiting a nível de servidor:
+
+\`\`\`nginx
+http {
+    limit_req_zone $binary_remote_addr zone=api:10m rate=10r/s;
+
+    server {
+        location /api/ {
+            limit_req zone=api burst=20 nodelay;
+            limit_req_status 429;
+        }
+    }
+}
+\`\`\`
+
+## CORS: Controlar Quem Pode Chamar a Sua API
+
+CORS (Cross-Origin Resource Sharing) controla quais domínios podem fazer pedidos à sua API a partir de um browser. Configurar \`Access-Control-Allow-Origin: *\` significa que qualquer website no mundo pode chamar a sua API através do browser de um utilizador.
+
+Para APIs internas ou APIs que só o seu próprio website deve chamar:
+
+\`\`\`javascript
+const cors = require('cors');
+
+// Só permitir pedidos do domínio da empresa
+app.use('/api/', cors({
+  origin: ['https://empresa.pt', 'https://www.empresa.pt'],
+  methods: ['GET', 'POST', 'PUT'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
+\`\`\`
+
+Note que CORS é proteção do browser — não substitui autenticação. Pedidos diretos via curl ou Postman ignoram CORS completamente. CORS protege contra ataques CSRF iniciados de websites maliciosos, não contra acesso direto.
+
+## Checklist de Segurança de APIs
+
+**Autenticação e autorização**
+- [ ] Todos os endpoints têm autenticação (exceto os intencionalmente públicos)
+- [ ] Cada autenticação verifica permissões ao nível do objeto específico (não apenas "está logado")
+- [ ] Funções admin estão separadas e protegidas por verificação de role
+
+**Chaves de API**
+- [ ] Inventário completo de todas as chaves de API (próprias e de terceiros)
+- [ ] Uma chave por integração (não partilhar entre sistemas diferentes)
+- [ ] Rotação definida (pelo menos anual, trimestralmente para críticas)
+- [ ] Chaves com permissões mínimas necessárias
+- [ ] Nenhuma chave em código fonte ou ficheiros de configuração commitados
+
+**Webhooks**
+- [ ] Verificação de assinatura HMAC em todos os webhooks recebidos
+- [ ] Proteção contra replay attacks (validação de timestamp)
+- [ ] Endpoints de webhook retornam 200 rapidamente e processam em background
+
+**Dados**
+- [ ] APIs devolvem apenas os campos necessários (sem campos sensíveis extra)
+- [ ] Respostas de erro não expõem stack traces ou versões de software
+
+**Configuração**
+- [ ] Rate limiting ativo em todos os endpoints
+- [ ] CORS configurado com lista de origens permitidas (não wildcard)
+- [ ] Cabeçalhos de segurança HTTP presentes (Content-Security-Policy, X-Frame-Options)
+- [ ] HTTPS obrigatório (sem fallback para HTTP)
+
+**Monitorização**
+- [ ] Logs de acesso à API ativos e retidos por pelo menos 90 dias
+- [ ] Alerta para volume anormalmente alto de pedidos ou erros 401/403
+- [ ] Revisão periódica (trimestral) do inventário de APIs e permissões
+
+As APIs são a cola invisível que mantém os sistemas modernos a funcionar — e a superfície de ataque que mais cresce nas PMEs que adotam ferramentas digitais. Um inventário atualizado, chaves com rotação regular, e verificação de assinaturas em webhooks são suficientes para eliminar a maioria dos riscos práticos.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-22",
+    readingTime: 16,
+    author: {
+      name: "Rita Santos",
+      title: "Analista de Segurança",
+    },
+  },
+  {
+    slug: "seguranca-pagamentos-online-psd2-fraude-pme",
+    title: "Segurança nos Pagamentos Online: PSD2, MB Way e Proteção contra Fraude para PMEs Portuguesas",
+    excerpt:
+      "Aceitar pagamentos online expõe a empresa a card testing, fraude de chargebacks e incumprimento PCI DSS. Este guia explica como implementar PSD2/3DS2, configurar MB Way de forma segura, e reduzir fraude sem afugentar clientes legítimos.",
+    content: `Aceitar pagamentos online é uma das decisões mais impactantes para uma PME — abre novos mercados, elimina fricção de compra, e automatiza a cobrança. Mas também expõe a empresa a riscos financeiros específicos que as compras presenciais não têm: card testing por bots, fraude de chargebacks, violações PCI DSS com multas pesadas, e responsabilidade legal por dados de cartão mal armazenados.
+
+A boa notícia é que a arquitetura correta de pagamentos online elimina quase todos estes riscos sem requerer investimento significativo — e a maioria dos processadores de pagamento disponíveis em Portugal já integram os requisitos de segurança obrigatórios.
+
+## PSD2 e Strong Customer Authentication: O Que a Lei Exige
+
+A Diretiva de Serviços de Pagamento 2 (PSD2) e o Regulamento Delegado 2018/389 introduziram a Strong Customer Authentication (SCA) como requisito legal para pagamentos online na União Europeia. Em Portugal, a transposição foi feita pelo Decreto-Lei n.º 91/2018.
+
+**O que é SCA**: Para autenticar um pagamento online, são necessários dois de três fatores:
+- **Algo que o utilizador sabe** (password, PIN)
+- **Algo que o utilizador tem** (telemóvel para código SMS/app, token hardware)
+- **Algo que o utilizador é** (biometria: impressão digital, reconhecimento facial)
+
+Na prática, para pagamentos com cartão online, SCA é implementado via **3D Secure 2 (3DS2)**, o protocolo desenvolvido pelas redes Visa (Verified by Visa) e Mastercard (Mastercard Identity Check).
+
+**Quem tem responsabilidade de implementar SCA**: O banco emissor do cartão (que autentica o titular) e o processador de pagamentos (que inicia a autenticação). Se o comerciante usar Stripe, Adyen, Mollie ou outro processador certificado, a responsabilidade técnica é delegada ao processador. O comerciante apenas precisa de garantir que o checkout não interfere com o fluxo 3DS2.
+
+### Isenções de SCA
+
+Nem todos os pagamentos requerem SCA — existem isenções que reduzem fricção para transações de baixo risco:
+
+| Isenção | Condição | Responsabilidade em caso de fraude |
+|---------|----------|------------------------------------|
+| Transações abaixo de €30 | Até 5 transações consecutivas ou €100 acumulado | Banco emissor |
+| Análise de risco de transação (TRA) | Taxa de fraude do processador abaixo de limiares BCE | Processador |
+| Comerciantes de confiança (whitelisted) | Utilizador adicionou comerciante à lista de confiança | Banco emissor |
+| Pagamentos recorrentes (subscrições) | Apenas a primeira transação requer SCA | Banco emissor |
+| B2B com protocolos dedicados | Cartões corporativos | Banco emissor |
+
+A maioria dos processadores aplica estas isenções automaticamente via análise de risco — o checkout só apresenta o desafio 3DS2 quando necessário.
+
+## Implementação com Stripe em Portugal
+
+O Stripe é o processador mais comum para PMEs digitais portuguesas e lida com PCI DSS e SCA automaticamente quando integrado corretamente.
+
+### Stripe Elements (recomendado)
+
+O Stripe Elements é um widget de checkout que renderiza os campos de cartão diretamente do Stripe — os dados de cartão nunca passam pelos servidores da empresa:
+
+\`\`\`html
+<!-- Incluir Stripe.js -->
+<script src="https://js.stripe.com/v3/"></script>
+
+<form id="payment-form">
+  <div id="payment-element"></div>
+  <button id="submit-btn">Pagar</button>
+  <div id="error-message"></div>
+</form>
+
+<script>
+const stripe = Stripe('pk_live_SEU_PUBLISHABLE_KEY');
+
+// Criar PaymentIntent no backend primeiro
+const response = await fetch('/api/criar-pagamento', {
+  method: 'POST',
+  headers: {'Content-Type': 'application/json'},
+  body: JSON.stringify({valor: 2999, moeda: 'eur'})
+});
+const {client_secret} = await response.json();
+
+// Renderizar o formulário de pagamento (inclui 3DS2 automaticamente)
+const elements = stripe.elements({clientSecret: client_secret});
+const paymentElement = elements.create('payment');
+paymentElement.mount('#payment-element');
+
+document.getElementById('submit-btn').addEventListener('click', async () => {
+  const {error} = await stripe.confirmPayment({
+    elements,
+    confirmParams: {
+      return_url: 'https://empresa.pt/pagamento-confirmado'
+    }
+  });
+  if (error) {
+    document.getElementById('error-message').textContent = error.message;
+  }
+});
+</script>
+\`\`\`
+
+**No backend (Node.js), criar o PaymentIntent:**
+
+\`\`\`javascript
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
+app.post('/api/criar-pagamento', async (req, res) => {
+  const { valor } = req.body;
+
+  // Validar sempre o valor no servidor, nunca confiar no valor do cliente
+  if (!Number.isInteger(valor) || valor < 50 || valor > 100000) {
+    return res.status(400).json({ error: 'Valor inválido' });
+  }
+
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: valor,
+    currency: 'eur',
+    automatic_payment_methods: { enabled: true },
+    // Metadados para referência interna
+    metadata: {
+      pedido_id: req.body.pedido_id,
+      cliente_id: req.session.cliente_id
+    }
+  });
+
+  res.json({ client_secret: paymentIntent.client_secret });
+});
+\`\`\`
+
+### Por Que Nunca Armazenar Dados de Cartão Diretamente
+
+PCI DSS (Payment Card Industry Data Security Standard) define 12 requisitos para empresas que armazenam, processam ou transmitem dados de cartão. A certificação PCI DSS para empresas que processam dados de cartão diretamente é cara e complexa (auditoria anual, testes de penetração, etc.).
+
+A alternativa é **não armazenar dados de cartão** — delegar ao processador certificado. Com Stripe Elements, os dados de cartão vão diretamente do browser para os servidores da Stripe sem passar pelos servidores da empresa. O PCI DSS scope reduz para o mais simples (SAQ A ou SAQ A-EP), que se cumpre essencialmente garantindo HTTPS e não modificar o código de pagamento do Stripe.
+
+**O que NUNCA armazenar:**
+- Número completo do cartão (PAN)
+- CVV/CVV2 (código de segurança de 3 dígitos) — nem mesmo temporariamente
+- PIN do cartão
+- Track data (dados da banda magnética)
+- Dados de autenticação de cartão completos
+
+**O que pode armazenar:**
+- Token do Stripe (ex: \`pm_1234...\`) — referência ao método de pagamento, sem dados reais
+- Últimos 4 dígitos do cartão — apenas para mostrar ao utilizador "terminado em 4242"
+- Data de expiração — apenas para mostrar ao utilizador
+
+## MB Way: Integração Segura para o Mercado Português
+
+MB Way tem penetração muito elevada em Portugal e é frequentemente o método de pagamento preferido nas transações B2C. A integração via SIBS API Market é a via oficial.
+
+### Segurança na Integração MB Way
+
+**Verificação de webhooks de confirmação**: Após o utilizador confirmar o pagamento na app MB Way, a SIBS envia um webhook para o endpoint configurado. Verifique sempre a autenticidade antes de marcar o pedido como pago:
+
+\`\`\`python
+import hmac
+import hashlib
+import json
+
+def verificar_webhook_mbway(payload: bytes, assinatura_recebida: str,
+                              secret: str) -> bool:
+    """Verifica a assinatura HMAC-SHA256 do webhook MB Way/SIBS."""
+    assinatura_esperada = hmac.new(
+        secret.encode('utf-8'),
+        payload,
+        hashlib.sha256
+    ).hexdigest()
+
+    return hmac.compare_digest(assinatura_esperada, assinatura_recebida)
+
+@app.route('/webhook/mbway', methods=['POST'])
+def webhook_mbway():
+    payload = request.get_data()
+    assinatura = request.headers.get('X-Signature')
+
+    if not verificar_webhook_mbway(payload, assinatura,
+                                    os.environ['MBWAY_WEBHOOK_SECRET']):
+        return jsonify({'erro': 'Assinatura inválida'}), 401
+
+    dados = json.loads(payload)
+
+    # Verificar estado do pagamento
+    if dados.get('status') == 'COMPLETED':
+        processar_pedido(dados['pedido_id'])
+
+    return jsonify({'recebido': True}), 200
+\`\`\`
+
+**Referências Multibanco via API SIBS**: Para pagamentos via referência Multibanco (ATM), o risco principal é reutilização de referências. Cada referência deve ser única por transação, com validade limitada (24-72 horas), e inativada após o pagamento para evitar duplos pagamentos.
+
+## Card Testing: O Ataque Mais Comum em Lojas Online Portuguesas
+
+Card testing (ou card cracking) é um ataque em que os criminosos usam bots para testar centenas ou milhares de números de cartão roubados numa loja online. O objetivo é descobrir quais os cartões ainda ativos antes de os usar para compras maiores noutros sites.
+
+**Como identificar**: Spike súbito de transações com valores muito baixos (€0,01 a €1,00), alta taxa de falha em pagamentos (>40%), múltiplos cartões diferentes com o mesmo IP ou user-agent, criação em massa de contas novas.
+
+**Consequências**: Além do impacto reputacional, o processador de pagamentos pode cobrar taxas por cada tentativa falhada, ou suspender a conta por excesso de chargebacks.
+
+**Defesas com Stripe Radar:**
+
+\`\`\`javascript
+// No PaymentIntent, ativar Radar avançado e 3DS obrigatório para transações suspeitas
+const paymentIntent = await stripe.paymentIntents.create({
+  amount: valor,
+  currency: 'eur',
+  // Forçar 3DS2 para todas as transações (elimina card testing automatizado)
+  // Atenção: reduz conversão em 5-15% — equilibrar com risco
+  payment_method_options: {
+    card: {
+      request_three_d_secure: 'any'  // 'automatic' = quando necessário, 'any' = sempre
+    }
+  }
+});
+\`\`\`
+
+**Regras Radar personalizadas** (Stripe Dashboard → Radar → Rules):
+\`\`\`
+# Bloquear cartões de países sem relação com o negócio
+block if :card_country: not in ('PT', 'ES', 'FR', 'DE', 'GB')
+
+# Exigir 3DS para IPs em listas de risco
+request_3ds if :ip_risk_score: > 65
+
+# Bloquear múltiplas tentativas com cartões diferentes no mesmo email
+block if :card_fingerprint_count: > 3 and :email_count: < 2
+\`\`\`
+
+**CAPTCHA no checkout**: Para lojas com tráfego de bots, adicionar Cloudflare Turnstile ou Google reCAPTCHA v3 ao checkout reduz o card testing drasticamente sem impactar a experiência de utilizadores reais.
+
+## Chargebacks: Prevenção e Gestão
+
+Um chargeback ocorre quando o titular do cartão contesta uma transação junto do banco. O valor é revertido automaticamente para o cliente, e o comerciante paga ainda uma taxa de chargeback (tipicamente €15-25 por ocorrência). Se a taxa de chargebacks superar 1% do volume de transações, o processador pode suspender a conta.
+
+### Tipos de Chargeback
+
+**Fraude "verdadeira"**: O cartão foi usado sem autorização do titular (cartão roubado). O 3DS2 transfere a responsabilidade para o banco emissor se a transação foi autenticada — o comerciante não paga. Principal razão para ativar 3DS2.
+
+**Fraude "amigável"** (friendly fraud): O titular do cartão fez a compra mas nega reconhecer a transação (para obter reembolso e ficar com o produto). É a forma mais difícil de combater.
+
+**Não entrega / produto diferente do descrito**: Disputas legítimas de clientes insatisfeitos. Prevenível com descrições claras, confirmações por email, e políticas de devolução acessíveis.
+
+### Documentação para Disputar Chargebacks
+
+Para contestar um chargeback com sucesso, guarde evidência de cada transação:
+- IP e geolocalização aproximada no momento da compra
+- User-agent e fingerprint do browser
+- Timestamp e dados do produto/serviço comprado
+- Email de confirmação enviado (com timestamp de abertura se disponível)
+- Histórico de comunicação com o cliente
+- Prova de entrega (número de tracking para físicos, logs de download para digitais)
+- Para subscrições: confirmação inicial e ausência de pedido de cancelamento
+
+O Stripe guarda automaticamente muitos destes dados e tem um dashboard de disputas para responder diretamente.
+
+## PCI DSS na Prática para PMEs
+
+PCI DSS tem 4 níveis baseados no volume de transações anuais. A grande maioria das PMEs portuguesas está no **Nível 4** (menos de 20.000 transações Visa/Mastercard online por ano), que requer apenas um **Self-Assessment Questionnaire (SAQ)** anual.
+
+Com integração via Stripe Elements ou outro processador hosted-fields:
+
+**SAQ A** (requisitos mínimos): Aplicável se a empresa:
+- Não toca em dados de cartão em nenhum momento (Stripe Elements)
+- Usa HTTPS no checkout
+- Não armazena dados de cartão nos seus servidores
+
+Os 6 requisitos do SAQ A são basicamente:
+1. Não armazenar dados de cartão
+2. HTTPS com certificado válido
+3. Acesso restrito aos sistemas do checkout
+4. Monitorizar acesso a sistemas de pagamento
+5. Manter o software atualizado
+6. Política de segurança documentada
+
+**O que o Stripe Certificate of Compliance cobre**: O Stripe é certificado PCI DSS Nível 1 (auditoria anual por QSA) e inclui no seu contrato de serviço uma delegação de responsabilidade pelos dados de cartão processados na sua infraestrutura.
+
+## Checklist de Segurança de Pagamentos Online
+
+**Arquitetura**
+- [ ] Dados de cartão nunca passam pelos servidores da empresa (Stripe Elements ou equivalente)
+- [ ] HTTPS obrigatório no checkout — sem fallback para HTTP
+- [ ] TLS 1.2 mínimo, preferencialmente TLS 1.3
+- [ ] Conteúdo misto (mixed content) ausente nas páginas de checkout
+
+**PSD2 / 3DS2**
+- [ ] Processador de pagamentos suporta 3DS2
+- [ ] Isenções de SCA configuradas e testadas
+- [ ] Fluxo de autenticação testado com cartões de teste de diferentes bancos
+
+**Antifraude**
+- [ ] Rate limiting ativo no endpoint de criação de pagamentos
+- [ ] CAPTCHA ou equivalente ativo no checkout (para operações de alto risco)
+- [ ] Regras Radar (Stripe) ou equivalente configuradas para o perfil de risco do negócio
+- [ ] Alertas para spike de transações falhadas (card testing)
+- [ ] Valor do pedido validado no servidor (nunca confiar no valor enviado pelo cliente)
+
+**MB Way / Multibanco**
+- [ ] Verificação de assinatura HMAC nos webhooks de confirmação
+- [ ] Referências Multibanco únicas por transação com validade limitada
+- [ ] Inativação de referências após pagamento confirmado
+
+**Dados e conformidade**
+- [ ] Nenhum log que contenha dados de cartão (CVV, PAN completo)
+- [ ] SAQ A (ou superior) preenchido anualmente
+- [ ] Política de chargebacks documentada e evidência de transações guardada
+- [ ] Resposta a incidentes de pagamento documentada (o que fazer se o processador notificar uma violação)
+
+## O Que Fazer se Suspeitar de Fraude em Curso
+
+Se notar atividade suspeita no checkout (spike de tentativas falhadas, reclamações de utilizadores de débitos não reconhecidos):
+
+1. **Ativar modo de revisão manual** no processador — coloca pagamentos em hold até revisão manual
+2. **Adicionar CAPTCHA temporariamente** se ainda não existir
+3. **Verificar logs** para identificar padrão (IPs de origem, países, user-agents, valores)
+4. **Contactar o processador** — Stripe, por exemplo, tem suporte para fraude ativa
+5. **Se houve dados comprometidos**: notificar CNPD em 72h (Art. 33 RGPD) se dados pessoais de utilizadores foram afetados
+
+A segurança de pagamentos online é uma das áreas onde seguir as melhores práticas do processador de pagamentos — Stripe, SIBS, Adyen — já cobre 90% do necessário. O erro mais comum das PMEs é tentar implementar lógica de pagamentos própria por questões de aparência do checkout, comprometendo toda a segurança que o processador fornece gratuitamente.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-22",
+    readingTime: 17,
+    author: {
+      name: "Rita Santos",
+      title: "Analista de Segurança",
+    },
+  },
 ];
 
 export function getPostBySlug(slug: string): Post | undefined {
