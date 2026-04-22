@@ -46,6 +46,929 @@ export const AUTHORS: Record<string, Author> = {
 
 export const posts: Post[] = [
   {
+    slug: "aws-seguranca-pme-iam-s3-guardduty-cloudtrail",
+    title: "AWS para PMEs: Segurança na Amazon Web Services sem Equipa Dedicada",
+    excerpt:
+      "A Amazon Web Services é usada por milhares de empresas portuguesas para alojar websites, aplicações e backups. Saiba como configurar IAM, proteger buckets S3, ativar GuardDuty e CloudTrail, e evitar as falhas de segurança mais comuns na AWS.",
+    content: `A Amazon Web Services (AWS) é a plataforma cloud mais usada no mundo — e em Portugal não é exceção. Desde startups a agências digitais, passando por PMEs que migraram o alojamento dos seus websites ou aplicações para a nuvem, a AWS está presente em muitas empresas que não têm equipa de IT dedicada.
+
+O problema é que a AWS é um ambiente poderoso com centenas de serviços, muitos controlos de segurança opcionais e uma curva de aprendizagem significativa. Sem configuração adequada, uma conta AWS pode tornar-se um vetor de ataque sério: buckets S3 com dados de clientes acessíveis publicamente, credenciais programáticas expostas em repositórios GitHub, ou instâncias EC2 usadas para minerar criptomoedas depois de comprometidas.
+
+Este guia foca nos controlos essenciais que uma PME consegue implementar sem expertise de cloud avançada — e que cobrem a maioria dos riscos reais.
+
+## Proteger a Conta Root AWS: A Primeira Prioridade
+
+A conta root é criada quando abre uma conta AWS com o email de registo. Tem poderes ilimitados sobre todos os recursos e não pode ser restringida por políticas IAM. Se for comprometida, é game over.
+
+### MFA Obrigatório na Conta Root
+
+1. Aceda à **AWS Console → Security Credentials** (clique no nome do utilizador no canto superior direito)
+2. Em "Multi-factor authentication (MFA)", clique **Assign MFA device**
+3. Escolha **Authenticator app** e siga os passos com Google Authenticator, Microsoft Authenticator ou Aegis
+4. Guarde os códigos de recuperação num gestor de passwords (Bitwarden, 1Password, Keeper)
+
+Nunca use SMS para MFA na AWS — os números de telefone são vulneráveis a SIM swap.
+
+### Não Usar a Conta Root para Tarefas do Dia-a-Dia
+
+Após criar a conta, use-a apenas para:
+- Criar o primeiro utilizador IAM com privilégios de administrador
+- Alterar o plano de suporte
+- Fechar a conta AWS
+
+Para tudo o resto, use utilizadores IAM ou funções IAM. Se a consola pede as credenciais root para uma tarefa comum, algo está mal.
+
+### Criar um Alias de Conta
+
+Em **IAM → Dashboard**, defina um alias de conta (ex: \`empresa-producao\`). Isto substitui o ID numérico da conta no URL de login IAM e ajuda a identificar a conta correta quando tem várias.
+
+## IAM: Identidade e Acessos na AWS
+
+O IAM (Identity and Access Management) é o sistema que controla quem pode fazer o quê na sua conta AWS.
+
+### Tipos de Identidades IAM
+
+**Utilizadores IAM**: Pessoas que acedem à consola AWS ou usam a API programaticamente. Use para membros da equipa.
+
+**Grupos IAM**: Conjuntos de utilizadores com as mesmas permissões. Crie grupos por função: \`Administradores\`, \`Developers\`, \`ReadOnly\`.
+
+**Funções IAM (Roles)**: Identidades assumidas temporariamente por serviços AWS (Lambda, EC2) ou utilizadores de outros sistemas. Nunca embuta credenciais num servidor — use roles.
+
+**Políticas IAM**: Documentos JSON que definem permissões. Podem ser anexadas a utilizadores, grupos ou roles.
+
+### Princípio do Menor Privilégio
+
+Cada utilizador e serviço deve ter apenas as permissões mínimas necessárias para a sua função. Exemplos práticos:
+
+- Um desenvolvedor que trabalha apenas com S3 não precisa de acesso EC2
+- Uma aplicação que lê de uma base de dados RDS não precisa de permissões para apagar instâncias
+- Um utilizador de billing não precisa de acesso a nenhum recurso técnico
+
+Use políticas geridas pela AWS quando existirem (\`AmazonS3ReadOnlyAccess\`, \`AmazonRDSReadOnlyAccess\`) — são mantidas e atualizadas pela Amazon. Crie políticas personalizadas apenas quando necessário.
+
+### Chaves de Acesso: O Que Nunca Fazer
+
+Chaves de acesso (Access Key ID + Secret Access Key) são o maior risco de segurança na AWS. São credenciais de longa duração que, se expostas, dão acesso programático à conta.
+
+**Nunca faça**:
+- Guardar chaves de acesso no código fonte (nem em comentários)
+- Commit de ficheiros \`.env\` com chaves para repositórios Git (mesmo privados)
+- Usar chaves da conta root
+- Partilhar chaves entre aplicações ou pessoas
+- Deixar chaves ativas indefinidamente sem rotação
+
+**O que fazer**:
+- Para aplicações em EC2, Lambda ou ECS: use **IAM Roles** — a aplicação assume a role automaticamente sem credenciais fixas
+- Para acesso humano à API: use **AWS IAM Identity Center** (SSO) com credenciais temporárias
+- Se mesmo assim precisar de chaves: rotação a cada 90 dias, ativar **IAM Access Analyzer** para detetar uso anómalo
+
+**Verificar chaves expostas**: Se suspeitar que chaves foram expostas (ex: commit acidental para GitHub), revogue-as imediatamente em IAM → Users → Security Credentials e verifique o CloudTrail para atividade suspeita.
+
+### Ativar MFA para Todos os Utilizadores IAM com Acesso à Consola
+
+\`\`\`
+IAM → Users → [selecionar utilizador] → Security Credentials → Assign MFA device
+\`\`\`
+
+Pode forçar MFA através de uma política IAM — qualquer tentativa de ação sem MFA ativo resulta em erro de autorização.
+
+## S3: Proteger Buckets e Dados em Repouso
+
+O S3 (Simple Storage Service) é o serviço de armazenamento de objetos da AWS. É frequentemente usado para armazenar ficheiros, backups, assets de websites e logs. É também a fonte de muitas das fugas de dados mais mediáticas dos últimos anos — por configuração incorreta.
+
+### Bloquear Acesso Público por Predefinição
+
+A AWS introduziu o **S3 Block Public Access** precisamente para evitar que dados sejam expostos por engano. Deve estar ativo em todas as contas e buckets que não precisam de acesso público.
+
+Em **S3 → Block Public Access settings for this account**: ative todas as 4 opções. Isto bloqueia qualquer permissão de acesso público, mesmo que alguém tente configurá-la incorretamente num bucket individual.
+
+Se tiver um bucket específico para servir assets públicos de um website estático, ative o Block Public Access apenas nesse bucket com cuidado e use políticas de bucket explícitas.
+
+### Encriptação em Repouso
+
+Ative encriptação em todos os buckets:
+
+\`\`\`
+S3 → [nome do bucket] → Properties → Default encryption
+→ Server-side encryption with Amazon S3 managed keys (SSE-S3)
+\`\`\`
+
+SSE-S3 é gratuita e cobre a encriptação em disco. Para dados altamente sensíveis, use SSE-KMS com chaves geridas pelo cliente (tem custo adicional por operação de chave).
+
+### Versionamento e Object Lock para Backups Imutáveis
+
+Se usar S3 para backups, ative **Versioning** e **Object Lock**:
+
+- **Versioning**: mantém versões anteriores de cada ficheiro — se um ransomware encriptar os ficheiros, pode restaurar versões anteriores
+- **Object Lock** com modo COMPLIANCE: torna os ficheiros impossíveis de eliminar durante um período definido, mesmo por um administrador
+
+\`\`\`
+S3 → [bucket de backup] → Properties → Versioning → Enable
+S3 → [bucket de backup] → Properties → Object Lock → Enable (durante criação)
+\`\`\`
+
+Para backups: configure uma política de ciclo de vida para mover versões antigas para S3 Glacier (custo muito reduzido).
+
+### Logging de Acesso ao Bucket
+
+Ative **Server Access Logging** em buckets com dados sensíveis — regista quem acedeu a quê e quando:
+
+\`\`\`
+S3 → [bucket] → Properties → Server access logging → Enable
+→ Destino: um bucket separado de logs
+\`\`\`
+
+## GuardDuty: Deteção de Ameaças Automatizada
+
+O AWS GuardDuty é um serviço de deteção de ameaças que analisa continuamente os logs CloudTrail, VPC Flow Logs e DNS para identificar comportamento suspeito. Os primeiros 30 dias são gratuitos — depois o custo é baseado no volume de dados analisados (tipicamente €20-100/mês para uma PME).
+
+O GuardDuty deteta automaticamente:
+- Credenciais IAM usadas a partir de localizações incomuns ou IPs de TOR/VPN maliciosos
+- Instâncias EC2 a comunicar com endereços de comando e controlo conhecidos (C2)
+- Mineiros de criptomoeda (cryptojacking)
+- Atividade de reconhecimento e port scanning dentro da VPC
+- Tentativas de exfiltração de dados de buckets S3
+- Acesso incomum a chaves KMS
+
+### Ativar GuardDuty
+
+\`\`\`
+AWS Console → GuardDuty → Get Started → Enable GuardDuty
+\`\`\`
+
+Se tiver múltiplas contas AWS, ative GuardDuty com **delegated administrator** para ter visibilidade centralizada.
+
+**Configurar alertas**: Em GuardDuty → Settings → configure notificações para o seu email via SNS para findings de severidade HIGH e CRITICAL.
+
+## CloudTrail: Auditoria de Todas as Ações
+
+O CloudTrail regista todas as chamadas à API AWS — quem fez o quê, quando e a partir de onde. É essencial para detetar acesso não autorizado e fazer investigação forense após um incidente.
+
+### Ativar CloudTrail para Toda a Conta
+
+\`\`\`
+AWS Console → CloudTrail → Create trail
+→ Name: trail-empresa-main
+→ Apply to all regions: Yes
+→ Management events: Read + Write
+→ S3 bucket: criar bucket dedicado para logs
+→ Log file validation: Enable (para detetar tampering)
+\`\`\`
+
+O custo é baseado no volume de eventos — para uma PME, geralmente €5-20/mês.
+
+### O Que Monitorizar no CloudTrail
+
+Configure alertas (via CloudWatch Alarms) para estes eventos:
+
+| Evento | Risco |
+|--------|-------|
+| \`ConsoleLogin\` com \`MFAUsed: No\` | Acesso sem MFA |
+| \`DeleteBucket\` ou \`DeleteObject\` | Eliminação de dados |
+| \`CreateUser\` ou \`AttachUserPolicy\` | Escalada de privilégios |
+| \`RunInstances\` em regiões não usadas | Cryptojacking |
+| \`GetSecretValue\` fora de horas normais | Exfiltração de credenciais |
+| Qualquer ação com conta Root | Uso indevido da root |
+
+## Security Hub: Vista Centralizada de Conformidade
+
+O AWS Security Hub agrega findings de GuardDuty, IAM Access Analyzer, Inspector e outros serviços, e avalia a conta contra padrões de conformidade como o **AWS Foundational Security Best Practices**.
+
+\`\`\`
+AWS Console → Security Hub → Go to Security Hub → Enable Security Hub
+→ Ativar: AWS Foundational Security Best Practices v1.0.0
+\`\`\`
+
+O Security Hub apresenta uma pontuação de segurança e lista controlo a controlo o que está em conformidade e o que precisa de ação. É o ponto de partida para um programa de hardening estruturado.
+
+Os primeiros 30 dias são gratuitos.
+
+## Secrets Manager: Credenciais Sem Hardcoding
+
+O AWS Secrets Manager armazena credenciais de base de dados, API keys e outros segredos, disponibilizando-os às aplicações via API — sem necessidade de as incluir em código ou variáveis de ambiente em texto simples.
+
+\`\`\`python
+import boto3
+
+client = boto3.client('secretsmanager', region_name='eu-west-1')
+secret = client.get_secret_value(SecretId='prod/db/password')
+password = json.loads(secret['SecretString'])['password']
+\`\`\`
+
+A aplicação precisa de uma IAM Role com permissão \`secretsmanager:GetSecretValue\` apenas para os segredos que necessita.
+
+O Secrets Manager suporta **rotação automática** de credenciais de base de dados RDS — sem downtime e sem alterar código.
+
+Custo: ~€0.40 por segredo por mês + €0.05 por 10.000 chamadas à API.
+
+## VPC e Security Groups: Controlo de Rede
+
+Uma VPC (Virtual Private Cloud) isola os seus recursos AWS numa rede privada. Os Security Groups funcionam como firewalls statefu nos à volta de cada recurso.
+
+### Regras Essenciais de Security Groups
+
+**Para instâncias EC2 (servidores)**:
+- Nunca abrir porta 22 (SSH) ao mundo (\`0.0.0.0/0\`) — restringir ao IP do escritório ou usar AWS Systems Manager Session Manager (sem SSH)
+- Nunca abrir porta 3389 (RDP) ao mundo
+- HTTP/HTTPS (80/443) apenas se o servidor for público
+- Portas de base de dados (3306 MySQL, 5432 PostgreSQL) apenas a partir do Security Group da aplicação, nunca ao mundo
+
+**Para bases de dados RDS**:
+- Nunca tornar a instância publicamente acessível (\`Publicly Accessible: No\`)
+- Porta de base de dados apenas a partir do Security Group do servidor de aplicação
+
+**Verificar regularmente**: Aceda a **VPC → Security Groups** e procure regras com source \`0.0.0.0/0\` em portas sensíveis. O Security Hub também sinaliza estes problemas.
+
+## Detetar Anomalias de Custos: Um Sinal de Segurança
+
+Aumentos súbitos na fatura AWS são frequentemente o primeiro sinal de comprometimento — cryptojacking, spam por email via SES, ou uso de recursos em regiões que não usa normalmente.
+
+### Ativar Alertas de Faturação
+
+\`\`\`
+AWS Billing → Billing preferences → Receive Billing Alerts: Enable
+→ CloudWatch → Alarms → Billing → Create alarm
+→ Threshold: 20% acima da média mensal habitual
+→ Notification: email da equipa
+\`\`\`
+
+### AWS Cost Anomaly Detection
+
+\`\`\`
+AWS Billing → Cost Anomaly Detection → Create monitor
+→ Monitor type: AWS services
+→ Alert threshold: quando custo diário excede €50 do esperado
+\`\`\`
+
+Este serviço usa machine learning para detetar padrões anómalos de custo — gratuitamente.
+
+## Trusted Advisor: Verificação Automática de Boas Práticas
+
+O AWS Trusted Advisor verifica automaticamente a conta contra boas práticas em 5 categorias: custo, desempenho, segurança, tolerância a falhas e limites de serviço.
+
+Na camada gratuita, os checks de segurança incluem:
+- Portas de segurança abertas ao público (22, 3389, 3306, etc.)
+- Buckets S3 com permissões de acesso abertas
+- Utilização de IAM (se tem utilizadores, grupos e roles configurados)
+- MFA na conta root
+- Chaves de acesso ativas para a conta root
+
+\`\`\`
+AWS Console → Trusted Advisor → Security
+\`\`\`
+
+Os planos Business e Enterprise têm acesso a todos os checks — mas para uma PME, os gratuitos já cobrem os basics.
+
+## Checklist de Segurança AWS para PMEs
+
+**Conta e IAM**
+- [ ] MFA ativo na conta root (aplicação autenticadora, não SMS)
+- [ ] Conta root nunca usada para tarefas do dia-a-dia
+- [ ] Utilizadores IAM individuais por pessoa (sem partilha de credenciais)
+- [ ] Grupos IAM por função com políticas de menor privilégio
+- [ ] MFA obrigatório para todos os utilizadores com acesso à consola
+- [ ] Chaves de acesso auditadas — eliminar as não utilizadas
+- [ ] Aplicações a usar IAM Roles, não chaves de acesso fixas
+
+**S3**
+- [ ] Block Public Access ativo ao nível da conta
+- [ ] Encriptação SSE-S3 ativa em todos os buckets
+- [ ] Versionamento ativo em buckets de backup
+- [ ] Object Lock configurado nos buckets de backup críticos
+- [ ] Server access logging ativo em buckets com dados sensíveis
+
+**Monitorização**
+- [ ] CloudTrail ativo em todas as regiões com log file validation
+- [ ] GuardDuty ativo (pelo menos avaliar durante os 30 dias gratuitos)
+- [ ] Security Hub ativo com AWS Foundational Security Best Practices
+- [ ] Alertas de faturação e Cost Anomaly Detection configurados
+
+**Rede**
+- [ ] Security groups sem 0.0.0.0/0 em portas SSH/RDP/base de dados
+- [ ] Instâncias RDS sem acesso público
+- [ ] Acesso SSH via AWS Systems Manager Session Manager em vez de porta 22 aberta
+
+**Segredos**
+- [ ] Credenciais de base de dados em Secrets Manager, não em variáveis de ambiente
+- [ ] Sem chaves de acesso AWS em código fonte ou repositórios Git
+
+## Recursos Úteis
+
+- **AWS Security Hub**: ponto único de entrada para conformidade
+- **AWS Well-Architected Tool**: avalia a arquitetura contra o Security Pillar
+- **Prowler**: ferramenta open-source de auditoria de contas AWS (gratuita)
+- **CloudSploit / Aqua**: scanners de configuração AWS
+
+A AWS tem uma curva de aprendizagem real, mas os controlos descritos aqui — IAM com menor privilégio, MFA, S3 Block Public Access, CloudTrail, GuardDuty — cobrem a grande maioria dos vetores de ataque que afetam PMEs. Não é necessário ser especialista em cloud para ter uma conta AWS segura; é necessário ter os basics corretos desde o início.`,
+    category: "ferramentas",
+    categoryLabel: "Ferramentas",
+    publishedAt: "2026-04-22",
+    readingTime: 18,
+    author: {
+      name: "Carlos Miranda",
+      title: "Consultor de Cibersegurança",
+    },
+  },
+  {
+    slug: "eliminacao-segura-equipamento-dados-rgpd-pme",
+    title: "Eliminação Segura de Equipamento Informático: Como Destruir Discos e Dados de Clientes em Conformidade com o RGPD",
+    excerpt:
+      "Quando substitui computadores, discos, impressoras ou telemóveis antigos, os dados dos clientes continuam lá. Saiba como apagar dados em conformidade com o RGPD, escolher entre wipe de software e destruição física, e documentar o processo.",
+    content: `Todos os anos, empresas portuguesas vendem, doam ou deitam fora equipamento informático com dados de clientes intactos no disco rígido. Às vezes por descuido; outras vezes porque "formatei o computador" — sem perceber que formatar não apaga os dados.
+
+Em 2009, um estudo da British Columbia University comprou 250 discos usados em mercados de segunda mão. Em 34% deles, os investigadores recuperaram dados pessoais, incluindo registos médicos, extratos bancários e contratos. Nada mudou desde então — as ferramentas de recuperação tornaram-se mais acessíveis, não menos.
+
+Para as PMEs portuguesas, isto cria dois problemas: um problema de segurança (dados de clientes nas mãos de quem comprou o equipamento no OLX) e um problema de conformidade (o RGPD exige que os dados pessoais sejam protegidos durante todo o ciclo de vida, incluindo o momento de eliminação).
+
+## O Que o RGPD Diz sobre Eliminação de Dados
+
+O RGPD não tem um artigo dedicado à destruição de equipamento, mas vários princípios aplicam-se diretamente:
+
+**Artigo 5(1)(e) — Limitação da conservação**: Os dados pessoais só devem ser conservados "durante um período não superior ao necessário para as finalidades". Quando o equipamento é retirado de serviço, os dados que já não são necessários devem ser eliminados.
+
+**Artigo 5(1)(f) — Integridade e confidencialidade**: Os dados pessoais devem ser tratados de forma a garantir "segurança adequada dos dados pessoais, incluindo a proteção contra o seu tratamento não autorizado ou ilícito". Equipamento não seguramente eliminado representa tratamento não autorizado.
+
+**Artigo 32 — Segurança do tratamento**: Exige "medidas técnicas e organizativas adequadas" para proteger os dados. A destruição segura de suportes é uma dessas medidas.
+
+**Artigo 24 — Responsabilidade do responsável pelo tratamento**: A empresa tem de demonstrar conformidade. Isso inclui documentar o processo de eliminação de dados em equipamento desativado.
+
+A CNPD já sancionou empresas por dados encontrados em equipamento alienado. A coima não precisa de ser máxima para ser dolorosa — €5.000 a €25.000 é um valor realista para uma violação deste tipo numa PME.
+
+## Por Que "Formatar" Não É Suficiente
+
+Esta é a confusão mais comum. Quando "formata" um disco ou "repõe as definições de fábrica" de um dispositivo:
+
+**O que acontece realmente**: O sistema operativo apaga o índice — a tabela que lista onde estão os ficheiros — mas não apaga os dados em si. É como rasgar o índice de um livro: os capítulos continuam lá, só é mais difícil encontrá-los. Software gratuito como Recuva, PhotoRec ou TestDisk recupera esses dados em minutos.
+
+**Exceção importante para SSDs e discos modernos**: Em SSDs, NVME e dispositivos com encriptação de hardware ativa, o comportamento pode ser diferente (explicamos abaixo). Mas em HDDs tradicionais, a formatação simples não elimina dados de forma irrecuperável.
+
+## Tipos de Armazenamento e Método Correto
+
+### Discos Rígidos (HDD — discos magnéticos tradicionais)
+
+Os HDDs gravam dados em superfícies magnéticas giratórias. Para eliminação segura:
+
+**Wipe por software** (método recomendado para reutilização ou doação):
+- **DBAN (Darik's Boot and Nuke)**: Padrão de eliminação DoD 5220.22-M, 3 passagens. Gratuito, arranca a partir de USB. Para HDDs de capacidade normal (até 2TB), demora algumas horas.
+- **Eraser** (Windows): ferramenta com interface gráfica, múltiplos padrões (Gutmann 35 passagens, DoD 7 passagens). Bom para apagar ficheiros/pastas específicos ou o disco inteiro.
+- **\`shred\`** (Linux): comando nativo. \`shred -vzn 3 /dev/sda\` faz 3 passagens e verifica.
+- **\`nwipe\`**: substituto moderno do DBAN, mais flexível.
+
+O padrão de 3 passagens (DoD 5220.22-M) é suficiente para HDD — não há evidência de que passagens adicionais ofereçam segurança real em discos modernos, ao contrário do que o método Gutmann de 35 passagens sugeria para discos mais antigos.
+
+**Destruição física**: Se o disco contém dados altamente sensíveis (saúde, dados financeiros, segredos de negócio) ou se não quer o risco de uma falha de software, a destruição física é a opção mais segura. Um serviço certificado de destruição custa €2-10 por disco e emite um certificado de destruição.
+
+### SSDs, NVMe e Memória Flash
+
+Os SSDs têm uma complicação técnica: o **wear leveling**. Para prolongar a vida dos chips de memória, o controlador do SSD distribui as escritas por células diferentes — o que significa que uma sobrescrita de dados pode não cobrir todas as cópias físicas dos dados originais.
+
+**ATA Secure Erase**: Os SSDs modernos suportam o comando ATA Secure Erase, que instrui o controlador a limpar todos os dados internamente. É muito mais eficaz que uma sobrescrita por software:
+
+\`\`\`bash
+# Verificar suporte (Linux)
+hdparm -I /dev/sda | grep -i "security erase"
+
+# Executar ATA Secure Erase
+hdparm --security-set-pass "" /dev/sda
+hdparm --security-erase "" /dev/sda
+\`\`\`
+
+Em Windows, muitos fabricantes têm utilitários próprios: Samsung Magician (Secure Erase), Crucial Storage Executive, Western Digital Dashboard.
+
+**Encriptação + eliminação da chave (Cryptographic Erasure)**: Esta é a abordagem mais elegante e recomendada para SSDs:
+1. O SSD usa encriptação de hardware desde o início (Self-Encrypting Drive — SED) ou o BitLocker encripta o volume
+2. Quando chega o momento de eliminar o disco, apaga-se a chave de encriptação
+3. Os dados continuam fisicamente no disco, mas são matematicamente irrecuperáveis sem a chave
+
+Se o BitLocker estava ativo com uma chave no TPM, e formata o disco removendo o BitLocker (e portanto eliminando a chave), os dados ficam efetivamente inacessíveis.
+
+**Para SSDs com dados muito sensíveis**: A destruição física é a única forma de ter certeza absoluta.
+
+### Smartphones e Tablets (iOS e Android)
+
+**iOS (iPhone/iPad)**:
+1. Ative **Face ID / Touch ID** e um código de acesso longo (o iOS usa encriptação de hardware ligada ao código)
+2. Aceda a **Definições → Geral → Transferir ou Repor iPhone → Apagar Todo o Conteúdo e Definições**
+3. Isto apaga a chave de encriptação — os dados ficam irrecuperáveis
+
+Desde o iPhone 3GS, os dispositivos iOS usam encriptação de hardware. Um factory reset num iPhone com código de acesso ativo é seguro.
+
+**Android**:
+A segurança depende do fabricante e versão do Android. Para garantir segurança:
+1. Ative a encriptação do dispositivo (Android 6+ faz isso por predefinição em muitos dispositivos)
+2. Execute uma reposição de fábrica completa
+3. Para dispositivos mais antigos (Android 5 ou inferior): considere destruição física para dados muito sensíveis
+
+### Impressoras e MFPs (Multifuncionais)
+
+As impressoras de escritório modernas têm discos rígidos ou memória flash interna que armazenam cópias de todos os documentos digitalizados, impressos e copiados. Isto é frequentemente ignorado.
+
+**Antes de devolver, vender ou desfazer de uma impressora**:
+1. Execute o procedimento de eliminação de dados do fabricante (geralmente em Definições → Segurança → Limpar Disco/Memória). O manual da impressora tem as instruções específicas.
+2. Se não encontrar essa opção, contacte o fabricante ou o serviço de assistência
+3. Para impressoras de leasing: verifique o contrato — o fornecedor geralmente é responsável pela eliminação, mas verifique
+
+**Impressoras de leasing**: Muitos contratos de leasing incluem a obrigação do fornecedor de eliminar dados no fim do contrato. Exija confirmação por escrito e um certificado de eliminação.
+
+### Dispositivos de Armazenamento de Rede (NAS)
+
+Para um NAS (Synology, QNAP, etc.):
+1. Antes de desativar: exporte qualquer configuração que precise
+2. Execute o processo de reinstalação/factory reset do NAS (geralmente remove a configuração e os dados)
+3. Para os discos dentro do NAS: aplique o mesmo processo que para HDDs ou SSDs — DBAN, ATA Secure Erase ou destruição física
+
+Se o NAS usava RAID: mesmo com RAID, os discos individuais podem ter dados recuperáveis. Trate cada disco individualmente.
+
+### Cloud e Contas SaaS
+
+Quando termina a subscrição de um serviço cloud (Dropbox, Google Workspace, Salesforce), os dados não são imediatamente eliminados. A maioria dos fornecedores tem um período de retenção após cancelamento (30-90 dias típico).
+
+**Antes de cancelar qualquer serviço cloud**:
+1. Exporte todos os dados que necessita (relatórios, ficheiros, configurações)
+2. Elimine explicitamente os dados dentro do serviço antes de cancelar — não conte com a eliminação automática
+3. Leia a política de eliminação de dados do fornecedor no DPA (Data Processing Agreement)
+4. Solicite confirmação de eliminação por escrito para dados sensíveis
+
+## Serviços de Destruição Certificada em Portugal
+
+Para empresas que processam grandes volumes de equipamento ou dados altamente sensíveis, os serviços de destruição certificada oferecem:
+- Recolha do equipamento nas instalações da empresa
+- Destruição física com trituradores industriais certificados
+- Certificado de destruição com número de série de cada dispositivo destruído
+- Relatório de conformidade RGPD
+
+Empresas com serviços de destruição certificada em Portugal incluem fornecedores de gestão de resíduos REEE (Resíduos de Equipamentos Elétricos e Eletrónicos) como a Valormed, Amb3E e gestores de arquivo como a Iron Mountain. Verifique sempre se o fornecedor tem certificação ISO 27001 para destruição de dados.
+
+O custo de destruição certificada varia:
+- Disco individual: €2-8 com certificado
+- Computador completo: €10-25
+- Recolha e destruição em volume: negociável
+
+## Criar uma Política de Eliminação de Equipamento
+
+Uma PME responsável tem um processo documentado. Não precisa de ser complexo — uma página com os passos e uma folha de registo são suficientes.
+
+**Elementos de uma política de eliminação**:
+
+1. **Âmbito**: que equipamentos abrange (computadores, portáteis, discos, telemóveis, impressoras, NAS)
+2. **Classificação por sensibilidade dos dados**: equipamento que processou dados de saúde ou financeiros tem requisitos mais exigentes
+3. **Método aprovado por tipo de dispositivo**: HDD → DBAN 3 passagens ou destruição; SSD → ATA Secure Erase ou destruição; Telemóvel → factory reset após encriptação
+4. **Quem executa**: nome ou função responsável
+5. **Documentação**: registo de cada dispositivo eliminado (número de série, data, método, responsável)
+6. **Certificado de destruição**: arquivar para auditoria RGPD
+
+**Registo de eliminação de equipamento** (campos mínimos):
+
+| Data | Tipo de equipamento | Número de série | Dados presentes | Método de eliminação | Responsável | Certificado |
+|------|---------------------|-----------------|-----------------|---------------------|-------------|-------------|
+| 2026-03-15 | Portátil Dell Latitude | 5CG12345 | Dados de clientes | DBAN 3 passagens | João Silva | N/A |
+| 2026-03-20 | iPhone 12 | DX4H... | Email empresarial | Factory reset + verificação | Ana Costa | N/A |
+
+Guarde este registo durante pelo menos 3 anos — pode ser necessário em caso de auditoria CNPD ou litígio.
+
+## Checklist de Eliminação de Equipamento
+
+**Antes de eliminar qualquer dispositivo**
+
+- [ ] Identificar que dados pessoais ou sensíveis existem no dispositivo
+- [ ] Verificar se os dados ainda são necessários (exportar backup se sim)
+- [ ] Confirmar método de eliminação adequado para o tipo de hardware
+- [ ] Revogar acessos associados ao dispositivo (contas de email, VPN, MDM)
+- [ ] Remover o dispositivo do MDM/Intune/Jamf antes de eliminar dados
+
+**Durante a eliminação**
+
+- [ ] Executar o método de eliminação aprovado para o tipo de suporte
+- [ ] Verificar o sucesso da operação (DBAN mostra relatório; ATA Secure Erase confirma conclusão)
+- [ ] Para destruição física: solicitar certificado de destruição
+
+**Após a eliminação**
+
+- [ ] Registar no log de eliminação (data, dispositivo, método, responsável)
+- [ ] Arquivar certificado de destruição (se aplicável)
+- [ ] Atualizar inventário de ativos de IT para marcar o dispositivo como eliminado
+
+A eliminação segura de dados é uma das medidas de segurança mais fáceis de documentar e demonstrar — e uma das que a CNPD verifica com maior frequência em inspeções após incidentes. Ter o processo definido e os registos em ordem é proteção legal real para a sua empresa.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-22",
+    readingTime: 16,
+    author: {
+      name: "Miguel Ferreira",
+      title: "Auditor de Compliance",
+    },
+  },
+  {
+    slug: "github-gitlab-seguranca-codigo-fonte-pme",
+    title: "GitHub e GitLab Seguros para PMEs: Proteger Código, Segredos e Pipelines CI/CD",
+    excerpt:
+      "Chaves de API expostas em repositórios GitHub são uma das principais causas de violações de dados em empresas tecnológicas. Saiba como proteger o código fonte, evitar fugas de segredos, configurar branch protection e usar CI/CD com segurança.",
+    content: `Em março de 2023, a Toyota Motor descobriu que credenciais de acesso a um servidor cloud tinham sido acidentalmente publicadas num repositório GitHub público há quase cinco anos. Durante esse tempo, os dados de cerca de 296.000 clientes estiveram potencialmente acessíveis. O repositório era de um fornecedor, não da Toyota — mas a responsabilidade e o dano reputacional recaíram sobre a marca.
+
+Situações semelhantes acontecem regularmente com empresas muito mais pequenas: uma startup que pública o \`.env\` com as chaves da AWS, uma agência que tem o token da API do Stripe num repositório "privado" que o cliente pode ver, um freelancer que coloca as credenciais da base de dados de produção no código por conveniência.
+
+O git tem uma memória longa. Mesmo que apague um ficheiro com segredos e faça commit, o ficheiro continua na história do repositório — acessível a quem clonar o repositório ou tiver acesso ao historial.
+
+## A Anatomia de Uma Fuga de Segredos
+
+### O Que São "Segredos" em Contexto de Desenvolvimento
+
+Segredos são qualquer informação que dá acesso a sistemas ou recursos:
+- Chaves de API (AWS, Stripe, Twilio, Mailgun, OpenAI)
+- Passwords de base de dados (PostgreSQL, MySQL, MongoDB)
+- Tokens OAuth e JWT secrets
+- Chaves SSH privadas e certificados
+- Variáveis de ambiente com configurações de produção
+- Credenciais de serviços de terceiros
+
+### Como os Segredos Chegam ao Git
+
+Os vetores mais comuns:
+
+**Ficheiros \`.env\` sem \`.gitignore\`**: O ficheiro \`.env\` é o lugar standard para guardar configuração local — mas é também o ficheiro que mais frequentemente acaba em repositórios. Se não estiver no \`.gitignore\`, um \`git add .\` inadvertido publica todas as credenciais.
+
+**Hardcoding por pressa**: \`const apiKey = "sk_live_..."\` posto "temporariamente" e esquecido.
+
+**Configurações de teste**: Credenciais de ambiente de staging ou teste que são "menos importantes" mas dão acesso a dados reais.
+
+**Ficheiros de configuração de ferramentas**: \`.travis.yml\`, \`.gitlab-ci.yml\`, \`docker-compose.yml\` com variáveis de ambiente embutidas.
+
+**Histórico de commits**: Mesmo apagando o ficheiro, o \`git log\` e o \`git show\` revelam o conteúdo de commits anteriores.
+
+## Configurar o .gitignore Corretamente
+
+O \`.gitignore\` deve existir em todos os repositórios e deve incluir os ficheiros de configuração sensíveis antes do primeiro commit.
+
+### .gitignore Essencial para Projetos Web
+
+\`\`\`gitignore
+# Variáveis de ambiente e configuração
+.env
+.env.local
+.env.*.local
+.env.production
+.env.staging
+.env.development.local
+
+# Chaves e certificados
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa
+id_ed25519
+*.pub
+
+# Credenciais de cloud
+.aws/credentials
+.aws/config
+terraform.tfvars
+*.tfvars
+secrets.yml
+secrets.yaml
+config/secrets.yml
+
+# Ficheiros de IDE com configuração
+.vscode/settings.json
+*.sublime-workspace
+
+# Dependências (não devem estar no repo)
+node_modules/
+vendor/
+__pycache__/
+*.pyc
+
+# Builds e artefactos
+dist/
+build/
+.next/
+\`\`\`
+
+**Regra de ouro**: Crie o \`.gitignore\` antes de qualquer outro ficheiro no repositório. Se já existe código com segredos, trate isso como um incidente (ver secção de resposta).
+
+## Ferramentas de Deteção de Segredos
+
+### Pre-commit Hooks: Bloquear Antes do Commit
+
+Os pre-commit hooks executam scripts antes de cada commit. Se detetarem segredos, bloqueiam o commit e alertam o programador.
+
+**gitleaks** — a ferramenta mais popular:
+
+\`\`\`bash
+# Instalar (macOS)
+brew install gitleaks
+
+# Instalar (Linux/Windows via GitHub Releases)
+# https://github.com/gitleaks/gitleaks/releases
+
+# Testar o repositório atual
+gitleaks detect --source . --verbose
+
+# Configurar como pre-commit hook
+cat > .git/hooks/pre-commit << 'EOF'
+#!/bin/sh
+gitleaks protect --staged --redact
+if [ $? -ne 0 ]; then
+    echo "❌ gitleaks detetou possíveis segredos. Commit bloqueado."
+    echo "Remova as credenciais antes de fazer commit."
+    exit 1
+fi
+EOF
+chmod +x .git/hooks/pre-commit
+\`\`\`
+
+**detect-secrets** (da Yelp) — bom para Python e ambientes corporativos:
+
+\`\`\`bash
+pip install detect-secrets
+detect-secrets scan > .secrets.baseline
+detect-secrets audit .secrets.baseline
+\`\`\`
+
+**Framework pre-commit** — gestão centralizada de hooks para equipas:
+
+\`\`\`yaml
+# .pre-commit-config.yaml
+repos:
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.18.2
+    hooks:
+      - id: gitleaks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: check-added-large-files
+      - id: detect-private-key
+      - id: check-json
+      - id: check-yaml
+\`\`\`
+
+\`\`\`bash
+pip install pre-commit
+pre-commit install  # Instala os hooks no repo atual
+\`\`\`
+
+### GitHub Secret Scanning e Push Protection
+
+O GitHub tem deteção de segredos integrada para repositórios públicos (gratuita) e privados (GitHub Advanced Security, pago, mas incluído no GitHub Enterprise).
+
+**Para repositórios públicos**: O GitHub automaticamente analisa cada push e envia alertas quando deteta padrões de chaves conhecidas (AWS, Stripe, Google, etc.). Também notifica os fornecedores diretamente para revogar as chaves.
+
+**Push Protection** (GitHub Advanced Security): Bloqueia o push antes de chegar ao servidor se detetar segredos — é o equivalente ao gitleaks mas do lado do servidor.
+
+Para ativar em repositórios privados com GitHub Advanced Security:
+\`\`\`
+Repository Settings → Code Security → Secret scanning → Enable
+→ Push protection → Enable
+\`\`\`
+
+### GitLab: Secret Detection Integrada
+
+No GitLab, a deteção de segredos está integrada nos pipelines CI/CD:
+
+\`\`\`yaml
+# .gitlab-ci.yml
+include:
+  - template: Security/Secret-Detection.gitlab-ci.yml
+
+secret_detection:
+  stage: test
+\`\`\`
+
+## GitHub: Configurações de Segurança da Organização
+
+Se a sua empresa usa GitHub para gerir repositórios de vários projetos, configure a segurança ao nível da organização.
+
+### Enforçar 2FA Para Toda a Organização
+
+\`\`\`
+GitHub Organization → Settings → Authentication security
+→ Require two-factor authentication: Enable
+\`\`\`
+
+Qualquer membro sem 2FA ativo é automaticamente removido da organização.
+
+### Permissões de Repositório
+
+\`\`\`
+Organization Settings → Member privileges
+→ Default repository permission: Read (não Write nem Admin)
+→ Allow members to create repositories: Private only
+→ Allow forking of private repositories: Disable
+\`\`\`
+
+### Audit Log da Organização
+
+\`\`\`
+Organization → Settings → Audit log
+\`\`\`
+
+Regista todas as ações: quem criou repositórios, quem alterou permissões, quem acedeu a segredos de Actions, quem desativou proteções. Filtre por eventos de segurança relevantes: \`repo.create\`, \`org.invite_member\`, \`protected_branch.destroy\`.
+
+## Branch Protection: Controlo sobre o Código de Produção
+
+As regras de proteção de branches impedem alterações diretas ao código de produção sem revisão.
+
+### Configurar Proteção para o Branch Principal
+
+\`\`\`
+Repository → Settings → Branches → Branch protection rules → Add rule
+→ Branch name pattern: main (ou master)
+→ Require a pull request before merging: Enable
+   → Required number of approvals: 1 (2 para repositórios críticos)
+   → Dismiss stale pull request approvals: Enable
+   → Require review from Code Owners: Enable
+→ Require status checks to pass before merging: Enable
+   → (adicione os checks de CI/CD que devem passar)
+→ Require signed commits: Enable (se usar GPG signing)
+→ Restrict who can push to matching branches: Enable
+   → Adicionar apenas os utilizadores/teams autorizados
+→ Allow force pushes: Disable
+→ Allow deletions: Disable
+\`\`\`
+
+### Code Owners
+
+O ficheiro \`CODEOWNERS\` define quem deve rever alterações a partes específicas do código:
+
+\`\`\`
+# .github/CODEOWNERS
+
+# Infra e CI/CD — só o lead de operações revê
+/.github/workflows/    @empresa/ops-team
+/terraform/            @empresa/ops-team
+/docker-compose.yml    @empresa/ops-team
+
+# Código de pagamentos — revisão obrigatória do CTO
+/src/payments/         @cto-username @empresa/senior-devs
+
+# Tudo o resto — qualquer senior dev
+*                      @empresa/senior-devs
+\`\`\`
+
+## Secrets no CI/CD: GitHub Actions e GitLab CI
+
+Os pipelines CI/CD precisam de credenciais para fazer deploy, aceder a bases de dados de staging, publicar packages, etc. Como gerir isso com segurança?
+
+### GitHub Actions Secrets
+
+\`\`\`
+Repository → Settings → Secrets and variables → Actions → New repository secret
+\`\`\`
+
+Nos workflows, aceda aos segredos como variáveis de ambiente:
+
+\`\`\`yaml
+# .github/workflows/deploy.yml
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy
+        env:
+          AWS_ACCESS_KEY_ID: \${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: \${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          aws s3 sync ./dist s3://meu-bucket/
+\`\`\`
+
+**Importante**: Os segredos do GitHub Actions são mascarados nos logs — se um workflow tentar imprimir um segredo, aparece \`***\`. Mas um workflow malicioso pode exfiltrar segredos através de um HTTP request. Por isso:
+
+- Defina quais branches podem aceder a secrets de produção (Environments com proteção)
+- Use **OIDC** (OpenID Connect) para autenticação em AWS, Azure, GCP — elimina a necessidade de armazenar chaves de acesso:
+
+\`\`\`yaml
+# Autenticação AWS via OIDC — sem chaves armazenadas
+- name: Configure AWS credentials
+  uses: aws-actions/configure-aws-credentials@v4
+  with:
+    role-to-assume: arn:aws:iam::123456789:role/GitHubActions-Deploy
+    aws-region: eu-west-1
+\`\`\`
+
+### GitLab CI/CD Variables
+
+\`\`\`
+Project → Settings → CI/CD → Variables → Add variable
+→ Type: Variable (para texto) ou File (para ficheiros como kubeconfig)
+→ Masked: Yes (oculta nos logs)
+→ Protected: Yes (apenas em branches protegidos)
+\`\`\`
+
+### Environments com Proteção
+
+Para deployments de produção, use Environments com regras de proteção:
+
+\`\`\`
+Repository → Settings → Environments → New environment → production
+→ Required reviewers: [adicionar aprovadores]
+→ Deployment branches: Selected branches → main
+→ Secrets específicos do ambiente de produção
+\`\`\`
+
+Desta forma, qualquer deploy para produção requer aprovação manual — uma PR sozinha não chega.
+
+## Gerir Personal Access Tokens e SSH Keys
+
+### Personal Access Tokens (PAT)
+
+Os PATs são credenciais que dão acesso à API GitHub/GitLab. Muitas empresas têm PATs antigos com permissões excessivas espalhados por scripts e pipelines.
+
+**Boas práticas**:
+- Use **Fine-grained Personal Access Tokens** (GitHub) em vez dos clássicos — permitem limitar o acesso a repositórios específicos e operações específicas
+- Defina sempre uma data de expiração (máximo 1 ano, recomendado 90 dias)
+- Use uma conta de serviço (não pessoal) para tokens de CI/CD
+- Audite PATs existentes regularmente: \`GitHub Settings → Developer settings → Personal access tokens\`
+
+### SSH Keys
+
+\`\`\`
+GitHub Settings → SSH and GPG keys
+\`\`\`
+
+Reveja periodicamente as chaves SSH associadas à conta:
+- Elimine chaves de computadores que já não usa
+- Elimine chaves de ex-colaboradores (ou remova o seu acesso à organização, o que elimina automaticamente o acesso via SSH)
+- Use chaves ed25519 em vez de RSA (mais curtas e mais seguras)
+
+## O Que Fazer se Segredos Foram Expostos
+
+Se descobrir que credenciais foram publicadas num repositório — mesmo que só por alguns minutos, mesmo que seja um repo privado:
+
+### Passo 1: Revogar Imediatamente
+
+**Antes de tentar limpar o histórico**, revogue as credenciais:
+- Chaves AWS: IAM → Users → Security Credentials → Deactivate/Delete
+- Tokens Stripe: Dashboard Stripe → Developers → API Keys → Roll key
+- Tokens de API genéricos: Aceda ao painel do serviço e revogue/regenere
+- Passwords: Altere imediatamente nos sistemas afetados
+
+A razão para revogar primeiro: alguém pode ter visto as credenciais e estar a usá-las. Limpar o git não revoga o acesso já existente.
+
+### Passo 2: Verificar Uso Indevido
+
+- **AWS**: CloudTrail → filtrar por chave de acesso comprometida
+- **GitHub**: Audit log da organização
+- **Google Cloud**: Cloud Audit Logs
+- **Stripe**: Dashboard → Events → filtrar por chave
+
+### Passo 3: Limpar o Histórico Git (Se Necessário)
+
+Se as credenciais já foram revogadas e quer limpar o histórico por razões de compliance:
+
+**git-filter-repo** (ferramenta recomendada pelo GitHub):
+
+\`\`\`bash
+pip install git-filter-repo
+
+# Substituir um ficheiro que não devia ter sido commitado
+git filter-repo --path .env --invert-paths
+
+# Substituir uma string específica em todo o histórico
+git filter-repo --replace-text <(echo "sk_live_XXXX==>REMOVED")
+\`\`\`
+
+Após limpar, force push para o repositório remoto e notifique todos os colaboradores para re-clonar o repositório (o histórico local deles ainda tem os dados).
+
+**Nota**: Se o repositório era público, mesmo que por minutos, assuma que os dados foram indexados. Scanners automáticos (como o do GitGuardian) monitorizam repositórios públicos em tempo real e notificam os fornecedores. Trate como comprometimento real.
+
+## Checklist de Segurança Git para PMEs
+
+**Configuração base**
+- [ ] \`.gitignore\` configurado com ficheiros \`.env\` e credenciais antes do primeiro commit
+- [ ] gitleaks ou equivalente instalado como pre-commit hook em todos os repositórios
+- [ ] Secret scanning ativo no GitHub/GitLab
+- [ ] 2FA obrigatório para todos os membros da organização
+
+**Repositórios**
+- [ ] Branch protection configurado no branch principal (main/master)
+- [ ] Pull requests obrigatórias antes de merge (pelo menos 1 aprovação)
+- [ ] CODEOWNERS definido para ficheiros críticos (infra, CI/CD, pagamentos)
+- [ ] Repositórios privados por predefinição (não públicos)
+
+**Credenciais e acessos**
+- [ ] Personal Access Tokens com expiração definida e permissões mínimas
+- [ ] Chaves SSH de ex-colaboradores removidas
+- [ ] Secrets de CI/CD guardados em GitHub/GitLab Secrets, não no código
+- [ ] OIDC configurado para autenticação em cloud (elimina chaves de acesso estáticas)
+- [ ] Environments de produção com aprovação manual para deploy
+
+**Auditoria**
+- [ ] Audit log da organização revisto mensalmente
+- [ ] Alerta configurado para novos membros adicionados à organização
+- [ ] Inventário de repositórios públicos (revisão trimestral de se devem ser públicos)
+
+Uma PME técnica que segue estas práticas está bem protegida contra a causa número um de violações em empresas de software: credenciais acidentalmente expostas em repositórios de código. A implementação leva um dia; o retorno é segurança permanente.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-22",
+    readingTime: 19,
+    author: {
+      name: "Carlos Miranda",
+      title: "Consultor de Cibersegurança",
+    },
+  },
+  {
     slug: "seguranca-faturacao-moloni-invoicexpress-saft-pme",
     title: "Segurança em Plataformas de Faturação: Moloni, InvoiceXpress e SAF-T para PMEs",
     excerpt:
