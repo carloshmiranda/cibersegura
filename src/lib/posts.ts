@@ -35406,7 +35406,7 @@ O GCP organiza recursos numa hierarquia: **Organização → Pastas → Projetos
 
 **Organização**: O nível mais alto, associado ao domínio do Google Workspace da empresa. Se usa o GCP com uma conta Gmail pessoal (e não com Google Workspace empresarial), não tem organização — e perde controlos de segurança importantes. Migre para Google Workspace.
 
-**Projetos**: O equivalente a "contas" na AWS ou "subscriptions" no Azure. Cada projeto tem a sua faturação, IAM, e conjunto de recursos. A melhor prática é separar ambientes em projetos distintos: `empresa-producao`, `empresa-staging`, `empresa-desenvolvimento`.
+**Projetos**: O equivalente a "contas" na AWS ou "subscriptions" no Azure. Cada projeto tem a sua faturação, IAM, e conjunto de recursos. A melhor prática é separar ambientes em projetos distintos: \`empresa-producao\`, \`empresa-staging\`, \`empresa-desenvolvimento\`.
 
 **Identidade**: O GCP usa contas Google (ou contas de serviço) para autenticação. O IAM do GCP é granular mas diferente da AWS — os papéis são atribuídos ao nível da hierarquia (Organização, Pasta, Projeto, ou Recurso específico).
 
@@ -35420,26 +35420,26 @@ A maioria das contas GCP em PMEs tem demasiados utilizadores com papéis de Edit
 
 | Papel | O que permite | Para quem |
 |---|---|---|
-| `Owner` | Tudo, incluindo apagar projetos | Apenas a conta de emergência |
-| `Editor` | Criar/modificar recursos | Evitar — usar papéis mais restritos |
-| `Viewer` | Ver tudo, sem modificar | Auditores, gestão |
-| `roles/compute.instanceAdmin` | Gerir VMs | Devops/SRE |
-| `roles/storage.objectAdmin` | Gerir objetos no Cloud Storage | Aplicações que escrevem para buckets |
-| `roles/cloudsql.client` | Ligar a instâncias Cloud SQL | Aplicações com acesso à base de dados |
+| \`Owner\` | Tudo, incluindo apagar projetos | Apenas a conta de emergência |
+| \`Editor\` | Criar/modificar recursos | Evitar — usar papéis mais restritos |
+| \`Viewer\` | Ver tudo, sem modificar | Auditores, gestão |
+| \`roles/compute.instanceAdmin\` | Gerir VMs | Devops/SRE |
+| \`roles/storage.objectAdmin\` | Gerir objetos no Cloud Storage | Aplicações que escrevem para buckets |
+| \`roles/cloudsql.client\` | Ligar a instâncias Cloud SQL | Aplicações com acesso à base de dados |
 
 **Como auditar quem tem acesso ao quê**:
-```bash
+\`\`\`bash
 # Listar todas as atribuições IAM num projeto
 gcloud projects get-iam-policy PROJETO_ID --format=json | \
   jq '.bindings[] | select(.role != "roles/viewer") | {role: .role, members: .members}'
-```
+\`\`\`
 
 Execute este comando regularmente e reveja membros com papéis de Owner ou Editor. Remova acessos de ex-colaboradores imediatamente.
 
 ### Conta de Emergência (Break-Glass)
 
-Crie uma conta Google dedicada exclusivamente para emergências: `admin-emergencia@empresa.com`. Esta conta deve:
-- Ter papel `Owner` no nível da Organização
+Crie uma conta Google dedicada exclusivamente para emergências: \`admin-emergencia@empresa.com\`. Esta conta deve:
+- Ter papel \`Owner\` no nível da Organização
 - Estar protegida com 2FA com chave de segurança física (YubiKey), não SMS
 - Ser usada apenas em situações de emergência (conta principal comprometida, acidente de exclusão)
 - Ter os acessos documentados e guardados de forma segura (cofre físico ou gestor de passwords isolado)
@@ -35459,13 +35459,13 @@ A solução é o **Workload Identity Federation**: em vez de usar chaves estáti
 **Para GitHub Actions** (pipeline CI/CD):
 Em vez de guardar uma chave de service account como segredo no GitHub, configure o Workload Identity Federation:
 
-```yaml
+\`\`\`yaml
 # .github/workflows/deploy.yml
 - uses: google-github-actions/auth@v2
   with:
     workload_identity_provider: 'projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/POOL_ID/providers/PROVIDER_ID'
     service_account: 'deploy-sa@PROJETO.iam.gserviceaccount.com'
-```
+\`\`\`
 
 O token é gerado automaticamente para cada execução do pipeline e expira ao fim de uma hora. Sem chaves estáticas para vazar.
 
@@ -35479,39 +35479,39 @@ O equivalente ao S3 da AWS, o Cloud Storage armazena ficheiros, backups, assets 
 
 Se tem uma Organização GCP, aplique uma restrição de política de organização que bloqueia acesso público a todos os buckets:
 
-```bash
+\`\`\`bash
 gcloud org-policies set-policy --organization=ORG_ID enforce_resource_policy.json
-```
+\`\`\`
 
-Com o ficheiro `enforce_resource_policy.json`:
-```json
+Com o ficheiro \`enforce_resource_policy.json\`:
+\`\`\`json
 {
   "name": "organizations/ORG_ID/policies/storage.uniformBucketLevelAccess",
   "spec": { "rules": [{"enforce": true}] }
 }
-```
+\`\`\`
 
 ### Uniform Bucket-Level Access
 
 Ative o "Uniform bucket-level access" em todos os buckets. Isto desativa as ACLs por objeto (que são confusas e propensas a erros) e impõe que todo o controlo de acesso seja feito via IAM:
 
-```bash
+\`\`\`bash
 gcloud storage buckets update gs://NOME_DO_BUCKET \
   --uniform-bucket-level-access
-```
+\`\`\`
 
 ### Versionamento e Proteção contra Eliminação Acidental
 
 Para buckets com dados importantes (backups, dados de clientes, assets de produção):
 
-```bash
+\`\`\`bash
 # Ativar versionamento
 gcloud storage buckets update gs://NOME_DO_BUCKET --versioning
 
 # Configurar soft delete (recuperação após eliminação)
 gcloud storage buckets update gs://NOME_DO_BUCKET \
   --soft-delete-duration=7d
-```
+\`\`\`
 
 ### Encriptação com CMEK (opcional mas recomendado para dados sensíveis)
 
@@ -35535,22 +35535,22 @@ Com IP privado, a instância só é acessível de dentro da VPC — não da inte
 
 Se por razões operacionais precisa de manter IP público (ex: acesso de um developer local durante desenvolvimento), restrinja a "Authorized networks" aos IPs específicos que precisam de acesso:
 
-```bash
+\`\`\`bash
 gcloud sql instances patch NOME_INSTANCIA \
   --authorized-networks=IP_DO_DEVELOPER/32
-```
+\`\`\`
 
-Nunca use `0.0.0.0/0` em Authorized Networks.
+Nunca use \`0.0.0.0/0\` em Authorized Networks.
 
 ### Backups Automáticos e Point-in-Time Recovery
 
-```bash
+\`\`\`bash
 gcloud sql instances patch NOME_INSTANCIA \
   --backup-start-time=02:00 \
   --enable-point-in-time-recovery \
   --retained-backups-count=30 \
   --retained-transaction-log-days=7
-```
+\`\`\`
 
 Teste a recuperação trimestral — um backup não testado é um backup não confiável.
 
@@ -35562,22 +35562,22 @@ O Cloud Audit Logs é o equivalente ao CloudTrail da AWS. Regista quem fez o qu�
 
 Os "Data Access" audit logs (quem leu dados) estão desativados por defeito devido ao volume e custo. Para dados sensíveis, ative-os:
 
-```bash
+\`\`\`bash
 gcloud projects get-iam-policy PROJETO_ID --format json > policy.json
 # Edite o ficheiro para adicionar auditConfigs
 gcloud projects set-iam-policy PROJETO_ID policy.json
-```
+\`\`\`
 
 ### Log Sink para Retenção de Longo Prazo
 
 Por defeito, os logs têm retenção de 30 dias no Cloud Logging. Para conformidade (NIS2, RGPD), exporte logs para Cloud Storage com retenção mais longa:
 
-```bash
+\`\`\`bash
 gcloud logging sinks create audit-long-term \
   storage.googleapis.com/BUCKET_LOGS \
   --log-filter='logName:"cloudaudit.googleapis.com"' \
   --include-children
-```
+\`\`\`
 
 ### Alertas para Eventos Críticos
 
@@ -35614,7 +35614,7 @@ O Firebase é frequentemente o primeiro ponto de contacto de developers com o GC
 
 As regras de segurança padrão do Firebase (modo "test") permitem leitura e escrita por qualquer pessoa. Nunca deixe uma aplicação em produção com as regras de teste:
 
-```javascript
+\`\`\`javascript
 // INSEGURO — nunca em produção
 rules_version = '2';
 service cloud.firestore {
@@ -35624,10 +35624,10 @@ service cloud.firestore {
     }
   }
 }
-```
+\`\`\`
 
 Regras corretas para autenticação com Firebase Auth:
-```javascript
+\`\`\`javascript
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -35642,13 +35642,13 @@ service cloud.firestore {
     }
   }
 }
-```
+\`\`\`
 
 ### Firebase Authentication: Não Confiar no Cliente
 
 O Firebase Auth gere autenticação, mas a autorização tem de ser verificada no servidor (Cloud Functions) ou nas regras do Firestore. Nunca confie em dados enviados pelo cliente sem verificar o token:
 
-```javascript
+\`\`\`javascript
 // Cloud Function — verificar token antes de operações sensíveis
 const admin = require('firebase-admin');
 
@@ -35663,7 +35663,7 @@ exports.operacaoSensivel = functions.https.onCall(async (data, context) => {
   }
   // Operação sensível aqui
 });
-```
+\`\`\`
 
 ## Cloud Run e App Engine: Segurança em Aplicações Serverless
 
@@ -35671,7 +35671,7 @@ exports.operacaoSensivel = functions.https.onCall(async (data, context) => {
 
 Por defeito, um serviço Cloud Run pode ser configurado como público (qualquer pessoa pode invocar) ou privado (apenas com autenticação). Para serviços internos (APIs chamadas por outros serviços, não diretamente pelos utilizadores finais), use autenticação:
 
-```bash
+\`\`\`bash
 # Tornar o serviço privado
 gcloud run services update NOME_SERVICO \
   --region=europe-west1 \
@@ -35682,13 +35682,13 @@ gcloud run services add-iam-policy-binding NOME_SERVICO \
   --region=europe-west1 \
   --member="serviceAccount:calling-sa@PROJETO.iam.gserviceaccount.com" \
   --role="roles/run.invoker"
-```
+\`\`\`
 
 ### Secret Manager: Sem Variáveis de Ambiente em Texto Claro
 
 As variáveis de ambiente no Cloud Run são visíveis nos logs e na configuração do serviço. Para segredos (passwords de base de dados, chaves API), use o Secret Manager:
 
-```bash
+\`\`\`bash
 # Criar segredo
 echo -n "password-super-secreta" | gcloud secrets create DB_PASSWORD --data-file=-
 
@@ -35696,7 +35696,7 @@ echo -n "password-super-secreta" | gcloud secrets create DB_PASSWORD --data-file
 gcloud run services update NOME_SERVICO \
   --region=europe-west1 \
   --set-secrets="DB_PASSWORD=DB_PASSWORD:latest"
-```
+\`\`\`
 
 O segredo é injetado como variável de ambiente em runtime sem aparecer na configuração visível.
 
@@ -35973,6 +35973,821 @@ A segurança dos terminais POS é uma das áreas de cibersegurança mais tangív
     author: {
       name: "Carlos Miranda",
       title: "Consultor de Cibersegurança",
+    },
+  },
+  {
+    slug: "seguranca-dns-pme-filtros-cloudflare-quad9-nextdns",
+    title: "Segurança DNS para PMEs: Filtros Gratuitos que Bloqueiam Malware antes de Chegarem ao Computador",
+    excerpt:
+      "O DNS é o primeiro passo em quase todos os ciberataques. Filtros de DNS gratuitos como Cloudflare Gateway, Quad9 e NextDNS bloqueiam domínios maliciosos na raiz — antes que o malware chegue ao computador. Guia prático de implementação para PMEs portuguesas.",
+    content: `Antes de um colaborador clicar num link de phishing, antes de o ransomware contactar o servidor de controlo, antes de o spyware exfiltrar dados — existe sempre uma consulta DNS. O dispositivo precisa de resolver um nome de domínio para um endereço IP. É neste momento que um filtro de DNS pode interromper o ataque.
+
+A maioria das PMEs investe em antivírus, formação de colaboradores, e passwords seguras. Muito poucas implementam filtragem DNS — apesar de ser uma das medidas com melhor rácio custo-eficácia disponíveis. Os serviços mais eficazes são gratuitos.
+
+Este guia explica como funciona, quais as ferramentas disponíveis, e como implementar em menos de duas horas numa PME portuguesa típica.
+
+## Como o DNS se Torna uma Linha de Defesa
+
+O DNS (Domain Name System) é o sistema que converte nomes de domínio legíveis (como "banco-seguro.pt") em endereços IP que os computadores usam. Toda a comunicação internet começa com uma consulta DNS.
+
+Quando um colaborador clica num link de phishing que leva a "b4nco-seg0ro.xyz", o computador faz uma consulta DNS antes de qualquer coisa: "qual é o IP de b4nco-seg0ro.xyz?". Um filtro DNS que reconheça este domínio como malicioso responde com "não existe" ou redireciona para uma página de bloqueio — e a ligação nunca é estabelecida.
+
+**O que os filtros DNS bloqueiam**:
+
+- **Domínios de phishing**: Domínios registados recentemente a imitar bancos, serviços de email, entidades governamentais
+- **Malware C2** (command and control): Os servidores que o malware usa para receber instruções — se o malware não conseguir comunicar, fica paralizado
+- **Ransomware distribution**: Sites que servem os ficheiros executáveis do ransomware
+- **Cryptojacking**: Domínios de scripts de mineração de criptomoeda
+- **Botnets**: Infraestrutura de redes de computadores comprometidos
+- **Categorias de conteúdo** (nalgumas plataformas): Redes sociais, gambling, ou outros conteúdos não relacionados com trabalho
+
+**O que os filtros DNS não bloqueiam**:
+
+- Ataques que usam endereços IP diretamente (sem nome de domínio) — raro mas existe
+- Malware já instalado que usa encriptação personalizada
+- Ameaças em domínios legítimos (ex: ficheiros maliciosos em serviços cloud legítimos)
+
+A filtragem DNS não substitui antivírus, MFA, ou formação. É uma camada adicional que bloqueia uma parte significativa das ameaças com esforço mínimo.
+
+## As Plataformas Principais
+
+### Cloudflare Gateway (Cloudflare for Teams Free)
+
+A oferta gratuita da Cloudflare inclui filtragem DNS para até 50 utilizadores. A Cloudflare opera uma das redes de DNS mais rápidas do mundo (1.1.1.1) e a versão de segurança adiciona bloqueio de domínios maliciosos.
+
+**DNS resolver gratuito com proteção básica**: 1.1.1.2 e 1.0.0.2 — bloqueia apenas malware e phishing conhecidos, sem configuração de conta.
+
+**Cloudflare Zero Trust (conta gratuita)**:
+- Até 50 utilizadores gratuito
+- Políticas personalizadas (bloquear categorias, domínios específicos)
+- Logs de consultas DNS (saber quais domínios a rede está a tentar resolver)
+- Integração com identidade (Azure AD, Google Workspace) nos planos pagos
+
+**Como configurar o DNS básico** (sem conta, para uso imediato):
+\`\`\`
+DNS primário: 1.1.1.2
+DNS secundário: 1.0.0.2
+\`\`\`
+Configure estes IPs no router da empresa — todos os dispositivos da rede passam a usar DNS com filtragem de malware automaticamente.
+
+### Quad9
+
+A Quad9 é uma organização sem fins lucrativos suíça que opera o resolver 9.9.9.9. Usa feeds de ameaças de IBM X-Force e outras fontes de threat intelligence para bloquear domínios maliciosos.
+
+**Características**:
+- Completamente gratuito, sem limites de utilizadores
+- Não regista IPs dos utilizadores (política de privacidade rigorosa)
+- Inclui validação DNSSEC
+- Bloqueia domínios de malware, phishing, e spyware
+
+**Configuração**:
+\`\`\`
+DNS primário: 9.9.9.9
+DNS secundário: 149.112.112.112
+\`\`\`
+
+Quad9 é a recomendação padrão para PMEs que preferem uma entidade sem fins lucrativos com foco em privacidade, sem necessidade de criar contas.
+
+### NextDNS
+
+NextDNS oferece um plano gratuito com 300.000 consultas por mês (suficiente para empresas pequenas) e planos pagos a partir de €1.99/mês para consultas ilimitadas.
+
+**Diferencial**: Interface de configuração muito mais granular do que Quad9 ou o resolver simples da Cloudflare.
+
+**O que pode configurar**:
+- Múltiplas listas de bloqueio (OISD, AdGuard, NextDNS Threat Intelligence, entre outros)
+- Bloqueio por categorias (jogos, redes sociais, gambling, violência)
+- Lista branca de domínios que nunca são bloqueados
+- Lista negra de domínios adicionais
+- Logs detalhados de consultas por dispositivo
+- Perfis diferentes para dispositivos diferentes
+
+Para PMEs que querem mais controlo — saber quais domínios a rede está a aceder, identificar anomalias, ou bloquear categorias de conteúdo — o NextDNS é a melhor opção.
+
+### OpenDNS Umbrella (Cisco)
+
+O OpenDNS Umbrella tem um plano gratuito (OpenDNS Home, que cobre uso empresarial básico) e planos empresariais mais avançados.
+
+**Resolvers gratuitos**:
+\`\`\`
+DNS primário: 208.67.222.222
+DNS secundário: 208.67.220.220
+\`\`\`
+
+Bloqueia phishing e alguns malwares. Para funcionalidades avançadas (logs, políticas personalizadas, categorias) é necessário criar conta e usar os resolvers de conta.
+
+## Implementação Prática: Configurar o Router da Empresa
+
+A forma mais eficiente de implementar filtragem DNS numa PME é configurar os servidores DNS no router. Assim, todos os dispositivos da rede (computadores, telemóveis, impressoras, TVs) usam automaticamente o DNS filtrado, sem necessidade de configurar cada dispositivo individualmente.
+
+### Routers mais comuns em Portugal
+
+**Router do operador (MEO, NOS, Vodafone, Nowo)**:
+
+A maioria dos routers fornecidos pelos operadores portugueses permitem configurar os servidores DNS nas definições de DHCP (o servidor que atribui IPs aos dispositivos da rede).
+
+1. Aceder à interface web do router (geralmente 192.168.1.1 ou 192.168.0.1 — ver etiqueta no router)
+2. Login com as credenciais de administrador (no router ou nas definições da conta do operador)
+3. Procurar secção "DNS", "DHCP Settings", ou "Internet Settings"
+4. Substituir os DNS automáticos do operador pelos DNS de filtragem
+
+**Atenção**: Alguns routers de operador não permitem alterar os DNS — o operador força os seus próprios resolvers. Neste caso, há alternativas:
+- Instalar um router adicional entre o router do operador e a rede interna
+- Configurar DNS em cada dispositivo individualmente
+- Usar NextDNS ou Cloudflare Gateway com perfil configurado via política de grupo (Windows AD) ou MDM
+
+**Ubiquiti UniFi / MikroTik** (routers empresariais comuns):
+
+Nestes equipamentos mais avançados, configure os DNS no servidor DHCP interno. O processo é diferente por modelo, mas tipicamente:
+- UniFi: Dashboard → Networks → [rede] → DHCP Name Server → Manual → inserir IPs
+- MikroTik: IP → DHCP Server → Servers → [servidor] → DNS Servers
+
+### Verificar se o Filtro está a Funcionar
+
+Após configurar, teste:
+
+1. **Teste de bloqueio de malware** (Cloudflare):
+   - Tente aceder a: \`http://malware.testcategory.com\` (domínio de teste oficial)
+   - Deve ser bloqueado e mostrar página de erro ou de bloqueio
+
+2. **Verificar qual DNS está a ser usado**:
+   \`\`\`
+   # Windows (Prompt de Comando)
+   nslookup google.com
+   # Deve mostrar o servidor DNS configurado
+   \`\`\`
+
+3. **Quad9 teste**:
+   - Tente aceder a \`http://malware.testcategory.com\`
+   - Quad9 bloqueia isto por padrão
+
+## Filtragem DNS com NextDNS: Configuração Recomendada para PMEs
+
+O NextDNS merece uma secção dedicada porque oferece a melhor experiência para PMEs que querem visibilidade e controlo.
+
+### Criar Perfil de Segurança
+
+1. Criar conta em nextdns.io
+2. Criar um novo perfil para a empresa (ex: "Empresa — Rede Principal")
+3. Anotar o ID do perfil e os resolvers DNS atribuídos
+
+### Listas de Bloqueio Recomendadas
+
+Ativar estas listas no separador "Blocklists":
+
+| Lista | O que bloqueia |
+|-------|----------------|
+| NextDNS Threat Intelligence | Ameaças identificadas pelo NextDNS |
+| OISD (Big list) | Anúncios, trackers, malware |
+| AdGuard DNS Filter | Malware, phishing, trackers |
+| uBlock Origin Filters | Ameaças adicionais |
+| EasyList | Domínios de malware e phishing |
+
+Não ative demasiadas listas — cada lista adicional aumenta a probabilidade de falsos positivos (bloquear algo legítimo). As listas acima cobrem bem sem ruído excessivo.
+
+### Categorias para Bloquear (secção Security)
+
+No NextDNS, em "Security", ativar:
+- ✅ Threat Intelligence Feeds
+- ✅ Google Safe Browsing
+- ✅ Cryptojacking Protection
+- ✅ DNS Rebinding Protection
+- ✅ IDN Homograph Attacks Protection
+- ✅ Typosquatting Protection
+- ✅ Parked Domains
+- ✅ CSAM — se aplicável ao contexto
+
+### Logs e Alertas
+
+O NextDNS guarda os logs de consultas DNS por 7 dias no plano gratuito. Use-os para:
+
+- Identificar dispositivos a aceder a domínios suspeitos
+- Ver padrões de acesso anómalos (ex: um computador a fazer centenas de consultas a domínios desconhecidos pode ser sinal de malware)
+- Confirmar que bloqueios estão a funcionar
+
+Reveja os logs brevemente uma vez por semana — 5 minutos podem revelar atividade inesperada.
+
+## Configuração em Computadores Individuais (Windows e macOS)
+
+Se não for possível configurar no router, configure nos computadores.
+
+### Windows 10/11
+
+1. Painel de Controlo → Centro de Rede e Partilha → Ligações → [adaptador] → Propriedades
+2. Protocolo Internet Versão 4 (TCP/IPv4) → Propriedades
+3. Usar os seguintes endereços de servidor DNS
+4. Inserir os IPs do filtro escolhido
+
+Alternativa via PowerShell (como administrador):
+\`\`\`powershell
+Set-DnsClientServerAddress -InterfaceAlias "Wi-Fi" -ServerAddresses ("9.9.9.9","149.112.112.112")
+\`\`\`
+
+Para impedir que utilizadores alterem o DNS, use Group Policy Objects (GPO) se tiver um domínio Windows Active Directory.
+
+### macOS
+
+1. Preferências do Sistema → Rede → [ligação ativa] → Avançado → DNS
+2. Remover servidores DNS existentes
+3. Adicionar os IPs do filtro
+
+### Dispositivos Móveis (iOS/Android)
+
+Para telemóveis de empresa:
+
+**iOS**: Definições → Wi-Fi → [rede] → Configurar DNS → Manual → adicionar servers
+
+**Android**: As definições variam por fabricante. Procurar "DNS privado" nas definições de rede — permite configurar NextDNS ou Cloudflare por nome de servidor (ex: \`{ID}.dns.nextdns.io\`).
+
+**MDM (Gestão de Dispositivos Móveis)**: Se usar Microsoft Intune ou outro MDM, pode impor configuração DNS a todos os dispositivos geridos — a abordagem mais robusta para empresas com múltiplos dispositivos móveis.
+
+## Casos Reais: O Que os Filtros DNS Bloqueiam
+
+Para ilustrar o valor prático, estes são tipos de ataques que a filtragem DNS interromperia antes de causar dano:
+
+**Campanha de phishing fiscal (AT/Finanças)**: Emails com links para domínios registados horas antes do envio, imitando o portal das Finanças. Um filtro DNS com lista de domínios recentemente registados ou domínios categorizados como phishing bloqueia a resolução — o colaborador vê página de erro em vez do site falso.
+
+**Ransomware após macro maliciosa**: Colaborador abre Word com macro que descarrega o payload de ransomware de um domínio de distribuição. Se esse domínio estiver em listas de malware (frequente — os grupos de ransomware reutilizam infraestrutura), o DNS bloqueia o descarregamento.
+
+**Malware bancário**: Software malicioso que tenta comunicar com servidor C2 para enviar credenciais bancárias. Se o C2 estiver identificado nas listas de threat intelligence, o DNS bloqueia a comunicação — o malware fica isolado, incapaz de exfiltrar dados.
+
+## O Que os Filtros DNS Não Fazem: Expectativas Realistas
+
+A filtragem DNS não é uma solução completa. Limitações importantes:
+
+**Domínios legítimos comprometidos**: Se um atacante injetar conteúdo malicioso num site legítimo (ex: um plugin WordPress vulnerável num site de fornecedor), o DNS não bloqueia — o domínio base é legítimo.
+
+**HTTPS bypass**: Tecnicamente, é possível configurar malware para usar DNS-over-HTTPS (DoH) com um resolver diferente do configurado no sistema, ignorando o filtro. Malware sofisticado pode fazer isto, mas a maioria não o faz.
+
+**Falsos positivos**: Às vezes domínios legítimos são incorretamente classificados como maliciosos. Quando isto acontece, o colaborador reporta que "o site não abre" — o que é preferível ao cenário oposto, mas pode ser disruptivo.
+
+**Sem visibilidade sobre tráfego**: O filtro DNS não inspeciona o conteúdo das comunicações — apenas os nomes de domínio. Para inspeção de conteúdo, é necessário um proxy ou sistema de CASB.
+
+## Checklist de Implementação DNS Seguro para PMEs
+
+**Configuração inicial**:
+- [ ] Escolher plataforma (recomendação: Quad9 para simplicidade, NextDNS para controlo)
+- [ ] Configurar DNS no router da empresa
+- [ ] Testar bloqueio com domínio de teste
+- [ ] Documentar os IPs DNS configurados (para referência futura)
+
+**Se usar NextDNS ou Cloudflare Gateway**:
+- [ ] Criar conta e perfil da empresa
+- [ ] Ativar listas de bloqueio recomendadas
+- [ ] Configurar bloqueio de categorias de segurança
+- [ ] Configurar logs (guardar no mínimo 30 dias se possível)
+- [ ] Adicionar lista branca de domínios internos que possam ser bloqueados
+
+**Dispositivos fora da rede da empresa**:
+- [ ] Configurar DNS em portáteis de trabalho usados em casa ou na rua
+- [ ] Configurar DNS em telemóveis de empresa (ou usar MDM)
+- [ ] Informar colaboradores sobre o que é a filtragem DNS e porque existe
+
+**Manutenção**:
+- [ ] Rever logs DNS semanalmente (5 minutos)
+- [ ] Verificar se algum serviço legítimo foi bloqueado e adicionar à lista branca
+- [ ] Atualizar listas de bloqueio (automático no NextDNS; manual noutras plataformas)
+
+---
+
+A filtragem DNS é talvez o controlo de cibersegurança com melhor rácio custo-eficácia para uma PME: gratuito, implementável em menos de duas horas, eficaz contra uma fatia significativa das ameaças mais comuns, e praticamente invisível para os utilizadores quando funciona bem. A maioria das PMEs que sofreu ransomware em Portugal nos últimos anos poderia ter interrompido o ataque mais cedo com esta camada.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-23",
+    readingTime: 16,
+    author: {
+      name: "Carlos Miranda",
+      title: "Consultor de Cibersegurança",
+    },
+  },
+  {
+    slug: "ciberseguranca-ginasios-fitness-portugal",
+    title: "Cibersegurança para Ginásios e Espaços de Fitness em Portugal: Dados de Membros, Pagamentos e RGPD",
+    excerpt:
+      "Ginásios processam dados de saúde dos membros, pagamentos por débito direto e cartão, e câmaras de vigilância — tudo sujeito ao RGPD. Guia prático de cibersegurança para ginásios, health clubs e estúdios de fitness em Portugal.",
+    content: `Um ginásio parece um negócio físico: máquinas, pesos, vestiários. Mas por baixo há uma operação digital mais complexa do que a maioria dos proprietários reconhece: software de gestão de membros com dados pessoais e de saúde, processamento de pagamentos recorrentes por débito direto e cartão, câmaras de videovigilância, aplicações móveis de reserva de aulas, e frequentemente sistemas de controlo de acessos biométricos.
+
+Esta combinação — dados de saúde (categoria especial RGPD), dados financeiros, e presença física — coloca os ginásios numa posição de risco específica que merece atenção.
+
+## O Perfil de Risco de um Ginásio
+
+### Dados de Saúde: A Maior Responsabilidade RGPD
+
+O Regulamento Geral de Proteção de Dados classifica dados de saúde como **categoria especial** (artigo 9.º) — o nível mais alto de proteção obrigatória. Isto inclui:
+
+- **IMC, peso, percentagem de gordura corporal** recolhidos na avaliação física inicial
+- **Lesões, limitações físicas, histórico médico** declarados no questionário de admissão
+- **Condições de saúde** que influenciam treino (diabetes, hipertensão, gravidez)
+- **Biometria** usada em sistemas de controlo de acesso (impressão digital, reconhecimento facial)
+
+**O que isto implica na prática**:
+
+- Necessita de **consentimento explícito e separado** para processar estes dados (não basta uma cláusula genérica nos termos de serviço)
+- Necessita de **base legal clara** para cada tipo de dado — a maioria dos dados de saúde em ginásios requer consentimento explícito ou execução de contrato com componente de saúde
+- Uma **violação de dados** que exponha estes dados tem obrigação de notificação à CNPD (Comissão Nacional de Proteção de Dados) em 72 horas
+- As **coimas** por violação de dados de saúde são mais elevadas — até 4% do volume de negócios anual
+
+### Software de Gestão de Membros
+
+Os sistemas de gestão de ginásios (Perfect Gym, Mindbody, Glofox, GymManager, e soluções portuguesas como GinásioApp) são o núcleo da operação e um dos principais vetores de risco:
+
+- Contêm dados pessoais de centenas a milhares de membros
+- Processam pagamentos ou armazenam referências de pagamento
+- Frequentemente têm portais web e apps móveis com autenticação de membros
+- São acedidos por múltiplos colaboradores com níveis de acesso variáveis
+
+### Pagamentos Recorrentes por Débito Direto
+
+A maioria dos ginásios portugueses cobra mensalidades por débito direto SEPA. Isto envolve:
+- Armazenamento de NIBs/IBANs dos membros
+- Autorizações de débito (mandatos SEPA) que devem ser guardadas de forma segura
+- Eventualmente dados de cartão para cobrança pontual
+
+### Controlo de Acesso e Videovigilância
+
+- **Torniquetes/catracas biométricas**: Dados biométricos são categoria especial RGPD — os requisitos são ainda mais rigorosos que para outros dados de saúde
+- **Câmaras de videovigilância**: Vestiários NÃO podem ter câmaras (lei portuguesa). Zonas de treino têm requisitos específicos de sinalização e retenção de imagens (máximo 30 dias em geral; exceções para fins de segurança com autorização específica)
+
+## As Ameaças Mais Relevantes
+
+### Acesso Não Autorizado ao Software de Gestão
+
+A ameaça mais provável: um ex-colaborador com acesso ao software que o mantém após sair, ou credenciais fracas/partilhadas que permitem acesso indevido.
+
+**Consequências**: acesso à ficha completa de todos os membros, NIBs, dados de saúde, histórico de pagamentos.
+
+### Violação de Dados na Plataforma SaaS
+
+Se o software de gestão for cloud-based (Mindbody, Glofox, etc.), uma violação de dados na plataforma do fornecedor pode expor os dados dos membros do ginásio. Em 2022, uma violação no fornecedor de software Herff Jones expôs dados de milhares de clientes. O ginásio não é tecnicamente responsável pela falha técnica do fornecedor, mas é responsável pela escolha e supervisão do fornecedor (RGPD, artigo 28.º — contratos com subcontratantes).
+
+### Ransomware
+
+Um ginásio com apenas um computador de receção que executa o software de gestão, a folha de pagamentos, e o email — tudo no mesmo dispositivo — é altamente vulnerável a ransomware. Uma infeção pode:
+- Encriptar todos os dados de membros
+- Bloquear acesso ao histórico de pagamentos
+- Comprometer ficheiros de backup no mesmo disco
+
+### Engenharia Social Direcionada ao Pessoal de Receção
+
+O pessoal de receção tem acesso ao software de gestão e lida com muitos contactos externos (novos membros, fornecedores, parceiros). São alvos naturais para phishing ou pretexting:
+
+**Cenário real**: Email que parece ser do fornecedor do software a pedir "verificação de conta" com login — link vai para página falsa. O colaborador introduz credenciais, o atacante tem acesso completo ao sistema de gestão.
+
+## Boas Práticas de Segurança para Ginásios
+
+### Gestão de Acessos ao Software
+
+**Princípio do mínimo privilégio**: Não todos os colaboradores precisam de acesso a todos os dados.
+
+| Perfil | Acesso necessário |
+|--------|-------------------|
+| Receção | Check-in, reservas, venda de produtos, informação básica de membro |
+| Personal trainer | Ficha de treino e saúde do cliente atribuído |
+| Gerência | Relatórios financeiros, gestão de membros, configuração |
+| Limpeza/manutenção | Nenhum acesso ao software |
+
+**Credenciais individuais**: Cada colaborador deve ter login próprio — nunca partilhar a password "do ginásio". Se um colaborador sair, desativar o acesso imediatamente.
+
+**Revisão de acessos**: Mensalmente, verificar quem tem acesso ativo ao sistema — especialmente após saída de colaboradores.
+
+### Offboarding de Colaboradores
+
+Esta é a falha mais comum em ginásios com alta rotatividade de pessoal:
+
+1. No último dia de trabalho, desativar credenciais de acesso ao software de gestão
+2. Remover acesso a email de trabalho
+3. Recuperar cartões de acesso e chaves
+4. Se o colaborador tinha acesso a passwords partilhadas (Wi-Fi, caixa), alterar essas passwords
+
+Crie uma checklist de saída e atribua a responsabilidade de a executar ao gerente de turno — não deixar para "mais tarde".
+
+### Proteção dos Computadores de Gestão
+
+O computador de receção é o ativo digital mais crítico de um ginásio:
+
+- **Antivírus/EDR ativo e atualizado**: Windows Defender está incluído no Windows 10/11 e é suficiente para a maioria dos ginásios se bem configurado
+- **Windows Update automático**: Sistema operativo atualizado reduz exposição a vulnerabilidades conhecidas
+- **Sem uso pessoal**: O computador de receção não deve ser usado para email pessoal, redes sociais, ou navegação não relacionada com o trabalho
+- **Bloqueio automático**: Configurar bloqueio de ecrã após 5 minutos de inatividade — a receção fica frequentemente desacompanhada
+- **Backup diário automático**: Para um disco externo e/ou cloud. Testar a recuperação uma vez por trimestre
+
+### Segurança da Rede Wi-Fi
+
+Um ginásio tem tipicamente várias necessidades de Wi-Fi:
+- Rede interna para o computador de gestão e terminais POS
+- Wi-Fi para membros (se disponível)
+- Wi-Fi para câmaras de vigilância
+
+Estas três redes **não devem ser a mesma**. Separe com VLANs ou pelo menos com SSIDs diferentes em routers diferentes:
+
+- **Rede interna (gestão)**: Password forte, apenas equipamento da empresa, sem acesso para membros
+- **Rede membros** (se disponível): Isolada da rede interna, sem acesso a dispositivos internos
+- **Rede câmaras**: Isolada, sem acesso à internet para câmaras que não precisem
+
+### Videovigilância: Regras Específicas em Portugal
+
+A lei portuguesa de videovigilância (Lei 58/2019 e regulamentação CNPD) impõe requisitos específicos:
+
+**Onde NÃO pode haver câmaras**:
+- Vestiários — absolutamente proibido
+- Casas de banho
+- Salas de descanso de colaboradores
+- Zonas de refeição de colaboradores
+
+**Onde podem existir câmaras**:
+- Zona de receção e entrada
+- Zona de treino/sala de máquinas (com sinalização obrigatória)
+- Estacionamento
+- Zonas de acesso ao ginásio
+
+**Obrigações**:
+- Sinalização visível com pictograma de câmara e informação sobre o responsável pelo tratamento
+- Registo de atividade de tratamento (artigo 30.º RGPD)
+- Retenção máxima das imagens: 30 dias (com possibilidade de extensão para fins de segurança com justificação)
+- Acesso restrito às imagens — não pode ser qualquer colaborador
+
+**Sistema de câmaras**: Use um sistema com password de administrador forte, firmware atualizado, e acesso remoto por VPN (não acesso direto à internet). Câmaras IP baratas com firmware sem atualização são um vetor de ataque frequente.
+
+### Gestão de Dados de Membros e RGPD
+
+**Questionário de admissão e consentimento**:
+
+O formulário de admissão deve ter consentimento separado e granular para cada tipo de dado sensível:
+- □ Consinto que o ginásio trate os meus dados de saúde (peso, composição corporal, condições médicas) para fins de prestação do serviço de treino personalizado
+- □ Consinto no envio de comunicações de marketing (promoções, newsletters)
+
+Estes dois consentimentos não podem estar combinados. Se um membro não quiser comunicações de marketing, isso não pode afetar a sua adesão.
+
+**Tempo de retenção**: Após o cancelamento da adesão, os dados do membro não devem ser guardados indefinidamente. Defina uma política clara:
+- Dados de pagamento/faturação: 10 anos (obrigação fiscal)
+- Dados de saúde e treino: 1-2 anos após cancelamento (ou até o membro pedir eliminação)
+- Imagens de videovigilância: 30 dias
+
+**Direito ao apagamento**: Membros podem pedir a eliminação dos seus dados. Tenha um processo definido para dar resposta em 30 dias (prazo RGPD).
+
+### Biometria: O Nível Mais Alto de Cautela
+
+Se o ginásio usa controlo de acesso biométrico (impressão digital, reconhecimento facial):
+
+1. **Consentimento explícito é obrigatório** — não pode ser condição de acesso ao ginásio sem alternativa. Deve existir sempre uma alternativa não biométrica (cartão de membro, código).
+2. **Registo de atividade de tratamento específico** para dados biométricos
+3. **Avaliação de Impacto sobre a Proteção de Dados (AIPD)** — provavelmente necessária, dado o risco elevado dos dados biométricos
+4. **Segurança técnica reforçada** para o sistema que armazena os dados biométricos
+
+Muitos ginásios portugueses têm sistemas biométricos instalados sem cumprir estes requisitos. A CNPD tem emitido deliberações específicas sobre biometria e a fiscalização está a aumentar.
+
+## App Móvel e Portal de Membros
+
+Se o ginásio tem app ou portal web para reservas:
+
+- **Autenticação**: Deve ter password forte + opcionalmente MFA para o painel de administração
+- **Dados transmitidos**: Verificar se a ligação é HTTPS (cadeado no browser) — nunca HTTP para dados de login ou pessoais
+- **Fornecedor da app**: Verificar se existe contrato RGPD com o fornecedor como subcontratante (artigo 28.º)
+- **Armazenamento de passwords**: A plataforma deve guardar passwords com hash criptográfico (bcrypt, Argon2) — nunca em claro
+
+## Comunicações com Membros: Email Marketing e SMS
+
+Campanhas de email e SMS para promoções, renovações e novidades:
+
+- **Consentimento para marketing**: Verificar que apenas contacta membros que deram consentimento explícito para comunicações de marketing
+- **Unsubscribe**: Todo email de marketing deve ter link de cancelamento funcional
+- **Plataforma de email**: Use plataformas como Mailchimp, Brevo (ex-Sendinblue), ou equivalente — têm conformidade RGPD incorporada e são subcontratantes adequados
+- **Não use Gmail ou Outlook para envios em massa**: Para além dos problemas de entrega, não tem controlo de unsubscribe e não é adequado para envios em volume
+
+## Checklist de Cibersegurança para Ginásios
+
+**Acessos e Credenciais**:
+- [ ] Cada colaborador tem login individual no software de gestão
+- [ ] Perfis de acesso diferenciados por função
+- [ ] Processo de offboarding definido (desativar acesso no último dia)
+- [ ] Passwords únicas e fortes para contas de gestão
+- [ ] MFA ativado na conta de email da empresa
+
+**Dispositivos**:
+- [ ] Antivírus/Windows Defender ativo no computador de receção
+- [ ] Windows Update automático ativado
+- [ ] Computador de receção não usado para uso pessoal
+- [ ] Backup automático diário (testado)
+- [ ] Bloqueio automático de ecrã após inatividade
+
+**Rede**:
+- [ ] Rede interna separada da rede de membros
+- [ ] Câmaras em rede própria isolada
+- [ ] Password Wi-Fi interna diferente da de membros
+
+**RGPD e Dados de Membros**:
+- [ ] Consentimento separado para dados de saúde e marketing
+- [ ] Política de retenção de dados definida
+- [ ] Processo para responder a pedidos de apagamento
+- [ ] Registo de atividades de tratamento atualizado
+- [ ] Contrato com subcontratantes (software de gestão, app) atualizado
+
+**Videovigilância**:
+- [ ] Sem câmaras em vestiários ou casas de banho
+- [ ] Sinalização obrigatória em zonas filmadas
+- [ ] Acesso às imagens restrito
+- [ ] Imagens apagadas após 30 dias
+- [ ] Firmware das câmaras IP atualizado
+
+**Biometria (se aplicável)**:
+- [ ] Consentimento explícito documentado para cada membro
+- [ ] Alternativa não biométrica disponível
+- [ ] AIPD realizada
+
+---
+
+Os ginásios têm um perfil de risco específico que resulta da combinação de dados sensíveis (saúde, biometria), pagamentos recorrentes, e operações físicas com videovigilância. A boa notícia é que a maioria dos controlos necessários são operacionais — não técnicos. Separar redes, fazer offboarding correto de colaboradores, e configurar consentimentos RGPD adequados são medidas acessíveis a qualquer ginásio independente.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-23",
+    readingTime: 15,
+    author: {
+      name: "Rita Santos",
+      title: "Analista de Segurança",
+    },
+  },
+  {
+    slug: "ciberseguranca-psicologos-clinicas-psicologia-portugal",
+    title: "Cibersegurança para Psicólogos e Clínicas de Psicologia em Portugal: Proteger Dados Clínicos Sensíveis",
+    excerpt:
+      "Registos de saúde mental são os dados mais sensíveis que existe. Psicólogos e clínicas de psicologia têm obrigações reforçadas sob o RGPD e legislação de saúde. Guia prático de segurança digital para psicólogos, psicoterapeutas e clínicas de saúde mental.",
+    content: `Nenhum dado pessoal é mais sensível do que um registo de saúde mental. O que é dito numa sessão de psicologia — traumas, relacionamentos, diagnósticos, crises — representa a informação mais íntima que uma pessoa pode partilhar. Uma violação de dados numa clínica de psicologia não é apenas uma infração técnica ao RGPD: é uma potencial destruição da privacidade e bem-estar dos pacientes.
+
+Psicólogos portugueses têm obrigações legais que vão além do RGPD: o segredo profissional consagrado no Estatuto da Ordem dos Psicólogos Portugueses (OPP), as regras do código deontológico, e a legislação de registos de saúde (Lei n.º 12/2005 e alterações). A segurança digital é parte integrante do cumprimento destas obrigações — não um complemento opcional.
+
+## O Que Está em Jogo: A Natureza dos Dados Clínicos
+
+Os registos de uma clínica de psicologia incluem tipicamente:
+
+- **Notas de sessão**: Conteúdo das sessões, revelações do paciente, análises do psicólogo
+- **Avaliações psicológicas**: Resultados de testes, diagnósticos (ICD-11 ou DSM-5), relatórios
+- **Histórico clínico**: Medicação, hospitalizações, história familiar, trauma
+- **Dados de identificação e contacto**: Nome, NIF, morada, contactos de emergência
+- **Dados de faturação**: NIB/IBAN para reembolsos de seguros, dados de cartão se pagamento direto
+- **Comunicações**: Emails, SMS, mensagens de agendamento
+
+Todos estes dados são **categoria especial** ao abrigo do RGPD (artigo 9.º, alínea h — tratamento de dados de saúde por profissionais de saúde). O tratamento está autorizado pela necessidade de prestação de cuidados de saúde, mas com requisitos de segurança correspondentes.
+
+## Enquadramento Legal Específico para Psicólogos
+
+### Segredo Profissional
+
+O artigo 34.º do Estatuto da OPP estabelece que "o psicólogo está obrigado ao segredo profissional em relação a tudo o que lhe seja transmitido ou de que tenha conhecimento no exercício da sua profissão". Este segredo:
+
+- É vitalício — não termina com o fim da relação terapêutica
+- Aplica-se mesmo após a morte do paciente
+- Abrange não apenas o conteúdo das sessões, mas a própria existência da relação terapêutica
+- Pode ser levantado apenas em circunstâncias muito específicas (ex: perigo grave e atual para terceiros)
+
+**Implicação digital**: Uma violação de dados que exponha registos clínicos é também uma violação do segredo profissional, com consequências disciplinares perante a OPP para além das legais.
+
+### RGPD e Dados de Saúde
+
+O tratamento de dados de saúde mental por psicólogos é legal ao abrigo do artigo 9.º, n.º 2, alínea h (prestação de cuidados de saúde) e do artigo 9.º, n.º 3 (obrigação de sigilo profissional). Mas este enquadramento legal não dispensa as medidas técnicas e organizativas obrigatórias:
+
+- **Artigo 5.º** — Princípios: minimização de dados, limitação da conservação, integridade e confidencialidade
+- **Artigo 25.º** — Proteção de dados desde a conceção (privacy by design)
+- **Artigo 32.º** — Segurança do tratamento: medidas técnicas e organizativas adequadas ao risco
+- **Artigo 35.º** — Avaliação de Impacto sobre a Proteção de Dados (AIPD) — provavelmente necessária para clínicas com volume significativo de dados de saúde mental
+
+### Registos de Saúde
+
+A Lei n.º 12/2005 (alterada pela Lei 26/2016) regula o acesso aos registos de saúde. Aplica-se a profissionais de saúde incluindo psicólogos e estabelece que:
+
+- O paciente tem direito de acesso ao seu processo clínico
+- Os dados devem ser conservados de forma segura
+- O acesso deve ser restrito a quem tem necessidade de conhecer
+
+## Ameaças Específicas ao Contexto Clínico
+
+### Phishing Dirigido a Profissionais de Saúde
+
+Os serviços de saúde são alvo prioritário de phishing porque os atacantes sabem que têm dados valiosos e muitas vezes infraestruturas de segurança mais fracas que setores como financeiro ou defesa.
+
+**Cenários frequentes**:
+- Email falso do sistema de agendamento online a pedir "atualização de credenciais"
+- Email que imita o SNS/DGS com "atualização de orientações clínicas" — link vai para página de login falsa
+- Fatura falsa do software de gestão clínica — documento Word com macro maliciosa
+
+### Ransomware em Clínicas Independentes
+
+As clínicas de psicologia independentes são alvos atraentes para ransomware porque:
+- Têm dados altamente sensíveis (o que aumenta o valor do resgate percebido)
+- Frequentemente têm infraestrutura IT mínima
+- A perturbação da atividade tem impacto imediato e óbvio (não conseguem aceder às fichas dos pacientes)
+
+Um psicólogo independente cujo computador seja cifrado pelo ransomware pode perder acesso a anos de notas clínicas, agendas, e dados de faturação — com potencial impossibilidade de continuar a atividade sem pagar o resgate ou recuperar de backup.
+
+### Violações por Colaboradores ou Ex-colaboradores
+
+Numa clínica com múltiplos profissionais, a ameaça interna é real:
+- Psicólogo que sai da clínica e leva fichas de pacientes (violação de RGPD e segredo profissional)
+- Assistente administrativo com acesso ao sistema de gestão que visualiza fichas além do necessário
+- Acesso não revogado de ex-colaborador
+
+### Comunicação Digital Insegura
+
+Muitos psicólogos comunicam com pacientes por canais que não garantem confidencialidade adequada:
+- Email não encriptado com informação clínica
+- WhatsApp pessoal para comunicações sobre sessões
+- Videoconferência em plataformas sem garantias de confidencialidade adequadas
+
+## Segurança dos Registos Clínicos
+
+### Software de Gestão Clínica: Escolha Informada
+
+O sistema de gestão clínica (onde estão as notas, agendamentos, e dados dos pacientes) é o ativo digital mais crítico. Critérios de avaliação:
+
+**Onde estão os dados**?
+- Cloud (servidores do fornecedor) — conveniente, mas implica transferir dados para um subcontratante → necessita de DPA (Data Processing Agreement) nos termos do RGPD
+- On-premise (no seu computador) — mais controlo, mas responsabilidade total de backup e segurança recai sobre si
+
+**Encriptação**:
+- Os dados estão encriptados em repouso (quando armazenados)?
+- A ligação entre o software e o servidor usa HTTPS/TLS?
+- O fornecedor tem certificação ISO 27001 ou equivalente?
+
+**Controlo de acessos**:
+- Cada utilizador tem login próprio?
+- Existe log de quem acedeu a quê e quando?
+- É possível restringir o acesso de cada profissional apenas aos seus pacientes?
+
+**Backup**:
+- O fornecedor faz backups automáticos? Com que frequência? Onde são armazenados?
+- Pode exportar os seus dados (portabilidade)?
+
+**Soluções usadas em Portugal**: Clinicware, Medidata, Salesforce Health Cloud para clínicas maiores, ou soluções genéricas como Google Workspace (com configuração cuidadosa de RGPD).
+
+### Notas de Sessão em Papel
+
+Muitos psicólogos ainda fazem notas em papel. A segurança física é obrigatória:
+
+- **Armário fechado à chave** — nunca notas soltas num escritório partilhado
+- **Acesso restrito** — apenas o psicólogo responsável e, se aplicável, supervisores com consentimento do paciente
+- **Destruição segura** — quando já não necessário ou no final do prazo de retenção, destruição com destruidor de papel de nível P-4 mínimo (corte cruzado), não só tiras
+
+### Computador de Trabalho: Configuração Segura
+
+Se usa um computador para registos clínicos:
+
+**Encriptação do disco**: Ativar BitLocker (Windows) ou FileVault (macOS). Isto garante que mesmo que o computador seja roubado, os dados não são acessíveis sem a password de login.
+
+- Windows 10/11 Pro: Painel de Controlo → BitLocker → Ativar BitLocker
+- macOS: Preferências do Sistema → Segurança e Privacidade → FileVault → Ativar
+
+**Password forte e bloqueio automático**:
+- Password de login de pelo menos 12 caracteres
+- Bloqueio automático após 5 minutos de inatividade (fundamental se o computador está numa sala de espera ou escritório partilhado)
+- Nunca partilhar a password com colaboradores ou familiares
+
+**Separação pessoal/profissional**:
+- O computador com registos clínicos não deve ser o mesmo usado por filhos, cônjuges, ou para uso pessoal genérico
+- Idealmente, conta de utilizador separada no computador para uso clínico
+
+**Antivírus e atualizações**:
+- Windows Defender (incluído no Windows 10/11) é suficiente se bem configurado
+- Manter Windows/macOS atualizado — ativar atualizações automáticas
+- Não instalar software de origem desconhecida
+
+### Backup dos Registos Clínicos
+
+A perda de registos clínicos — por avaria, roubo, ou ransomware — tem impacto direto nos pacientes. Um backup robusto é obrigatório:
+
+**Regra 3-2-1 adaptada para psicólogos**:
+- **3 cópias** dos dados (original + 2 backups)
+- **2 tipos de suporte** diferentes (ex: disco externo + cloud)
+- **1 cópia offsite** (fora das instalações)
+
+**Implementação prática**:
+- Disco externo encriptado (VeraCrypt ou disco com encriptação hardware) em casa ou cofre — ligado semanalmente para backup
+- Cloud encriptada de ponta a ponta: Proton Drive, Tresorit, ou Backblaze (com encriptação do lado do cliente)
+- **Nunca Google Drive ou Dropbox não encriptado** para dados clínicos sensíveis — estes fornecedores têm acesso aos seus dados
+
+**Frequência**: Backup diário do computador principal. Se usar software cloud, verificar que o fornecedor faz backups automáticos frequentes.
+
+**Testar a recuperação**: Uma vez por semestre, verificar que consegue restaurar os dados a partir do backup — backups que não foram testados podem não funcionar quando são necessários.
+
+## Comunicação Segura com Pacientes
+
+### Email
+
+O email standard não é encriptado de ponta a ponta — os servidores de email podem ler o conteúdo. Para comunicações com pacientes:
+
+**O que pode enviar por email**: Confirmações de agendamento, links para formulários, faturas genéricas (sem diagnósticos)
+
+**O que NÃO deve enviar por email**: Relatórios clínicos, notas de sessão, informação de diagnóstico, informação de emergência ou crise
+
+**Se precisar de enviar documentos clínicos por email**: Use encriptação. Opções:
+- **Tresorit Send** — envio seguro de ficheiros com encriptação
+- **ProtonMail** — email encriptado de ponta a ponta (requer que o destinatário também use ProtonMail, ou use encriptação com password)
+- **Envio de PDF com password** — não é encriptação forte, mas melhor que nada para documentos não críticos
+
+### Teleconsulta e Videoconferência
+
+A pandemia normalizou as consultas online. Para consultas de psicologia por vídeo, a plataforma deve garantir:
+
+- **Encriptação de ponta a ponta** das videochamadas
+- **Sem gravação automática** ou gravação apenas com consentimento explícito
+- **Compliance com RGPD** — fornecedor europeu ou com adequação/cláusulas contratuais
+
+**Plataformas adequadas para teleconsulta**:
+- **Whereby** (norueguesa, RGPD nativo, plano individual gratuito)
+- **Sioslife / SiosConnect** (portuguesa)
+- **Zoom Healthcare** (versão específica com BAA/DPA para saúde, plano pago)
+
+**Plataformas problemáticas**:
+- Zoom standard (sem plano Healthcare e DPA específico para saúde)
+- WhatsApp videochamada — encriptada, mas dados de metadados vão para Meta; inadequado para contexto clínico formal
+- FaceTime — aceitável para contacto informal, não para consulta formal com registo
+
+### Agendamento Online
+
+Se usa plataforma de agendamento online (Calendly, Acuity, Doctoralia, etc.):
+- Verificar se o fornecedor tem DPA RGPD disponível
+- Minimizar dados recolhidos no formulário de agendamento (nome, contacto, motivo genérico — não histórico clínico)
+- Não usar o formulário de agendamento para recolher informação clínica sensível
+
+## Gestão de Acessos em Clínicas com Múltiplos Profissionais
+
+Se a clínica tem vários psicólogos e pessoal administrativo:
+
+**Princípio da necessidade de conhecer**: O pessoal administrativo que faz agendamentos não precisa de aceder às notas clínicas. Os psicólogos só devem aceder às fichas dos seus próprios pacientes (exceto em situações de substituição acordadas).
+
+**Registos de auditoria**: O sistema de gestão deve registar quem acedeu a que ficha e quando. Reveja estes logs periodicamente — não para espionar colaboradores, mas para identificar acessos anómalos.
+
+**Offboarding**: Quando um psicólogo sai da clínica:
+1. Desativar acesso ao sistema no último dia
+2. Transferir pacientes para outro profissional (com consentimento dos pacientes)
+3. Garantir que o ex-colaborador não retém cópias de fichas clínicas
+4. Alterar passwords partilhadas (Wi-Fi da clínica, email genérico, se existirem)
+
+## AIPD: Quando é Obrigatória
+
+Uma **Avaliação de Impacto sobre a Proteção de Dados (AIPD)** é provavelmente obrigatória para clínicas de psicologia que:
+- Tratam dados de saúde mental em grande escala
+- Usam sistemas de videovigilância
+- Utilizam dados de pacientes para investigação ou ensino
+
+Para um psicólogo independente com uma prática pequena, pode não ser obrigatória mas é recomendável documentar o raciocínio.
+
+O guia da CNPD sobre AIPD está disponível em cnpd.pt.
+
+## Tempo de Retenção dos Registos
+
+A quanto tempo guardar os registos clínicos é uma questão com respostas diferentes dependendo da fonte:
+
+- **Código Deontológico OPP**: Não especifica prazo mínimo; recomenda conservar enquanto necessário para o paciente
+- **Lei de Saúde**: Sugere 5-10 anos para registos de saúde após o último tratamento
+- **RGPD**: Minimização de dados — guardar apenas o tempo necessário para a finalidade
+
+**Prática recomendada**: 10 anos após o último contacto com o paciente (alinhado com os prazos mais longos da legislação de saúde), depois eliminação segura. Para menores, 10 anos após o paciente atingir a maioridade.
+
+**Nota**: Para situações com potencial de litigância (processos disciplinares, queixas), consulte advogado sobre o prazo de retenção adequado.
+
+## Checklist de Cibersegurança para Psicólogos
+
+**Computador e Dispositivos**:
+- [ ] Encriptação de disco ativada (BitLocker/FileVault)
+- [ ] Password forte de login, bloqueio automático após 5 min
+- [ ] Computador clínico separado de uso pessoal (ou conta separada)
+- [ ] Antivírus ativo e atualizado
+- [ ] Atualizações automáticas ativadas
+
+**Registos Clínicos**:
+- [ ] Software de gestão clínica com DPA RGPD do fornecedor
+- [ ] Acesso ao sistema restrito por utilizador/paciente
+- [ ] Notas em papel em armário fechado à chave
+- [ ] Backup automático diário + cópia offsite encriptada
+- [ ] Backup testado nos últimos 6 meses
+
+**Comunicação**:
+- [ ] Informação clínica sensível não enviada por email standard
+- [ ] Plataforma de teleconsulta com RGPD compliance e encriptação
+- [ ] Consentimento informado que inclui os canais de comunicação digital usados
+
+**Clínica com Múltiplos Profissionais**:
+- [ ] Acessos individuais por profissional (sem partilha de password)
+- [ ] Pessoal administrativo sem acesso a notas clínicas
+- [ ] Processo de offboarding documentado e executado
+- [ ] Revisão trimestral de quem tem acesso a quê
+
+**RGPD**:
+- [ ] Registo de atividades de tratamento atualizado
+- [ ] Informação de privacidade entregue aos pacientes
+- [ ] Consentimento documentado para tratamentos que o requerem
+- [ ] Política de retenção de dados definida
+- [ ] Processo para responder a pedidos de acesso ou apagamento (30 dias)
+
+---
+
+A cibersegurança para psicólogos não é uma questão burocrática — é parte integrante do dever ético de proteger os pacientes. Um paciente que partilhou as suas experiências mais difíceis numa sessão confia que essas informações ficam entre ele e o profissional. Garantir a segurança técnica dessa informação é honrar essa confiança com atos concretos, não apenas com intenções.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-23",
+    readingTime: 17,
+    author: {
+      name: "Miguel Ferreira",
+      title: "Auditor de Compliance",
     },
   },
 ];
