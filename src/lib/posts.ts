@@ -38230,6 +38230,758 @@ O transporte e a logística são setores onde um incidente informático tem cons
       title: "Auditor de Compliance",
     },
   },
+  {
+    slug: "ciberseguranca-agencias-viagens-portugal",
+    title: "Cibersegurança para Agências de Viagens em Portugal: Proteger GDS, Passaportes e Pagamentos",
+    excerpt:
+      "GDS, BSP e cópias de passaportes expõem agências de viagens a fraudes específicas. Guia prático de cibersegurança para agências de viagens e turismo em Portugal, com RGPD e proteção de dados.",
+    content: `Uma agência de viagens tem um sistema de informação incomum: acede a plataformas globais de distribuição (GDS) que permitem emitir bilhetes de avião em nome de companhias aéreas, gere documentos de identidade de dezenas de clientes, e processa pagamentos com cartão. Se as credenciais de acesso ao GDS forem comprometidas, um atacante pode emitir bilhetes fraudulentos em nome da agência — custos que ficam a cargo da agência na próxima liquidação BSP com a IATA.
+
+A **cibersegurança para agências de viagens** em Portugal tem especificidades que a tornam distinta de outras pequenas e médias empresas. Não se trata apenas de proteger um servidor ou uma caixa de email — é proteger o acesso a sistemas globais de reservas com crédito associado, dados de passaportes de clientes, e fluxos financeiros complexos com fornecedores internacionais.
+
+## O Que Está em Jogo: Dados e Sistemas
+
+### Sistemas de Distribuição Global (GDS)
+
+A maioria das agências de viagens portuguesas usa o **Amadeus** (com menor penetração do Sabre e Galileo/Travelport). O acesso é feito através do Amadeus Selling Platform Connect (SPC) com credenciais específicas: Office ID, assinatura de agente, e palavra-passe.
+
+Estes sistemas têm um risco particular: **crédito embutido**. Uma agência IATA tem um limite de crédito no BSP (Billing Settlement Plan) que permite emitir bilhetes que só são liquidados no próximo ciclo de faturação semanal. Um atacante com acesso às credenciais GDS pode emitir dezenas de bilhetes fraudulentos — tipicamente destinos de longa distância em classe executiva — antes de a fraude ser detetada. A agência fica responsável pelo pagamento à IATA.
+
+**Cenários de fraude GDS documentados em Portugal e Europa**:
+- Credenciais comprometidas via phishing direcionado a funcionários de balcão
+- Acesso a contas inativas de ex-funcionários que nunca foram removidas do sistema
+- Malware keylogger instalado em computadores de trabalho, capturando credenciais ao longo de semanas
+
+### BSP (Billing Settlement Plan IATA)
+
+O BSP é o sistema de liquidação de pagamentos entre agências e companhias aéreas, operado pela IATA em Portugal. As agências liquidam regularmente. Um incidente no GDS pode resultar em **debit memos** — cobranças retroativas da IATA por irregularidades nas emissões — de valor significativo.
+
+### Documentos de Identidade dos Clientes
+
+Para processar vistos, reservas em certos hotéis, e viagens a destinos que exigem identificação, as agências recolhem **cópias de passaportes e bilhetes de identidade**. Estes documentos são sensíveis: a sua exposição pode causar roubo de identidade dos clientes.
+
+Para viagens com necessidades especiais (destinos que requerem vacinas, viagens de saúde), as agências podem ainda recolher **dados de saúde** — categoria especial sob o RGPD, com requisitos de proteção acrescidos.
+
+### CRM e Histórico de Clientes
+
+O CRM de uma agência contém dados que, em conjunto, revelam muito sobre as pessoas:
+- Dados pessoais de contacto e identificação
+- Histórico completo de viagens (revela padrões de vida, viagens de negócio, férias familiares)
+- Preferências pessoais (alimentação, mobilidade reduzida, alojamento)
+- Dados financeiros (valores gastos, formas de pagamento habituais)
+- Correspondência sobre viagens de negócio sensíveis
+
+### Back-Office e Sistemas Financeiros
+
+- Software de gestão de back-office (TravelStudio, Merlin, ou back-offices integrados com GDS)
+- IBANs de fornecedores: hotéis, operadores locais, transfers, seguradoras de viagem
+- Contratos com parceiros e respetivas comissões e margens
+- Credenciais do portal RNAAT (Registo Nacional de Agentes de Viagens e Turismo) no Turismo de Portugal
+
+## Enquadramento Legal
+
+### RGPD para Agências de Viagens
+
+As agências são **responsáveis pelo tratamento** (controllers) dos dados pessoais dos clientes. Obrigações específicas:
+
+**Cópias de passaportes**: devem ser recolhidas apenas quando estritamente necessário (processo de visto, reservas que o exigem). Devem ser:
+- Eliminadas após conclusão do serviço e período razoável para reclamações (12 meses é defensável)
+- Nunca armazenadas em email não encriptado como repositório permanente
+- Nunca enviadas a fornecedores desnecessários (um hotel não precisa de guardar o passaporte indefinidamente)
+
+**Dados de saúde**: necessidades alimentares médicas, mobilidade reduzida, necessidade de oxigénio a bordo — são **categoria especial** (Art. 9 RGPD). Requerem consentimento explícito documentado e medidas de segurança reforçadas.
+
+**Marketing**: envio de promoções e newsletters requer consentimento separado da execução do contrato de viagem. A reserva de uma viagem não é base legal para envio de marketing indefinido.
+
+**Transferências internacionais**: ao partilhar dados com hotéis fora da UE (Marrocos, EUA, Egito, Emirados), é necessário garantia adequada. Para os EUA, verificar se o hotel está inscrito no EU-US Data Privacy Framework.
+
+### RNAAT e Portal Turismo de Portugal
+
+As agências registadas no RNAAT têm obrigações de manutenção de documentação. As credenciais do portal Turismo de Portugal devem ser protegidas — uma alteração não autorizada nos dados de registo pode criar problemas regulatórios e de licença.
+
+### PCI DSS para Pagamentos com Cartão
+
+Se a agência aceita pagamento por cartão (presencial ou online), deve cumprir o PCI DSS. Para a maioria das pequenas agências, o nível adequado é o **SAQ A** — pagamentos via gateway certificada, sem armazenar dados de cartão localmente. Nunca escrever números de cartão em papel, Excel, ou email.
+
+## Ameaças Específicas ao Setor
+
+### Fraude de Emissão GDS (Ticket Fraud)
+
+**Como funciona**:
+1. Atacante envia email de phishing ao agente de balcão, imitando a Amadeus ("Atualização de segurança obrigatória — inicie sessão")
+2. Credenciais capturadas são usadas imediatamente a partir de IPs externos
+3. São emitidos 20 a 50 bilhetes de classe executiva para destinos intercontinentais
+4. Os bilhetes são vendidos em fóruns de fraude ou usados antes de a IATA processar
+5. A agência recebe um debit memo IATA na próxima liquidação BSP — pode atingir dezenas de milhar de euros
+
+A Amadeus não envia emails pedindo login. Qualquer email desta natureza é phishing.
+
+### BEC e Fraude de IBAN em Pagamentos a Fornecedores
+
+Hotéis, operadores locais, transfers, e fornecedores de excursões são pagos por transferência bancária — ambiente ideal para Business Email Compromise:
+
+**Cenário típico**:
+1. Email do hotel parceiro habitual: "Mudámos de banco — todos os pagamentos futuros para o novo IBAN"
+2. Próximas reservas são pagas para conta do atacante em vez do hotel real
+3. A agência deve o dinheiro ao hotel e perdeu o que foi transferido
+
+**Verificação obrigatória**: qualquer pedido de alteração de IBAN de fornecedor deve ser verificado por chamada telefónica para o **número registado nos contratos existentes** — nunca para o número indicado no próprio email de pedido. Ver guia completo: [Fraude de Pagamento por Email](/blog/fraude-pagamento-email-iban-como-prevenir)
+
+### Phishing Direcionado a Agências de Viagens
+
+Emails credíveis construídos para o setor:
+- **"Amadeus System Upgrade"**: link para página de login falsa imitando o Amadeus SPC
+- **"IATA BSP Alert — Ação necessária"**: alerta urgente sobre o BSP, pedindo verificação de credenciais
+- **"CNPD — Notificação de infração"**: falsa notificação de violação RGPD, com link para "resposta"
+- **"Seguradora de viagem — Atualização de contrato"**: fingindo ser seguradora parceira, com ficheiro malicioso anexo
+
+Em todos os casos, o atacante usa urgência para fazer o destinatário agir sem verificar.
+
+### Comprometimento do Portal RNAAT
+
+Credenciais do portal de Turismo de Portugal, se comprometidas, permitem a um atacante alterar dados de registo da agência, afetando a licença RNAAT. Proteger com a mesma diligência que as credenciais GDS.
+
+### Roubo da Base de Dados de Clientes
+
+Um CRM com histórico de viagens, passaportes e preferências de centenas de clientes tem valor no mercado de dados roubados. A exposição pode resultar em coima CNPD até 4% do volume de negócios anual e danos reputacionais irreversíveis.
+
+## Proteger o Acesso ao GDS
+
+### Credenciais Amadeus/GDS
+
+**Regras fundamentais**:
+- Conta individual por agente — nunca conta partilhada
+- Password forte e única (diferente do email da empresa e do CRM)
+- Remoção imediata da conta GDS quando um funcionário sai — antes de qualquer outro procedimento de offboarding
+- Lista de contas ativas revisada trimestralmente
+
+**Configurações de segurança no Amadeus Selling Platform Connect**:
+O Office Manager pode configurar:
+- **Restrições de IP**: limitar acesso apenas a IPs do escritório — acessos de IPs externos são bloqueados ou geram alerta
+- **Alertas por email**: notificação quando há acesso de IPs não habituais
+- **Limites de emissão por agente**: volume diário máximo de bilhetes por conta
+- **Log de acessos e emissões**: para revisão em caso de suspeita
+
+**Se detetar acesso suspeito ao GDS**:
+1. Bloquear imediatamente a conta comprometida no Amadeus
+2. Contactar Amadeus Portugal / suporte GDS de emergência
+3. Verificar emissões dos últimos 3-7 dias — identificar bilhetes não autorizados
+4. Contactar IATA/BSP para reportar fraude (há procedimento específico para ticket fraud)
+5. Registar queixa na Polícia Judiciária — Unidade de Cibercrime
+
+## Gerir Passaportes e Documentos de Identidade com Segurança
+
+### Recolher Apenas o Necessário
+
+Não recolha o passaporte completo quando só precisa de alguns campos. Para uma reserva de hotel, normalmente basta nome, data de nascimento e número do documento — não a fotocópia completa. Recolha a cópia integral apenas quando **obrigatório** (processo de visto, algumas companhias aéreas para nacionais de certos países).
+
+### Armazenamento Seguro
+
+- **Nunca em email como repositório**: o email é para envio pontual, não para guardar ficheiros sensíveis indefinidamente
+- **Pasta encriptada na cloud**: OneDrive ou Google Drive com acesso restrito apenas ao responsável do processo
+- **Sistema de back-office com controlo de acesso**: se o software permite anexar documentos com controlo por utilizador, prefira essa opção ao email
+- **Encriptação em repouso**: qualquer dispositivo local com cópias de passaportes deve ter BitLocker (Windows) ou FileVault (Mac) ativo
+
+### Retenção e Eliminação
+
+- Eliminar cópias de passaportes após conclusão da viagem e período de reclamações (12 meses é defensável)
+- Revisão semestral de documentos a eliminar — criar rotina no calendário
+- Documentar a política de retenção no Registo de Atividades de Tratamento (RAT)
+
+## Segurança nos Pagamentos
+
+**Cartões de crédito**:
+- Nunca escrever números de cartão em papel, email, ou folha de cálculo
+- Usar terminal de pagamento certificado pelo banco (EFTPOS homologado)
+- Para pagamentos online: usar gateway de pagamento certificado PCI DSS (Stripe, Easypay, SIBS/MB WAY)
+- Guardar apenas os últimos 4 dígitos para referência interna — nunca o número completo
+
+**Transferências bancárias**:
+- Lista de IBANs de fornecedores verificada e armazenada de forma controlada (não apenas nos históricos de email)
+- Processo de verificação telefónica para qualquer IBAN novo ou alterado
+- Aprovação dual para transferências acima de valor-limite (ex: €2.000)
+
+## Formação da Equipa
+
+### O Que Todos Devem Reconhecer
+
+- Phishing imitando Amadeus, IATA, CNPD, e fornecedores habituais
+- Nunca clicar em links de emails "urgentes" — ir sempre diretamente ao portal via URL conhecida
+- Verificar por telefone qualquer pedido de alteração de dados financeiros de fornecedores
+- Reportar imediatamente qualquer acesso suspeito ou comportamento anormal nos sistemas
+
+Envie periodicamente um email de teste de phishing imitando a "Amadeus" para verificar a resistência da equipa. Use os resultados para formação, não punição. Ver: [Simulações de Phishing](/blog/simulacao-phishing-empresa-como-fazer-pme)
+
+## Continuidade em Caso de Falha do GDS
+
+O GDS pode ter indisponibilidade planeada (manutenção) ou não planeada. Plano de contingência mínimo:
+- Lista de contactos diretos de fornecedores habituais para reservas de emergência por telefone
+- Acesso a booking.com e outros canais alternativos para alojamento de emergência
+- Comunicação a clientes sobre possíveis atrasos sem depender exclusivamente dos sistemas habituais
+
+## Checklist de Cibersegurança para Agências de Viagens
+
+**Acesso GDS (Amadeus/Sabre)**:
+- [ ] Conta individual por agente — sem contas partilhadas
+- [ ] Restrição de IP configurada no Amadeus (apenas IPs do escritório)
+- [ ] Alertas de acesso atípico ativados
+- [ ] Contas de ex-funcionários removidas imediatamente após saída
+- [ ] Lista de contas ativas revisada trimestralmente
+
+**Documentos de Identidade (Passaportes)**:
+- [ ] Cópias de passaportes em pasta encriptada com acesso restrito
+- [ ] Política de retenção definida (viagem + 12 meses)
+- [ ] Revisão semestral de documentos a eliminar
+- [ ] Documentado no Registo de Atividades de Tratamento
+
+**Pagamentos**:
+- [ ] Processo de verificação telefónica para alterações de IBAN de fornecedores
+- [ ] Terminal de pagamento certificado pelo banco
+- [ ] Números de cartão nunca armazenados
+- [ ] Aprovação dual para transferências acima de valor-limite
+
+**Email e Comunicação**:
+- [ ] MFA ativo no email da empresa
+- [ ] SPF, DKIM, DMARC configurados no domínio da agência
+- [ ] Formação sobre phishing GDS/IATA para toda a equipa
+
+**Portais (RNAAT, Turismo de Portugal)**:
+- [ ] Credenciais individuais e password única por portal
+- [ ] MFA ativo quando disponível
+
+**RGPD**:
+- [ ] Consentimento separado para marketing (além do contrato de viagem)
+- [ ] Registo de Atividades de Tratamento (RAT) atualizado
+- [ ] Processo de notificação à CNPD em 72h documentado
+- [ ] DPA assinado com fornecedores cloud que processam dados de clientes
+
+---
+
+A fraude de GDS é o risco mais específico e financeiramente devastador para uma agência de viagens. Um fim de semana com credenciais comprometidas pode resultar em dezenas de milhar de euros em debit memos IATA que a agência tem de pagar. A proteção começa com uma regra simples: conta individual por agente, remoção imediata quando um funcionário sai, e alerta configurado para acessos de IPs externos. O investimento em tempo é de uma hora. O custo de não fazer pode ser catastrófico.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-24",
+    readingTime: 14,
+    author: {
+      name: "Carlos Miranda",
+      title: "Consultor de Cibersegurança",
+    },
+  },
+  {
+    slug: "ciberseguranca-gabinetes-arquitetura-engenharia-portugal",
+    title: "Cibersegurança para Gabinetes de Arquitetura e Engenharia em Portugal: Proteger Projetos BIM e Clientes",
+    excerpt:
+      "Ficheiros BIM, e-Urbanismo e dados de propriedade tornam gabinetes de arquitetura e engenharia alvos específicos. Guia prático de cibersegurança para o setor em Portugal.",
+    content: `Um gabinete de arquitetura de média dimensão trabalha com ficheiros Revit de projetos para clientes privados — moradias, escritórios corporativos, empreendimentos residenciais. Dentro desses ficheiros estão as plantas detalhadas das propriedades dos clientes, orçamentos de obra, e até dados pessoais dos proprietários. Um ransomware que cifre esses ficheiros — com prazos de licença de obras a correr e aprovações municipais pendentes — coloca o gabinete numa situação impossível.
+
+A **cibersegurança para gabinetes de arquitetura e engenharia** é uma área com ameaças específicas que a maioria dos guias genéricos ignora. Os ficheiros de trabalho são formato proprietário (Revit, AutoCAD, ArchiCAD), os prazos são rígidos (licenças municipais, certidões de conformidade), e a colaboração com engenheiros especializados obriga a partilhar ficheiros confidenciais com múltiplas entidades externas.
+
+## O Que Está em Jogo: Dados e Sistemas num Gabinete
+
+### Ficheiros de Projeto BIM e CAD
+
+Os ficheiros de projeto são o ativo mais valioso de um gabinete:
+- **Revit (.rvt)**: modelos BIM completos com geometria, propriedades dos materiais, e custo estimado
+- **AutoCAD (.dwg / .dxf)**: peças desenhadas, plantas, alçados, cortes
+- **ArchiCAD (.pln)**: arquivos de projeto completos
+- **IFC**: formato aberto para interoperabilidade entre equipas BIM
+
+Um projeto médio pode ter centenas de ficheiros, incluindo:
+- Plantas detalhadas da propriedade dos clientes (layout de divisões, sistemas de segurança, acessos)
+- Especificações técnicas e cadernos de encargos com valores e materiais
+- Orçamentos de obra (informação financeira sensível do cliente)
+- Documentação fotográfica do local (exterior e interior de propriedades privadas)
+- Correspondência sobre preferências e decisões de projeto
+
+### Portais Regulatórios
+
+- **e-Urbanismo**: plataforma municipal de submissão de pedidos de licenciamento — cada câmara tem o seu portal ou usa a plataforma nacional; credenciais individuais por técnico responsável
+- **Portal da Ordem dos Arquitetos (OA)**: registo profissional, declarações, comunicações
+- **IMPIC** (Instituto dos Mercados Públicos, do Imobiliário e da Construção): obras sujeitas a fiscalização, acesso com credenciais profissionais
+- **Portal das Finanças / AT**: comunicações de obras que afetam o Valor Patrimonial Tributário (VPT)
+- **iPortalDoc / ConsCiência**: portais usados em obras de reabilitação com financiamento europeu
+
+### Plataformas de Colaboração BIM
+
+Para projetos de grande dimensão, o gabinete pode usar:
+- **Autodesk Construction Cloud (BIM 360)**: colaboração em cloud com construtoras, engenheiros de especialidades, donos de obra
+- **Trimble Connect**: alternativa ao Autodesk para colaboração BIM
+- **SharePoint / OneDrive**: partilha de documentação com subcontratados
+
+### Dados dos Clientes
+
+Os clientes de um gabinete de arquitetura partilham informação muito sensível:
+- Dados pessoais (NIF, morada, contactos)
+- Dados patrimoniais (caderneta predial, escritura de propriedade, valor do imóvel)
+- Capacidade financeira e orçamento disponível para a obra
+- Informação sobre a vida privada revelada pelo layout do projeto
+- Para projetos corporativos: planos de expansão, organização interna, estratégia comercial
+
+## Ameaças Específicas ao Setor
+
+### Ransomware em Ficheiros AutoCAD e BIM
+
+O ransomware é a ameaça mais devastadora para um gabinete de arquitetura. A combinação de fatores é perigosa:
+- Ficheiros Revit e AutoCAD são cifrados — o projeto fica completamente inacessível
+- Com aprovações municipais em curso e prazos a correr, a pressão para pagar o resgate é enorme
+- A recuperação a partir de backup, mesmo que exista, pode demorar dias com perda de trabalho recente
+
+**Malware específico para AutoCAD**: existem variantes que infetam os ficheiros de template do AutoCAD (acad.lsp, acaddoc.lsp) para se propagarem automaticamente sempre que o AutoCAD abre qualquer projeto — o gabinete inteiro pode estar infetado antes de a ameaça ser detetada.
+
+**Vetores de entrada mais comuns**:
+- Ficheiros DWG ou PDF recebidos de "clientes" ou "fornecedores" desconhecidos contendo código malicioso
+- RDP exposto para acesso remoto ao servidor de ficheiros do gabinete
+- Credenciais de um colaborador comprometidas via phishing
+
+### Roubo de Propriedade Intelectual
+
+As plantas e projetos são obras protegidas pelo Código do Direito de Autor. O roubo pode:
+- Beneficiar concorrentes (especialmente em concursos públicos onde soluções similares são suspeitas)
+- Ser usado por clientes inescrupulosos que dispensam o gabinete a meio do projeto e continuam com os desenhos
+- Revelar soluções técnicas proprietárias desenvolvidas pelo gabinete ao longo de anos
+
+### Phishing Imitando Câmaras Municipais e Portais Regulatórios
+
+Os atacantes sabem que arquitetos e engenheiros esperam comunicações de câmaras municipais e portais regulatórios — e que há sempre urgência associada a prazos de licenciamento:
+
+- **"e-Urbanismo — Notificação de processo urgente"**: link para página de login falsa do portal municipal
+- **"Ordem dos Arquitetos — Atualização obrigatória de credenciais"**: phishing imitando o portal da OA
+- **"IMPIC — Comunicação obrigatória até X dias"**: email urgente com ficheiro malicioso anexo
+- **"Câmara Municipal de [cidade] — O seu processo requer documentação adicional"**: falso aviso com anexo ou link
+
+A urgência real dos prazos de licenciamento torna estes ataques particularmente eficazes.
+
+### Comprometimento de Credenciais e-Urbanismo
+
+Se as credenciais do e-Urbanismo de um técnico são comprometidas, um atacante pode:
+- Consultar processos de licenciamento ativos com plantas e dados confidenciais dos clientes
+- Submeter documentação falsa em nome do técnico, causando problemas no processo
+- Ver o estado de processos de outros clientes — violação de confidencialidade profissional
+
+### Fraude em Pagamentos de Subcontratados
+
+Nos projetos de arquitetura há múltiplos pagamentos a subcontratados: engenheiros de estruturas, MEP (mecânica, elétrica, plomagem), consultores de sustentabilidade, topógrafos, acústicos. Este ambiente é propício a fraude de IBAN:
+
+- Email do engenheiro de estruturas (comprometido): "Mudei de banco — por favor atualize o IBAN para pagamentos futuros"
+- Gabinete paga honorários para conta fraudulenta
+- O engenheiro real pede o pagamento — o gabinete deve o valor em duplicado
+
+**Protocolo**: verificação telefónica para qualquer pedido de alteração de IBAN, para número **já registado** na empresa (não para o número indicado no email).
+
+## Proteger os Ficheiros de Projeto
+
+### Backup Anti-Ransomware
+
+O backup é a proteção mais crítica contra ransomware para um gabinete de arquitetura. Sem backup adequado, a escolha após um ransomware fica entre pagar o resgate ou perder meses de trabalho.
+
+**Estratégia recomendada**:
+- Backup automático diário de todos os ficheiros de projeto (não apenas dos que estão em edição)
+- Cópia **offsite** com **imutabilidade** (Object Lock em S3, ou Backblaze B2 Immutable Backups) — protege contra ransomware que tenta cifrar ou eliminar os backups
+- Retenção de versões históricas mínimo 30 dias (idealmente 90) — permite recuperar para antes do incidente
+- **Teste de recuperação trimestral**: recuperar um projeto num ambiente de teste para verificar que o backup funciona de facto
+
+**Ferramentas adequadas**:
+- Veeam Backup & Replication Community Edition (gratuita) para servidores locais
+- Azure Backup ou Backblaze B2 para armazenamento imutável na cloud
+
+Ver guia completo: [Estratégia de Backup para PMEs](/blog/estrategia-backup-pme-regra-3-2-1-recuperacao)
+
+### Controlo de Versões
+
+Usar sistema de controlo de versões para ficheiros CAD/BIM:
+- Autodesk Docs (BIM 360), SharePoint com histórico de versões ativo, ou servidor com versioning
+- Evitar armazenamento apenas em discos locais sem backup — um disco que falha não tem recuperação
+
+### Acesso por Projeto
+
+Nem todos os membros da equipa precisam de aceder a todos os projetos:
+- Configurar o servidor de ficheiros ou plataforma cloud para dar acesso projeto a projeto
+- A equipa do Projeto A não deve ver os ficheiros do Projeto B de outro cliente
+- Este isolamento limita o impacto de um comprometimento — um colaborador com conta comprometida só expõe os seus projetos, não todo o portfólio
+
+## Colaboração Segura com Subcontratados
+
+### Partilha Controlada
+
+Ao partilhar ficheiros BIM com engenheiros de especialidades:
+- Partilha apenas da pasta específica do projeto, não da estrutura completa do gabinete
+- Acesso temporário com prazo definido — revogar após conclusão da fase de colaboração
+- Via plataforma com log de acesso (SharePoint, OneDrive, BIM 360) — evitar envio de ficheiros grandes por email sem controlo
+
+### Autodesk Construction Cloud / BIM 360
+
+Configure no BIM 360:
+- Permissões por membro e por pasta — acesso mínimo necessário para cada colaborador externo
+- Auditoria periódica de utilizadores externos (convidados) — quem tem acesso a quê, e por que razão
+- Revogação de acesso quando a colaboração termina
+
+### Acordo de Confidencialidade
+
+Nos contratos com engenheiros e consultores externos, incluir cláusula de confidencialidade que proíba partilha das plantas e dados dos clientes com terceiros não autorizados. É uma proteção legal complementar à técnica — e define responsabilidade em caso de violação.
+
+## Portais Regulatórios
+
+### e-Urbanismo
+
+- **Credenciais individuais** por técnico responsável — nunca credenciais partilhadas de "gabinete"
+- **Gestor de passwords** para guardar credenciais de cada portal municipal (há portais distintos por câmara, e muitos gabinetes trabalham em múltiplos municípios)
+- Nunca clicar em links de emails que reclamem urgência e peçam login — confirmar sempre diretamente no portal do município via URL conhecida
+- Verificar o URL no browser antes de introduzir credenciais
+
+### Ordem dos Arquitetos e IMPIC
+
+- Password forte e única para o portal da OA
+- MFA se o portal suportar
+- Suspeitar de emails da "OA" ou "IMPIC" com pedidos de login ou ficheiros anexos — contactar as entidades diretamente em caso de dúvida
+
+## RGPD para Gabinetes de Arquitetura
+
+### Dados de Clientes e Projetos
+
+**Retenção de documentação de projeto**: as obrigações profissionais e o Código de Ética da OA indicam conservação durante a vida do edifício ou mínimo de 10 anos. Documentar no RAT (Registo de Atividades de Tratamento).
+
+**Plantas de habitação privada**: revelam o layout da casa de clientes privados, com localização de quartos, cofres, sistemas de segurança. Armazenar de forma controlada, com acesso apenas aos elementos do projeto.
+
+**Fotografias de propriedades privadas**: as fotos do interior de uma casa de cliente durante o processo de projeto são dados pessoais potencialmente sensíveis. Armazenar de forma controlada, com acesso restrito.
+
+**Portfólio e marketing**: antes de publicar imagens de um projeto no website ou redes sociais do gabinete, obter **consentimento escrito do cliente** — especialmente para habitação privada onde a localização pode ser identificável.
+
+### Subcontratados como Subcontratantes RGPD
+
+Os engenheiros e consultores externos que acedem a dados pessoais dos clientes (moradas em plantas, identidade dos proprietários) devem ter DPA (Contrato de Subcontratação) com o gabinete, nos termos do Art. 28 RGPD.
+
+## Trabalho em Campo e Dispositivos Móveis
+
+Arquitetos visitam obras e clientes com laptops e tablets regularmente. Para dispositivos em movimento:
+
+- **Encriptação do disco**: BitLocker (Windows) ou FileVault (Mac) obrigatório em todos os laptops do gabinete
+- **VPN**: para aceder ao servidor de ficheiros do gabinete fora do escritório (em obra, em cliente, em casa)
+- **MFA**: para aceder a sistemas cloud (BIM 360, email, SharePoint) a partir de redes Wi-Fi externas
+- **Bloqueio automático**: após 5 minutos de inatividade
+- Nunca usar Wi-Fi público sem VPN para trabalho em projetos de clientes
+
+## Checklist de Cibersegurança para Gabinetes de Arquitetura e Engenharia
+
+**Ficheiros de Projeto (BIM/CAD)**:
+- [ ] Backup automático diário com cópia offsite imutável
+- [ ] Versões históricas retidas mínimo 30 dias
+- [ ] Teste de recuperação de backup realizado trimestralmente
+- [ ] Acesso por projeto — colaboradores só veem os projetos em que trabalham
+- [ ] Controlo de versões ativo (BIM 360, SharePoint, ou equivalente)
+
+**Portais Regulatórios (e-Urbanismo, OA, IMPIC)**:
+- [ ] Credenciais individuais por técnico — sem contas partilhadas de gabinete
+- [ ] Password única por portal, gerida em gestor de passwords
+- [ ] MFA ativo onde disponível
+- [ ] Suspeitar de emails urgentes pedindo login — confirmar diretamente no portal
+
+**Colaboração com Subcontratados**:
+- [ ] Acesso partilhado limitado ao projeto específico
+- [ ] Revogação de acesso após conclusão da fase de colaboração
+- [ ] DPA assinado com subcontratados que acedem a dados de clientes
+
+**Pagamentos a Subcontratados**:
+- [ ] Verificação telefónica para pedidos de alteração de IBAN
+- [ ] Aprovação dual para honorários acima de valor-limite
+
+**Dispositivos**:
+- [ ] BitLocker/FileVault ativo em todos os laptops do gabinete
+- [ ] VPN para acesso remoto ao servidor de ficheiros
+- [ ] Bloqueio automático após inatividade
+
+**RGPD**:
+- [ ] Consentimento escrito do cliente antes de publicar imagens de projetos
+- [ ] Registo de Atividades de Tratamento (RAT) atualizado com todas as categorias de dados
+- [ ] DPA com subcontratados externos que processam dados de clientes
+- [ ] Política de retenção de documentação de projeto (mínimo 10 anos) documentada
+
+---
+
+A ameaça mais relevante para um gabinete de arquitetura é o ransomware sobre ficheiros de projeto — e a proteção começa com um backup robusto e imutável. Com projetos que representam semanas de trabalho e prazos de licenciamento municipais que não se podem perder, a recuperação a partir de backup é a única alternativa realista ao pagamento de resgate. Invista neste controlo antes de qualquer outro, e complemente com controlo de versões e acesso por projeto para limitar o impacto de qualquer comprometimento.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-24",
+    readingTime: 15,
+    author: {
+      name: "Miguel Ferreira",
+      title: "Auditor de Compliance",
+    },
+  },
+  {
+    slug: "ciberseguranca-saloes-cabeleireiro-estetica-bem-estar-portugal",
+    title: "Cibersegurança para Salões de Cabeleireiro, Estética e Spas em Portugal",
+    excerpt:
+      "Bookings, dados de saúde de clientes e redes sociais expõem salões de beleza a riscos concretos. Guia de cibersegurança para cabeleireiros, esteticistas e spas em Portugal.",
+    content: `Um salão de cabeleireiro com três colaboradoras usa uma tablet partilhada com acesso à aplicação de marcações. A mesma tablet tem o Instagram do salão aberto, o email de contacto, e acesso ao sistema de pagamentos por MB Way. Uma conta comprometida pode cascatear por todos estes sistemas — e a consequência pode ser a perda da conta de Instagram com cinco mil seguidores construída ao longo de anos, ou a exposição de dados de saúde dos clientes.
+
+A **cibersegurança para salões de cabeleireiro, estética e bem-estar** raramente é abordada nos guias técnicos, mas o setor tem riscos concretos e específicos: alergias e condições de pele registadas nas fichas dos clientes são dados de saúde sob o RGPD, as redes sociais são o principal canal de aquisição de clientes, e a rotatividade de colaboradoras cria riscos de acessos que não são revogados a tempo.
+
+## O Que Está em Jogo
+
+### Plataformas de Marcações e CRM
+
+A maioria dos salões portugueses usa uma plataforma de marcações online:
+- **Booksy**: popular em Portugal, integra marcações, CRM, e pagamentos
+- **Fresha** (anteriormente Shedul): crescimento rápido, CRM integrado, popular entre salões independentes
+- **MindBody**: mais comum em spas e centros de bem-estar
+- **Planfy**: solução europeia com presença no mercado português
+- Salões mais pequenos usam agenda Google Calendar partilhada ou gestão via WhatsApp
+
+Estas plataformas contêm:
+- Dados pessoais de todos os clientes (nome, contacto, histórico de visitas)
+- Notas de tratamento com alergias e condições de saúde (ver abaixo)
+- Dados de pagamento se a plataforma tem pagamento integrado
+- Histórico completo de visitas e serviços
+
+### Dados de Saúde dos Clientes
+
+Um dado que muitos salões subestimam: as **alergias e condições relevantes para o tratamento** registadas nas fichas de clientes são **dados de saúde** — categoria especial sob o Art. 9 do RGPD, com requisitos de proteção acrescidos. Exemplos comuns:
+
+- "Alergia a amónia — usar produtos sem amónia" (cabeleireiro)
+- "Dermatite atópica — evitar produtos com fragâncias" (esteticista)
+- "Diabetes — cuidado com tempo de exposição a UV" (spa/solário)
+- "Hiperidrose — tratamento com iontoforese" (médico-estética)
+- "Grávida 2.º trimestre — evitar determinados óleos essenciais" (massagem)
+
+Estes dados requerem **consentimento explícito documentado** para serem recolhidos e tratados, e medidas de segurança equivalentes às de dados clínicos.
+
+### Redes Sociais e Presença Online
+
+Para salões de beleza, o Instagram e o Facebook são frequentemente o principal canal de aquisição de novos clientes. Uma conta com anos de publicações, seguidores, e reviews acumuladas representa um ativo de negócio real — a sua perda é uma perda de receita imediata.
+
+O **Google Business Profile** (Google My Business) é igualmente crítico: afeta a posição nas pesquisas locais "cabeleireiro perto de mim" — que são uma das fontes mais relevantes de novos clientes para salões físicos.
+
+### Sistema de Pagamentos
+
+- Terminal de pagamento por cartão (EFTPOS homologado pelo banco)
+- MB Way (recebimento de clientes e envio para fornecedores)
+- Plataformas de pagamento integradas nas apps de marcações
+- Pagamentos a fornecedores de produto (coloração, equipamento)
+
+### Dados Comerciais
+
+- Lista de clientes com histórico e valor de vida do cliente
+- Stocks de produtos de coloração e tratamentos (com custo associado)
+- IBANs de fornecedores habituais
+- Contratos com colaboradoras (comissão, arrendamento de cadeira — regime frequente no setor)
+
+## Ameaças Específicas ao Setor
+
+### Roubo de Conta de Instagram/Facebook
+
+É o risco mais imediato e mais comum para salões de beleza. Os atacantes usam engenharia social via Direct Message:
+
+**Método típico**:
+1. A conta do salão recebe uma DM no Instagram fingindo ser o "Instagram Support" ou "Meta Team"
+2. A mensagem avisa que a conta tem uma violação e vai ser suspensa — "confirme a sua identidade aqui"
+3. O link leva a uma página falsa que pede as credenciais do Instagram
+4. Alternativa: pedem o código de verificação enviado por SMS (que é na realidade o código de recuperação da conta)
+5. Com o código ou as credenciais, o atacante toma controlo da conta em segundos
+
+**Após o roubo**: a conta é usada para esquemas de fraude (concursos falsos, promoções fraudulentas), e o salão perde o acesso a anos de publicações e seguidores. A recuperação via suporte Meta é possível mas pode demorar dias a semanas.
+
+**Prevenção**: o Instagram e o Facebook **nunca** enviam DMs a pedir credenciais ou códigos de verificação. Qualquer mensagem deste tipo é fraude.
+
+### Comprometimento da Plataforma de Marcações
+
+Se a conta do Booksy ou Fresha for comprometida:
+- Um atacante tem acesso a toda a base de dados de clientes, incluindo dados de saúde
+- Pode cancelar marcações (sabotagem de concorrente ou extorsão)
+- Pode ver dados de pagamento integrado
+- Pode desativar a conta ou exportar toda a base de dados de clientes
+
+### Sequestro do Google Business Profile
+
+O Google Business Profile pode ser alvo de pedidos fraudulentos de "reivindicação" ou "transferência de propriedade":
+- A listagem do salão passa para controlo do atacante
+- Número de telefone, morada, e website podem ser alterados
+- Reviews e classificações podem ser manipuladas
+
+**Prevenção**: verificar regularmente que a listagem está correta e que o email associado tem autenticação de dois fatores ativa.
+
+### Exposição de Fichas de Clientes
+
+Uma tablet partilhada com a app de marcações, deixada sem bloqueio de ecrã durante uma pausa, expõe a base de dados de clientes — incluindo dados de saúde — a qualquer pessoa que entre no salão.
+
+Dados de saúde expostos desta forma constituem uma **violação de dados de categoria especial**, com obrigação de notificação à CNPD em 72 horas e possível coima até €20M ou 4% do volume de negócios.
+
+### Fraude em Pagamentos a Fornecedores
+
+Fornecedores de produto (coloração, equipamento de estética) podem ser alvo de BEC. Se o email ou WhatsApp do fornecedor é comprometido, o atacante solicita alteração de IBAN para pagamentos futuros.
+
+**Prevenção**: verificação telefónica para qualquer pedido de alteração de dados de pagamento, para número já registado — nunca para o número indicado no email de pedido.
+
+## Proteger as Redes Sociais
+
+### Autenticação de Dois Fatores (2FA) — Obrigatório
+
+Ativar 2FA em todas as redes sociais do salão, **exclusivamente via app de autenticação** (não SMS — o SMS pode ser intercetado):
+
+**Instagram**:
+1. Perfil → Menu (☰) → Configurações → Segurança → Autenticação de dois fatores
+2. Selecionar "App de autenticação" em vez de "Mensagem de texto"
+3. Guardar os códigos de backup impressos ou em local físico seguro
+
+**Facebook**:
+1. Definições → Segurança e início de sessão → Autenticação de dois fatores
+2. App de autenticação
+3. Guardar códigos de recuperação num local físico
+
+O Instagram e o Facebook **nunca** pedem o código 2FA por mensagem direta ou email. Se alguém pede o código — é fraude.
+
+### Auditoria de Administradores
+
+No Facebook, auditar regularmente quem tem acesso à Página do salão:
+- Configurações → Pessoas e outras páginas → Administradores da página
+- Remover ex-colaboradoras e qualquer conta desconhecida
+
+No Instagram Business: rever contas com acesso via Meta Business Suite.
+
+### Guardar os Códigos de Recuperação
+
+Quando ativa o 2FA, o Instagram e o Facebook fornecem **códigos de recuperação de emergência**. Guardar:
+- Impressos e numa gaveta fechada do escritório
+- Na conta de email da empresa (nunca no DM das redes sociais ou no telemóvel pessoal)
+- São o recurso final se o telemóvel com a app de autenticação for perdido ou avariado
+
+## Proteger a Plataforma de Marcações
+
+### Conta Individual por Colaboradora
+
+A tablet partilhada com uma única conta "do salão" cria problemas:
+- Não é possível auditar quem fez o quê no sistema
+- Se uma colaboradora termina, é necessário alterar a password para todas
+- Uma colaboradora com má intenção tem acesso a toda a base de dados
+
+**Melhor prática**: criar conta individual por colaboradora nas plataformas que suportam utilizadores múltiplos (Fresha e Booksy suportam). Cada colaboradora:
+- Faz login com as suas próprias credenciais
+- Só vê as suas próprias marcações (se configurado)
+- Ao terminar o contrato, a sua conta é desativada sem afetar as restantes
+
+### Bloqueio Automático de Ecrã
+
+O tablet ou telemóvel com acesso à plataforma de marcações deve:
+- Bloquear automaticamente após 2 a 3 minutos sem uso
+- Exigir PIN ou biometria para desbloquear
+- Nunca ficar desbloqueado na receção sem supervisão direta
+
+### MFA na Conta Principal
+
+A conta proprietária da plataforma de marcações deve ter MFA ativo (Fresha e Booksy suportam autenticação de dois fatores). Esta é a conta que dá acesso a toda a base de dados.
+
+## RGPD para Salões de Beleza e Estética
+
+### Base Legal para Dados de Saúde
+
+As alergias e condições de saúde registadas nas fichas de clientes são dados de saúde (categoria especial Art. 9 RGPD). A base legal mais adequada é o **consentimento explícito** [Art. 9(2)(a)]:
+
+- Obter consentimento escrito (ou digital com prova) do cliente para registar e usar estas informações
+- Guardar prova do consentimento — formulário assinado ou registo com timestamp no sistema
+- Explicar claramente que os dados são usados exclusivamente para prestação do serviço (segurança do cliente), não para marketing
+
+**Na prática**: uma simples "ficha de cliente" com:
+- Dados básicos de contacto
+- Alergias ou condições relevantes para o tratamento
+- Consentimento para guardar e usar estes dados para os serviços do salão
+- Opção separada de consentimento para comunicações de marketing
+
+### Fotografias de Resultados (Antes/Depois)
+
+As fotos de antes/depois são usadas extensamente em redes sociais. São dados pessoais (imagem identificável). Antes de publicar qualquer foto de cliente:
+- Obter **consentimento explícito** documentado
+- Especificar onde vão ser usadas (Instagram, Facebook, website)
+- Informar que o cliente pode retirar o consentimento a qualquer momento
+- Ter processo para remover a foto se o consentimento for retirado
+
+Fotos tiradas sem consentimento de publicação não podem ser partilhadas publicamente — mesmo que o cliente não reconheça a sua própria foto, a exposição constitui violação RGPD.
+
+### Retenção de Dados
+
+| Tipo de Dados | Retenção Recomendada |
+|---------------|---------------------|
+| Historial de tratamentos e alergias | 2 a 3 anos (segurança do cliente) |
+| Dados de faturação | 10 anos (obrigação fiscal) |
+| Consentimentos de marketing | Até revogação do consentimento |
+| Fotografias de resultados | Enquanto o consentimento se mantiver |
+| Dados de ex-colaboradoras | 5 anos (obrigações laborais) |
+
+### Direito de Acesso e Eliminação
+
+Qualquer cliente pode pedir:
+- Cópia de todos os dados que o salão tem sobre ele (direito de acesso — resposta em 30 dias)
+- Eliminação dos seus dados (direito ao esquecimento — quando não haja obrigação legal de retenção)
+
+Ter um processo simples documentado para responder a estes pedidos.
+
+## Gestão de Acessos na Equipa
+
+### Entrada de Nova Colaboradora
+
+Ao integrar uma nova colaboradora:
+- Criar conta individual na plataforma de marcações
+- Definir acesso apenas às suas próprias marcações — não à base completa de clientes
+- Não dar acesso às contas de redes sociais do salão salvo se o papel o justificar
+
+### Saída de Colaboradora
+
+No dia da saída ou antes (especialmente em saídas conflituosas):
+- Desativar conta na plataforma de marcações
+- Remover da administração do Facebook e Instagram do salão
+- Alterar password do email do salão se a colaboradora tinha acesso
+- Revogar acesso ao Google Business Profile
+- Alterar password do MB Way se partilhado
+
+A rotatividade é alta no setor — ter este processo como rotina, não como exceção.
+
+### Email do Salão
+
+- Email profissional do salão (info@salaoxyz.pt) separado dos emails pessoais
+- MFA ativo no email de negócio
+- Designar 1-2 responsáveis; não partilhar com toda a equipa
+- Alterar password quando uma responsável sai
+
+## Checklist de Cibersegurança para Salões de Beleza e Estética
+
+**Redes Sociais**:
+- [ ] 2FA ativo via app de autenticação no Instagram e Facebook do salão
+- [ ] Códigos de recuperação guardados em local físico seguro
+- [ ] Administradores da Página Facebook revistos — ex-colaboradoras removidas
+- [ ] Google Business Profile com email associado protegido por MFA
+
+**Plataforma de Marcações**:
+- [ ] Conta individual por colaboradora — sem conta partilhada única
+- [ ] MFA ativo na conta proprietária
+- [ ] Password forte e única (diferente do email pessoal)
+- [ ] Bloqueio automático de ecrã na tablet (2 a 3 minutos)
+
+**Gestão de Acessos**:
+- [ ] Processo documentado de entrada e saída de colaboradoras
+- [ ] Acessos revogados no dia da saída (marcações, redes sociais, email)
+- [ ] Acesso das colaboradoras limitado às suas próprias marcações
+
+**RGPD**:
+- [ ] Ficha de cliente com consentimento explícito para dados de saúde (alergias)
+- [ ] Consentimento separado para marketing
+- [ ] Consentimento documentado para publicação de fotografias de resultados
+- [ ] Processo documentado para pedidos de acesso e eliminação de dados
+
+**Pagamentos**:
+- [ ] Terminal de pagamento por cartão em bom estado e de fornecedor certificado
+- [ ] Números de cartão nunca escritos ou guardados
+- [ ] Verificação telefónica para alterações de IBAN de fornecedores
+
+---
+
+O risco mais imediato para um salão de beleza não é um ataque sofisticado — é a perda de uma conta de Instagram para um phishing via Direct Message. Evita-se com um passo: ativar 2FA via app de autenticação, não SMS. Com isso resolvido, o resto é gerir acessos com bom senso: conta individual por colaboradora, revogação imediata quando saem, e consentimento documentado para os dados de saúde dos clientes. Estes três passos cobrem os riscos mais concretos do setor sem requerer conhecimento técnico avançado.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-24",
+    readingTime: 13,
+    author: {
+      name: "Rita Santos",
+      title: "Analista de Segurança",
+    },
+  },
 ];
 
 export function getPostBySlug(slug: string): Post | undefined {
