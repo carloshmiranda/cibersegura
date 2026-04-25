@@ -38982,6 +38982,866 @@ O risco mais imediato para um salão de beleza não é um ataque sofisticado —
       title: "Analista de Segurança",
     },
   },
+  {
+    slug: "ciberseguranca-empresas-construcao-civil-portugal",
+    title: "Cibersegurança para Empresas de Construção Civil em Portugal: Proteger BIM, Subcontratados e Portais AT",
+    excerpt:
+      "Empreiteiros e construtoras gerem dezenas de subcontratados, ficheiros BIM e portais AT e IMPIC. Guia de cibersegurança para empresas de construção civil em Portugal.",
+    content: `Uma empresa de construção civil com vinte funcionários pode ter cinquenta subcontratados ativos num projeto de média dimensão — cada um com o seu IBAN, representante, e fatura a liquidar. Se o email do gestor de obra for comprometido, um atacante pode inserir-se na cadeia de aprovação de pagamentos e redirecionar transferências para IBANs fraudulentos. O setor da construção civil é um dos mais visados por fraude de Business Email Compromise em Portugal, precisamente por esta complexidade financeira.
+
+A **cibersegurança para empresas de construção civil** tem particularidades que a distinguem de outros setores: obras dispersas geograficamente com dispositivos em condições difíceis, uma cadeia de subcontratação extensa que cria múltiplos pontos de entrada, ficheiros BIM e de projeto que representam propriedade intelectual valiosa, e portais regulatórios críticos cujas credenciais nunca devem ser partilhadas.
+
+## O Que Está em Jogo
+
+### Ficheiros de Projeto e Propriedade Intelectual
+
+Os projetos de uma construtora acumulam ao longo do tempo um conjunto de ativos digitais com valor significativo:
+
+- **Ficheiros BIM e CAD**: projetos em AutoCAD, Revit, ou ArchiCAD com dezenas ou centenas de horas de trabalho técnico. O roubo de um projeto em concurso público pode ser entregue a um concorrente; a destruição por ransomware pode atrasar uma obra por semanas
+- **Orçamentos e propostas**: valores de custo real de mão-de-obra e materiais, margens, e estratégia comercial — informação extremamente sensível em contexto concorrencial
+- **Documentação de obra**: relatórios de progresso, autos de medição, registos de não-conformidades, fotografias
+- **Contratos e caderno de encargos**: condições acordadas com donos de obra e subcontratados
+- **Peças desenhadas finais e as-built**: documentação regulatória que pode ter valor décadas após a conclusão da obra
+
+### Portais Regulatórios e Administrativos
+
+As empresas de construção em Portugal acedem regularmente a portais críticos:
+
+- **Portal IMPIC** (Instituto dos Mercados Públicos, do Imobiliário e da Construção): gestão do alvará de construção, renovações, e comunicações regulatórias. A perda de acesso pode impedir a empresa de operar legalmente
+- **BASE.gov.pt**: submissão de propostas a concursos públicos (obras públicas)
+- **Portal das Finanças / AT**: submissão de SAF-T, declarações de IVA, e-fatura
+- **Portal ePortugal / Balcão Único**: pedidos de licenciamento junto de municípios
+- **Portais municipais de e-Urbanismo**: comunicações sobre licenças de construção e pedidos de autorização
+- **Segurança Social Direta**: gestão de trabalhadores, contribuições, e situação contributiva
+- **ACT** (Autoridade para as Condições do Trabalho): comunicações de início de obra, notificações prévia
+- **SNS/Serviços de Saúde Ocupacional**: registos de medicina do trabalho obrigatória para trabalhadores em risco
+
+### Fluxos Financeiros com Subcontratados
+
+Um empreiteiro de construção gere simultaneamente múltiplos fluxos financeiros:
+
+- Autos de medição aprovados e pagamentos periódicos a subcontratados
+- Compras de materiais a fornecedores (cimento, ferro, materiais de acabamento)
+- Pagamentos de aluguer de equipamento (andaimes, gruas, equipamento pesado)
+- Faturas de serviços especializados (EDP, gas, telecomunicações nas obras)
+- Garantias bancárias para concursos públicos
+
+A frequência e o volume destes pagamentos criam oportunidades repetidas para fraude de IBAN.
+
+### Dados dos Trabalhadores
+
+Uma construtora de média dimensão processa dados pessoais extensos dos seus trabalhadores:
+
+- Dados de admissão e contrato
+- Registos de assiduidade (cada vez mais por app ou biométrico em estaleiro)
+- Vigilância de saúde obrigatória (médico do trabalho em sectores de risco)
+- Dados de segurança e saúde no trabalho (SST) — fichas de aptidão, acidentes de trabalho
+- Registos de formação obrigatória em SST
+- Dados de motoristas com tacógrafo (se a empresa tiver frota)
+- Geolocalização de veículos da empresa
+
+## Enquadramento Legal
+
+### RGPD para Construtoras
+
+As empresas de construção civil são **responsáveis pelo tratamento** (controllers) dos dados de trabalhadores, subcontratados (pessoas singulares), e visitantes de obra. Obrigações principais:
+
+**Dados de saúde dos trabalhadores**: as fichas de vigilância de saúde obrigatória (medicina do trabalho) e registos de acidentes de trabalho são dados de saúde — categoria especial Art. 9 RGPD. Requerem:
+- Tratamento com finalidade específica (gestão de saúde ocupacional)
+- Acesso restrito a quem necessita (RH e médico de empresa)
+- Prazo de conservação alinhado com a legislação laboral (mínimo 5 anos após cessação)
+
+**Biometria em estaleiro**: os sistemas de controlo de ponto por impressão digital ou reconhecimento facial são dados biométricos — categoria especial Art. 9 RGPD. Requerem:
+- Consentimento explícito dos trabalhadores *ou* necessidade imperiosa de segurança devidamente justificada
+- Alternativa não biométrica para quem não consente
+- Registo de Operações de Tratamento (ROT) específico
+
+**GPS de frota**: a geolocalização contínua de veículos com trabalhadores é tratamento de dados pessoais dos motoristas. Obrigações:
+- Informação transparente aos motoristas (aviso escrito)
+- Limitação de finalidade (segurança de frota e otimização de rotas — não vigilância comportamental)
+- Conservação limitada (tipicamente 30 dias para controlo de frota)
+- Proibição de monitorização fora de horário de trabalho
+
+**CCTV em estaleiro**: câmeras em zonas de trabalho com trabalhadores visíveis requerem:
+- Avisos de videovigilância visíveis (Lei n.º 34/2013 e RGPD)
+- Conservação máxima 30 dias (salvo investigação de incidente)
+- Acesso restrito às gravações
+
+### NIS2 e Construção
+
+A maioria das PMEs de construção não está sujeita diretamente ao NIS2 (que visa setores críticos de infraestrutura). No entanto, se a empresa trabalha como subcontratada de entidades do setor público em obras de infraestrutura crítica, pode ser afetada por obrigações de segurança da cadeia de fornecimento.
+
+## Ameaças Específicas ao Setor
+
+### Fraude de IBAN por Email (BEC)
+
+É o risco financeiro mais imediato para construtoras. O padrão habitual:
+
+1. O email do gestor de obra, diretor financeiro, ou de um subcontratado é comprometido — frequentemente via phishing
+2. O atacante monitoriza silenciosamente as comunicações durante semanas, aprendendo os padrões de comunicação, os projetos em curso, e os valores habituais
+3. Numa altura de pagamento (final de mês, aprovação de auto de medição), o atacante substitui uma fatura legítima por outra com o seu próprio IBAN
+4. O valor é transferido antes de a fraude ser detetada
+
+**Casos específicos ao setor**:
+- Alteração de IBAN numa fatura de subcontratado (alvenaria, impermeabilização, eletricidade)
+- Interceção de comunicação com fornecedor de materiais com nova conta bancária
+- Fraude em pagamento de aluguer de equipamento pesado
+
+**Prevenção**: protocolo de verificação telefónica para qualquer alteração de IBAN, para número de contacto pré-estabelecido (nunca o número indicado no email de pedido).
+
+### Ransomware sobre Ficheiros de Projeto
+
+Os ficheiros BIM, CAD, e documentação de obra são alvos de ransomware porque:
+- Têm valor claro e imediato para a empresa
+- São grandes e demoram tempo a reconstruir
+- Os prazos de obra criam pressão para pagamento rápido
+
+**Vetores de entrada mais comuns**:
+- Email com anexo malicioso enviado a colaborador de escritório (gestão de obra, faturação)
+- Acesso remoto (RDP) exposto sem autenticação forte
+- Malware numa pen USB usada em estaleiro e depois ligada ao computador de escritório
+
+**Pós-comprometimento**: o ransomware pode cifrar simultaneamente os projetos locais e os ficheiros em drives partilhadas de rede — toda a documentação de obras em curso pode ser afetada num único incidente.
+
+### Phishing Imitando Portais Regulatórios
+
+Os atacantes exploram a dependência das construtoras de portais como IMPIC e AT:
+
+- **"IMPIC — Renovação de Alvará"**: email urgente alertando que o alvará caduca, com link para página falsa que captura credenciais
+- **"AT — Notificação de Irregularidade"**: email com suposta irregularidade em SAF-T ou IVA, com link malicioso
+- **"BASE.gov.pt — Esclarecimento de Proposta"**: em período de concurso, email pedindo acesso para "esclarecer elementos" da proposta
+
+**Sinal de alerta**: comunicações legítimas do IMPIC e AT não pedem confirmação de credenciais por email nem têm links para páginas de login com urgência associada.
+
+### Comprometimento de Contas de Estaleiro
+
+Os dispositivos em estaleiro (tablets, smartphones de encarregados) têm desafios específicos:
+
+- Condições de uso mais adversas (poeira, humidade, quedas)
+- Frequente partilha entre turnos e trabalhadores
+- Ligação a redes Wi-Fi de obra (frequentemente inseguras ou partilhadas com subcontratados)
+- Apps de gestão de obra com acesso a dados sensíveis
+
+Se um tablet de encarregado for comprometido, pode dar acesso a:
+- App de gestão de obra com dados do projeto e equipa
+- Email profissional
+- WhatsApp Business da obra
+- Sistema de controlo de ponto
+
+### Vazamento de Propostas em Concurso Público
+
+Em concursos públicos no BASE.gov.pt, uma proposta comprometida pode ser:
+- Acedida por um concorrente (que ajusta o seu preço em conformidade)
+- Alterada antes da submissão por um atacante interno ou externo
+- Usada para impugnar a proposta vencedora se os valores internos ficarem conhecidos
+
+A preparação de propostas frequentemente envolve email com ficheiros de cálculo de custo — que revelam as margens reais da empresa.
+
+## Controlo de Acesso por Papel
+
+| Papel | Acesso Adequado |
+|-------|----------------|
+| Direção | Financeiro, contratos, portais regulatórios (com MFA) |
+| Gestor de Obra | Documentação do projeto, app de gestão de obra, não financeiro |
+| Encarregado | App de estaleiro (ponto, comunicações), sem acesso a contratos |
+| Faturação/Contabilidade | Sistema financeiro (acesso apenas às funcionalidades necessárias), AT portal |
+| Subcontratado | Nenhum acesso aos sistemas internos — comunicação via email/portal externo |
+
+## Proteger os Portais Regulatórios
+
+### IMPIC e BASE.gov.pt
+
+- Credenciais individuais por utilizador autorizado — nunca conta partilhada
+- Autenticação via Chave Móvel Digital (CMD) quando disponível — mais segura que password simples
+- Revogar acesso imediatamente quando um funcionário com acesso termina funções
+- Não salvar credenciais em browsers partilhados
+- Monitorizar comunicações do IMPIC para detetar alertas de tentativas de acesso
+
+### Portal das Finanças / AT
+
+- Conta separada para o TOC/contabilista (acesso delegado via AT, não partilha de credenciais principais)
+- Ativar CMD na conta principal da empresa
+- Rever regularmente os utilizadores com acesso delegado ao Portal das Finanças
+
+### BASE.gov.pt — Segurança em Concursos Públicos
+
+- Conta de acesso protegida com password forte e única
+- Ficheiros de proposta apenas em ambientes controlados (não em dispositivos pessoais ou dispositivos de estaleiro)
+- Verificação da integridade do ficheiro submetido antes de fechar o concurso
+- Comunicar à plataforma qualquer tentativa de acesso suspeita
+
+## Gestão de Subcontratados e Fornecedores
+
+### Protocolo de Verificação de IBAN
+
+Para **qualquer** alteração de IBAN de um fornecedor ou subcontratado:
+
+1. **Não processar com base em email ou documento PDF**: IBANs alterados por email são o vetor principal de fraude
+2. **Ligar para o número de contacto registado** (não o da mensagem de pedido) e confirmar verbalmente
+3. **Registar a confirmação**: quem confirmou, quando, e o IBAN confirmado
+4. Atualizar o registo apenas após confirmação telefónica
+
+**Na prática**: criar uma tabela de IBANs aprovados com histórico de alterações e aprovações.
+
+### Acesso de Subcontratados a Sistemas
+
+Subcontratados não devem ter acesso direto aos sistemas internos da construtora. Alternativas:
+- Portal externo específico para comunicação de autos de medição
+- Email específico da obra (ex: obra-pinhal@empresa.pt) em vez de acesso ao sistema principal
+- Partilha de documentação via link OneDrive/Google Drive com expiração — não via pen USB
+
+### Validação de Faturas
+
+Estabelecer um processo de conferência de faturas:
+- Fatura física ou em PDF assinado digitalmente com ATCUD (o código único de documento da AT)
+- Verificar ATCUD da fatura em e-fatura.at.gov.pt antes de processar pagamento
+- Discrepâncias entre fatura e contrato aprovadas pelo gestor de obra, não apenas pela faturação
+
+O ATCUD (introduzido em 2023 em Portugal) permite verificar a autenticidade de uma fatura diretamente no portal AT — verificação que protege contra faturas falsas.
+
+## Segurança em Estaleiro
+
+### Dispositivos Portáteis
+
+- **Pin/password obrigatório** em todos os dispositivos usados em obra
+- **Bloqueio automático** após 3 a 5 minutos de inatividade
+- **App de gestão de obra**: usar apps com autenticação por utilizador (não conta partilhada)
+- **Pens USB**: proibir ligação de pens USB não autorizadas aos computadores de escritório — a pen pode vir de estaleiro com malware inadvertidamente copiado de um sistema infectado de subcontratado
+
+### Wi-Fi em Estaleiro
+
+A rede Wi-Fi de obra (frequentemente um router móvel 4G) é frequentemente partilhada com subcontratados. Medidas:
+- Rede separada para trabalhadores da empresa e subcontratados (redes com palavras-passe distintas)
+- Não usar a rede de estaleiro para aceder a portais regulatórios ou email corporativo — usar dados móveis da operadora para estas operações
+- Alterar a password da rede de estaleiro quando a obra muda de fase ou entram novos subcontratados
+
+### Fotografias e Vídeos de Obra
+
+- Fotografias documentando o estado da obra são dados internos — não partilhar em grupos WhatsApp de família ou redes sociais pessoais
+- Registos com localização GPS incorporada (metadata EXIF) revelam a localização exata da obra
+- Drones e registos topográficos têm valor de propriedade intelectual — armazenar com acesso restrito
+
+## Backup de Projetos e Documentação
+
+### Regra 3-2-1 para Projetos
+
+Para uma construtora, o backup de projetos é crítico:
+- **3 cópias**: ficheiros de trabalho + backup local (NAS) + backup remoto (cloud)
+- **2 suportes diferentes**: NAS local + cloud (OneDrive, SharePoint, Dropbox Business)
+- **1 cópia offsite**: o backup remoto na cloud é o offsite neste modelo
+
+**Periodicidade**: backup diário automático dos ficheiros de projeto ativos. Backup semanal completo.
+
+### Proteção Anti-Ransomware
+
+- Ativar **Versioning** no SharePoint/OneDrive — mantém versões anteriores dos ficheiros (até 500 versões por ficheiro), permitindo recuperar a versão não cifrada
+- NAS com **snapshots imutáveis**: o ransomware não consegue cifrar snapshots imutáveis configurados corretamente (Synology, QNAP com SnapVault)
+- Testar recuperação de backup trimestralmente — confirmar que a restauração funciona antes de precisar dela
+
+## Offboarding de Funcionários
+
+O setor da construção tem rotatividade elevada — trabalhadores sazonais, fim de obra, subcontratados que mudam de empresa. O offboarding de acessos é frequentemente ignorado.
+
+**No dia da saída de qualquer funcionário com acesso digital**:
+- Desativar conta de email corporativo e revogar sessões ativas
+- Remover do grupo WhatsApp de obra
+- Desativar conta na app de gestão de obra
+- Revogar acesso a OneDrive/SharePoint partilhado
+- Se tinha acesso ao portal AT ou IMPIC — remover acesso delegado
+- Alterar passwords de contas partilhadas a que teve acesso (a eliminar progressivamente em favor de contas individuais)
+
+## Checklist de Cibersegurança para Construtoras
+
+**Portais e Acessos**:
+- [ ] MFA/CMD ativo no Portal das Finanças, IMPIC, e BASE.gov.pt
+- [ ] Credenciais individuais por utilizador — sem contas partilhadas em portais regulatórios
+- [ ] Acesso delegado ao TOC via portal AT (sem partilha de credenciais principais)
+- [ ] Processo de remoção de acessos no dia de saída de cada funcionário
+
+**Proteção contra Fraude Financeira**:
+- [ ] Protocolo de verificação telefónica para alterações de IBAN
+- [ ] Verificação de ATCUD em faturas antes de processar pagamento
+- [ ] Dupla aprovação para transferências acima de determinado valor
+- [ ] Lista de IBANs aprovados com histórico de alterações
+
+**Backup e Proteção de Projetos**:
+- [ ] Backup diário automático de ficheiros de projeto (3-2-1)
+- [ ] Versioning ativo no OneDrive/SharePoint
+- [ ] Snapshots imutáveis no NAS (se aplicável)
+- [ ] Teste de recuperação de backup realizado nos últimos 90 dias
+
+**Dispositivos e Estaleiro**:
+- [ ] Todos os dispositivos de estaleiro com PIN/password e bloqueio automático
+- [ ] Rede Wi-Fi separada para empresa e subcontratados
+- [ ] Proibição de pens USB não autorizadas nos computadores de escritório
+
+**RGPD**:
+- [ ] Trabalhadores informados sobre GPS de frota (aviso escrito)
+- [ ] Biometria de controlo de ponto com base legal documentada
+- [ ] Avisos de videovigilância em estaleiro
+- [ ] Processo de resposta a pedidos de acesso de trabalhadores
+
+---
+
+O risco mais crítico para uma construtora é duplo: a fraude de IBAN nos pagamentos a subcontratados, e o ransomware sobre ficheiros de projeto. São ameaças distintas com proteções distintas — o protocolo de verificação telefónica para IBANs não requer investimento tecnológico, apenas processo; o backup imutável com versioning protege contra ransomware sem depender de nenhuma resposta humana em tempo real. Implementar estes dois controlos elimina os riscos com impacto financeiro mais imediato para o setor.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-25",
+    readingTime: 15,
+    author: {
+      name: "Miguel Ferreira",
+      title: "Auditor de Compliance",
+    },
+  },
+  {
+    slug: "ciberseguranca-clinicas-fisioterapia-reabilitacao-portugal",
+    title: "Cibersegurança para Clínicas de Fisioterapia e Centros de Reabilitação em Portugal",
+    excerpt:
+      "Registos clínicos, SNS, ADSE e equipamentos de imagem expõem clínicas de fisioterapia a riscos específicos. Guia de cibersegurança para fisioterapeutas e centros de reabilitação em Portugal.",
+    content: `Uma clínica de fisioterapia com cinco fisioterapeutas processa dados de saúde de centenas de utentes por mês — diagnósticos, planos de tratamento, notas de evolução clínica, e registo de sessões de reabilitação após cirurgia ou acidente. Estes dados são categoria especial sob o RGPD, com obrigações de segurança equivalentes às de um hospital. Uma violação que exponha registos clínicos de utentes obriga a notificação à CNPD em 72 horas e pode resultar em coimas até €20 milhões ou 4% do volume de negócios.
+
+A **cibersegurança para clínicas de fisioterapia e centros de reabilitação** raramente recebe orientação específica, apesar do volume e sensibilidade dos dados processados. Não é um problema teórico: clínicas de fisioterapia em Portugal são alvos de ransomware precisamente porque os registos clínicos têm valor claro e os processos de recuperação não existem.
+
+## O Que Está em Jogo
+
+### Registos Clínicos dos Utentes
+
+Os dados de saúde processados numa clínica de fisioterapia incluem:
+
+- **Notas de avaliação inicial**: diagnóstico médico de referência, anamnese, exame físico, objetivos terapêuticos
+- **Planos de tratamento**: protocolo personalizado, técnicas aplicadas, progressão
+- **Notas de evolução (SOAP)**: registo sessão a sessão da resposta ao tratamento
+- **Relatórios de alta e de reavaliação**: enviados ao médico prescritor, seguradora, ou tribunal (em casos de acidente)
+- **Dados de imagem**: radiografias e ressonâncias partilhadas pelo médico, ecografias realizadas na clínica (se disponível)
+- **Dados de origem**: quem referenciou (SNS, médico privado, seguradora de acidentes de trabalho, advogado em caso de acidente)
+
+São dados de saúde — categoria especial Art. 9 RGPD — independentemente de serem registados em papel ou sistema digital.
+
+### Sistemas de Gestão Clínica
+
+As clínicas de fisioterapia em Portugal usam tipicamente:
+
+- **Software clínico específico**: Clinicsoft, ClinicManager, MedicalXpert, ou equivalentes europeus (Nookal, Jane App) — contêm agenda, ficha clínica, e faturação
+- **Sistemas genéricos adaptados**: algumas clínicas usam PHC ou Primavera para a componente de faturação, separado de um sistema de notas clínicas
+- **Fichas em papel**: ainda comum em clínicas mais pequenas ou para determinados registos
+- **Agenda digital**: Google Calendar, ou integrada no software clínico
+
+O software clínico é o sistema crítico: contém os dados mais sensíveis e, em caso de ransomware, torna impossível aceder ao historial de utentes.
+
+### Portais e Sistemas Externos
+
+- **Portal SNS para convencionados**: acesso a dados de referenciação de utentes SNS, importação de prescrições, comunicação com centros de saúde
+- **ADSE**: portal de reembolso e faturação para utentes com subsistema de saúde ADSE (funcionários públicos)
+- **AdvanceCare, Médis, Fidelidade Saúde, e outras seguradoras**: portais de validação de atos e faturação para utentes com seguro de saúde privado
+- **GNS (Gabinete Nacional de Segurança) / SPMS**: para clínicas convencionadas com acesso a sistemas do SNS
+- **Receita Sem Papel (RSP)**: acesso a prescrições digitais do Portal da Saúde
+- **Seguro de Acidentes de Trabalho**: comunicação com seguradoras sobre processos de reabilitação de acidente laboral
+
+### Equipamentos de Imagem
+
+Algumas clínicas de fisioterapia e centros de reabilitação dispõem de ecógrafo para diagnóstico por imagem. Estes equipamentos:
+
+- Correm frequentemente em sistemas operativos desatualizados (Windows 7 ou mesmo XP)
+- São frequentemente ligados à rede da clínica para envio de imagens ao sistema clínico
+- Raramente recebem atualizações de segurança do fabricante
+
+Um ecógrafo em rede com Windows 7 é uma porta de entrada para um atacante — não para os dados do ecógrafo, mas para a rede interna da clínica.
+
+## Enquadramento Legal
+
+### RGPD e Dados de Saúde
+
+As clínicas de fisioterapia processam dados de saúde com base no Art. 9(2)(h) RGPD — necessário para fins de medicina preventiva ou de trabalho, diagnóstico médico, prestação de cuidados de saúde. Isto significa que não é necessário pedir consentimento separado para o tratamento clínico, mas existem obrigações específicas:
+
+**Base legal para diferentes tratamentos**:
+
+| Tratamento de Dados | Base Legal |
+|---------------------|-----------|
+| Registos clínicos para prestação de cuidados | Art. 9(2)(h) — necessidade de saúde |
+| Partilha de registos com médico prescritor | Art. 9(2)(h) — continuidade de cuidados |
+| Comunicação com seguradora para reembolso | Execução de contrato com utente |
+| Marketing para utentes existentes | Interesse legítimo (limitado) |
+| Fotografias/vídeos de progresso de reabilitação | Consentimento explícito Art. 9(2)(a) |
+| Envio de dados a advogado em processo judicial | Consentimento explícito ou exercício de direitos legais |
+
+**Período de conservação dos registos**: o Decreto-Lei n.º 171/2013 e orientações do Conselho Nacional de Ética para as Ciências da Vida indicam conservação mínima de **5 anos** após o último contacto clínico. Para menores, o prazo corre a partir da maioridade. Em casos de acidente de trabalho ou acidentes pessoais com processos judiciais pendentes, os registos devem ser conservados enquanto o processo estiver ativo.
+
+### DPO para Clínicas de Fisioterapia
+
+A CNPD e o EDPB indicam que o DPO (Encarregado de Proteção de Dados) é obrigatório quando há "tratamento em grande escala de categorias especiais de dados" (Art. 37(1)(c) RGPD). Para clínicas de fisioterapia:
+
+- **Clínica pequena com 1-2 fisioterapeutas e poucos utentes**: provavelmente abaixo do limiar de "grande escala"
+- **Centro de reabilitação com múltiplos fisioterapeutas, várias especialidades e centenas de utentes mensais**: deve nomear DPO ou obter parecer jurídico documentado sobre a dispensa
+
+Na dúvida, documentar a análise realizada (mesmo que a conclusão seja que o DPO não é obrigatório).
+
+### Obrigação de Notificação em 72 Horas
+
+Qualquer violação de dados de saúde obriga a notificação à CNPD em 72 horas após o responsável da clínica ter conhecimento — independentemente do número de utentes afetados. Se a violação colocar os utentes em risco de discriminação ou dano, é também necessário notificar os próprios utentes.
+
+## Ameaças Específicas ao Setor
+
+### Ransomware no Software Clínico
+
+É a ameaça de maior impacto operacional. Um ataque de ransomware que cifre o software clínico:
+
+- Torna impossível aceder ao historial de utentes
+- Bloqueia a agenda (impossibilidade de confirmar horários e planos de tratamento)
+- Impede faturação e comunicação com seguradoras e SNS
+- Pode destruir anos de registos clínicos se não houver backup
+
+**Por que as clínicas são alvos atraentes**: os dados clínicos têm valor para extorsão direta (ameaça de publicação de diagnósticos), e a pressão operacional (utentes com consultas marcadas, processo de reabilitação contínuo) cria incentivo ao pagamento rápido.
+
+### Phishing Imitando SNS e Seguradoras
+
+Os atacantes exploram os portais que as clínicas acedem regularmente:
+
+- **"SNS — Atualização de credenciais de acesso"**: email falso pedindo confirmação de login no portal de convencionados
+- **"ADSE — Fatura rejeitada"**: notificação falsa de rejeição de faturação, com link para página de login falsa
+- **"Médis/AdvanceCare — Aprovação de atos pendente"**: urgência para "confirmar" atos clínicos, com link malicioso
+
+Estes phishing são eficazes porque as clínicas recebem regularmente comunicações legítimas destes portais, e uma fatura rejeitada ou um ato por aprovar têm impacto financeiro imediato.
+
+### Acesso Não Autorizado a Registos Clínicos (Insider)
+
+O risco interno em clínicas inclui:
+
+- Fisioterapeuta acedendo a registos de utentes que não são seus (por curiosidade ou a pedido de terceiros)
+- Funcionário administrativo com acesso ao sistema clínico sem necessidade real
+- Ex-funcionário que mantém acesso após terminar o contrato
+
+Para utentes com perfil público (figuras públicas, atletas de alta competição, casos mediáticos de acidentes) o risco de acesso não autorizado é particularmente elevado.
+
+### Comprometimento de Portais de Seguradoras
+
+Se as credenciais de acesso ao portal de uma seguradora forem comprometidas:
+
+- Um atacante pode submeter pedidos de reembolso fraudulentos em nome da clínica
+- Pode aceder a dados de saúde de utentes disponíveis no portal
+- Pode alterar dados bancários da clínica para redirecionar pagamentos
+
+### WhatsApp para Comunicações Clínicas
+
+Muitas clínicas usam WhatsApp para comunicar com utentes — confirmar marcações, enviar exercícios, partilhar vídeos de progressão. Riscos concretos:
+
+- **Dados de saúde em texto não encriptado** (relativamente ao acesso pelo servidor da Meta): sob o RGPD, a partilha de dados de saúde via WhatsApp requer base legal e informação ao utente sobre os riscos
+- **Conta WhatsApp comprometida** expõe histórico de conversas com utentes e dados de saúde
+- **Grupos de WhatsApp** com múltiplos utentes revelam a identidade de utentes a outros (violação de privacidade)
+- Exercícios e vídeos partilhados via WhatsApp ficam retidos nos servidores da Meta
+
+**Alternativa mais segura**: usar email encriptado (ProtonMail) ou portal seguro da plataforma clínica para partilha de documentos clínicos. WhatsApp apenas para confirmações neutras de marcação.
+
+## Controlo de Acesso por Papel
+
+| Papel | Acesso ao Software Clínico |
+|-------|--------------------------|
+| Fisioterapeuta | Apenas ficha dos seus próprios utentes |
+| Diretor Clínico | Todas as fichas (para supervisão e relatórios) |
+| Recepcionista | Agenda e dados de contacto — sem notas clínicas |
+| Faturação | Módulo de faturação — sem notas clínicas |
+| Estagiário | Apenas utentes que supervisiona, com acesso limitado |
+
+A maioria do software clínico suporta perfis de acesso por papel. Se o software em uso não suporta — é um critério a considerar na próxima renovação.
+
+## Proteger os Equipamentos de Imagem
+
+Os ecógrafos e outros equipamentos de imagem com ligação de rede requerem atenção específica:
+
+- **Segmentação de rede**: colocar o ecógrafo numa VLAN separada, sem acesso direto à internet ou ao servidor do software clínico. A transferência de imagens deve ser feita via DICOM para o sistema de armazenamento, não via rede aberta
+- **Desligar serviços desnecessários**: os equipamentos médicos em rede frequentemente têm serviços de rede ativos que não são necessários para o funcionamento clínico
+- **Contrato de manutenção com o fornecedor**: incluir cláusula sobre atualizações de segurança e responsabilidade por vulnerabilidades do equipamento
+
+## Backup de Registos Clínicos
+
+O backup de uma clínica de fisioterapia deve obedecer a:
+
+**Frequência**: backup diário automático do software clínico — no final do dia de trabalho, ou em tempo real se o software suportar
+
+**Destino**: mínimo dois destinos — backup local (NAS ou servidor externo) + backup remoto (cloud)
+
+**Imutabilidade**: o backup não deve poder ser cifrado pelo ransomware que eventualmente infete os sistemas. Opções:
+- NAS Synology ou QNAP com Immutable Snapshots (proteção WORM)
+- Cloud com Object Lock (Azure Blob Storage, AWS S3 Glacier)
+- Serviço de backup gerido com proteção anti-ransomware
+
+**Teste de recuperação**: verificar trimestralmente que o backup pode ser restaurado. Saber que existe backup não é suficiente — é necessário confirmar que o restore funciona.
+
+**Retenção**: o backup deve reter versões dos últimos 30 dias (para recuperar de ransomware que dormiu semanas antes de se ativar).
+
+## RGPD — Obrigações Práticas
+
+### Ficha de Utente e Consentimento
+
+A ficha de admissão do utente deve incluir:
+
+- Identificação da clínica como responsável pelo tratamento
+- Finalidade do tratamento (prestação de cuidados de fisioterapia)
+- Direitos do utente (acesso, retificação, eliminação, portabilidade dos registos)
+- Informação sobre partilha com médico prescritor, seguradoras, SNS conforme aplicável
+- Para fotografias/vídeos de progresso: consentimento específico e revogável
+
+### Resposta a Pedidos de Utentes
+
+Qualquer utente pode pedir:
+- **Cópia dos registos clínicos** (direito de acesso — resposta em 30 dias)
+- **Portabilidade**: exportação dos registos em formato legível (para outro prestador de saúde)
+- **Eliminação**: quando não há obrigação legal de retenção (o prazo mínimo de 5 anos prevalece sobre o pedido de eliminação)
+
+Ter um processo documentado para estes pedidos, com registo de data e resposta.
+
+### Acordos de Subcontratação de Dados
+
+Se a clínica usa software clínico em cloud (SaaS), o fornecedor é **subcontratante** (processor) dos dados de saúde. É obrigatório ter um **Acordo de Subcontratação de Dados** (DPA) com o fornecedor, que especifique:
+- Que o fornecedor só processa dados por instrução da clínica
+- As medidas de segurança implementadas
+- Onde os dados são armazenados (dentro da UE é preferível — verificar com o fornecedor)
+
+## Checklist de Cibersegurança para Fisioterapia
+
+**Acesso e Autenticação**:
+- [ ] Conta individual por profissional no software clínico — sem conta partilhada
+- [ ] MFA ativo nos portais externos (ADSE, seguradoras, SNS)
+- [ ] Perfis de acesso por papel — recepcionistas sem acesso a notas clínicas
+- [ ] Offboarding imediato: acessos revogados no dia de saída de qualquer funcionário
+
+**Backup e Recuperação**:
+- [ ] Backup diário automático do software clínico
+- [ ] Backup remoto em cloud (adicional ao local)
+- [ ] Proteção anti-ransomware (imutabilidade ou snapshots)
+- [ ] Teste de recuperação realizado nos últimos 90 dias
+
+**Equipamentos de Imagem**:
+- [ ] Ecógrafo ou equipamento de imagem em VLAN separada
+- [ ] Contrato de manutenção com cláusula de segurança
+
+**Dispositivos e Rede**:
+- [ ] Computadores com antivírus ativo e atualizações automáticas
+- [ ] Wi-Fi de utentes separada da rede clínica
+- [ ] Bloqueio de ecrã automático (máx. 5 minutos) em todos os computadores
+
+**RGPD**:
+- [ ] Ficha de utente com informação de tratamento de dados (Art. 13 RGPD)
+- [ ] Consentimento específico para fotografias/vídeos de reabilitação
+- [ ] DPA com fornecedor de software clínico cloud
+- [ ] Processo documentado para pedidos de acesso e portabilidade de registos
+- [ ] Análise documentada sobre obrigação de DPO
+
+**Comunicações**:
+- [ ] Dados clínicos não partilhados via WhatsApp — apenas por canal seguro
+- [ ] Email profissional separado do email pessoal dos fisioterapeutas
+
+---
+
+O risco prioritário para uma clínica de fisioterapia é o ransomware sobre o software clínico — com impacto imediato na operação e potencial perda irreversível de registos de utentes. O backup diário com proteção anti-ransomware é o controlo mais importante. O segundo risco é o acesso não autorizado a registos clínicos por pessoal interno — resolvido com contas individuais e perfis de acesso por papel. Estes dois controlos cobrem os cenários de maior impacto e devem ser a prioridade de qualquer clínica de fisioterapia que ainda não os tenha implementado.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-25",
+    readingTime: 14,
+    author: {
+      name: "Rita Santos",
+      title: "Analista de Segurança",
+    },
+  },
+  {
+    slug: "ciberseguranca-escolas-privadas-centros-formacao-portugal",
+    title: "Cibersegurança para Escolas Privadas e Centros de Formação Profissional em Portugal",
+    excerpt:
+      "Dados de menores, portais IEFP e DGESTE, plataformas LMS e registos de alunos têm proteção específica no RGPD. Guia de cibersegurança para escolas privadas e centros de formação em Portugal.",
+    content: `Uma escola privada com quinhentos alunos processa dados pessoais de menores, dados de saúde de alunos com necessidades educativas especiais, registos disciplinares, desempenho académico, e dados de contacto de centenas de famílias. Quando uma violação de dados envolve crianças, as obrigações RGPD são mais exigentes e as consequências mais graves. Em simultâneo, as escolas são alvo de ransomware porque não podem simplesmente fechar enquanto recuperam — os alunos têm aulas, os exames têm datas, e os pais esperam comunicação contínua.
+
+A **cibersegurança para escolas privadas e centros de formação profissional** em Portugal exige uma abordagem que equilibre a necessidade de sistemas abertos e colaborativos (plataformas de ensino, comunicação com famílias, acesso de alunos) com proteção adequada dos dados mais sensíveis — especialmente quando envolvem menores.
+
+## O Que Está em Jogo
+
+### Dados de Alunos Menores
+
+Os dados de alunos menores têm proteção acrescida no RGPD. O Art. 8 estabelece que, para serviços de sociedade da informação dirigidos a crianças, Portugal fixou em **16 anos** o limiar abaixo do qual é necessário consentimento parental. Para escolas, a base legal para tratamento de dados de alunos é diversa:
+
+- **Execução de contrato** (com os pais/encarregados): matrícula, comunicação sobre progresso
+- **Obrigação legal**: cumprimento de requisitos da DGESTE, estatísticas DGEEC, fichas de avaliação
+- **Legítimo interesse** (limitado): gestão interna segura da escola
+
+**Tipos de dados processados**:
+- Dados de identificação do aluno e encarregados de educação
+- Registos de avaliação e desempenho académico
+- Registos de assiduidade
+- Dados de saúde: NEE (Necessidades Educativas Especiais), alergias, medicação em contexto escolar, relatórios psicológicos
+- Registos disciplinares
+- Dados de participação em atividades extra-curriculares
+- Fotografias e vídeos em contexto escolar (visitas de estudo, festas, atividades)
+- Dados de encarregados de educação (contactos, dados de faturação das propinas)
+
+### Plataformas e Sistemas de Gestão Escolar
+
+As escolas privadas em Portugal usam tipicamente:
+
+**Software de gestão escolar**:
+- **JPG** (Jardim Pedagógico/JPG School): solução portuguesa amplamente usada em escolas privadas, integra gestão de alunos, avaliações, assiduidade, e portal para pais
+- **INOVAR** (Grupo Inovar): sistema de gestão integrado com portal de encarregados
+- **Escola Digital / escola.digital**: plataforma de comunicação escola-família
+- **GestAcad**: sistema de gestão académica
+
+**Plataformas de ensino (LMS)**:
+- **Google Workspace for Education**: Gmail, Classroom, Meet, Drive em contas @escola.pt
+- **Microsoft Teams for Education**: integrado com Microsoft 365 Education
+- **Moodle**: LMS open-source auto-hospedado, muito usado em centros de formação profissional e ensino superior privado
+
+**Portais regulatórios**:
+- **Portal DGESTE**: comunicações regulatórias para escolas privadas
+- **DGEEC MISI**: submissão de estatísticas de alunos e pessoal
+- **SIGE / RAIDES** (para ensino superior privado): registo de alunos inscritos e diplomados
+
+**Para centros de formação profissional**:
+- **Portal IEFP** (Si2e / SiGEF): acesso a financiamento de formação, gestão de cursos homologados
+- **Portal ANQEP**: acreditação de entidades formadoras, gestão de CNO/CQEP
+- **Plataforma SIGO**: registo de percursos formativos e certificações
+- **Rede EURES** e portais de bolsas de formação
+
+### Laboratórios e Salas de Informática
+
+As salas de informática escolares têm características de segurança específicas:
+- Dezenas de computadores acessíveis a alunos com níveis de maturidade variáveis
+- Partilhados por múltiplas turmas ao longo do dia
+- Frequentemente ligados a internet sem filtragem adequada
+- Potencial para instalação de malware por alunos (via pendrive, downloads)
+- Risco de acesso a conteúdos inadequados (se não houver filtragem)
+
+## Enquadramento Legal
+
+### RGPD para Dados de Menores em Contexto Escolar
+
+**Fotografias e vídeos de alunos**: são dados pessoais, e quando a criança é identificável, a publicação (no website da escola, redes sociais, ou partilha com pais de outras crianças) requer base legal específica:
+
+- Para publicação em website ou redes sociais da escola: **consentimento dos pais** (para menores de 16 anos)
+- Para partilha interna no sistema de gestão escolar (acesso apenas dos pais do aluno em questão): **execução de contrato**
+- Os grupos de WhatsApp ou plataformas onde pais partilham fotografias de actividades escolares com outras crianças visíveis são um problema frequente de violação de dados
+
+**Dados de saúde em contexto escolar**:
+- Alergias alimentares, medicação administrada na escola, relatórios de NEE — dados de saúde (Art. 9 RGPD)
+- Requerem base legal específica: na maioria dos casos, Art. 9(2)(h) (cuidados de saúde) ou Art. 9(2)(b) (obrigações em matéria de segurança social e saúde pública)
+- Acesso restrito: professores só devem aceder às alergias e NEE relevantes para a sua função — não ao historial clínico completo
+
+**Videovigilância em escolas**:
+- O Decreto-Lei n.º 34/2013 (Lei de Segurança Privada) permite videovigilância em escolas
+- Exige avisos visíveis
+- Zonas privadas (balneários, instalações sanitárias) são proibidas
+- Conservação máxima 30 dias
+
+### Portais IEFP e ANQEP para Centros de Formação
+
+Os portais do IEFP e ANQEP gerem acreditação, financiamento, e registo de formandos. A perda de acesso ou o comprometimento de credenciais pode:
+- Impedir submissão de candidaturas a financiamento de formação (onde prazos são críticos)
+- Comprometer o registo de certificados de formandos no SIGO (certificados de dupla certificação, EFA)
+- Dar acesso a dados de formandos e histórico de cursos a atacantes
+
+## Ameaças Específicas ao Setor
+
+### Ransomware no Sistema de Gestão Escolar
+
+Um ataque de ransomware que afete o sistema de gestão escolar pode bloquear:
+- Acesso a registos de avaliação (crítico em período de exames)
+- Agenda escolar e assiduidade
+- Comunicação com encarregados de educação
+- Portal de propinas e faturação
+
+**Em período de exames nacionais ou provas internas**, a pressão operacional é máxima — o que aumenta a probabilidade de a escola considerar pagar para desbloquear o sistema rapidamente.
+
+### Phishing Imitando DGESTE, IEFP, e AT
+
+Os portais regulatórios que as escolas e centros de formação acedem são imitados por atacantes:
+
+- **"DGESTE — Autorização de funcionamento: documentos em falta"**: urgência de submissão de documentos, com link para página falsa
+- **"IEFP — Candidatura a financiamento: prazo a expirar"**: email a imitar o Si2e, com link malicioso
+- **"AT — Irregularidade em faturação de propinas"**: alerta falso sobre SAF-T ou emissão de recibos
+
+A eficácia destes phishing é elevada porque os destinatários (direção da escola, responsável de formação) recebem comunicações legítimas regulares destes organismos.
+
+### Comprometimento de Plataformas LMS
+
+Se as credenciais de um professor no Google Workspace ou Microsoft Teams forem comprometidas:
+
+- Um atacante tem acesso a todos os conteúdos das aulas (materiais, gravações de videoconferências com menores)
+- Pode aceder a comunicações privadas com alunos e encarregados
+- Pode submeter conteúdos inadequados nos canais das turmas
+- As videoconferências gravadas com imagens de crianças são dados pessoais sensíveis
+
+Se um aluno comprometer as credenciais de outro aluno ou de um professor (por keylogger num computador partilhado, ou por phishing):
+- Pode alterar trabalhos, aceder a avaliações, ou ver dados de outros alunos
+
+### Grupos de WhatsApp de Pais
+
+Os grupos de WhatsApp de pais são frequentemente geridos pela escola mas fora do seu controlo:
+
+- Fotografias de crianças partilhadas sem consentimento dos pais das crianças fotografadas
+- Dados pessoais de alunos (menções a problemas disciplinares, saúde) partilhados em grupo
+- Desinformação ou comunicação de crise não gerida pela escola
+
+A escola tem responsabilidade parcial quando cria e gere estes grupos — deve definir regras de uso e não partilhar dados pessoais de alunos nestes canais.
+
+### Comprometimento de Laboratórios de Informática
+
+Alunos (especialmente do secundário) podem instalar malware, keyloggers, ou ferramentas de acesso remoto nos computadores dos laboratórios. Cenários reais:
+- Keylogger instalado captura credenciais de professores que fazem login no computador de sala
+- Proxy instalado contorna filtros de conteúdo
+- Criptominer instalado usa recursos do computador para mineração de criptomoedas
+
+### Pedidos de Acesso a Dados por Encarregados de Educação
+
+O RGPD dá aos pais (como representantes legais de menores) o direito de aceder aos dados escolares dos filhos. Cenários problemáticos:
+- Pais em conflito de custódia — um dos pais com custódia partilhada que não tem acesso ao portal pode exigir dados que a escola não sabe se deve facultar
+- Alunos maiores de 16 que exercem autonomamente direitos RGPD (em conflito com o que os pais pedem)
+
+Ter um processo documentado e, em casos complexos, consultar apoio jurídico.
+
+## Segurança em Laboratórios de Informática
+
+### Configuração dos Postos de Trabalho
+
+- **Contas de aluno limitadas**: sem permissões de instalação de software, sem acesso às definições do sistema
+- **Restauro automático**: configurar os computadores para restaurar o estado original após cada sessão (usando ferramentas como DeepFreeze, ou imagens de sistema em PXE boot)
+- **Filtragem de conteúdo**: DNS com filtragem (Cloudflare for Families, NextDNS com perfis por escola) ou proxy de conteúdo
+- **Bloqueio de portas USB**: desativar portas USB no BIOS ou por política de grupo (GPO no Active Directory/Intune)
+
+### Rede da Escola Segmentada
+
+- **Rede de alunos separada** da rede administrativa (professores, direção, sistema de gestão escolar)
+- **Rede de convidados** para dispositivos pessoais de visitantes
+- Alunos não devem ter acesso à rede onde estão os sistemas de gestão escolar
+
+### Monitorização Básica
+
+Em redes escolares com Active Directory ou Google Workspace:
+- Ativar logs de acesso e comportamento anómalo (logins fora de horas, downloads em massa)
+- Rever periodicamente os dispositivos ligados à rede
+- Google Workspace Admin e Microsoft 365 Admin têm relatórios de atividade incluídos na licença Education
+
+## Proteger as Plataformas LMS e Email
+
+### Google Workspace for Education / Microsoft Teams
+
+- **MFA obrigatório para professores e administradores** (não para alunos menores — a usabilidade tem de ser equilibrada com segurança)
+- **Sessões de alunos com restrições**: bloquear acesso a apps fora do ambiente controlado pela escola, restringir partilha de ficheiros com externos
+- **Contas terminadas** quando o aluno ou professor sai — revogar imediatamente
+- **Gravações de aulas**: definir política clara sobre retenção (ex: 90 dias) e quem pode aceder — não deixar por padrão acessíveis a todos os membros da turma indefinidamente
+- **Videoconferências com menores**: desativar gravação por participantes externos; só o professor deve poder gravar
+
+### Senhas de Professores
+
+- Password manager para professores (Bitwarden, 1Password) — especialmente importante porque acedem a múltiplas plataformas (LMS, portal de notas, email, portal DGESTE)
+- Sensibilização para phishing: professores são alvo porque têm acesso a dados de muitos alunos
+
+## Segurança nos Portais de Financiamento (Centros de Formação)
+
+### Portal IEFP / Si2e
+
+- Credenciais individuais por utilizador autorizado — nunca partilhadas
+- Autenticação com Chave Móvel Digital quando disponível
+- Revogar acesso imediatamente quando o responsável de formação muda
+- Não guardar credenciais em browsers — usar password manager
+
+### Submissão de Candidaturas a Financiamento
+
+- Ficheiros de candidatura em acesso restrito (apenas os que preparam a candidatura)
+- Verificar integridade da submissão — confirmar no portal que o ficheiro submetido está correto
+- Guardar comprovativos de submissão e número de referência
+
+## RGPD — Práticas Específicas para Escolas
+
+### Fotografias de Alunos: O Que Fazer
+
+**Processo recomendado**:
+1. No início do ano letivo, obter consentimento escrito dos encarregados de educação para publicação de fotografias do aluno em contexto escolar
+2. Especificar onde serão usadas: website da escola, redes sociais, jornal escolar, anuário
+3. Consentimento separado por finalidade (website vs redes sociais vs anuário)
+4. Processo documentado para retirar fotografias quando o consentimento é revogado
+5. Nunca publicar fotografias de alunos cujo consentimento não foi obtido
+
+**Grupos de WhatsApp de pais**: definir regra explícita de que não são partilhadas fotografias onde crianças de outros pais sejam identificáveis, sem consentimento dos pais respectivos.
+
+### Dados Partilhados com Professores
+
+- Professores acedem apenas aos dados dos seus alunos (por turma/disciplina)
+- Dados de NEE e saúde partilhados apenas com professores que precisam (de apoio educativo, do conselho de turma com necessidade de conhecer)
+- Professores substitutos: acesso limitado ao período de substituição
+
+### Retenção de Dados de Ex-Alunos
+
+| Tipo de Dados | Retenção Recomendada |
+|---------------|---------------------|
+| Documentos académicos (diplomas, pautas) | 10 anos (ou permanente para documentos de titulação) |
+| Dados de avaliação e assiduidade | 5 anos após saída |
+| Dados de saúde (NEE, alergias) | 5 anos após saída ou maioridade, consoante o que for maior |
+| Dados financeiros (propinas) | 10 anos (obrigação fiscal) |
+| Dados de contacto de pais | 1 ano após o aluno sair (salvo pedido de manutenção) |
+| Registos disciplinares | 3 anos (salvo processos judiciais pendentes) |
+
+### Centros de Formação: Dados de Formandos
+
+Os centros de formação profissional processam dados de formandos que podem incluir:
+- Dados de desempregados (situação de emprego é dado sensível)
+- Dados de beneficiários de subsídios sociais
+- Qualificações profissionais anteriores
+
+Para formandos IEFP: os dados são partilhados com o IEFP como co-responsável — ter DPA e clareza sobre quem é responsável por quê.
+
+## Comunicação em Crise
+
+Quando ocorre um incidente (breach de dados, ataque de ransomware), a escola tem de comunicar:
+
+1. **CNPD** (em 72 horas se houver risco para os titulares)
+2. **Pais e encarregados de educação** dos alunos afetados (se os dados foram expostos)
+3. **DGESTE** / órgão de tutela (dependendo da natureza do incidente)
+4. **Eventualmente** os próprios alunos maiores de 16 anos (como titulares autónomos)
+
+Ter um plano de comunicação de crise preparado previamente — incluindo quem comunica, como, e com que mensagem — evita improvisação num momento de stress.
+
+## Checklist de Cibersegurança para Escolas Privadas
+
+**Plataformas de Ensino**:
+- [ ] MFA obrigatório para professores e staff administrativo no LMS e email
+- [ ] Contas de alunos com permissões restritas (sem instalação de software)
+- [ ] Política de retenção de gravações de aulas definida e aplicada
+- [ ] Offboarding imediato: conta do professor ou aluno desativada ao terminar o ano
+
+**Laboratórios de Informática**:
+- [ ] Restauro automático dos postos após cada sessão (ou imagem de sistema)
+- [ ] Portas USB bloqueadas por GPO ou BIOS
+- [ ] Filtragem DNS ativa na rede de alunos
+- [ ] Rede de alunos separada da rede administrativa
+
+**Portais Regulatórios (Centros de Formação)**:
+- [ ] Credenciais IEFP/ANQEP individuais por utilizador (não partilhadas)
+- [ ] CMD ativa nos portais que a suportam
+- [ ] Acesso revogado quando responsável de formação muda
+
+**RGPD — Dados de Alunos**:
+- [ ] Consentimento de fotografias obtido no início do ano (por finalidade)
+- [ ] Professores acedem apenas aos dados das suas turmas
+- [ ] Dados de saúde/NEE com acesso restrito a quem necessita
+- [ ] Política de retenção de dados documentada por categoria
+- [ ] Processo documentado para pedidos de acesso e eliminação
+
+**Backup e Continuidade**:
+- [ ] Backup diário do sistema de gestão escolar
+- [ ] Backup remoto em cloud (adicional ao local)
+- [ ] Plano de continuidade básico (o que fazer se o sistema de gestão falhar em período de exames)
+
+**Comunicação**:
+- [ ] Plano de comunicação de crise preparado (CNPD, pais, tutela)
+- [ ] Regras definidas para grupos WhatsApp de pais (sem fotografias de outros alunos)
+
+---
+
+A maior vulnerabilidade das escolas privadas não é técnica — é a combinação de dados muito sensíveis (menores, saúde, desempenho académico) com processos de segurança pouco formalizados. A prioridade é dupla: backup robusto do sistema de gestão escolar (protege contra ransomware no pior momento possível) e controlo de acesso por papel nas plataformas de ensino (limita o impacto de qualquer comprometimento a um subconjunto de dados). Para centros de formação, acrescentar MFA nos portais IEFP e ANQEP — onde a perda de acesso ou o comprometimento pode bloquear financiamento crítico.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-25",
+    readingTime: 16,
+    author: {
+      name: "Carlos Miranda",
+      title: "Consultor de Cibersegurança",
+    },
+  },
 ];
 
 export function getPostBySlug(slug: string): Post | undefined {
