@@ -39842,6 +39842,550 @@ A maior vulnerabilidade das escolas privadas não é técnica — é a combinaç
       title: "Consultor de Cibersegurança",
     },
   },
+  {
+    slug: "ciberseguranca-restaurantes-cafes-portugal",
+    title: "Cibersegurança para Restaurantes e Cafés em Portugal: POS, Delivery e Dados de Clientes",
+    excerpt:
+      "Terminais de pagamento, plataformas de delivery (Uber Eats, Glovo), WiFi de clientes e programas de fidelidade criam riscos específicos para restaurantes e cafés. Guia prático de cibersegurança para o setor de restauração em Portugal.",
+    content: `Um restaurante pode parecer pouco interessante para um atacante. Não tem segredos industriais nem dados financeiros de grandes empresas. Mas tem o que os atacantes mais valorizam: fluxo constante de transações de cartão, dados de centenas ou milhares de clientes, e sistemas de gestão frequentemente desatualizados porque "está a funcionar e ninguém lhe toca".
+
+O setor da restauração em Portugal é um dos mais afetados por ataques a terminais de pagamento e por violações de dados em plataformas de terceiros — muitas vezes sem que os proprietários sequer saibam que aconteceu até receberem uma notificação do banco ou da CNPD.
+
+## Terminais de Pagamento (POS): O Maior Risco
+
+### Como Acontecem os Ataques a POS
+
+Os ataques a terminais de pagamento na restauração seguem dois modelos principais:
+
+**Skimming de hardware** — dispositivos físicos colocados sobre o terminal legítimo para capturar dados do cartão. Mais comum em terminais sem supervisão direta (balcão de bar, check-out de self-service). A deteção exige verificação visual regular do terminal antes de abrir ao público.
+
+**Malware em sistemas POS** — software malicioso instalado no computador ou tablet que serve de backend ao terminal, capturando dados de cartão em memória antes de serem cifrados. Requer acesso ao sistema, seja por ligação remota comprometida, USB infetada, ou phishing ao dono ou colaborador.
+
+### Boas Práticas para Terminais de Pagamento
+
+**Terminais certificados e atualizados**: use sempre terminais fornecidos ou homologados pela vossa instituição bancária. Modelos antigos sem atualizações de firmware são mais vulneráveis. Pergunte ao banco qual o ciclo de substituição recomendado.
+
+**Rede isolada para POS**: o terminal de pagamento não deve partilhar a mesma rede WiFi ou LAN dos computadores de gestão, telemóveis de colaboradores, ou da rede de clientes. Crie uma VLAN separada — a maioria dos routers de escritório permite isso sem custo adicional.
+
+**Sem acesso à internet no POS desnecessário**: o terminal precisa de ligação ao processador de pagamentos. Não precisa de aceder ao Google, YouTube ou qualquer outro serviço. Configure regras de firewall que limitam o tráfego do POS exclusivamente ao processador de pagamentos.
+
+**Verificação diária do terminal**: antes de abrir, inspect o terminal fisicamente — tampa traseira, leitor de cartão, teclado. Qualquer peça solta ou adicional suspeita deve ser reportada ao banco imediatamente. Não use o terminal até ser verificado.
+
+**Não conecte pens USB desconhecidas**: colaboradores não devem ligar pens USB nos sistemas POS ou nos computadores de caixa. Uma pen encontrada no parque de estacionamento é uma técnica comum de entrega de malware (baiting).
+
+## Plataformas de Delivery: Uber Eats, Glovo e Similares
+
+### Os Riscos das Integrações de Delivery
+
+As plataformas de delivery criaram um novo vetor de ataque para restaurantes: a conta do restaurante na plataforma.
+
+**Sequestro de conta da plataforma**: se a password da conta Uber Eats ou Glovo for comprometida, um atacante pode alterar o IBAN de pagamento para o seu próprio, redirecionando receitas durante dias ou semanas antes de ser detetado. Este tipo de fraude é particularmente difícil de recuperar — as plataformas podem demorar semanas a investigar e a reverter transferências.
+
+**Fraude de encomendas falsas**: em plataformas com menor verificação, atacantes criam encomendas falsas com cartões de crédito roubados. O restaurante prepara e entrega a encomenda, o cartão é recusado em chargeback semanas depois, e o restaurante fica sem o dinheiro.
+
+**Acesso às mensagens de clientes**: muitas plataformas permitem ver os dados de contacto dos clientes para coordenação de entrega. Uma conta comprometida expõe esses dados.
+
+### Proteger as Contas de Delivery
+
+**MFA obrigatório em todas as plataformas**: ative a autenticação de dois fatores em todas as contas de delivery — Uber Eats, Glovo, Takeaway.com, e quaisquer outras. Use sempre a app de autenticação (Authy, Google Authenticator) em vez de SMS quando possível.
+
+**Password exclusiva por plataforma**: não reutilize a password do email, do Facebook, ou de qualquer outra conta. Cada plataforma deve ter uma password única e complexa, guardada num gestor de passwords (Bitwarden é gratuito e funciona bem para equipas pequenas).
+
+**Verificação regular do IBAN configurado**: uma vez por mês, confirme que o IBAN registado nas plataformas de delivery ainda é o correto. Ative notificações de pagamento para detetar alterações imediatamente.
+
+**Conta separada para operações**: se possível, use um endereço de email específico para o restaurante nas plataformas de delivery — separado do email pessoal do proprietário. Assim, uma violação do email pessoal não compromete as contas de delivery.
+
+**Acesso limitado por colaborador**: nas plataformas que permitem gestão de utilizadores, crie contas individuais para cada colaborador que precisa de acesso, com as permissões mínimas necessárias. Revogue imediatamente quando um colaborador sai.
+
+## WiFi de Clientes: Conveniência com Segurança
+
+Oferecer WiFi gratuito é um diferenciador em muitos estabelecimentos, mas a rede de clientes não pode ser a mesma que a rede interna com o sistema de caixa, computador de gestão e câmeras de segurança.
+
+### Configurar WiFi de Clientes Corretamente
+
+**SSID e rede separados**: a rede de clientes deve ser um SSID completamente isolado, sem acesso à rede interna. Todos os routers modernos (mesmo os mais económicos) suportam redes de convidados (guest network). Se o vosso router não suporta, vale a pena atualizar — o custo é de €50-150 e protege toda a operação.
+
+**Filtragem DNS na rede interna**: na rede interna (caixa, computadores de gestão), ative filtragem DNS com Cloudflare (1.1.1.3) ou NextDNS. Bloqueia automaticamente muitos domínios de malware e phishing sem custo adicional.
+
+**Sem partilha de passwords entre redes**: a password do WiFi de clientes não deve ser a mesma que a da rede interna. Mude a password da rede interna se algum colaborador que a conhecia saiu da empresa.
+
+**Captive portal com aceitação de termos**: se usar um captive portal (página de login antes de aceder à internet), inclua uma aceitação simples de termos de utilização. Documenta o uso da rede e protege legalmente em caso de uso indevido por um cliente.
+
+## RGPD na Restauração: O Que Precisa de Saber
+
+### Dados de Reservas e Programas de Fidelidade
+
+Os restaurantes processam dados pessoais de clientes de várias formas:
+
+- **Reservas**: nome, contacto, eventualmente preferências alimentares (dado de saúde se incluir alergias ou dieta por motivo médico)
+- **Programas de fidelidade**: histórico de visitas, preferências, dados de contacto
+- **Encomendas de delivery**: morada de entrega, dados de pagamento (via plataforma)
+- **Câmeras de segurança**: imagens de clientes e colaboradores
+
+**Base legal para reservas**: a execução do contrato (Art. 6(1)(b) RGPD) cobre o tratamento de dados para gerir a reserva. Para contactar o cliente com marketing posterior, precisa de consentimento explícito ou legítimo interesse documentado.
+
+**Dados de alergias e dieta**: preferências alimentares por motivo de saúde (alergias, doença celíaca, diabetes) são dados de saúde (categoria especial, Art. 9 RGPD). Só os devem recolher se for necessário para servir o cliente com segurança — e nunca partilhar desnecessariamente.
+
+**Retenção de dados**: dados de reservas podem ser eliminados alguns meses após a visita (salvo obrigação fiscal). Dados de programas de fidelidade: mantenha pelo período do programa mais o prazo razoável para disputas. Documente as políticas de retenção.
+
+**Câmeras de videovigilância**:
+- Sinalização obrigatória à entrada (cartaz normalizado CNPD)
+- Registo de atividades de tratamento
+- Acesso às gravações limitado ao proprietário ou responsável designado
+- Retenção máxima recomendada: 30 dias (salvo incidente em investigação)
+- Câmeras não devem apontar para áreas privadas (casas de banho, balneários de colaboradores)
+
+### Gestão de Dados de Colaboradores
+
+Os restaurantes têm tipicamente elevada rotatividade. Os dados de ex-colaboradores têm prazos de retenção definidos por obrigação legal:
+
+| Tipo de Dados | Retenção |
+|---------------|----------|
+| Contratos de trabalho e recibos de vencimento | 5 anos após cessação (obrigação fiscal) |
+| Registos de ponto | 5 anos |
+| Dados de segurança social | 5 anos |
+| Dados bancários para pagamento de salários | Até confirmação do último pagamento processado |
+| Currículo e candidatura (não contratados) | Máximo 1 ano (ou menos com política documentada) |
+
+Quando um colaborador sai, revogar imediatamente o acesso ao sistema de caixa, às plataformas de delivery, e ao email ou sistemas de comunicação da empresa é obrigação de segurança — não burocracia opcional.
+
+## Sistema de Gestão de Restaurante: Segurança do Software
+
+Muitos restaurantes usam software de gestão integrado (como Lightspeed, Pigzbe, ou soluções nacionais) que centraliza caixa, stock, reservas e relatórios. Um comprometimento deste sistema pode expor dados de meses de transações.
+
+**Contas individuais por colaborador**: nunca partilhem um login "genérico" entre toda a equipa. Cada colaborador deve ter a sua própria conta com as permissões mínimas (um empregado de mesa não precisa de aceder a relatórios financeiros ou configurações do sistema).
+
+**Passwords fortes e MFA**: se o software de gestão suportar MFA, ative para o utilizador administrador no mínimo. Passwords geradas por gestor de passwords (mínimo 16 caracteres aleatórios) para todas as contas administrativas.
+
+**Backups regulares da base de dados**: o sistema de gestão deve ter backup diário automático para localização externa ao restaurante (cloud ou disco externo fora do local). Um incêndio, inundação ou roubo do equipamento não pode significar perda de todos os dados de clientes e registos fiscais.
+
+**Actualizações em dia**: active as atualizações automáticas do software de gestão ou defina um calendário mensal para verificar e aplicar atualizações. Software desatualizado é a porta de entrada mais comum para ataques.
+
+**Acesso remoto seguro**: se o fornecedor de software precisar de acesso remoto para suporte, exija que seja feito por VPN ou ferramenta de acesso remoto com sessão gravada (TeamViewer com logs, AnyDesk Business). Não autorize acesso remoto permanente — deve ser ativado caso a caso.
+
+## Engenharia Social e Phishing no Setor da Restauração
+
+Os proprietários de restaurantes recebem frequentemente tentativas de phishing disfarçadas de:
+
+- **Tripadvisor, Google My Business**: "A sua conta foi suspensa por violação dos termos" — link falso para roubar credenciais
+- **Plataformas de delivery**: "Há um problema com o seu IBAN" — link falso para alterar dados bancários
+- **Fornecedores**: fatura falsa com IBAN diferente do fornecedor real
+- **ASAE, AT, SEF**: notificação falsa de inspeção ou coima, com link para "regularizar a situação"
+
+**Regra de ouro**: nunca clique em links de emails urgentes. Vá diretamente ao site da plataforma ou contacte o fornecedor pelo número que já conhece. Uma mensagem legítima da Uber Eats sobre o seu IBAN vai também estar visível no painel de gestão da plataforma quando aceder diretamente.
+
+**Verificação de faturas com IBAN diferente**: se receber uma fatura de um fornecedor habitual com um IBAN diferente do usual, ligue para o fornecedor pelo número que já tem guardado (não o número que aparece na fatura) antes de efetuar qualquer pagamento.
+
+## Checklist de Cibersegurança para Restaurantes e Cafés
+
+**Pagamentos e POS**:
+- [ ] Terminal de pagamento em rede isolada (VLAN separada)
+- [ ] Verificação física do terminal antes de abrir ao público
+- [ ] Firmware do terminal atualizado (verificar com o banco)
+- [ ] Sem pens USB desconhecidas nos sistemas de caixa
+
+**Plataformas de Delivery**:
+- [ ] MFA ativo em todas as contas (Uber Eats, Glovo, Takeaway.com)
+- [ ] Password exclusiva por plataforma (gestor de passwords)
+- [ ] IBAN verificado mensalmente em todas as plataformas
+- [ ] Acesso revogado imediatamente quando colaborador sai
+
+**Rede e WiFi**:
+- [ ] Rede de clientes separada da rede interna
+- [ ] Password WiFi interna diferente da rede de clientes
+- [ ] Filtragem DNS na rede interna
+
+**Software de Gestão**:
+- [ ] Contas individuais por colaborador (sem login partilhado)
+- [ ] Backup diário automático em localização externa
+- [ ] Atualizações aplicadas regularmente
+- [ ] Acesso remoto de fornecedores ativado apenas quando necessário
+
+**RGPD e Dados**:
+- [ ] Sinalização de videovigilância à entrada
+- [ ] Retenção de gravações máximo 30 dias
+- [ ] Dados de colaboradores ex-funcionários eliminados conforme política
+- [ ] Consentimento documentado para programas de fidelidade e marketing
+
+---
+
+O risco não começa com um ataque sofisticado — começa com uma password partilhada entre toda a equipa numa plataforma de delivery, ou com um terminal de pagamento na mesma rede que o tablet usado para ver Netflix. A proteção de um restaurante não exige expertise técnica avançada: exige disciplina em práticas básicas que ficam por fazer porque "há sempre mais urgência". Cada violação de dados num restaurante pode resultar em notificação à CNPD, coima até 4% do volume de negócios anual, e perda de confiança dos clientes num setor onde a reputação é tudo.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-25",
+    readingTime: 13,
+    author: {
+      name: "Rita Santos",
+      title: "Analista de Segurança",
+    },
+  },
+  {
+    slug: "ciberseguranca-farmacias-independentes-portugal",
+    title: "Cibersegurança para Farmácias Independentes em Portugal: Sifarma, Dados de Saúde e RGPD",
+    excerpt:
+      "Farmácias processam dados de saúde dos seus clientes — a categoria mais protegida no RGPD. Guia de cibersegurança para farmácias independentes em Portugal: Sifarma, portais ANF, proteção de dados de medicação e conformidade regulatória.",
+    content: `Uma farmácia independente com duzentos clientes habituais pode processar dados de saúde de centenas de pessoas — prescrições, medicação crónica, histórico de compras — que revelam condições médicas sensíveis: diabetes, VIH, doenças psiquiátricas, oncologia. São dados de categoria especial ao abrigo do Art. 9 do RGPD, com requisitos de proteção mais exigentes e coimas mais severas em caso de violação.
+
+Ao mesmo tempo, as farmácias dependem de software específico do setor (Sifarma, b-Simple, Farmatic) que é atualizado com menor frequência do que software genérico, interagem com sistemas do SNS e da Segurança Social, e têm terminais de pagamento integrados com a caixa registadora. É um conjunto de riscos que merece atenção específica.
+
+## O Software de Gestão: Sifarma e Alternativas
+
+### Segurança do Sifarma
+
+O Sifarma (da ANF — Associação Nacional de Farmácias) é o software de gestão mais comum nas farmácias portuguesas. Algumas práticas críticas para a sua segurança:
+
+**Contas individuais por colaborador**: é tentador ter uma conta "farmácia" partilhada por todos os farmacêuticos e técnicos. Mas a utilização de contas partilhadas impossibilita a auditoria de acções — se ocorrer uma violação de dados ou um erro de dispensa, é impossível saber quem fez o quê. Cada colaborador deve ter a sua própria conta com as suas credenciais.
+
+**Perfis de acesso adequados**: um técnico de farmácia não precisa de acesso às mesmas funcionalidades que o diretor técnico. Configure perfis de acesso que limitam o que cada colaborador pode ver e fazer — histórico de clientes, relatórios financeiros, configurações do sistema.
+
+**Backups do Sifarma**: o Sifarma tem funcionalidades de backup integradas, mas muitos proprietários não as configuram. A base de dados do Sifarma deve ter backup diário automático para um disco externo ou localização cloud, e esse backup deve ser testado periodicamente (um backup que nunca foi testado é um backup que pode não funcionar quando precisar).
+
+**Atualizações de versão**: mantenha o Sifarma atualizado. As atualizações incluem correções de segurança além de novas funcionalidades. Registar-se nas comunicações da ANF/Sifarma garante que recebe notificações de atualizações críticas.
+
+**Acesso remoto do suporte técnico**: quando o suporte técnico do Sifarma precisa de aceder remotamente para resolver um problema, esse acesso deve ser:
+- Iniciado por vocês (não por um contacto não solicitado)
+- Monitorizado durante a sessão
+- Encerrado imediatamente no final do suporte
+- Nunca mediante um link enviado por email não esperado
+
+### Portais Regulatórios: ANF, Infarmed e Segurança Social
+
+As farmácias acedem a vários portais regulatórios com dados sensíveis:
+
+- **Portal ANF**: gestão de encomendas, faturação à ANF, comunicações
+- **Portal Infarmed**: notificação de reações adversas, psicotrópicos, benzodiazepinas
+- **Portal da Segurança Social Direta**: comparticipações
+- **Receita Sem Papel (RSP)**: plataforma de prescrições eletrónicas do SNS
+- **Portal das Finanças**: obrigações fiscais
+
+**MFA em todos os portais que o suportem**: o Portal das Finanças suporta Chave Móvel Digital (CMD). A RSP utiliza mecanismos de autenticação do SNS. Ative todas as camadas de autenticação disponíveis.
+
+**Credenciais individuais, não partilhadas**: o acesso a portais regulatórios com credenciais partilhadas é um risco sério — e em alguns casos pode ser uma violação dos termos de utilização do portal. O diretor técnico não deve partilhar as suas credenciais com colaboradores. Para colaboradores que precisam de acesso a portais específicos, devem ter contas próprias ou o processo deve ser realizado sob supervisão.
+
+**Processo de revogação imediato**: quando um colaborador sai, revogar o acesso a todos os portais e sistemas é prioritário — no próprio dia de saída, antes de mais nada.
+
+## Dados de Saúde: O Ativo Mais Sensível da Farmácia
+
+### O Que São Dados de Saúde numa Farmácia
+
+O RGPD classifica como dados de saúde (categoria especial, Art. 9) toda a informação que revela o estado de saúde de uma pessoa. No contexto de uma farmácia:
+
+- Histórico de medicação (revela condições crónicas: diabetes, hipertensão, depressão, VIH)
+- Prescrições médicas
+- Alergias e contraindicações
+- Respostas a perguntas de aconselhamento farmacêutico
+
+O processamento destes dados exige **base legal específica do Art. 9(2)**, não apenas do Art. 6. Para farmácias, a base legal mais adequada é o Art. 9(2)(h) — cuidados de saúde e medicina — combinado com o sigilo profissional do farmacêutico.
+
+### Quem Pode Aceder a Dados de Clientes
+
+**Princípio da necessidade**: colaboradores devem aceder apenas aos dados que precisam para realizar a sua função. Um técnico que serve ao balcão não precisa de ver o histórico completo de medicação do cliente — precisa de confirmar a prescrição atual. A configuração de perfis de acesso no software de gestão deve refletir isto.
+
+**Dados em ecrã visível**: balcões de farmácia são espaços partilhados. O ecrã do computador não deve ser visível por outros clientes enquanto consulta dados de um cliente. Considere filtros de privacidade de ecrã (privacy screen filters) nos terminais de atendimento ao público.
+
+**Conversas sobre medicação**: o aconselhamento farmacêutico ao balcão pode revelar informação sensível em espaço partilhado. Tenha uma zona reservada para conversas sobre medicação sensível quando o cliente preferir mais privacidade.
+
+### Incidente de Dados de Saúde: Obrigações RGPD
+
+Uma violação de dados de saúde tem obrigações específicas:
+
+1. **Notificação à CNPD em 72 horas** se houver risco para os titulares — e com dados de saúde o risco é quase sempre presumido
+2. **Notificação aos clientes afetados** se o risco for elevado (probabilidade de dano real: discriminação, dano reputacional, roubo de identidade médica)
+3. **Documentação do incidente**: mesmo que não notifique os titulares, deve documentar internamente qualquer violação de dados
+
+A "roubo de identidade médica" — usar os dados de saúde de outra pessoa para obter medicação, seguros, ou prestações sociais — é um crime com consequências sérias para os clientes afetados.
+
+## Ataques Específicos ao Setor Farmacêutico
+
+### Ransomware em Farmácias
+
+O ransomware é uma ameaça real para farmácias independentes. Sistemas de gestão encriptados podem deixar uma farmácia operacionalmente paralisada — sem acesso a prescrições, histórico de clientes, ou fichas de contabilidade. A maioria dos ataques de ransomware a pequenas farmácias começa por:
+
+- **Email de phishing** com anexo malicioso (PDF de "prescrição" ou "fatura de fornecedor")
+- **Acesso remoto não protegido** — Remote Desktop Protocol (RDP) com password fraca exposto na internet
+- **Software desatualizado** com vulnerabilidades conhecidas
+
+**Defesa principal**: backup diário com pelo menos uma cópia offline ou imutável. Se o ransomware encriptar os sistemas, um backup de ontem significa que perde um dia de dados, não anos. Sem backup, a escolha é pagar o resgate (sem garantia de recuperação) ou perder tudo.
+
+### Phishing Direcionado a Farmácias
+
+Farmácias recebem phishing disfarçado de:
+
+- **Infarmed**: "Notificação urgente — medicamento retirado do mercado" com link malicioso
+- **Segurança Social**: "Problema na comparticipação — aceda para regularizar"
+- **ANF**: "A sua conta foi suspensa — atualize os dados"
+- **Fornecedores de medicamentos**: faturas com IBAN alterado
+
+**Procedimento padrão**: aceda sempre aos portais diretamente pelo URL que conhece (ou através de bookmarks que criou pessoalmente), nunca por links em emails. Contacte os fornecedores pelo número habitual para confirmar qualquer alteração de dados bancários.
+
+### Ataques à Cadeia de Abastecimento de Software
+
+Em 2023 e 2024, vários ataques a nível europeu comprometeram fornecedores de software de saúde e farmacêutico, afetando farmácias clientes. O modelo de ataque é sofisticado: em vez de atacar cada farmácia individualmente, os atacantes comprometem o fornecedor de software e usam as atualizações legítimas para distribuir malware.
+
+A proteção individual é limitada neste caso, mas pode reduzir o impacto:
+- Não instale atualizações de software imediatamente após lançamento — aguarde 1-2 dias para que problemas críticos sejam identificados pela comunidade
+- Mantenha backups recentes e testados, anteriores a qualquer atualização recente
+- Monitorize comunicações do fornecedor sobre incidentes de segurança
+
+## Terminais de Pagamento e Segurança Financeira
+
+As farmácias têm fluxos de pagamento mistos: comparticipações do SNS, pagamentos diretos por cartão, e às vezes numerário. Os terminais de pagamento merecem as mesmas proteções que qualquer outro setor:
+
+**Rede isolada para POS**: o terminal de pagamento deve estar numa rede separada da rede de gestão da farmácia. Um compromisso do POS não deve dar acesso ao Sifarma ou aos dados de clientes.
+
+**Verificação física regular do terminal**: inspecione o terminal antes de abrir ao público — especialmente em farmácias de serviço permanente onde pode haver intervalos sem supervisão direta.
+
+**Deteção de fraude em pagamentos**: se a farmácia tiver online banking, ative notificações imediatas para todas as transações. Débitos inesperados devem ser reportados ao banco sem demora.
+
+## Segurança Física da Farmácia
+
+A segurança digital não existe sem segurança física. Numa farmácia:
+
+**Clean desk no escritório e balcão de retaguarda**: prescrições físicas, receituário, documentos com dados de clientes não devem ficar visíveis sobre as secretárias quando não estão a ser usados. Documento com dados de saúde deixado numa secretária visível é uma violação de dados potencial.
+
+**Câmeras de videovigilância**: a maioria das farmácias tem videovigilância. Aplicam-se as mesmas regras RGPD:
+- Sinalização obrigatória à entrada
+- Acesso às gravações limitado ao responsável
+- Retenção máxima de 30 dias
+- Câmeras não devem capturar ecrãs de computador onde dados de clientes são visíveis
+
+**Destruição de documentos físicos**: prescrições físicas processadas, relatórios com dados de clientes, e qualquer documento físico com dados pessoais devem ser destruídos em trituradora de cross-cut (não strip-cut, que permite reconstrução) antes de ir para o lixo.
+
+**Controlo de acesso à retaguarda**: a área de armazenamento de medicamentos e o escritório não devem ser acessíveis a clientes. Se houver colaboradores de limpeza ou manutenção externos, o acesso deve ser supervisionado.
+
+## Conformidade RGPD para Farmácias
+
+### Registo de Atividades de Tratamento
+
+O RGPD exige um registo das atividades de tratamento de dados pessoais (Art. 30). Para uma farmácia, este registo deve incluir:
+
+| Atividade | Dados Tratados | Base Legal | Retenção |
+|-----------|---------------|-----------|---------|
+| Dispensa de medicamentos | Dados prescrição, histórico | Art. 9(2)(h) | 5 anos (obrigação fiscal) |
+| Programas de fidelidade | Nome, contacto, histórico | Consentimento | Duração + 1 ano |
+| Videovigilância | Imagens | Legítimo interesse | 30 dias |
+| Colaboradores | Dados laborais, RH | Obrigação legal | 5 anos pós cessação |
+| Candidaturas de emprego | Dados candidato | Consentimento | Máximo 1 ano |
+
+### Política de Privacidade e Informação aos Clientes
+
+Os clientes têm direito a ser informados sobre o tratamento dos seus dados (Art. 13/14 RGPD). Para farmácias, isto significa:
+
+- **Aviso de privacidade visível** no balcão ou disponível em papel e no website
+- **Consentimento documentado** para programas de fidelidade e marketing
+- **Processo definido** para responder a pedidos de acesso, retificação e eliminação de dados
+
+Um cliente que pede para eliminar o seu histórico de medicação da farmácia tem esse direito — com exceção dos registos que a farmácia é obrigada a manter por lei (por exemplo, registos de psicotrópicos e benzodiazepinas que o Infarmed exige manter por 3 anos).
+
+## Checklist de Cibersegurança para Farmácias Independentes
+
+**Software de Gestão (Sifarma/outros)**:
+- [ ] Conta individual por colaborador (sem logins partilhados)
+- [ ] Perfis de acesso configurados por função
+- [ ] Backup diário automático testado mensalmente
+- [ ] Atualizações aplicadas regularmente
+- [ ] Acesso remoto de suporte registado e monitorizado
+
+**Portais Regulatórios**:
+- [ ] CMD ativa no Portal das Finanças e outros portais que suportem
+- [ ] Credenciais individuais por utilizador
+- [ ] Acesso revogado imediatamente quando colaborador sai
+
+**Dados de Saúde**:
+- [ ] Ecrãs com dados de clientes não visíveis ao público (filtros de privacidade)
+- [ ] Registo de atividades de tratamento atualizado
+- [ ] Processo documentado para notificação de violação de dados (72h CNPD)
+- [ ] Destruição segura de documentos físicos com dados
+
+**Rede e Sistemas**:
+- [ ] Rede POS isolada da rede de gestão
+- [ ] Filtragem DNS na rede interna
+- [ ] Backup offline ou imutável (proteção contra ransomware)
+
+**Segurança Física**:
+- [ ] Sinalização de videovigilância à entrada
+- [ ] Clean desk com documentos físicos sensíveis
+- [ ] Acesso à retaguarda controlado
+
+---
+
+As farmácias independentes estão num ponto de intersecção delicado: processos muito sensíveis, regulação exigente, e tipicamente sem equipa de IT dedicada. A boa notícia é que as medidas mais impactantes — contas individuais, MFA, backups testados, rede isolada para POS — não exigem orçamentos significativos. Exigem processo e disciplina. O custo de uma violação de dados de saúde — em coimas da CNPD, em dano reputacional numa comunidade onde a farmácia é um ponto de confiança — é muito superior ao custo de implementar estas medidas preventivas.`,
+    category: "legislacao",
+    categoryLabel: "Legislacao RGPD",
+    publishedAt: "2026-04-25",
+    readingTime: 15,
+    author: {
+      name: "Miguel Ferreira",
+      title: "Auditor de Compliance",
+    },
+  },
+  {
+    slug: "ciberseguranca-imobiliarias-mediadores-imobiliarios-portugal",
+    title: "Cibersegurança para Imobiliárias e Mediadores Imobiliários em Portugal: Fraude de IBAN e Proteção de Dados",
+    excerpt:
+      "A fraude de IBAN em transações imobiliárias pode desviar centenas de milhares de euros numa única transferência. Guia de cibersegurança para imobiliárias e mediadores imobiliários em Portugal: BIC/IBAN fraud, KYC/AML, RGPD e proteção de clientes.",
+    content: `Uma transação imobiliária típica em Portugal envolve transferências bancárias de centenas de milhares de euros — o montante mais elevado que a maioria das pessoas ou empresas alguma vez transfere. Esta concentração de valor num único momento torna o setor imobiliário um alvo prioritário para um tipo específico de ataque: a fraude de IBAN.
+
+Em 2023 e 2024, houve casos documentados em Portugal e no resto da Europa onde compradores de imóveis transferiram o pagamento de sinal ou de escritura — dezenas ou centenas de milhares de euros — para contas controladas por atacantes, depois de receberem instruções falsas por email. O dinheiro desaparece em horas para contas no estrangeiro, a recuperação é rara, e a responsabilidade legal é disputada entre a mediadora, o advogado, o banco, e o cliente.
+
+## A Fraude de IBAN: Como Funciona e Por Que o Setor Imobiliário é Alvo
+
+### O Ataque Business Email Compromise (BEC) na Imobiliária
+
+O ataque começa tipicamente meses antes da transferência. O atacante compromete o email de uma das partes — a imobiliária, o advogado, ou o comprador — e monitoriza silenciosamente as comunicações durante semanas ou meses. Aprende o processo, os valores, os prazos, os participantes.
+
+Quando a transferência se aproxima, o atacante envia um email a partir de um endereço muito semelhante ao legítimo (mudando uma letra, adicionando um número, usando um domínio quase idêntico) com instruções de pagamento novas — "o IBAN foi alterado, por favor utilize este novo número de conta". O email chega no momento certo, com contexto correto, e muitas vezes a vítima não verifica.
+
+**Por que o imobiliário é particularmente vulnerável**:
+
+1. As transações são grandes e únicas — os compradores não têm experiência anterior para comparar
+2. O processo envolve múltiplas partes (mediadora, advogado, banco, vendedor) com muita troca de emails
+3. As transferências têm prazos (data de escritura, prazo de sinal) que criam urgência
+4. Os compradores estão emocionalmente envolvidos e menos críticos
+5. Emails de imobiliárias e advogados têm aparência profissional que confere confiança
+
+### Proteção Contra Fraude de IBAN
+
+**Nunca mude instruções de pagamento por email — protocolo obrigatório**: a política de todas as imobiliárias deve ser explícita: instruções de pagamento são comunicadas uma única vez, no início do processo, por canal verificado (pessoalmente, por telefone com número conhecido). Qualquer alteração de IBAN, mesmo que pareça legítima, deve ser verificada telefonicamente antes de qualquer transferência.
+
+**Verificação telefónica de IBAN antes de cada transferência**: antes de qualquer transferência relacionada com uma transação imobiliária — sinal, reforço de sinal, escritura — o comprador deve ligar para o número que já conhece da imobiliária ou do advogado para confirmar o IBAN. Este procedimento deve estar documentado e comunicado ao cliente desde o início.
+
+**Autenticação de email da empresa (DMARC, DKIM, SPF)**: configure DMARC, DKIM e SPF no domínio da imobiliária. Estas configurações de email são técnicas mas cruciais — impedem que atacantes enviem emails que parecem vir do vosso domínio. A maioria dos registadores de domínios e plataformas de email (Google Workspace, Microsoft 365) tem guias de configuração. Um IT básico consegue implementar em 1-2 horas.
+
+**Assinatura digital de comunicações com dados de pagamento**: em transações de alto valor, considere assinar digitalmente os emails com instruções de pagamento usando certificados digitais (disponíveis através de entidades certificadas em Portugal como o Cartão de Cidadão ou certificados do SCEE). Uma mensagem assinada digitalmente é verificável como autêntica.
+
+**Email profissional no domínio próprio**: qualquer imobiliária que ainda use endereços Gmail ou Hotmail para comunicação profissional deve migrar para email com o seu próprio domínio (exemplo@suaimobiliaria.pt). Além de profissionalismo, permite implementar as proteções técnicas de email mencionadas.
+
+## Proteção dos Dados de Clientes
+
+### Que Dados Processa uma Imobiliária
+
+As imobiliárias processam um volume significativo de dados pessoais sensíveis:
+
+- **Dados de identificação** de compradores, vendedores e arrendatários (BI/CC, NIF, morada)
+- **Dados financeiros** (documentos de capacidade financeira, extratos bancários, declarações de IRS para financiamento)
+- **Dados de situação patrimonial** (imóveis detidos, dívidas, histórico de crédito)
+- **Documentos de imóveis** (caderneta predial, certidão de teor, registos de propriedade)
+- **Procurações e documentos legais**
+- **Dados de arrendatários** (recibos de vencimento, garantias)
+
+Estes dados têm valor elevado para fraudadores (roubo de identidade, fraude de crédito, extorsão) e devem ser protegidos com cuidado proporcional.
+
+### Armazenamento Seguro de Documentos
+
+**Nunca guardar documentos com dados sensíveis em email**: emails não são arquivos seguros. Extratos bancários, cópias de BI, declarações de IRS e documentos similares não devem ficar no inbox ou enviados de email como arquivo de longo prazo. Devem ser transferidos para um sistema de gestão documental ou pasta partilhada protegida, e o email deve ser eliminado após processamento.
+
+**Sistema de gestão documental protegido**: use uma plataforma de armazenamento de documentos com controlo de acesso por utilizador. Google Drive, SharePoint/OneDrive, ou Dropbox Business permitem controlar quem acede a cada pasta. Documentos de transações específicas devem ser acessíveis apenas às pessoas envolvidas nessa transação.
+
+**Partilha de documentos por link expirado**: quando precisa de enviar documentos para clientes ou parceiros (advogados, bancos), use links de partilha com data de expiração em vez de attachments de email. Links temporários são mais controláveis — podem ser revogados se necessário.
+
+**Cifra de documentos sensíveis**: documentos altamente sensíveis (cópias de Cartão de Cidadão, declarações de IRS) devem ser protegidos com password ou cifrados antes de serem armazenados ou partilhados. O PDF password protection é básico mas melhor do que nada; VeraCrypt ou Boxcryptor oferecem cifra mais robusta para pastas inteiras.
+
+### Retenção e Eliminação de Dados
+
+As obrigações de retenção numa imobiliária são determinadas por vários regimes legais:
+
+| Tipo de Documento | Retenção | Fundamento |
+|-------------------|----------|------------|
+| Contratos de mediação | 10 anos | Prescrição contratual |
+| Documentação de transações concluídas | 10 anos | Obrigação fiscal (IRS, IMT) |
+| Documentação de transações não concluídas | 1-2 anos após desistência | Mínimo necessário |
+| KYC/AML (identificação de clientes para BCFT) | 7 anos após fim da relação | Lei 83/2017 |
+| Dados de candidatos a arrendamento (não selecionados) | Máximo 6 meses | Princípio de minimização RGPD |
+| Comunicações de marketing | Até revogação de consentimento | RGPD |
+
+**Processo de eliminação documentado**: quando o prazo de retenção termina, os dados devem ser eliminados — não apenas da "pasta principal" mas também de backups, emails, e localizações secundárias. Documente o processo de eliminação para demonstrar conformidade em caso de auditoria da CNPD.
+
+## Obrigações de KYC/AML (Branqueamento de Capitais)
+
+### A Lei 83/2017 e as Imobiliárias
+
+As imobiliárias são "entidades obrigadas" ao abrigo da Lei 83/2017 (branqueamento de capitais e financiamento do terrorismo — BCFT). Isto implica obrigações específicas:
+
+**Identificação e verificação de clientes**: antes de iniciar uma relação de negócio (contrato de mediação), a imobiliária deve identificar e verificar a identidade do cliente — tanto compradores como vendedores. Para pessoas singulares: documento de identificação + NIF. Para pessoas coletivas: certidão comercial + identificação do beneficiário efetivo.
+
+**Beneficiário efetivo**: quando o cliente é uma empresa, a imobiliária deve identificar quem são os beneficiários efetivos (pessoas singulares que detêm ou controlam a empresa). Esta informação está disponível no Registo Central do Beneficiário Efetivo (RCBE).
+
+**Operações de risco elevado**: transações acima de €15.000 em numerário são proibidas no imobiliário (Decreto-Lei 28/2019). Situações de risco elevado (cliente em lista de sanções, transação com países de alto risco, estrutura complexa sem justificação) exigem due diligence reforçada.
+
+**Comunicação ao DCIAP**: se a imobiliária tiver suspeita razoável de branqueamento de capitais, tem obrigação de comunicar ao Departamento Central de Investigação e Ação Penal (DCIAP). Não reportar quando deveria é um crime — mas reportar de boa fé está protegido por lei.
+
+**Implicações de segurança digital**: os documentos de KYC/AML — cópias de documentos de identificação, declarações de beneficiários efetivos — são dados pessoais sensíveis que devem ser armazenados com segurança e retidos pelo período legal (7 anos). A segurança digital destes arquivos é também uma obrigação legal de BCFT.
+
+## Segurança dos Sistemas e Comunicações
+
+### Email Profissional e Comunicações com Clientes
+
+**Domínio próprio com proteções técnicas**: como referido, email no vosso domínio com SPF, DKIM e DMARC. Adicionalmente:
+
+- **Senha de acesso ao email forte**: uma conta de email comprometida de um colaborador é o ponto de entrada para fraude BEC. Passwords fortes e MFA no email são a defesa mais importante.
+- **MFA no email obrigatório**: Google Workspace e Microsoft 365 suportam MFA. Deve ser obrigatório para todas as contas, não apenas para o administrador.
+- **Monitorização de regras de reencaminhamento**: atacantes que comprometem emails de imobiliárias frequentemente criam regras de reencaminhamento automático para receberem cópias de todos os emails. Verifique periodicamente se existem regras de reencaminhamento não autorizadas nas contas da empresa (no Gmail: Definições > Reencaminhamento e POP/IMAP; no Outlook: Definições > Email > Regras).
+
+### Plataformas de Gestão Imobiliária (CRM)
+
+Muitas imobiliárias usam CRM ou software específico (Apimo, Realtillo, CasaHoje, ou plataformas internacionais) para gestão de portfólio e clientes:
+
+- **MFA no CRM**: se o CRM suportar MFA, ative para todas as contas
+- **Contas individuais**: cada colaborador com a sua conta — nunca contas partilhadas
+- **Revogação imediata**: quando um consultor sai da imobiliária, revogar o acesso ao CRM e a todas as plataformas no próprio dia
+- **Exportação de dados**: controle quem pode exportar dados do CRM — a lista de clientes da imobiliária é um ativo valioso e confidencial
+
+### Assinatura Eletrónica de Contratos
+
+A utilização de plataformas de assinatura eletrónica (DocuSign, AdobeSign, ou portuguesas como Signaturit) é cada vez mais comum para contratos de mediação, promessas de compra e venda, e contratos de arrendamento. Considerações de segurança:
+
+- **Verificação de identidade robusta**: use plataformas que permitem autenticação da identidade do signatário (CC, Chave Móvel Digital) para contratos de maior valor
+- **Arquivo das assinaturas**: os registos de assinatura (audit trail com timestamps, IPs, autenticação) devem ser arquivados com o contrato — são a prova de autenticidade
+- **Proteção da conta da plataforma**: MFA na conta da plataforma de assinatura, dado que permite criar documentos em nome da empresa
+
+## Engenharia Social e Ataques Específicos ao Imobiliário
+
+**Phishing para credenciais de portais**: os portais de imobiliário (Idealista, Imovirtual, Casa.pt) são alvo de phishing — emails falsos sobre "problemas com os seus anúncios" que redirecionam para páginas de login falsas. Uma conta de portal comprometida permite alterar anúncios, aceder a contactos de interessados, e potencialmente conduzir fraudes em nome da imobiliária.
+
+**Falsas propostas de compra**: proponentes que solicitam informação detalhada sobre imóveis (plantas, documentos) antes de qualquer reunião presencial, usando identidades falsas, para compilar informação de propriedades que não tencionam comprar.
+
+**Vishing (chamadas falsas)**: chamadas de "advogados" ou "representantes do banco" pedindo confirmação de dados de transações ou alteração de instruções de pagamento. Nunca confirme ou altere dados por chamada não iniciada por vocês.
+
+## Checklist de Segurança para Imobiliárias e Mediadores
+
+**Fraude de IBAN (prioritário)**:
+- [ ] Política documentada: instruções de pagamento comunicadas uma vez, nunca alteradas por email
+- [ ] Procedimento de verificação telefónica antes de cada transferência comunicado a clientes
+- [ ] DMARC, DKIM, SPF configurados no domínio de email da empresa
+- [ ] MFA obrigatório em todas as contas de email
+
+**Dados de Clientes**:
+- [ ] Sistema de gestão documental com controlo de acesso por utilizador
+- [ ] Documentos sensíveis não armazenados em email como arquivo
+- [ ] Política de retenção documentada por categoria de documento
+- [ ] Processo de eliminação segura quando prazo termina
+
+**KYC/AML (Lei 83/2017)**:
+- [ ] Processo de identificação de clientes documentado
+- [ ] Verificação de beneficiários efetivos para clientes pessoas coletivas
+- [ ] Arquivos KYC retidos 7 anos com acesso controlado
+- [ ] Formação de colaboradores sobre obrigações BCFT
+
+**Sistemas e Email**:
+- [ ] Email profissional no domínio próprio (não Gmail/Hotmail pessoal)
+- [ ] MFA em email, CRM, e portais de anúncios
+- [ ] Contas individuais por colaborador
+- [ ] Verificação de regras de reencaminhamento de email mensalmente
+- [ ] Revogação de acessos no dia de saída de colaboradores
+
+---
+
+Numa transação imobiliária, a segurança não é responsabilidade exclusiva do banco ou do advogado — a mediadora está no centro das comunicações e é um ponto de risco crítico. A implementação de um protocolo simples de verificação de IBAN pode prevenir perdas que nenhum seguro cobre totalmente. O custo de implementar DMARC, MFA e um protocolo de verificação de pagamentos é de algumas horas de trabalho. O custo de uma única transferência fraudulenta pode ser o encerramento do negócio.`,
+    category: "ameacas",
+    categoryLabel: "Ameacas",
+    publishedAt: "2026-04-25",
+    readingTime: 17,
+    author: {
+      name: "Carlos Miranda",
+      title: "Consultor de Cibersegurança",
+    },
+  },
 ];
 
 export function getPostBySlug(slug: string): Post | undefined {
