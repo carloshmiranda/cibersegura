@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { NewsletterCapture } from "@/components/blog/newsletter-capture";
+import { extractFAQStructuredData } from "@/lib/seo-utils";
 
 export const metadata: Metadata = {
   title: "Após CNCS: NIS2 Continua — Obrigações e Próximos Passos para PMEs | CiberPME",
@@ -80,6 +81,34 @@ const getCNCSStatus = () => {
 export default function AposNIS2Page() {
   const cncsStatus = getCNCSStatus();
 
+  // Create FAQ content in the format expected by the extraction function
+  const faqContent = `
+## Perguntas Frequentes
+
+### O que acontece se não fiz o registo CNCS até 4 maio 2026?
+
+**R:** Se a sua empresa está abrangida pela NIS2 e não fez o registo CNCS, está em incumprimento legal. As autoridades podem aplicar multas até €7 milhões ou 1,4% do volume de negócios anual. Deve contactar imediatamente um consultor especializado para regularizar a situação e implementar as medidas de cibersegurança obrigatórias, mesmo após o prazo.
+
+### Quais são as principais obrigações que continuam depois do registo?
+
+**R:** As obrigações contínuas incluem: análise de riscos anual documentada, notificação de incidentes ao CNCS em 24h (alerta), 72h (relatório preliminar) e 1 mês (relatório final), implementação de medidas técnicas como backup, autenticação multi-fator e encriptação, e gestão contínua dos riscos da cadeia de fornecimento.
+
+### Com que frequência devo fazer análise de riscos de cibersegurança?
+
+**R:** A NIS2 obriga a realizar uma análise de riscos pelo menos uma vez por ano. Esta análise deve cobrir todos os sistemas e serviços críticos da empresa, identificar vulnerabilidades e definir medidas de mitigação. A documentação deve ser mantida atualizada e disponível para auditoria pelas autoridades competentes.
+
+### O que constitui um incidente que devo notificar ao CNCS?
+
+**R:** Deve notificar qualquer incidente que tenha impacto significativo na prestação de serviços ou na segurança da informação, incluindo: ataques informáticos bem-sucedidos, violações de dados pessoais, interrupções de serviço superiores a determinados limites, ou tentativas de acesso não autorizado a sistemas críticos. O prazo é rigoroso: 24h para alerta inicial, 72h para relatório preliminar.
+
+### A minha empresa pode ser multada mesmo depois de fazer o registo?
+
+**R:** Sim. O registo CNCS é apenas o primeiro passo. As multas aplicam-se por incumprimento de qualquer obrigação NIS2: não implementar medidas de segurança adequadas, não notificar incidentes no prazo, não realizar análises de risco, ou não gerir adequadamente os fornecedores. A conformidade é um processo contínuo, não um evento único.
+  `;
+
+  // Extract FAQ structured data
+  const faqStructuredData = extractFAQStructuredData(faqContent);
+
   // JSON-LD structured data for SEO
   const structuredData = {
     "@context": "https://schema.org",
@@ -147,6 +176,12 @@ export default function AposNIS2Page() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
+      {faqStructuredData && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }}
+        />
+      )}
 
       {/* Navigation */}
       <Header currentPath="/apos-nis2" />
@@ -422,6 +457,79 @@ export default function AposNIS2Page() {
                 >
                   → Boas práticas cibersegurança
                 </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ Section */}
+        <section className="border-t border-border">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 py-20">
+            <h2 className="text-3xl font-bold text-brand mb-12 text-center font-display text-balance">
+              Perguntas Frequentes
+            </h2>
+
+            <div className="space-y-8">
+              <div className="p-6 rounded-xl border border-border">
+                <h3 className="text-lg font-bold text-brand mb-3">
+                  ### O que acontece se não fiz o registo CNCS até 4 maio 2026?
+                </h3>
+                <div className="text-text-secondary text-sm leading-relaxed">
+                  <strong>R:</strong> Se a sua empresa está abrangida pela NIS2 e não fez o registo CNCS, está em incumprimento legal.
+                  As autoridades podem aplicar multas até €7 milhões ou 1,4% do volume de negócios anual.
+                  Deve contactar imediatamente um consultor especializado para regularizar a situação e implementar
+                  as medidas de cibersegurança obrigatórias, mesmo após o prazo.
+                </div>
+              </div>
+
+              <div className="p-6 rounded-xl border border-border">
+                <h3 className="text-lg font-bold text-brand mb-3">
+                  ### Quais são as principais obrigações que continuam depois do registo?
+                </h3>
+                <div className="text-text-secondary text-sm leading-relaxed">
+                  <strong>R:</strong> As obrigações contínuas incluem: análise de riscos anual documentada,
+                  notificação de incidentes ao CNCS em 24h (alerta), 72h (relatório preliminar) e 1 mês (relatório final),
+                  implementação de medidas técnicas como backup, autenticação multi-fator e encriptação,
+                  e gestão contínua dos riscos da cadeia de fornecimento.
+                </div>
+              </div>
+
+              <div className="p-6 rounded-xl border border-border">
+                <h3 className="text-lg font-bold text-brand mb-3">
+                  ### Com que frequência devo fazer análise de riscos de cibersegurança?
+                </h3>
+                <div className="text-text-secondary text-sm leading-relaxed">
+                  <strong>R:</strong> A NIS2 obriga a realizar uma análise de riscos pelo menos uma vez por ano.
+                  Esta análise deve cobrir todos os sistemas e serviços críticos da empresa,
+                  identificar vulnerabilidades e definir medidas de mitigação. A documentação deve ser
+                  mantida atualizada e disponível para auditoria pelas autoridades competentes.
+                </div>
+              </div>
+
+              <div className="p-6 rounded-xl border border-border">
+                <h3 className="text-lg font-bold text-brand mb-3">
+                  ### O que constitui um incidente que devo notificar ao CNCS?
+                </h3>
+                <div className="text-text-secondary text-sm leading-relaxed">
+                  <strong>R:</strong> Deve notificar qualquer incidente que tenha impacto significativo na
+                  prestação de serviços ou na segurança da informação, incluindo: ataques informáticos bem-sucedidos,
+                  violações de dados pessoais, interrupções de serviço superiores a determinados limites,
+                  ou tentativas de acesso não autorizado a sistemas críticos.
+                  O prazo é rigoroso: 24h para alerta inicial, 72h para relatório preliminar.
+                </div>
+              </div>
+
+              <div className="p-6 rounded-xl border border-border">
+                <h3 className="text-lg font-bold text-brand mb-3">
+                  ### A minha empresa pode ser multada mesmo depois de fazer o registo?
+                </h3>
+                <div className="text-text-secondary text-sm leading-relaxed">
+                  <strong>R:</strong> Sim. O registo CNCS é apenas o primeiro passo.
+                  As multas aplicam-se por incumprimento de qualquer obrigação NIS2:
+                  não implementar medidas de segurança adequadas, não notificar incidentes no prazo,
+                  não realizar análises de risco, ou não gerir adequadamente os fornecedores.
+                  A conformidade é um processo contínuo, não um evento único.
+                </div>
               </div>
             </div>
           </div>

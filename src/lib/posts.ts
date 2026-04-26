@@ -5017,7 +5017,29 @@ Para detalhes sobre o regime de coimas, consulte o artigo [Multas e Coimas NIS2 
 | 6 meses | Formação básica de segurança para todos os colaboradores |
 | 12 meses | Revisão formal de gestão: análise de risco, incidentes, plano anual |
 
-O registo NIS2 não é o fim — é o começo de uma nova relação da sua empresa com a segurança digital. Mas o início não tem de ser avassalador. Foque-se nas prioridades 1 e 2 primeiro: saber como notificar um incidente e ter uma análise de risco básica. O resto constrói-se progressivamente.`,
+O registo NIS2 não é o fim — é o começo de uma nova relação da sua empresa com a segurança digital. Mas o início não tem de ser avassalador. Foque-se nas prioridades 1 e 2 primeiro: saber como notificar um incidente e ter uma análise de risco básica. O resto constrói-se progressivamente.
+
+## Perguntas Frequentes
+
+### Posso relaxar agora que fiz o registo CNCS?
+
+**R:** Não. O registo apenas formaliza que a sua empresa está abrangida pela NIS2 - não cumpre nenhum requisito de segurança. As obrigações contínuas ficaram ativas: notificação de incidentes em 24h/72h, análise de risco anual, medidas técnicas de proteção. O registo é a linha de partida, não a chegada.
+
+### Qual é a primeira obrigação que devo implementar após o registo?
+
+**R:** Pipeline de notificação de incidentes. Se hoje a sua empresa for atacada por ransomware, tem 24 horas para alertar o CNCS, 72 horas para relatório preliminar e 1 mês para relatório final. Designe quem é responsável internamente e assegure que têm acesso ao portal riscos.cncs.gov.pt.
+
+### A análise de risco tem que ser um documento extenso?
+
+**R:** Não. Para PMEs, uma análise de risco de 5-10 páginas é suficiente se cobrir os elementos essenciais: inventário de ativos críticos, principais ameaças do setor, vulnerabilidades identificadas e plano de tratamento com responsáveis e prazos. O importante é estar documentada e revista anualmente.
+
+### O CNCS pode aparecer na minha empresa para auditoria?
+
+**R:** Pode, mas é improvável para PMEs no primeiro ano. O CNCS foca-se em pedidos de informação e auditorias remotas para entidades de setores importantes. Inspeções presenciais são reservadas para entidades essenciais ou casos de incumprimento persistente. Responda prontamente aos pedidos de informação.
+
+### Quanto tempo tenho para implementar todas as medidas técnicas?
+
+**R:** A NIS2 não define prazos específicos para medidas técnicas - espera implementação "sem demora injustificada". Para PMEs, um calendário de 3-6 meses é razoável: MFA e backup em 60 dias, política de segurança em 90 dias, formação em 6 meses. O importante é demonstrar progresso documentado ao CNCS.`,
     category: "legislacao",
     categoryLabel: "Legislacao RGPD",
     publishedAt: "2026-04-20",
@@ -5393,7 +5415,29 @@ O momento de criar um procedimento de notificação não é durante um ataque de
 
 A notificação eficaz começa muito antes do incidente. Uma empresa que praticou o processo e tem os contactos à mão notifica nas primeiras horas, não nos últimos minutos do prazo.
 
-Para mais contexto sobre as obrigações gerais NIS2, consulte o [guia de obrigações NIS2 para PMEs](/blog/nis2-decreto-lei-125-2025-obrigacoes-pme) e o [plano de resposta a incidentes](/blog/plano-resposta-incidentes-ciberseguranca-pme).`,
+Para mais contexto sobre as obrigações gerais NIS2, consulte o [guia de obrigações NIS2 para PMEs](/blog/nis2-decreto-lei-125-2025-obrigacoes-pme) e o [plano de resposta a incidentes](/blog/plano-resposta-incidentes-ciberseguranca-pme).
+
+## Perguntas Frequentes
+
+### E se descobrir o incidente numa sexta-feira à noite? O prazo conta na mesma?
+
+**R:** Sim, o prazo de 24 horas conta a partir do momento em que toma conhecimento do incidente, não a partir do próximo dia útil. Fins de semana e feriados não suspendem a contagem. O CNCS tem serviços de emergência 24/7 - pode notificar por email (cert@cncs.gov.pt) ou pelo portal. A notificação fora de horas é preferível à notificação tardia.
+
+### Que informação devo incluir se ainda não sei a causa raiz do incidente?
+
+**R:** No alerta de 24 horas, diga exatamente isso: "causa raiz em investigação". O CNCS compreende que em 24 horas não tem todos os detalhes. Forneça o que sabe: quando detetou, que sistemas estão afetados, se está contido. É melhor notificar com informação incompleta no prazo do que tardia com todos os detalhes.
+
+### Tenho que notificar tanto o CNCS como a CNPD no mesmo incidente?
+
+**R:** Depende do incidente. Se há disrução de serviços críticos, notifica o CNCS (NIS2). Se há exposição de dados pessoais, notifica a CNPD (RGPD). Um ransomware que encripta servidores e expõe dados de clientes requer ambas as notificações, para ambas as entidades, nos respectivos prazos e formulários.
+
+### Que acontece se não notificar ou notificar tarde?
+
+**R:** Incumprimento da notificação é infração grave: coimas até €10 milhões para entidades essenciais, €7 milhões para entidades importantes, ou percentagem do volume de negócios global. Notificação tardia é infração moderada com coimas mais baixas mas ainda significativas. "Não sabia que tinha de notificar" não é defesa válida após registo NIS2.
+
+### O CNCS vai partilhar os detalhes do meu incidente com outras empresas?
+
+**R:** O CNCS pode partilhar indicadores técnicos (IPs maliciosos, hashs de malware, etc.) com outras entidades para alertá-las, mas apenas com a sua autorização expressa. Dados comerciais sensíveis da sua empresa não são partilhados. O objetivo é protecção coletiva, não exposição individual. Pode autorizar partilha técnica mas recusar partilha de detalhes operacionais.`,
     category: "legislacao",
     categoryLabel: "Legislacao RGPD",
     publishedAt: "2026-04-19",
@@ -7816,7 +7860,29 @@ A NIS2 representa uma mudança fundamental na abordagem europeia à ciberseguran
 
 **O prazo é real e as consequências são sérias.** Mas com planeamento adequado e implementação gradual, mesmo PMEs com recursos limitados podem atingir conformidade e, simultaneamente, melhorar significativamente a sua postura de cibersegurança.
 
-A NIS2 não é apenas uma obrigação legal - é uma oportunidade para fortalecer a resiliência digital do seu negócio e ganhar vantagem competitiva num mercado cada vez mais consciente dos riscos cibernéticos.`,
+A NIS2 não é apenas uma obrigação legal - é uma oportunidade para fortalecer a resiliência digital do seu negócio e ganhar vantagem competitiva num mercado cada vez mais consciente dos riscos cibernéticos.
+
+## Perguntas Frequentes
+
+### A minha empresa está realmente abrangida pela NIS2?
+
+**R:** Para estar abrangida, a sua empresa deve cumprir dois critérios: ter 50 ou mais funcionários E um volume de negócios anual de €10 milhões ou superior. Além disso, deve operar num dos setores definidos na legislação. As empresas de setores de alta criticidade estão sempre abrangidas independentemente da dimensão. Consulte o portal CNCS para verificação oficial.
+
+### Qual é o prazo real para implementar a NIS2?
+
+**R:** A NIS2 entra em vigor a 3 de abril de 2026 em Portugal. Contudo, recomendamos começar a implementação imediatamente, pois o processo completo pode demorar 6-12 meses para PMEs sem recursos de cibersegurança existentes. O registo no CNCS deve ser feito até maio de 2026.
+
+### Quanto custa implementar os requisitos mínimos da NIS2?
+
+**R:** Para uma PME típica (50-100 funcionários), o investimento inicial varia entre €15.000-50.000, incluindo software, consultoria e formação. Os custos anuais de manutenção rondam €10.000-25.000. Este investimento é significativamente inferior às multas por não-conformidade, que podem chegar aos €7 milhões.
+
+### O que acontece se não cumprir os prazos da NIS2?
+
+**R:** O incumprimento pode resultar em multas administrativas até €7 milhões ou 1,4% do volume de negócios anual. Os administradores podem ser pessoalmente multados até €1 milhão e proibidos temporariamente de exercer funções de gestão. As autoridades também podem suspender atividades empresariais em casos graves.
+
+### Posso usar ferramentas gratuitas para cumprir a NIS2?
+
+**R:** Algumas ferramentas gratuitas como OpenVAS podem ajudar, mas dificilmente conseguirá conformidade completa apenas com soluções gratuitas. A NIS2 exige monitorização 24/7, gestão centralizada de incidentes e relatórios automatizados que requerem soluções comerciais. O investimento em ferramentas adequadas é essencial e compensa face aos riscos.`,
     category: "legislacao",
     categoryLabel: "Legislacao RGPD",
     publishedAt: "2026-03-29",
@@ -10001,22 +10067,27 @@ Para PMEs sujeitas a ambos os regimes:
 - Suporte 24/7 para notificação de incidentes
 - Integração com sistemas existentes
 
-## FAQ — Perguntas Frequentes sobre Coimas NIS2
+## Perguntas Frequentes
 
-**P: A minha PME pode receber uma coima de EUR 10 milhões?**
-R: Não. As PMEs (menos de 250 funcionários) têm coimas máximas de EUR 500.000 para infrações muito graves. Os valores mais altos aplicam-se apenas a grandes empresas e entidades essenciais.
+### A minha PME pode receber uma coima de EUR 10 milhões?
 
-**P: Qual é o prazo de prescrição para coimas NIS2?**
-R: As contraordenações NIS2 prescrevem em 5 anos a contar da data da infração. No entanto, a prescrição interrompe-se com qualquer ato de procedimento.
+**R:** Não. As PMEs (menos de 250 funcionários) têm coimas máximas de EUR 500.000 para infrações muito graves. Os valores mais altos aplicam-se apenas a grandes empresas e entidades essenciais.
 
-**P: Posso contestar uma coima NIS2 nos tribunais?**
-R: Sim. Tem direito de recurso para os tribunais administrativos no prazo de 30 dias após a notificação da decisão final. É recomendável apoio jurídico especializado.
+### Qual é o prazo de prescrição para coimas NIS2?
 
-**P: As coimas NIS2 são públicas?**
-R: Infrações muito graves e graves são publicadas no site do CNCS com identificação da empresa. Infrações leves mantêm-se confidenciais, exceto em caso de reincidência.
+**R:** As contraordenações NIS2 prescrevem em 5 anos a contar da data da infração. No entanto, a prescrição interrompe-se com qualquer ato de procedimento.
 
-**P: Como funciona o pagamento faseado para PMEs?**
-R: PMEs podem solicitar pagamento em prestações até 24 meses, mediante comprovação de dificuldades financeiras e apresentação de garantias adequadas.
+### Posso contestar uma coima NIS2 nos tribunais?
+
+**R:** Sim. Tem direito de recurso para os tribunais administrativos no prazo de 30 dias após a notificação da decisão final. É recomendável apoio jurídico especializado.
+
+### As coimas NIS2 são públicas?
+
+**R:** Infrações muito graves e graves são publicadas no site do CNCS com identificação da empresa. Infrações leves mantêm-se confidenciais, exceto em caso de reincidência.
+
+### Como funciona o pagamento faseado para PMEs?
+
+**R:** PMEs podem solicitar pagamento em prestações até 24 meses, mediante comprovação de dificuldades financeiras e apresentação de garantias adequadas.
 
 ## Próximos Passos para Proteger a Sua PME
 
