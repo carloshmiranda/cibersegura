@@ -2,7 +2,7 @@ import { neon } from "@neondatabase/serverless";
 
 export const dynamic = "force-dynamic";
 
-// GET /api/stats — returns total views from page_views table
+// GET /api/stats — returns total views and visitors from page_views table
 // Called by Hive's metrics cron to collect validation metrics across companies
 export async function GET() {
   // Handle development mode when DATABASE_URL is not set
@@ -12,7 +12,10 @@ export async function GET() {
     if (process.env.NODE_ENV === 'development') {
       return Response.json({
         ok: true,
-        views: 0,
+        data: {
+          page_views: 0,
+          visitors: 0,
+        }
       });
     }
 
@@ -25,11 +28,20 @@ export async function GET() {
   try {
     const sql = neon(process.env.DATABASE_URL);
 
-    const [views] = await sql`SELECT COALESCE(SUM(views), 0) as total FROM page_views`;
+    // Get total page views and unique visitors (unique date-path combinations)
+    const [stats] = await sql`
+      SELECT
+        COALESCE(SUM(views), 0) as page_views,
+        COUNT(*) as visitors
+      FROM page_views
+    `;
 
     return Response.json({
       ok: true,
-      views: Number(views.total),
+      data: {
+        page_views: Number(stats.page_views),
+        visitors: Number(stats.visitors),
+      }
     });
   } catch (error) {
     console.error('❌ Error fetching stats:', error);
