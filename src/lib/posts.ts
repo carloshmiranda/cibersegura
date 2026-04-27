@@ -42112,6 +42112,801 @@ O risco existencial para uma agência de recrutamento não é o downtime de um s
     },
   },
   {
+    slug: "ciberseguranca-opticas-optometristas-portugal",
+    title: "Cibersegurança para Ópticas e Optometristas em Portugal: Proteger Prescrições e Dados de Saúde Visual",
+    excerpt:
+      "Ópticas e clínicas de optometria processam dados de saúde visual — categoria especial RGPD. Guia prático de cibersegurança para proteger prescrições, software de gestão e dados de clientes.",
+    content: `Uma óptica parece, à primeira vista, um comércio de retalho. Mas por baixo da montra com armações e lentes de contacto existe uma realidade diferente: dados clínicos de centenas de clientes, prescrições de refração que são dados de saúde ao abrigo do RGPD, terminais de pagamento com PCI DSS, e portais de seguradoras de saúde com credenciais partilhadas entre colaboradores.
+
+Em Portugal existem mais de 3.000 estabelecimentos de óptica e centros de optometria, maioritariamente PMEs independentes ou pequenas cadeias. A maioria processa dados que juridicamente são **dados de saúde** — sem ter consciência das obrigações de segurança que isso implica.
+
+## Por Que os Dados das Ópticas São Dados de Saúde
+
+O RGPD, no artigo 4.º n.º 15, define dados de saúde como "dados pessoais relacionados com a saúde física ou mental de uma pessoa singular". A história clínica visual de um cliente — incluindo a sua acuidade visual, prescrição de lentes, patologias detetadas como glaucoma ou degenerescência macular — qualifica claramente como dado de saúde.
+
+O artigo 9.º do RGPD proíbe o tratamento de dados de saúde por regra, com exceções específicas. Para uma óptica, a base legal é geralmente a **prestação de cuidados de saúde** (Art. 9.º n.º 2 alínea h)) — o que significa que o tratamento é legal, mas exige:
+
+- Medidas de segurança adequadas ao risco (encriptação, controlo de acessos, logs)
+- Registo das atividades de tratamento (Art. 30.º RGPD)
+- Notificação à CNPD em 72 horas em caso de violação com risco para os titulares
+
+Uma violação de dados de uma óptica — por exemplo, um backup não encriptado com ficheiros de prescrições de 500 clientes — é notificável à CNPD e pode obrigar à notificação individual dos clientes afetados.
+
+## Obrigação de DPO
+
+Uma óptica ou clínica de optometria que realize exames visuais e armazene o historial clínico dos seus clientes pode ter **obrigação de nomear um Encarregado de Proteção de Dados (DPO)** se o volume de tratamento de dados de saúde for considerado "em larga escala" (Art. 37.º n.º 1 alínea c) RGPD).
+
+A CNPD não define um limiar numérico exato. Uma óptica com 2.000 ou mais fichas de clientes com dados clínicos provavelmente qualifica. Uma grande clínica de optometria com múltiplos locais certamente qualifica.
+
+O DPO pode ser externo — uma das opções mais práticas para PMEs, partilhado com outras entidades do setor de saúde por €100–300/mês. A nomeação deve ser comunicada à CNPD através do portal da autoridade.
+
+## As Ameaças Mais Comuns
+
+### Phishing a Imitar Fornecedores e Portais de Saúde
+
+Os emails de phishing mais eficazes contra ópticas imitam:
+
+- **Portais de seguradoras de saúde** (AdvanceCare, Médis, Multicare, Fidelidade Saúde, ADSE) — "sessão expirada, por favor autentique-se" ou "nova atualização do portal de comparticipações"
+- **Fornecedores de software de gestão** (Óticasoft, Softic, Vitoris) — "atualização crítica de segurança disponível"
+- **Infarmed** — "notificação de inspeção a dispositivos médicos" (lentes de contacto e óculos graduados são dispositivos médicos CE)
+- **Autoridade Tributária** — links de phishing para capturar credenciais do portal das finanças
+
+O padrão é idêntico em todos os casos: urgência artificial + link para página de login falsa. Qualquer colaborador pode ser o alvo, não apenas o gerente.
+
+**Controlo**: Nunca clicar em links de emails que pedem autenticação — navegar sempre diretamente para o portal pelo browser ou bookmark guardado.
+
+### Comprometimento de Contas de Seguradoras
+
+Este é o risco financeiro mais imediato. As contas nos portais de comparticipação de seguradoras (ADSE, AdvanceCare, Médis) permitem submeter pedidos de reembolso. Se um atacante obtiver as credenciais da óptica, pode:
+
+1. Submeter pedidos de reembolso fraudulentos em nome da óptica
+2. Alterar o IBAN de pagamentos para conta própria
+3. Aceder a dados pessoais e de saúde dos clientes que passaram pela óptica
+
+**Controlos**:
+- MFA ativo em todos os portais de seguradoras que o suportem
+- Credenciais individuais por colaborador — não uma conta partilhada "da óptica"
+- Alterar passwords de portais imediatamente quando um colaborador sai
+- Verificar mensalmente o histórico de submissões no portal para detetar pedidos fraudulentos
+
+### Ransomware no Software de Gestão
+
+O software de gestão de ópticas (Óticasoft, Softic, Vitoris, optichem, ou soluções adaptadas de ERPs genéricos como PHC/Primavera) armazena décadas de fichas de clientes, prescrições, histórico de compras, e dados de pagamento.
+
+Um ataque de ransomware que encripte a base de dados paralisa completamente a atividade:
+- Impossibilidade de aceder a encomendas de lentes em curso
+- Perda do histórico de prescrições dos clientes
+- Impossibilidade de faturar ou emitir recibos
+
+O vetor mais comum é um email de phishing aberto por um colaborador que instala malware, que depois se propaga pela rede interna.
+
+**Controlos**:
+- Backup diário da base de dados do software de gestão, com cópia off-site ou em cloud (OneDrive/Google Drive encriptado)
+- Testar a recuperação do backup pelo menos uma vez por trimestre — não basta fazer o backup, é preciso saber restaurá-lo
+- Manter o software de gestão e o sistema operativo atualizados
+
+### Fraude de IBAN em Pagamentos a Fornecedores
+
+Ópticas trabalham com fornecedores internacionais de armações (Luxottica, Safilo, Silhouette) e nacionais de lentes (Zeiss, Essilor/Nikon, Rodenstock via distribuidores). As faturas podem ser de valor significativo.
+
+O esquema: o email da óptica ou do fornecedor é comprometido; o atacante monitoriza silenciosamente durante semanas; quando está prestes a ocorrer uma transferência de valor elevado, envia um email aparentemente do fornecedor com novo IBAN para pagamento.
+
+**Controlo**: Qualquer alteração de IBAN por parte de um fornecedor deve ser verificada por telefone para um número registado anteriormente — nunca para um número indicado no próprio email.
+
+### Roubo de Conta Google Business Profile
+
+As ópticas dependem fortemente do Google Business Profile (Google Maps, avaliações, horários). Um atacante que tome conta do perfil pode alterar o número de telefone (redirecionar clientes), publicar conteúdo falso, ou destruir a reputação do negócio.
+
+O vetor mais comum é phishing por email imitando o Google: "Ação necessária: o seu perfil será desativado se não verificar a sua conta nas próximas 48 horas."
+
+**Controlos**:
+- MFA ativo na conta Google associada ao Business Profile
+- Verificar mensalmente quem tem acesso de gestão ao perfil
+- Nunca clicar em emails sobre o Google Business Profile — aceder sempre diretamente em business.google.com
+
+## Software de Gestão: Configuração Segura
+
+A maioria dos sistemas de gestão de ópticas foi desenhada para facilidade de uso, não para segurança. Algumas configurações críticas que muitas ópticas ignoram:
+
+### Contas Individuais por Colaborador
+
+O erro mais frequente: uma única conta "admin" partilhada por toda a equipa. Para além de impossibilitar a auditoria ("quem apagou esta ficha?"), significa que quando um colaborador sai, a password terá de ser alterada — algo que raramente acontece de forma atempada.
+
+**Configuração correta**:
+- Conta individual por colaborador, com o seu próprio nome de utilizador e password
+- Perfis de acesso por função:
+  - **Rececionista/Atendimento**: acesso a marcações, faturação, histórico de compras — sem acesso a dados clínicos detalhados
+  - **Optometrista/Técnico**: acesso completo a fichas clínicas e prescrições
+  - **Gerência**: acesso total incluindo relatórios financeiros
+
+### Logs de Auditoria
+
+Configure o software de gestão para registar quem acedeu a quê e quando. Estes logs são:
+- Indispensáveis para investigar incidentes ("quem acedeu à ficha do cliente X antes do roubo de dados?")
+- Exigidos pelo RGPD para demonstrar responsabilidade
+
+Se o software não suportar logs de auditoria, considere mudar para um que suporte — é um requisito RGPD, não uma opção.
+
+### Backup Automatizado e Testado
+
+A base de dados do software de gestão deve ter backup:
+- **Diário** (ou mais frequente se o volume de fichas for elevado)
+- **Automatizado** — não depender de alguém se lembrar de o fazer
+- **Off-site** — não apenas no mesmo PC ou servidor local (um incêndio ou roubo do hardware destrói o backup junto com os dados)
+- **Testado** — verificar mensalmente que o backup restaura corretamente
+
+Solução prática: configurar o software para exportar a base de dados para uma pasta local, e usar o OneDrive ou Google Drive para sincronizar essa pasta automaticamente para a cloud. Custo: €0 se incluído no plano do Microsoft 365 ou Google Workspace.
+
+## Terminais de Pagamento e PCI DSS
+
+As ópticas aceitam pagamentos de valor elevado — óculos graduados, lentes de contacto anuais, tratamentos de lentes premium. Os terminais de pagamento (TPA) processam dados de cartão de débito e crédito e estão sujeitos ao **PCI DSS (Payment Card Industry Data Security Standard)**.
+
+Para a maioria das ópticas, o âmbito é o **SAQ A** (mais simples) se:
+- Usar TPAs fornecidos pelo banco com solução "chip e PIN" integrada
+- Nunca armazenar dados de cartão localmente
+
+**Regras básicas**:
+- Nunca anote manualmente dados de cartão de clientes
+- O TPA deve estar em rede separada do computador de gestão (ou pelo menos com firewall entre eles)
+- Inspeccionar visualmente o TPA diariamente para detetar dispositivos de skimming físico instalados (câmera escondida, sobreposição no leitor de cartão)
+- Reportar imediatamente ao banco qualquer TPA que tenha sido fisicamente acedido por terceiros
+
+## Proteção de Dados de Menores
+
+Uma parte significativa dos clientes das ópticas são crianças com problemas de visão. Os dados de menores têm proteção reforçada ao abrigo do RGPD:
+
+- Em Portugal, o limiar de consentimento digital é **16 anos**
+- Os dados de saúde de menores têm prazos de retenção específicos (ver secção abaixo)
+- O acesso à ficha de uma criança deve ser restrito — apenas optometristas com necessidade clínica, não todo o pessoal
+
+**Consentimento parental**: Para crianças, o consentimento para tratamento de dados de saúde deve ser dado pelos pais/tutores, não pela própria criança.
+
+## Tabela de Retenção de Dados
+
+| Tipo de Dado | Período de Retenção | Base Legal |
+|---|---|---|
+| Ficha clínica / prescrições (adultos) | Mínimo 5 anos | Legislação de saúde + RGPD |
+| Ficha clínica / prescrições (menores) | Até 5 anos após atingir a maioridade | Proteção de dados de menores |
+| Dados de faturação e recibos | 10 anos | Obrigações fiscais (AT) |
+| Dados de marketing (newsletter, campanhas) | Até revogação do consentimento | Consentimento RGPD |
+| Dados de candidatos a emprego não contratados | Máximo 6 meses | Orientação CNPD |
+| Dados de videovigilância (se existir) | Máximo 30 dias | Lei da Videovigilância |
+
+A eliminação deve ser efetiva — não basta apagar o ficheiro; a base de dados deve remover os registos com purga das cópias de backup.
+
+## Checklist de Segurança para Ópticas
+
+| Controlo | Prioridade |
+|---|---|
+| MFA ativo em todos os portais de seguradoras | 🔴 Crítico |
+| Contas individuais por colaborador no software de gestão | 🔴 Crítico |
+| Backup diário off-site da base de dados testado | 🔴 Crítico |
+| Nenhuma senha partilhada entre colaboradores | 🔴 Crítico |
+| Processo de offboarding: remogar acessos no próprio dia | 🔴 Crítico |
+| MFA na conta Google (Business Profile + Gmail) | 🟡 Importante |
+| Perfis de acesso por função no software de gestão | 🟡 Importante |
+| Logs de auditoria ativos no software de gestão | 🟡 Importante |
+| Verificação mensal de histórico de submissões a seguradoras | 🟡 Importante |
+| Protocolo de verificação de IBAN por telefone | 🟡 Importante |
+| Registo de atividades de tratamento (Art. 30 RGPD) | 🟡 Obrigação Legal |
+| DPO nomeado (verificar obrigação) | 🟡 Obrigação Legal |
+| Política de privacidade atualizada no website e em loja | 🟢 Recomendado |
+| Encriptação do portátil/PC de gestão (BitLocker/FileVault) | 🟢 Recomendado |
+| Rede separada para TPA de pagamentos | 🟢 Recomendado |
+
+## O Que Fazer se Ocorrer uma Violação de Dados
+
+Se suspeitar que os dados dos seus clientes foram comprometidos (acesso não autorizado, ransomware, divulgação acidental):
+
+1. **Isolar o sistema afetado** — desligar da rede mas não desligar o hardware (preserva evidências)
+2. **Avaliar o âmbito** — quantos clientes afetados? Que tipo de dados? Prescrições, dados financeiros?
+3. **Notificar a CNPD em 72 horas** se existir risco para os titulares (dados de saúde comprometidos = risco presumido)
+4. **Notificar os clientes afetados** se o risco for elevado (ex: prescrições médicas e dados de contacto expostos)
+5. **Contactar a PJ (Unidade de Cibercrime)** se for ransomware ou acesso malicioso confirmado
+
+O formulário de notificação à CNPD está disponível em cnpd.pt/cidadaos/direitos/violacao-de-dados/.
+
+---
+
+Para contexto adicional sobre dados de saúde e RGPD, consulte o [guia RGPD para pequenas empresas](/blog/guia-rgpd-pequenas-empresas-portugal). O [guia de gestão de passwords](/blog/gestao-passwords-pme-guia-completo) e o artigo sobre [autenticação de dois fatores](/blog/autenticacao-dois-fatores-2fa-pme) complementam os controlos acima.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-27",
+    readingTime: 16,
+    author: {
+      name: "Miguel Ferreira",
+      title: "Auditor de Compliance",
+    },
+  },
+  {
+    slug: "ciberseguranca-textil-calcado-portugal",
+    title: "Cibersegurança para Empresas Têxteis e de Calçado em Portugal: IP, ERP e Fraude na Cadeia de Fornecimento",
+    excerpt:
+      "O setor têxtil e do calçado português é alvo de espionagem industrial, roubo de designs e fraude de IBAN em cadeias de fornecimento complexas. Guia prático de cibersegurança para fabricantes e exportadores.",
+    content: `O setor têxtil, de vestuário e calçado é um dos pilares da economia portuguesa — particularmente no Norte do país, onde concentra milhares de PMEs que produzem para marcas globais, gerem cadeias de fornecimento internacionais e desenvolvem as suas próprias coleções.
+
+Esta posição de fornecedor premium do mercado global torna estas empresas alvos específicos de ameaças que outras PMEs raramente enfrentam: **espionagem industrial** por parte de concorrentes, roubo de designs antes do lançamento de coleções, fraude de IBAN em transações com fornecedores de matérias-primas e compradores internacionais, e ataques de ransomware que paralisam a produção na semana de uma entrega crítica.
+
+## O Perfil de Risco do Setor
+
+### Espionagem de Propriedade Intelectual
+
+Uma empresa têxtil ou de calçado que desenvolve as suas próprias coleções tem um ativo crítico — os **designs antes do lançamento**. Uma coleção de outono/inverno que ainda está em desenvolvimento contém meses de trabalho e investimento significativo.
+
+Os atacantes com motivação de espionagem industrial tentam aceder a:
+- Ficheiros de design (Adobe Illustrator, Photoshop, CAD de calçado como CRISPIN ou Roman)
+- Fotografias de amostras de coleções ainda não apresentadas
+- Comunicações com compradores internacionais sobre especificações
+- Listas de preços e margens
+
+O vetor mais comum não é técnico — é humano. Um designer que sai da empresa e leva ficheiros para um concorrente, ou um colaborador aliciado a partilhar ficheiros de design.
+
+**Controlos**:
+- Controlo de acesso por projeto: colaboradores só acedem às pastas dos projetos em que trabalham
+- DLP (Data Loss Prevention): alertas quando ficheiros grandes de design são copiados para pen drives ou enviados por email externo
+- Marca d'água digital invisível em amostras e apresentações de coleção (permite rastrear a origem de uma fuga)
+- Auditar acessos a ficheiros de design nos 30 dias anteriores a qualquer saída de colaborador
+
+### Fraude de IBAN na Cadeia de Fornecimento
+
+As PMEs têxteis e de calçado têm cadeias de fornecimento complexas: fornecedores de tecidos, malhas, acessórios (botões, fivelas, fechos), serviços de estampagem, tintagem, e compradores internacionais que pagam por transferência bancária.
+
+A fraude de IBAN ("Business Email Compromise" ou BEC) é o risco financeiro mais imediato:
+
+1. O email da empresa ou de um fornecedor é comprometido por phishing
+2. O atacante monitoriza as comunicações em silêncio durante semanas
+3. Quando está prestes a ocorrer uma transferência de valor elevado (pagamento a fornecedor de matérias-primas, adiantamento de comprador internacional), o atacante envia um email aparentemente legítimo com novo IBAN
+4. A empresa paga para a conta errada
+
+Em cadeias de fornecimento internacionais, as transferências podem ser de dezenas de milhar de euros. Há casos documentados em Portugal de empresas têxteis que perderam €50.000–200.000 numa única operação.
+
+**Protocolo obrigatório**:
+1. Qualquer alteração de IBAN de fornecedor ou comprador deve ser **verificada por telefone** para um número registado previamente — nunca para um número indicado no próprio email
+2. Implementar **dupla aprovação** para transferências acima de um limiar (ex: >€5.000): autorização de dois responsáveis diferentes
+3. Configurar **alertas bancários em tempo real** para qualquer transferência saída — a "hora de ouro" para bloquear uma transferência fraudulenta é nos primeiros minutos
+4. Verificar mensalmente se existem **regras de reencaminhamento** no email do responsável financeiro (um atacante que compromete um email muitas vezes configura reencaminhamento silencioso para monitorizar comunicações)
+
+### ERP e Sistemas de Gestão de Produção
+
+As PMEs têxteis e de calçado usam ERPs como **PHC**, **Primavera**, **Sage**, ou soluções específicas do setor como **Bema** (confeção) ou **IntelliSewn**. Estes sistemas contêm informação crítica:
+- Especificações técnicas de produto (fichas de artigo, composições, processos)
+- Ordens de fabrico e planeamento de produção
+- Dados de clientes e pricing
+- Informação de fornecedores
+
+Um ataque de ransomware sobre o ERP paralisa completamente a operação: impossibilidade de emitir ordens de fabrico, de faturar, de gerir stocks.
+
+**Controlos para o ERP**:
+- Contas individuais por utilizador — nunca conta partilhada "da produção" ou "da faturação"
+- Perfis de acesso mínimo: operador de produção não acede a dados financeiros; financeiro não acede a especificações técnicas confidenciais
+- Backup diário da base de dados do ERP, com cópia off-site testada mensalmente
+- Acesso remoto ao ERP apenas via VPN — nunca expor o ERP diretamente à internet
+
+### Phishing Direcionado ao Setor
+
+Os emails de phishing mais eficazes contra empresas têxteis e de calçado imitam:
+
+- **Portais aduaneiros e de exportação** — alfândegas, TARIC, AEO, DHL/UPS/FedEx — "problema com declaração aduaneira, clique para resolver"
+- **Autoridade Tributária** — "divergência detetada no IVA intracomunitário" — frequente em empresas com operações de exportação
+- **Associações setoriais** (ATP — Associação Têxtil e Vestuário de Portugal, APICCAPS — Associação Portuguesa dos Industriais de Calçado) — "renovação de quota associativa" ou "acesso a relatório setorial"
+- **Compradores internacionais** — email falso imitando um comprador conhecido com pedido de especificações ou novo IBAN
+
+**Controlo**: Formação específica para os departamentos de compras e financeiro sobre reconhecer phishing com pretextos do setor.
+
+## Proteção de Ficheiros de Design
+
+Os ficheiros de design (Adobe Illustrator, Photoshop, CorelDraw, ficheiros CAD de calçado, fichas técnicas em Excel/PDF) são o ativo mais sensível de uma empresa com coleção própria.
+
+### Gestão de Acesso por Projeto
+
+Estruture as pastas de ficheiros por projeto/coleção, com permissões específicas:
+
+\`\`\`
+/Coleções
+  /2026-Outono-Inverno  [acesso: equipa de design + direção]
+  /2025-Primavera-Verão [acesso: toda a empresa — coleção já lançada]
+  /Especificações-Técnicas [acesso: técnicos de produto + produção]
+  /Contratos-Compradores [acesso: comercial + direção]
+\`\`\`
+
+Nas últimas semanas antes de um lançamento de coleção, restringir o acesso aos ficheiros de design apenas a quem tem necessidade imediata.
+
+### Marca d'Água em Apresentações
+
+Quando envia fotografias ou lookbooks de coleção para compradores ou agentes, adicione uma **marca d'água digital** com o nome do destinatário. Se um design aparecer copiado na concorrência, sabe de onde veio.
+
+Ferramentas simples: Adobe Acrobat (para PDFs), Canva, ou um script Python simples com Pillow para imagens.
+
+### Controlo de Dispositivos Amovíveis
+
+Pens USB e discos externos são um vetor comum de roubo de ficheiros. Configure a política de grupo do Windows (Group Policy) para:
+- Bloquear gravação em dispositivos USB não autorizados
+- Ou pelo menos registar o que é copiado para USB e quando
+
+Em ambientes onde a produção usa PCs partilhados com operadores de máquinas, esta configuração é especialmente importante.
+
+## Segurança nos Portais Externos
+
+As empresas têxteis e de calçado utilizam regularmente vários portais externos com credenciais próprias:
+
+| Portal | Risco | Controlo |
+|---|---|---|
+| Portal das Finanças (AT) | Phishing + acesso à faturação | MFA com CMD, credenciais individuais |
+| Portal da Segurança Social (SS Direta) | Acesso a dados de trabalhadores | CMD obrigatório |
+| Portal do Instituto do Emprego (IEFP) | Candidaturas a apoios | MFA + credenciais individuais |
+| Sistema de Informação de Certificação Têxtil (CITEVE) | Certificações de produto | Password forte + MFA se disponível |
+| TARIC / Portal da Alfândega (AT) | Declarações aduaneiras | CMD para declarantes aduaneiros |
+| INPI (marcas e patentes) | Registo de propriedade intelectual | Credenciais únicas + MFA |
+
+**Regra geral**: Qualquer portal governamental ou de certificação deve ser acedido com credenciais individuais (não partilhadas), e preferencialmente com Chave Móvel Digital (CMD) quando disponível.
+
+## Trabalho com Compradores e Marcas Internacionais
+
+Muitas PMEs têxteis e de calçado portuguesas são fornecedores de marcas europeias e internacionais — Inditex, H&M, Decathlon, Primark, ou marcas de luxo. Esta relação implica:
+
+### Acesso a Plataformas de Fornecedor
+
+Os grandes compradores utilizam plataformas de gestão de fornecedores (Coupa, SAP Ariba, Bamboo Rose, Lectrade, Infor Nexus). Estas plataformas têm acesso a dados de encomendas, especificações, e em alguns casos, dados financeiros.
+
+**Controlos**:
+- Conta por utilizador específico — não uma conta genérica "fornecedor"
+- MFA ativo se a plataforma suportar
+- Revogar acessos imediatamente quando o colaborador que os usava sai da empresa
+
+### Contratos com Cláusulas de Segurança
+
+Os grandes compradores exigem cada vez mais que os fornecedores demonstrem práticas de segurança. Podem pedir questionários de segurança ou cláusulas de confidencialidade nos contratos.
+
+Ter documentado — mesmo que de forma simples — a política de segurança da empresa (quem tem acesso a quê, como são protegidos os ficheiros de design) torna mais fácil responder a estas exigências e demonstrar seriedade.
+
+## Continuidade Operacional
+
+O setor têxtil e de calçado opera com janelas de entrega apertadas. Um ataque de ransomware na semana de entrega de uma coleção pode ser existencial.
+
+### Plano de Continuidade Mínimo
+
+Documente — uma página chega — as respostas a:
+
+1. **Se o ERP ficar inacessível**: Como continuamos a produção? Existe algum processo manual de emergência? Quem autoriza ordens de fabrico à mão?
+2. **Se o email ficar inacessível**: Qual é o número de telefone de cada comprador-chave? Como comunicamos urgências?
+3. **Se os ficheiros de design forem encriptados**: Existe backup off-site recente? Qual é o processo de restauro? Quanto tempo demora?
+4. **Se o responsável de TI (muitas vezes uma única pessoa) estiver indisponível**: Quem sabe contactar o fornecedor do ERP? Onde estão as passwords de acesso aos sistemas?
+
+Esta documentação deve existir em papel, fora dos sistemas informáticos — se o sistema estiver comprometido, o plano tem de ser acessível.
+
+## Checklist de Segurança para Têxteis e Calçado
+
+| Controlo | Prioridade |
+|---|---|
+| Protocolo de verificação de IBAN por telefone (antes de qualquer pagamento a novo IBAN) | 🔴 Crítico |
+| MFA em email corporativo e portais governamentais | 🔴 Crítico |
+| Dupla aprovação para transferências acima de limiar definido | 🔴 Crítico |
+| Backup do ERP diário, off-site, testado mensalmente | 🔴 Crítico |
+| Contas individuais no ERP com perfis de acesso por função | 🔴 Crítico |
+| Alertas bancários em tempo real para transferências | 🟡 Importante |
+| Controlo de acesso por projeto a ficheiros de design | 🟡 Importante |
+| Verificação de regras de reencaminhamento de email (mensal) | 🟡 Importante |
+| Offboarding no dia da saída (email, ERP, portais, VPN) | 🟡 Importante |
+| SPF + DKIM + DMARC no domínio de email da empresa | 🟡 Importante |
+| Formação anti-phishing específica para departamentos de compras e financeiro | 🟡 Importante |
+| Controlo de dispositivos USB (bloqueio ou registo) | 🟢 Recomendado |
+| Marca d'água em apresentações de coleção enviadas externamente | 🟢 Recomendado |
+| Plano de continuidade documentado (em papel) | 🟢 Recomendado |
+| Política de segurança documentada (para auditoria de compradores) | 🟢 Recomendado |
+
+---
+
+O [artigo sobre fraude de CEO (BEC)](/blog/fraude-ceo-bec-pme-portugal) aprofunda os mecanismos do compromisso de email empresarial. Para a segurança do ERP, o [guia de segurança no software de gestão PHC e Primavera](/blog/seguranca-software-gestao-erp-phc-primavera-pme) tem orientação específica. O [guia de backup 3-2-1](/blog/backup-dados-pme-regra-3-2-1) estabelece a estratégia de proteção contra ransomware.`,
+    category: "ameacas",
+    categoryLabel: "Ameacas",
+    publishedAt: "2026-04-27",
+    readingTime: 17,
+    author: {
+      name: "Carlos Miranda",
+      title: "Consultor de Cibersegurança",
+    },
+  },
+  {
+    slug: "linux-server-hardening-pme-ubuntu-debian",
+    title: "Hardening de Servidores Linux para PMEs: Ubuntu e Debian Seguros sem Expertise Avançada",
+    excerpt:
+      "Muitas PMEs gerem um VPS Linux para alojamento, email ou aplicações internas. Este guia cobre SSH seguro, firewall UFW, fail2ban, atualizações automáticas e monitorização básica para Ubuntu e Debian.",
+    content: `Existe um ponto cego frequente nas PMEs portuguesas: a empresa tem todo o foco em proteger os PCs de escritório — antivírus, MFA, passwords — mas tem um servidor Linux a correr algures numa cloud (Hetzner, OVH, DigitalOcean, AWS EC2) com configuração de fábrica, porta SSH aberta para o mundo, e sem actualizações há meses.
+
+Esse servidor pode estar a alojar o website da empresa, o servidor de email, uma aplicação interna, ou simplesmente backups. E está a ser varrido por scanners automáticos a cada hora — literalmente. Os logs de autenticação SSH de um novo servidor sem configuração de segurança mostram, tipicamente, centenas a milhares de tentativas de login por dia.
+
+Este guia cobre o hardening essencial para **Ubuntu 22.04 LTS e Debian 12** — as distribuições mais comuns para servidores de PMEs. Os comandos são testados nestas versões; em Rocky Linux ou AlmaLinux, alguns nomes de pacotes diferem mas os conceitos são idênticos.
+
+## Por Onde Começar: O Servidor Recém-Criado
+
+Quando um VPS é criado, o estado inicial é geralmente:
+- Login como root por SSH com password
+- Porta SSH padrão (22) aberta
+- Todas as atualizações pendentes desde a criação da imagem
+- Sem firewall ativo
+- Sem monitorização
+
+Estes quatro problemas são os mais urgentes e o que este guia trata, pela ordem certa.
+
+## 1. Atualizações: Primeiro de Tudo
+
+Antes de qualquer outra configuração, aplicar todas as atualizações pendentes:
+
+\`\`\`bash
+apt update && apt upgrade -y
+# Reiniciar se houver atualização do kernel
+reboot
+\`\`\`
+
+### Atualizações Automáticas de Segurança
+
+Configure as atualizações de segurança para se instalarem automaticamente. Em produção, algumas equipas evitam isto por medo de quebrar algo — o risco de não aplicar patches de segurança é muito maior do que o risco de uma atualização de segurança causar problemas (que é muito baixo para pacotes de segurança críticos).
+
+\`\`\`bash
+apt install -y unattended-upgrades
+dpkg-reconfigure --priority=low unattended-upgrades
+\`\`\`
+
+Verificar a configuração em \`/etc/apt/apt.conf.d/50unattended-upgrades\` — por defeito, instala apenas atualizações de segurança do repositório \`-security\`, que é o comportamento correto.
+
+Para receber notificações por email quando atualizações são instaladas:
+\`\`\`
+// Em /etc/apt/apt.conf.d/50unattended-upgrades
+Unattended-Upgrade::Mail "admin@suaempresa.pt";
+Unattended-Upgrade::MailReport "on-change";
+\`\`\`
+
+## 2. Utilizadores: Nunca Trabalhar como Root
+
+A conta root tem poderes ilimitados e não deve ser usada para acesso regular.
+
+### Criar Utilizador Administrativo
+
+\`\`\`bash
+adduser nomeadmin
+usermod -aG sudo nomeadmin
+\`\`\`
+
+A partir daqui, todas as operações de administração são feitas como \`nomeadmin\` com \`sudo\` quando necessário.
+
+### Verificar Sudoers
+
+Verificar que o ficheiro sudoers está correto:
+\`\`\`bash
+visudo  # Editor seguro de sudoers
+\`\`\`
+
+A linha \`%sudo   ALL=(ALL:ALL) ALL\` permite que todos os membros do grupo \`sudo\` usem sudo — correto por defeito no Ubuntu/Debian.
+
+## 3. SSH: A Porta de Entrada Mais Atacada
+
+O SSH é o serviço mais varrido na internet. A configuração padrão é funcional mas insegura.
+
+### Autenticação por Chave SSH (Obrigatório)
+
+Nunca autenticar por password em SSH de produção. Use autenticação por chave pública.
+
+**No seu PC local** (não no servidor):
+\`\`\`bash
+# Gerar par de chaves (se ainda não tiver)
+ssh-keygen -t ed25519 -C "admin@suaempresa.pt"
+
+# Copiar a chave pública para o servidor
+ssh-copy-id nomeadmin@IP_DO_SERVIDOR
+\`\`\`
+
+**Verificar** que consegue autenticar com a chave antes de desativar passwords:
+\`\`\`bash
+ssh nomeadmin@IP_DO_SERVIDOR  # Deve entrar sem pedir password
+\`\`\`
+
+### Hardening do sshd_config
+
+Editar \`/etc/ssh/sshd_config\`:
+
+\`\`\`
+# Desativar login de root por SSH
+PermitRootLogin no
+
+# Desativar autenticação por password (apenas chaves)
+PasswordAuthentication no
+ChallengeResponseAuthentication no
+
+# Desativar autenticação por teclado interativo
+KbdInteractiveAuthentication no
+
+# Limitar tempo de autenticação e tentativas por ligação
+LoginGraceTime 30
+MaxAuthTries 3
+MaxSessions 5
+
+# Desativar X11 forwarding (raro ser necessário em servidores)
+X11Forwarding no
+
+# Mensagem de login (opcional — para requisitos de compliance)
+# Banner /etc/ssh/banner.txt
+\`\`\`
+
+Depois de editar, testar a configuração antes de reiniciar (evita ficar bloqueado):
+\`\`\`bash
+sshd -t  # Testa a configuração sem reiniciar
+systemctl restart ssh
+\`\`\`
+
+### Mudar a Porta SSH (Segurança por Obscuridade — Limitada mas Útil)
+
+Mudar a porta padrão de 22 para uma porta alta (ex: 2222, 22000) não é segurança real — um scanner competente encontra SSH em qualquer porta. Mas **elimina 99% do tráfego de brute force automatizado** que visa especificamente a porta 22, reduzindo drasticamente o ruído nos logs.
+
+Em \`/etc/ssh/sshd_config\`:
+\`\`\`
+Port 22000  # Exemplo — escolha uma porta entre 1024 e 65535
+\`\`\`
+
+**Importante**: Atualizar a regra de firewall antes de reiniciar o SSH, caso contrário fica bloqueado.
+
+## 4. Firewall: UFW para Simplicidade
+
+O UFW (Uncomplicated Firewall) é a forma mais prática de gerir o iptables em Ubuntu e Debian.
+
+### Configuração Base
+
+\`\`\`bash
+# Instalar UFW se não estiver presente
+apt install -y ufw
+
+# Política padrão: bloquear tudo que entra, permitir tudo que sai
+ufw default deny incoming
+ufw default allow outgoing
+
+# Permitir SSH (ajustar a porta se mudou)
+ufw allow 22000/tcp  # Ou a porta que escolheu
+
+# Permitir HTTP e HTTPS se for servidor web
+ufw allow 80/tcp
+ufw allow 443/tcp
+
+# Ativar o UFW
+ufw enable
+
+# Verificar estado
+ufw status verbose
+\`\`\`
+
+### Princípio do Mínimo Privilégio para Firewall
+
+Só abrir as portas que são estritamente necessárias para a função do servidor. Exemplos:
+
+| Função do Servidor | Portas a Abrir |
+|---|---|
+| Servidor web | 80/tcp, 443/tcp, porta SSH |
+| Servidor de email | 25/tcp, 587/tcp, 993/tcp, porta SSH |
+| Base de dados (PostgreSQL) | Apenas SSH + acesso da rede interna |
+| Aplicação interna | Porta da app (apenas IPs autorizados) + SSH |
+
+Para restringir acesso de uma porta a um IP específico:
+\`\`\`bash
+ufw allow from 203.0.113.10 to any port 5432  # PostgreSQL apenas do IP do escritório
+\`\`\`
+
+## 5. Fail2Ban: Bloquear IPs após Tentativas Falhadas
+
+O fail2ban monitoriza os logs e bloqueia automaticamente IPs que fazem demasiadas tentativas de autenticação falhadas.
+
+\`\`\`bash
+apt install -y fail2ban
+\`\`\`
+
+Criar configuração local (nunca editar diretamente o ficheiro principal, que é sobrescrito em atualizações):
+
+\`\`\`bash
+# Criar /etc/fail2ban/jail.local
+cat > /etc/fail2ban/jail.local << 'EOF'
+[DEFAULT]
+bantime  = 1h
+findtime = 10m
+maxretry = 5
+backend  = systemd
+
+[sshd]
+enabled  = true
+port     = 22000  # Ajustar à porta SSH configurada
+logpath  = %(sshd_log)s
+maxretry = 3
+bantime  = 24h    # Ban mais longo para SSH
+EOF
+
+systemctl enable --now fail2ban
+\`\`\`
+
+Verificar o estado:
+\`\`\`bash
+fail2ban-client status sshd  # Ver tentativas e IPs banidos
+\`\`\`
+
+## 6. Monitorização Básica de Integridade
+
+### Auditoria de Logins e Sudo
+
+Os logs do sistema já registam logins e uso de sudo. Verificar regularmente:
+
+\`\`\`bash
+# Últimos logins
+last -n 20
+
+# Falhas de login
+lastb -n 20  # Requer root
+
+# Uso de sudo (Ubuntu/Debian com journald)
+journalctl -u sudo --since "24 hours ago"
+
+# Tentativas de SSH falhadas
+journalctl -u ssh --since "24 hours ago" | grep "Failed"
+\`\`\`
+
+### Instalar Logwatch para Resumos Diários por Email
+
+\`\`\`bash
+apt install -y logwatch
+\`\`\`
+
+Configurar em \`/etc/logwatch/conf/logwatch.conf\` (criar se não existir):
+\`\`\`
+MailTo = admin@suaempresa.pt
+MailFrom = logwatch@$(hostname)
+Detail = Low
+Range = yesterday
+\`\`\`
+
+O Logwatch envia um resumo diário dos eventos relevantes nos logs — logins, uso de sudo, falhas de autenticação, erros de serviços. Um resumo de 5 minutos por dia que pode identificar problemas antes que se tornem incidentes.
+
+### AIDE: Deteção de Alterações em Ficheiros
+
+O AIDE (Advanced Intrusion Detection Environment) cria uma base de dados de checksums de ficheiros do sistema e alerta quando algo muda inesperadamente.
+
+\`\`\`bash
+apt install -y aide
+aideinit  # Cria a base de dados inicial (pode demorar vários minutos)
+mv /var/lib/aide/aide.db.new /var/lib/aide/aide.db
+
+# Verificar alterações (crontab semanal é razoável)
+aide --check
+\`\`\`
+
+Adicionar verificação semanal ao crontab:
+\`\`\`bash
+echo "0 6 * * 1 root /usr/bin/aide --check | mail -s 'AIDE Report $(hostname)' admin@suaempresa.pt" >> /etc/crontab
+\`\`\`
+
+## 7. Proteções Adicionais do Sistema
+
+### Desativar Serviços Desnecessários
+
+Ver o que está a correr:
+\`\`\`bash
+systemctl list-units --type=service --state=running
+\`\`\`
+
+Desativar serviços que não são necessários para a função do servidor (ex: servidor de impressão \`cups\` num servidor web):
+\`\`\`bash
+systemctl disable --now cups  # Exemplo
+\`\`\`
+
+### Parâmetros do Kernel (sysctl)
+
+Algumas definições do kernel melhoram a segurança de rede. Adicionar a \`/etc/sysctl.d/99-security.conf\`:
+
+\`\`\`
+# Desativar reencaminhamento de pacotes (não é router)
+net.ipv4.ip_forward = 0
+
+# Proteção contra SYN flood
+net.ipv4.tcp_syncookies = 1
+
+# Rejeitar pacotes com routing de origem (possível spoofing)
+net.ipv4.conf.all.accept_source_route = 0
+net.ipv6.conf.all.accept_source_route = 0
+
+# Ignorar pings de broadcast (evitar participar em ataques DDoS smurf)
+net.ipv4.icmp_echo_ignore_broadcasts = 1
+
+# Não aceitar redirects ICMP
+net.ipv4.conf.all.accept_redirects = 0
+net.ipv6.conf.all.accept_redirects = 0
+
+# Log de pacotes com endereços suspeitos
+net.ipv4.conf.all.log_martians = 1
+\`\`\`
+
+Aplicar sem reiniciar:
+\`\`\`bash
+sysctl -p /etc/sysctl.d/99-security.conf
+\`\`\`
+
+### Permissões em Ficheiros Sensíveis
+
+\`\`\`bash
+# Verificar que o /etc/shadow (hashes de passwords) é só root
+chmod 640 /etc/shadow
+chmod 644 /etc/passwd
+
+# Verificar ficheiros com SUID suspeitos
+find / -perm /4000 -type f 2>/dev/null
+# Comparar com uma lista conhecida — ficheiros SUID inesperados são sinal de comprometimento
+\`\`\`
+
+## 8. Backup do Servidor
+
+Um servidor sem backup não é produção — é um sistema à espera de ser perdido.
+
+### O Que Fazer Backup
+
+Dependendo da função do servidor:
+- **Dados de aplicação**: bases de dados (dump diário com \`pg_dump\` ou \`mysqldump\`), ficheiros de utilizadores
+- **Configuração**: \`/etc/\` (principalmente os ficheiros que editou)
+- **Certificados SSL**: \`/etc/letsencrypt/\` (se usar Let's Encrypt)
+- **Código de aplicação**: se não está num repositório git, deve estar
+
+### Automatizar com Rsync + Crontab
+
+Exemplo simples de backup diário para servidor remoto (ou NAS de escritório com VPN):
+
+\`\`\`bash
+# Backup de base de dados PostgreSQL
+cat >> /etc/cron.daily/backup-db << 'EOF'
+#!/bin/bash
+BACKUP_DIR="/var/backups/db"
+mkdir -p $BACKUP_DIR
+pg_dumpall -U postgres | gzip > "$BACKUP_DIR/dump-$(date +%Y%m%d).sql.gz"
+# Manter apenas os últimos 7 dias
+find $BACKUP_DIR -name "*.sql.gz" -mtime +7 -delete
+EOF
+chmod +x /etc/cron.daily/backup-db
+\`\`\`
+
+Para backup off-site, considere [Backblaze B2](https://www.backblaze.com/b2/) com rclone (€5/TB/mês) ou um bucket S3 da AWS.
+
+## Checklist de Hardening
+
+| Ação | Estado |
+|---|---|
+| Todas as atualizações aplicadas | ☐ |
+| Unattended-upgrades configurado para segurança | ☐ |
+| Utilizador admin criado, login root desativado por SSH | ☐ |
+| Autenticação SSH por chave pública ativa | ☐ |
+| Autenticação por password SSH desativada | ☐ |
+| PasswordAuthentication no em sshd_config | ☐ |
+| Porta SSH não-padrão configurada | ☐ |
+| UFW ativo com política deny-incoming | ☐ |
+| Apenas portas necessárias abertas no UFW | ☐ |
+| fail2ban instalado e configurado | ☐ |
+| Logwatch ou equivalente a enviar resumos diários | ☐ |
+| Backup automatizado e testado (restore funciona?) | ☐ |
+| Serviços desnecessários desativados | ☐ |
+| Parâmetros sysctl de segurança de rede aplicados | ☐ |
+
+## Verificação: O Que um Atacante Vê
+
+Depois do hardening, pode verificar o estado do servidor com ferramentas de scanning externas:
+
+- **Shodan**: pesquise o IP do seu servidor em shodan.io — o que é visível publicamente
+- **nmap**: a partir de outro servidor, \`nmap -sV IP_DO_SERVIDOR\` — quais portas e serviços são detetáveis
+- **ssh-audit**: \`ssh-audit IP_DO_SERVIDOR\` — qualidade dos algoritmos criptográficos do SSH
+
+Um servidor bem configurado deve mostrar apenas as portas intencionalmente abertas, com serviços atualizados e sem banners que revelam versões exatas de software.
+
+---
+
+Para contexto adicional, o [guia de segurança RDP para acesso remoto ao Windows](/blog/seguranca-rdp-acesso-remoto-windows-pme) cobre o equivalente para ambientes Windows. O [guia de VPN empresarial](/blog/vpn-empresarial-pme-guia-completo) detalha como proteger o acesso remoto a recursos internos. O [artigo sobre backup 3-2-1](/blog/backup-dados-pme-regra-3-2-1) aprofunda a estratégia de proteção de dados para o servidor.`,
+    category: "ferramentas",
+    categoryLabel: "Ferramentas",
+    publishedAt: "2026-04-27",
+    readingTime: 18,
+    author: {
+      name: "Rita Santos",
+      title: "Analista de Segurança",
+    },
+  },
+  {
     slug: "ciberseguranca-notarios-conservatorias-registo-portugal",
     title: "Cibersegurança para Notários e Conservatórias em Portugal: Proteção de Atos Jurídicos e Dados Sensíveis",
     excerpt:
