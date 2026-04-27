@@ -43712,6 +43712,392 @@ Um clube desportivo não precisa de uma política de cibersegurança de 50 pági
       title: "Consultor de Cibersegurança",
     },
   },
+  {
+    slug: "ciberseguranca-medicina-trabalho-servicos-sst-portugal",
+    title: "Cibersegurança para Clínicas de Medicina do Trabalho e Serviços de SST em Portugal",
+    excerpt:
+      "As clínicas de medicina do trabalho processam os dados de saúde mais sensíveis de milhares de trabalhadores — e têm obrigação de os manter completamente separados dos seus empregadores. Uma violação de dados não é apenas uma crise RGPD: pode expor diagnósticos médicos confidenciais ao patrão. Guia prático de segurança para serviços de SST portugueses.",
+    content: `Uma clínica de medicina do trabalho está numa posição única no ecossistema de dados de saúde: processa informação clínica altamente sensível sobre trabalhadores — diagnósticos, consumo de substâncias, condições psiquiátricas, doenças crónicas — e tem a obrigação legal de garantir que o empregador nunca acede a esses dados.
+
+O médico do trabalho comunica ao empregador apenas o resultado binário: apto ou não apto. Todo o diagnóstico que fundamenta essa decisão é coberto por sigilo médico. Numa brecha de dados, esta tensão torna-se existencial: se um colaborador descobrir que o seu empregador teve acesso ao seu histórico clínico através de um incidente de segurança numa clínica de SST, as consequências legais e reputacionais para a clínica são devastadoras.
+
+Portugal tem centenas de clínicas de medicina do trabalho e serviços de segurança e saúde no trabalho (SST) independentes ou integrados em redes de saúde ocupacional. Muitos são PMEs com 5 a 30 profissionais, a servir dezenas ou centenas de empresas clientes simultaneamente. Esta combinação — dados extremamente sensíveis, múltiplos clientes com dados completamente separados, e infraestrutura IT típica de uma PME — cria riscos específicos que este guia endereça.
+
+## O Modelo de Ameaças Específico da Medicina do Trabalho
+
+Os riscos de cibersegurança numa clínica de medicina do trabalho não são iguais aos de uma clínica geral de saúde. Existem vetores de ataque e consequências específicas:
+
+**Acesso indevido de empregadores a dados clínicos**: O risco mais específico do setor. Um funcionário da clínica mal-intencionado (ou um administrador de sistema com acesso excessivo) pode vender informação clínica a empregadores — ou um atacante externo pode comprometer o sistema e publicar os dados, expondo a relação entre diagnósticos e identidades dos trabalhadores.
+
+**Ransomware durante períodos críticos**: As campanhas de medicina do trabalho têm picos de atividade previsíveis — início de contrato com novas empresas, renovações anuais de fichas de aptidão, temporadas de trabalhadores sazonais. Atacantes que monitorizam o setor podem sincronizar ataques de ransomware com estes períodos, maximizando a pressão para pagar.
+
+**Comprometimento de credenciais do portal ACT**: A Autoridade para as Condições do Trabalho (ACT) disponibiliza plataformas digitais relevantes para os serviços de SST. Credenciais comprometidas permitem acesso a registos de acidentes de trabalho e doenças profissionais.
+
+**Fraude de IBAN em faturação a empresas**: As clínicas de medicina do trabalho emitem faturas regulares às empresas clientes por serviços de SST. Um ataque BEC que comprometa o email da clínica pode levar empresas a transferir pagamentos para IBAN fraudulento.
+
+**Engenharia social por "gestores de RH"**: Atacantes que se façam passar por responsáveis de RH de empresas clientes para tentar obter informação sobre trabalhadores específicos — por exemplo, alegando precisar de confirmar a aptidão de um colaborador para uma promoção.
+
+## O Sigilo Médico e a Separação de Dados: A Obrigação Central
+
+A Lei 102/2009 (Regime Jurídico da Promoção da Segurança e Saúde no Trabalho) e o Código Deontológico da Ordem dos Médicos estabelecem claramente: o médico do trabalho não pode revelar ao empregador diagnósticos ou informação clínica dos trabalhadores. A comunicação ao empregador é limitada à aptidão para a função.
+
+Do ponto de vista técnico, esta obrigação tem implicações concretas na arquitetura do sistema de informação:
+
+**Controlo de acesso com separação explícita por papel**:
+- O médico do trabalho acede ao processo clínico completo do trabalhador
+- O técnico de SST (engenheiro, higienista) acede a dados de postos de trabalho e riscos profissionais, sem acesso a diagnósticos individuais
+- A rececionista acede a dados de agendamento e faturação, sem acesso a qualquer dado clínico
+- O gestor da clínica acede a dados de gestão e faturação, sem acesso a processos clínicos individuais
+- Nenhuma conta técnica ou de suporte tem acesso permanente a dados clínicos
+
+**Nenhuma API ou exportação para o sistema do empregador**: Mesmo que uma empresa cliente peça integração do sistema da clínica com o seu ERP de RH, esta integração não pode incluir dados clínicos. Pode incluir datas de consulta e resultados de aptidão, mas nunca diagnósticos, medicação, ou notas clínicas.
+
+**Isolamento por empresa cliente**: Os dados clínicos dos trabalhadores de cada empresa cliente devem estar tecnicamente isolados dos de outras empresas. Se o sistema da clínica for comprometido, o atacante não deve conseguir extrair dados de todas as empresas ao mesmo tempo — a segmentação reduz o impacto de cada incidente.
+
+## Software de Gestão em Medicina do Trabalho
+
+As clínicas de medicina do trabalho em Portugal usam software especializado para gestão de processos clínicos, fichas de aptidão, e agendamento. Os mais comuns incluem:
+
+**Sanigritas**: Sistema de gestão para medicina do trabalho amplamente usado em Portugal. Importa verificar: controlo de acesso por papel configurado, logs de auditoria de acessos a processos clínicos, suporte para backup automático, e localização dos servidores (Portugal/UE).
+
+**GestSaúde Ocupacional / Occupmed**: Plataformas especializadas com módulos de gestão de fichas de aptidão, riscos profissionais, e registo de acidentes.
+
+**Soluções genéricas adaptadas**: Algumas clínicas usam software clínico genérico (Glintt, Alert, etc.) adaptado para medicina do trabalho, ou até sistemas baseados em Microsoft Access ou Excel. Estas soluções têm tipicamente controlos de acesso mais fracos.
+
+**Perguntas críticas a fazer ao fornecedor de software**:
+- Existe controlo de acesso por papel (médico/técnico/recepcionista/gestão) com níveis de visibilidade diferentes?
+- Existe log de auditoria que regista quem acedeu a qual processo clínico e quando?
+- Onde estão alojados os dados — servidor local, datacenter em Portugal, cloud na UE?
+- Como é feito o backup e com que frequência?
+- Qual é o processo de atualização de segurança e em que prazo são corrigidas vulnerabilidades?
+- O acesso remoto (para médicos que fazem deslocações) faz-se por VPN ou por acesso direto ao sistema?
+
+Se o software não suporta controlo de acesso por papel, está a criar responsabilidade legal perante o RGPD e o Código Deontológico da Ordem dos Médicos.
+
+## Portais Externos: ACT, AT, SNS e Outros
+
+Os serviços de SST portugueses acedem a vários portais externos no âmbito da sua atividade:
+
+**Portal da ACT (Autoridade para as Condições do Trabalho)**: Registo de acidentes de trabalho, participação de doenças profissionais, relatório único. As credenciais de acesso devem ser individuais por técnico — nunca uma conta partilhada por toda a equipa. A ACT disponibiliza acesso via autenticação forte (Chave Móvel Digital).
+
+**Portal das Finanças / AT**: Emissão de faturas, SAF-T, obrigações fiscais. Conta dedicada para a clínica, com MFA ativado e credenciais não partilhadas com o contabilista via email.
+
+**Portal SNS / SPMS**: Para clínicas com acesso a plataformas de saúde pública ou integração com o SNS. Autenticação via CMD.
+
+**SINASSE (Sistema Nacional de Apoio à Saúde e Segurança no Trabalho)**: Plataforma de registo de serviços de SST em Portugal. Manter as credenciais de acesso seguras e individuais.
+
+**Boas práticas para todos estes portais**:
+- Uma conta por utilizador, nunca partilhadas
+- Ativar autenticação de dois fatores onde disponível, preferencialmente via app (não SMS)
+- Criar uma checklist de offboarding que inclua a revogação de acessos a todos estes portais quando um técnico ou médico sai da clínica
+- Monitorizar alertas de acesso anómalo (hora ou localização incomum)
+
+## Gestão de Backups: As Fichas de Aptidão Não Podem Desaparecer
+
+As fichas clínicas de medicina do trabalho têm obrigações de retenção legais em Portugal. A perda destes dados num ataque de ransomware sem backup adequado cria responsabilidade simultânea perante:
+- O RGPD (obrigação de integridade e disponibilidade dos dados, Art. 5(1)(f))
+- A Lei 102/2009 (obrigação de manter registos de SST)
+- Os trabalhadores afetados, que podem precisar destes registos para processos de doenças profissionais anos mais tarde
+
+**Estratégia de backup para clínicas de medicina do trabalho**:
+
+Backup diário da base de dados do software clínico, com cópia automática para armazenamento off-site (cloud com encriptação ou datacenter separado). A encriptação dos backups é obrigatória — os dados clínicos não podem estar em texto claro em qualquer local de armazenamento.
+
+Backup imutável para proteção contra ransomware: use armazenamento com Object Lock ativado (Backblaze B2, AWS S3, Azure Blob) ou Immutable Storage num NAS Synology/QNAP. O ransomware moderno tenta apagar ou encriptar backups — a imutabilidade garante que não consegue.
+
+Testar a recuperação trimestralmente: saber que existe um backup é diferente de saber que funciona. Faça um teste de restauro completo numa máquina separada a cada três meses, e documente o resultado.
+
+**Tempo de recuperação aceitável**: Para uma clínica de medicina do trabalho, a incapacidade de aceder às fichas de aptidão durante mais de 24 horas é crítica — empresas clientes podem ter trabalhadores que precisam urgentemente do certificado de aptidão para começar funções. O plano de continuidade deve garantir recuperação em menos de 4 horas para os dados mais críticos.
+
+## Notificação de Acidentes de Trabalho e Doenças Profissionais
+
+Uma das obrigações específicas dos serviços de SST é o registo e participação de acidentes de trabalho e suspeitas de doenças profissionais. Em Portugal, esta notificação faz-se através do portal da ACT e envolve dados sensíveis do trabalhador.
+
+Um comprometimento deste processo — seja por indisponibilidade do sistema por ransomware, seja por manipulação de registos — cria responsabilidade legal grave para a clínica e para a empresa cliente.
+
+**Controlos específicos**:
+- O acesso ao módulo de registo de acidentes deve estar restrito aos técnicos com responsabilidade direta nesta área
+- Os registos de acidentes devem ser tratados como dados de saúde (categoria especial RGPD Art. 9) mesmo que não incluam diagnóstico clínico detalhado
+- A retenção de registos de acidentes de trabalho em Portugal é de 20 anos — os backups devem garantir esta longevidade
+- Qualquer alteração a um registo de acidente deve gerar entrada no log de auditoria
+
+## Gestão de Acesso Multi-Empresa: Cada Cliente é um Silo
+
+Uma clínica de medicina do trabalho típica serve dezenas ou centenas de empresas clientes. Cada empresa tem os seus trabalhadores, as suas fichas de aptidão, os seus registos de riscos profissionais. Do ponto de vista de segurança, estes dados devem estar logicamente isolados.
+
+**O que isto significa na prática**:
+
+Quando uma empresa cliente termina o contrato com a clínica, os seus dados devem permanecer na clínica pelo período de retenção obrigatório — mas o acesso a esses dados deve ser restrito. Uma empresa concorrente que eventualmente se torne cliente não deve conseguir ver dados da empresa anterior.
+
+Quando um médico do trabalho cessa funções na clínica, o seu acesso ao sistema deve ser revogado imediatamente — incluindo acesso remoto. Médicos que fazem deslocações a empresas clientes muitas vezes têm acesso remoto ao sistema da clínica via VPN ou aplicação web. Este acesso deve estar na checklist de offboarding.
+
+Nunca usar contas de email partilhadas para comunicações com empresas clientes. Cada comunicação deve ser rastreável ao médico ou técnico que a enviou.
+
+## RGPD: Obrigações Específicas das Clínicas de SST
+
+As clínicas de medicina do trabalho têm obrigações RGPD acrescidas face a um consultório de clínica geral:
+
+**Duplo papel de responsável e subcontratante**: Para os dados dos trabalhadores das empresas clientes, a clínica atua como subcontratante (processador) — a empresa cliente é o responsável pelo tratamento. Isto significa que a relação deve ser formalizada por um Contrato de Processamento de Dados (DPA) em cada contrato de prestação de serviços de SST.
+
+**Registo de Atividades de Tratamento (RAT)**: Obrigatório. O RAT deve incluir as categorias de dados tratados (dados de saúde — categoria especial), as finalidades (vigilância da saúde ocupacional, aptidão para o trabalho), as bases legais (Art. 9(2)(h) RGPD — cuidados de saúde e medicina do trabalho), os períodos de retenção, e as medidas de segurança implementadas.
+
+**DPO (Encarregado da Proteção de Dados)**: Para clínicas que processam dados de saúde de trabalhadores em larga escala — por exemplo, a servir centenas de empresas com milhares de trabalhadores — a nomeação de DPO é obrigatória ao abrigo do Art. 37(1)(c) RGPD. Mesmo para clínicas de menor dimensão, é boa prática ter um DPO interno ou externo.
+
+**Notificação à CNPD**: Em caso de violação que envolva dados de saúde, a notificação à CNPD deve ser feita em 72 horas após o conhecimento da violação (Art. 33 RGPD). Dada a sensibilidade dos dados, a CNPD pode também exigir notificação aos titulares (Art. 34).
+
+**Base legal para o tratamento**: O tratamento de dados de saúde em medicina do trabalho está autorizado pelo Art. 9(2)(h) RGPD (cuidados de saúde, medicina preventiva, medicina do trabalho) e pelo Art. 9(2)(b) (obrigações de direito do trabalho). Esta base legal deve estar documentada no RAT.
+
+## Tabela de Retenção de Dados
+
+| Categoria de Dados | Prazo Mínimo | Base Legal |
+|---|---|---|
+| Ficha clínica individual (aptidão) | 5 anos após cessação da relação laboral | Lei 102/2009 |
+| Registos de acidentes de trabalho | 20 anos | Legislação de segurança social |
+| Registos de doenças profissionais | 20 anos | Legislação de segurança social |
+| Avaliações de riscos profissionais | 5 anos após cessação do contrato com a empresa | Lei 102/2009 |
+| Dados de faturação | 10 anos | Legislação fiscal |
+| Logs de acesso ao sistema | 1 a 2 anos | Art. 5(2) RGPD (responsabilidade) |
+| Dados de RH da clínica (colaboradores) | 5 anos após saída | Legislação laboral |
+
+## Checklist de Cibersegurança para Clínicas de Medicina do Trabalho
+
+**Controlo de Acesso e Autenticação**:
+- [ ] Contas individuais por utilizador no software clínico (nunca conta partilhada)
+- [ ] Perfis de acesso por função: médico / técnico SST / rececionista / gestão — sem acesso cruzado
+- [ ] Log de auditoria de acessos a processos clínicos (quem acedeu a quê e quando)
+- [ ] MFA em todos os portais externos (ACT, AT, SNS) via app autenticadora
+- [ ] Credenciais da Chave Móvel Digital (CMD) individuais por profissional
+- [ ] VPN para acesso remoto ao sistema clínico (nunca acesso direto via internet)
+
+**Dados e Backups**:
+- [ ] Backup diário automático da base de dados clínica com cópia off-site encriptada
+- [ ] Backup imutável configurado (Object Lock ou equivalente) para proteção contra ransomware
+- [ ] Teste de recuperação de backup realizado nos últimos 3 meses
+- [ ] Encriptação de disco (BitLocker/FileVault) em todos os computadores com dados de saúde
+
+**RGPD e Compliance**:
+- [ ] DPA assinado com cada empresa cliente que entrega dados de trabalhadores
+- [ ] Registo de Atividades de Tratamento (RAT) documentado e atualizado
+- [ ] DPO nomeado (ou justificação documentada da não obrigatoriedade)
+- [ ] Plano de resposta a violações de dados com procedimento de notificação à CNPD em 72h
+- [ ] Isolamento lógico de dados entre empresas clientes diferentes
+
+**Offboarding e Acessos**:
+- [ ] Checklist de offboarding com revogação de acessos ao software clínico e a todos os portais externos
+- [ ] Revogação de acesso remoto (VPN/aplicação) no dia da saída do profissional
+- [ ] Revisão trimestral de acessos ativos (quem ainda tem acesso ao quê)
+
+---
+
+A clínica de medicina do trabalho está entre os processadores de dados de saúde com maior exposição a riscos de privacidade — não porque os atacantes a visem especialmente, mas porque um único incidente pode comprometer simultaneamente dados de saúde de trabalhadores de dezenas de empresas diferentes. A separação técnica de dados por empresa cliente, o controlo de acesso rigoroso por papel, e o backup imutável são os três pilares que fazem a diferença entre um incidente contido e uma catástrofe regulatória.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-27",
+    readingTime: 16,
+    author: {
+      name: "Carlos Miranda",
+      title: "Consultor de Cibersegurança",
+    },
+  },
+  {
+    slug: "ciberseguranca-empresas-eventos-organizacao-congressos-portugal",
+    title: "Cibersegurança para Empresas de Eventos e Organização de Congressos em Portugal",
+    excerpt:
+      "As empresas de eventos processam dados pessoais de milhares de participantes durante janelas de tempo curtas, fazem pagamentos de alto valor a fornecedores em pressão de prazo, e gerem redes sociais com audiências valiosas. Um ataque à conta Instagram dois dias antes de um festival ou uma fraude de IBAN no pagamento ao fornecedor de som pode ser catastrófico. Guia prático de cibersegurança para event managers.",
+    content: `Organizar um evento é gerir tempo, pessoas, e dinheiro sob pressão constante. É também, do ponto de vista de cibersegurança, uma combinação de riscos que raramente são tratados com a seriedade que merecem: dados pessoais de milhares de participantes recolhidos em poucas semanas, pagamentos de dezenas de milhar de euros a fornecedores com prazos apertados, redes sociais com audiências construídas ao longo de anos, e equipas temporárias com acesso a sistemas críticos.
+
+As empresas de organização de eventos em Portugal — desde a agência que organiza congressos médicos anuais, ao promotor de festivais de verão, à empresa de team building, à organização profissional que gere conferências internacionais — partilham este perfil de risco mas raramente têm alguém na equipa dedicado a pensar em cibersegurança.
+
+Este guia aborda os riscos principais e os controlos concretos que qualquer empresa de eventos pode implementar.
+
+## Plataformas de Ticketing e Dados de Participantes
+
+A venda de bilhetes e gestão de inscrições é o primeiro ponto de recolha massiva de dados pessoais. Uma conferência de 500 pessoas já tem 500 registos com nome, email, telefone, empresa, e dados de pagamento.
+
+**Plataformas comuns em Portugal**:
+- **Eventbrite**: A mais usada globalmente, com operações em Portugal. Os dados dos participantes ficam nos servidores da Eventbrite (nos EUA, com cláusulas de transferência internacional sob SCCs).
+- **TicketLine / BOL**: Plataformas portuguesas para eventos de espetáculos e festivais.
+- **Sympla**: Plataforma brasileira com presença em Portugal para eventos corporativos.
+- **Whova / Cvent / Bizzabo**: Plataformas de gestão de congressos e eventos corporativos.
+- **Google Forms / Typeform com Stripe**: Muitas empresas menores combinam formulário de inscrição com pagamento direto.
+
+**Obrigações RGPD para dados de participantes**:
+
+Ao recolher dados de participantes para um evento, a empresa organizadora é responsável pelo tratamento. Isto implica:
+
+1. **Base legal clara**: O tratamento dos dados para gestão da inscrição e do evento é baseado na execução de contrato (Art. 6(1)(b)). O envio de comunicações de marketing após o evento requer consentimento separado.
+
+2. **Aviso de privacidade no formulário de inscrição**: Os participantes devem ser informados de que dados são recolhidos, para que fins, por quanto tempo, e quem os processa (incluindo a plataforma de ticketing como subcontratante).
+
+3. **DPA com a plataforma de ticketing**: Cada plataforma que processa dados de participantes em nome do organizador é um subcontratante e deve ter um Contrato de Processamento de Dados. A maioria das plataformas grandes disponibiliza estes contratos nos seus termos de serviço — mas têm de ser consultados e formalmente aceites.
+
+4. **Retenção e eliminação**: Após o evento, os dados de participantes devem ser eliminados quando já não são necessários. Dados para faturação têm retenção fiscal de 10 anos; dados de inscrição/contacto devem ser eliminados ao fim de 1-2 anos salvo consentimento para comunicações futuras.
+
+5. **Pedidos de acesso e eliminação**: Se um participante pedir para ver os seus dados ou para ser eliminado da base, a empresa tem 30 dias para responder. Isto pressupõe saber exatamente em que sistemas o participante está registado — incluindo a plataforma de ticketing, a lista de newsletter, e eventuais grupos de WhatsApp criados para o evento.
+
+**Segurança das contas nas plataformas de ticketing**:
+- MFA obrigatório na conta da empresa no Eventbrite, TicketLine, ou equivalente
+- Contas individuais para cada membro da equipa que precisa de acesso — não uma conta partilhada com login/password circulado por WhatsApp
+- Revogar acessos de freelancers e colaboradores temporários após o evento
+- Verificar regularmente que o IBAN/conta bancária de recebimentos no Eventbrite ou equivalente é o correto — comprometimento da conta pode levar à alteração da conta de destino dos pagamentos
+
+## Fraude de IBAN em Pagamentos a Fornecedores de Eventos
+
+Os eventos envolvem pagamentos significativos a fornecedores: som e luz, catering, venue, transportes, artistas, palestrantes, agências de comunicação. O pagamento ao fornecedor de som de um festival pode ser €20.000 a €100.000. O pagamento ao venue de um congresso pode ser €50.000.
+
+Este fluxo de pagamentos a múltiplos fornecedores, muitas vezes novos (cada evento pode ter fornecedores diferentes), é terreno fértil para fraude de IBAN.
+
+**O padrão de ataque**:
+1. O atacante monitoriza as comunicações de email da empresa organizadora (ou do fornecedor) após comprometimento de uma das contas.
+2. No momento em que está a ser processada a fatura final de um fornecedor importante, envia um email com IBAN "atualizado" — aparentemente do fornecedor mas de conta controlada pelo atacante.
+3. Sob a pressão de pagar antes do evento (ou de confirmar pagamento após o evento), o responsável financeiro processa a transferência sem verificar.
+
+**Protocolo de proteção**:
+- Para qualquer fornecedor com quem a empresa trabalha pela primeira vez, confirmar o IBAN por telefone antes do primeiro pagamento
+- Para fornecedores recorrentes, qualquer pedido de alteração de IBAN deve ser verificado por telefone — nunca aceite por email, independentemente de parecer legítimo
+- Verificar o domínio de email de qualquer fornecedor que pede alteração de IBAN — um domínio ligeiramente diferente do habitual é sinal de alarme imediato
+- Configurar alertas bancários em tempo real — se o dinheiro for transferido para conta errada, as primeiras 2 horas são críticas para tentativa de reversão
+
+## Redes Sociais: Ativos Construídos Durante Anos
+
+Para um promotor de festivais ou uma empresa de eventos corporativos, as páginas de Instagram, Facebook, e LinkedIn são ativos comerciais construídos durante anos — com dezenas de milhar de seguidores, histórico de comunicações, e confiança da audiência.
+
+O comprometimento de uma conta de redes sociais corporativa dois dias antes de um evento é um cenário de pesadelo: o atacante pode publicar mensagens falsas sobre cancelamento do evento, pedir reembolsos fraudulentos, ou simplesmente tornar inacessível o canal de comunicação quando mais é necessário.
+
+**Os vetores de comprometimento mais comuns**:
+
+**Phishing via DM (Direct Message)**: Um atacante envia uma mensagem direta no Instagram ou Facebook fingindo ser o suporte da plataforma — alertando para uma violação de direitos de autor, uma verificação de conta em risco, ou uma "oportunidade de verificação" (badge azul). O link leva a uma página que captura as credenciais.
+
+**Acesso de ex-colaboradores**: Um community manager que saiu da empresa continua com acesso de Administrador à página do Facebook — porque ninguém atualizou as permissões quando saiu.
+
+**Conta comprometida de um administrador**: Não é preciso comprometer a conta da empresa — basta comprometer a conta pessoal de Facebook de um dos administradores da página para ter acesso total.
+
+**Proteção das redes sociais corporativas**:
+
+- Ativar 2FA via app de autenticação (Google Authenticator, Authy) em todas as contas de redes sociais corporativas — nunca 2FA por SMS que pode ser comprometido por SIM swap
+- Usar o Meta Business Manager para gerir os acessos à página — permite ter acesso em nome da empresa sem depender das contas pessoais dos colaboradores
+- Auditar trimestralmente quem tem acesso de Administrador/Editor às páginas — remover ex-colaboradores, freelancers, e agências que já não prestam serviço
+- Guardar os códigos de recuperação da conta (backup codes) num gestor de passwords da empresa, não no email pessoal de um colaborador
+- Nunca partilhar a password da conta corporativa de Instagram com agências ou freelancers — em vez disso, adicioná-los como colaboradores com acesso limitado
+- Caso a conta seja comprometida: agir imediatamente — revogar todas as sessões ativas, alterar a password, verificar as publicações recentes, e reportar à plataforma
+
+## Pagamentos On-site: Terminais e PCI DSS
+
+Muitos eventos vendem bilhetes no local, cobram upgrades, ou têm bares e lojas com venda de merchandise. Qualquer aceitação de pagamentos por cartão gera obrigações de conformidade PCI DSS.
+
+**Terminais móveis usados em eventos em Portugal**:
+- **SumUp**: Amplamente usado em eventos pequenos e médios — via Bluetooth para smartphone ou tablet
+- **iZettle (PayPal)**: Similar ao SumUp
+- **Square**: Menos comum em Portugal
+- **Terminais de banco (Multibanco/TPA)**: Para eventos com maior volume, terminais alugados ao banco
+
+**Obrigações de segurança**:
+- Nunca registar manualmente dados de cartão em papel ou formulários digitais — qualquer transação deve ser processada diretamente no terminal
+- Se usar SumUp ou iZettle, garantir que a app está atualizada e que o terminal de leitura é verificado fisicamente no início do evento (verificar que não há dispositivos físicos de skimming colados sobre o terminal)
+- Os dispositivos com a app de pagamento não devem ser usados para outras finalidades (redes sociais, navegação web) durante o evento — risco de malware
+- Para eventos com sistema de pulseiras RFID com crédito pré-carregado, a segurança do sistema de pagamento deve ser auditada antes do evento
+
+## Equipas Temporárias e Freelancers: O Risco de Acesso
+
+Um grande evento pode envolver 30 a 50 pessoas com acesso a diferentes sistemas: o sistema de check-in, a plataforma de streaming, os grupos de WhatsApp de coordenação, os documentos com dados de convidados VIP.
+
+**Riscos específicos das equipas de evento**:
+- Freelancers e voluntários que precisam de acesso temporário ao sistema de check-in ou à plataforma de acreditação
+- Estagiários com acesso total ao email corporativo porque foi mais fácil do que criar acesso restrito
+- Agências de comunicação que gerem as redes sociais durante o evento e ficam com acesso após o evento terminar
+
+**Gestão de acessos para equipas de evento**:
+- Criar contas temporárias com data de expiração automática para colaboradores de evento — não reutilizar contas de colaboradores anteriores
+- Dar acesso mínimo necessário: o voluntário de check-in não precisa de ver a lista completa de participantes com dados financeiros — apenas o nome e se está registado
+- Após o evento: revogar todos os acessos temporários no próprio dia, incluindo acesso às redes sociais, plataforma de streaming, e grupos de WhatsApp
+- Usar um gestor de passwords da empresa para credenciais partilhadas de sistemas de evento — não circular passwords por WhatsApp ou email
+
+## Transmissão em Direto e Plataformas de Streaming
+
+Muitos eventos corporativos, conferências, e festivais incluem transmissão em direto pelo YouTube Live, Vimeo Live, ou plataformas especializadas (Hopin, Zoom Webinars, StreamYard).
+
+**Riscos específicos do streaming**:
+- A conta de YouTube ou Vimeo da empresa é comprometida e o atacante substitui o stream por conteúdo fraudulento
+- As credenciais de streaming (stream key RTMP) são partilhadas com produtoras e técnicos e ficam expostas — qualquer pessoa com a stream key pode transmitir em nome da empresa
+- O conteúdo do evento inclui apresentações com informação confidencial de clientes que inadvertidamente vai para o ar numa stream pública em vez de privada
+
+**Proteção**:
+- MFA na conta de YouTube e Vimeo da empresa
+- Gerar uma nova stream key RTMP para cada evento — as chaves anteriores partilhadas com técnicos externos ficam inválidas
+- Verificar a configuração de privacidade do stream antes de iniciar (público vs privado com link vs restrito a inscritos)
+- Testar o streaming 24 horas antes do evento — não a 30 minutos antes
+
+## RGPD para Fotografias e Vídeos de Eventos
+
+Fotografar e filmar eventos para uso em comunicação e marketing é prática universal. Mas o RGPD torna estas práticas mais complexas quando as imagens incluem pessoas identificáveis.
+
+**Na prática para eventos em Portugal**:
+- Incluir informação sobre fotografia no processo de inscrição — os participantes devem ser informados de que vão ser fotografados e de como as imagens serão usadas
+- Disponibilizar uma forma de optar por não ser fotografado (opt-out) — habitualmente uma pulseira ou distintivo de cor diferente que indica ao fotógrafo para não incluir esta pessoa nas fotos
+- Para fotos de menores (eventos familiares, eventos educativos), requerer consentimento parental explícito
+- Não publicar imagens que possam ser sensíveis: fotos que revelem dados de saúde (cadeira de rodas, lesões), dados políticos ou religiosos
+
+**Drones em eventos**: O uso de drones para filmagem aérea de eventos está sujeito a regulação da ANAC e também ao RGPD. Filmagem aérea de multidões é tratamento de dados pessoais em larga escala. Requerer aprovação prévia da ANAC, usar sinalização adequada, e documentar a base legal do tratamento.
+
+## Segurança Wi-Fi em Eventos
+
+Os grandes eventos criam redes Wi-Fi temporárias para participantes — ou usam as redes do venue. Ambas as situações têm riscos.
+
+**Redes do venue**: Não é possível controlar a segurança da rede do venue — outros utilizadores na mesma rede podem tentar intercetar tráfego. Para tarefas sensíveis (acesso ao email corporativo, gestão de pagamentos), usar VPN ou dados móveis em vez da rede do venue.
+
+**Redes Wi-Fi temporárias do evento**:
+- Separar a rede de gestão (backoffice, check-in, streaming) da rede de participantes
+- A rede de participantes deve ter client isolation — os dispositivos dos participantes não devem conseguir comunicar entre si
+- Usar WPA2/WPA3 com password forte mesmo nas redes de participantes (não redes abertas)
+
+## Continuidade Operacional: E se o Sistema Falhar Durante o Evento?
+
+O sistema de check-in cai 10 minutos antes de abertura das portas. O software de acreditação deixa de responder. A internet no venue corta. Estes cenários acontecem — e a empresa de eventos que não tem plano de contingência vai gerir uma crise em frente à audiência.
+
+**Plano de contingência mínimo para qualquer evento**:
+- Lista de participantes impressa ou em PDF offline (não apenas na cloud) — atualizada 24 horas antes do evento
+- Processo de check-in manual documentado e comunicado à equipa antes do evento
+- QR codes de acreditação com capacidade de leitura offline (não dependente de internet para validar)
+- Número de emergência do suporte técnico do software de check-in impresso e distribuído à equipa
+- Plano para o "primeiro quarto de hora" se o sistema falhar: quem decide o quê, como comunicar à audiência
+
+## Checklist de Cibersegurança para Empresas de Eventos
+
+**Antes do Evento**:
+- [ ] MFA ativo nas plataformas de ticketing e inscrições (Eventbrite, TicketLine, etc.)
+- [ ] Contas individuais para cada membro da equipa com acesso às plataformas
+- [ ] DPA assinado com plataforma de ticketing e outros subcontratantes que processam dados de participantes
+- [ ] Aviso de privacidade incluído no formulário de inscrição (dados recolhidos, base legal, retenção)
+- [ ] IBAN de todos os fornecedores principais verificado por telefone
+- [ ] MFA ativo em todas as redes sociais corporativas via app autenticadora
+- [ ] Backup dos códigos de recuperação das contas de redes sociais num gestor de passwords
+
+**Durante o Evento**:
+- [ ] Rede Wi-Fi de gestão separada da rede de participantes
+- [ ] Terminais de pagamento verificados fisicamente antes da abertura
+- [ ] Contas temporárias criadas para colaboradores de evento — com data de expiração
+- [ ] Lista de participantes em formato offline como contingência
+- [ ] Stream key RTMP nova gerada para este evento (não reutilizada de eventos anteriores)
+
+**Após o Evento**:
+- [ ] Revogar todos os acessos temporários de freelancers, voluntários, e agências
+- [ ] Verificar e atualizar permissões de redes sociais (remover quem já não presta serviço)
+- [ ] Eliminar dados de participantes que não são necessários para faturação ou marketing (com consentimento)
+- [ ] Rever registos de acesso para identificar anomalias durante o evento
+- [ ] Atualizar checklist com lições aprendidas para o próximo evento
+
+---
+
+A empresa de eventos tem uma janela de exposição única: muitos dados, muitas pessoas, muito dinheiro em movimento, tudo ao mesmo tempo, com equipa temporária e pressão de prazo. A maioria dos incidentes em empresas de eventos é evitável com controlos simples — MFA nas plataformas, verificação telefónica de IBANs, contas individuais em vez de partilhadas, e um plano de contingência offline para quando o sistema falha. O problema não é a tecnologia disponível — é a urgência do evento que empurra as boas práticas para segundo plano.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-27",
+    readingTime: 15,
+    author: {
+      name: "Rita Santos",
+      title: "Analista de Segurança",
+    },
+  },
 ];
 
 export function getPostBySlug(slug: string): Post | undefined {
