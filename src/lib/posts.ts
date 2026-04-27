@@ -45751,6 +45751,528 @@ Para um ginásio ou estúdio de fitness, a cibersegurança e a proteção de dad
       title: "Auditor de Compliance",
     },
   },
+  {
+    slug: "ciberseguranca-advogados-escritorios-advocacia-portugal",
+    title: "Cibersegurança para Advogados e Escritórios de Advocacia em Portugal",
+    excerpt:
+      "Segredo profissional, BEC em transações de alto valor, portais da Ordem dos Advogados e dados de clientes altamente sensíveis tornam os escritórios de advocacia alvos prioritários. Saiba como proteger processos, credenciais e comunicações de acordo com as obrigações deontológicas.",
+    content: `Os escritórios de advocacia são um alvo de valor extraordinário para atacantes. Não pelo valor em si da empresa — um escritório com três advogados não parece um alvo óbvio — mas pelo que guardam: segredos de negócios de clientes, detalhes de litígios em curso, documentação de transações imobiliárias de milhões de euros, dados pessoais e financeiros em volume, e frequentemente dados de saúde em processos de acidente ou seguro.
+
+O perfil de risco é específico e agravado por um conjunto de fatores: o segredo profissional cria uma barreira cultural à partilha de incidentes; a pressão de prazos processuais é intensa; a dimensão média dos escritórios é pequena, sem IT dedicado; e as consequências de um breach podem ser existenciais — não apenas financeiras, mas deontológicas.
+
+## Fraude BEC em Transações de Alto Valor: A Ameaça Financeira Central
+
+O Business Email Compromise (BEC) é a ameaça com maior impacto financeiro potencial para escritórios de advocacia. O mecanismo é sistemático: o atacante compromete o email do escritório ou do cliente, monitoriza silenciosamente durante semanas ou meses à procura de transações de alto valor iminentes, e intervém no momento certo com instruções de pagamento para uma conta fraudulenta.
+
+### Como Funciona na Prática
+
+Num processo de compra e venda de imóvel em que o escritório coordena a transferência, o atacante que controla o email do advogado (ou do cliente) sabe exatamente quando a escritura está marcada. Dois dias antes, envia um email em nome do advogado ou da outra parte com "instruções atualizadas de pagamento" — novo IBAN para uma conta que controlam. A transferência é feita por iniciativa do próprio cliente, convicto de que está a seguir as instruções legítimas do seu advogado.
+
+Uma única transação comprometida pode envolver €150.000 a €500.000 ou mais. Restaurar a confiança do cliente após este tipo de incidente é, na prática, impossível.
+
+### Protocolo de Proteção BEC para Escritórios
+
+1. **Comunicação explícita prévia**: no início de qualquer processo que envolva transferências, comunicar ao cliente por escrito que instruções de pagamento nunca serão alteradas por email. Qualquer alteração de IBAN requer confirmação telefónica para número pré-registado fora do email
+2. **DMARC p=reject no domínio do escritório**: impede que terceiros enviem emails com o domínio do escritório (@escritorio.pt). Sem DMARC, qualquer pessoa pode enviar email que parece vir do escritório. A configuração SPF/DKIM/DMARC é técnica mas essencial — o prestador de email ou o webmaster do site pode implementá-la
+3. **Verificar regras de reencaminhamento**: após qualquer suspeita de compromisso de email, verificar imediatamente se existem regras de reencaminhamento para endereços externos — é uma das primeiras coisas que atacantes configuram para monitorizar email sem ser detetados
+4. **Alertas bancários em tempo real**: configurar notificações imediatas para todas as transferências realizadas — a "hora de ouro" para recuperar fundos são as primeiras horas após a transferência fraudulenta
+
+## Software Jurídico: Gestão de Processos e Acesso de Colaboradores
+
+Os softwares de gestão jurídica mais usados em Portugal incluem o **Solicitware** (muito comum em solicitadores e notários), **JurisOffice**, **Primavera** com módulo jurídico, **TimeSolv**, e plataformas internacionais como **Clio** ou **MyCase**. Cada escritório tem a sua realidade, mas os princípios de segurança são transversais.
+
+### Contas Individuais e Perfis de Acesso
+
+Num escritório com vários advogados, estagiários, secretários jurídicos, e colaboradores administrativos, cada pessoa deve ter credenciais individuais no software de gestão de processos. Os motivos são práticos:
+
+- **Segredo profissional técnico**: um estagiário de outro departamento não deve ter acesso ao processo de um cliente que não é o seu
+- **Auditoria**: quem acedeu ao processo de que cliente? Sem contas individuais, é impossível saber
+- **Offboarding**: quando um colaborador sai, basta desativar a conta — sem necessidade de alterar passwords partilhadas
+
+**Perfis de acesso recomendados**:
+
+| Papel | Processos próprios | Processos do escritório | Faturação | Gestão |
+|---|---|---|---|---|
+| Advogado sócio | Total | Total | Ver | Total |
+| Advogado associado | Total | Os seus processos | Os seus | Não |
+| Estagiário | Supervisionado | Não | Não | Não |
+| Secretário jurídico | Os atribuídos | Os atribuídos | Não | Não |
+| Administrativo/faturação | Não | Não | Total | Parcial |
+
+### Backup dos Processos e Base de Dados
+
+O software de gestão jurídica contém informação que não é recuperável de outra forma: histórico de comunicações com clientes, minutas de documentos, notas de reuniões, prazos processuais críticos. Um ataque de ransomware que destrua esta base de dados sem backup pode inviabilizar processos em curso e criar responsabilidade civil.
+
+- Backup diário automatizado da base de dados do software jurídico
+- Cópia para destino geograficamente separado — cloud ou NAS com localização diferente do escritório
+- Verificar periodicamente que o backup pode ser restaurado — um backup que não funciona quando é necessário é inútil
+- Para software SaaS (cloud): confirmar que o fornecedor tem backup com retenção mínima de 30 dias e que os dados podem ser exportados se mudar de fornecedor
+
+## Portal da Ordem dos Advogados e Sistemas Judiciais
+
+Os advogados acedem regularmente a sistemas digitais que exigem credenciais individuais e protegidas:
+
+**Portal da Ordem dos Advogados (OA)**: registo, renovação de inscrição, comunicações oficiais. As credenciais do portal OA são pessoais e intransmissíveis — partilhá-las com colaboradores é uma violação deontológica, para além do risco de segurança.
+
+**Citius (portais dos tribunais)**: o sistema Citius é a plataforma de gestão processual dos tribunais portugueses, essencial para prazos, consulta de processos, e submissão de peças. As credenciais Citius são vinculadas ao cartão de identificação do advogado e devem ser tratadas com o mesmo cuidado que as credenciais bancárias.
+
+**Chave Móvel Digital (CMD)**: para autenticação reforçada em portais governamentais (AT, Segurança Social, portais judiciais). A CMD deve estar associada ao telemóvel pessoal do advogado — nunca partilhada ou delegada.
+
+**Recomendações**:
+- Nunca partilhar credenciais de portais profissionais com colegas ou assistentes, mesmo "temporariamente"
+- Password única e forte para cada plataforma, gerida em gestor de passwords profissional
+- 2FA ativado em todos os portais que o suportam
+- Verificar regularmente os acessos ativos nas plataformas e revogar sessões desconhecidas
+
+## Phishing Dirigido a Escritórios de Advocacia
+
+Os advogados são alvos frequentes de phishing sofisticado, precisamente porque os emails que recebem incluem muitos documentos e comunicações de fontes externas diversas — tribunais, clientes, notários, contraparte. Alguns vetores específicos:
+
+**Phishing imitando tribunais**: emails alegando ser notificações do Citius, do Tribunal Administrativo, ou de outros tribunais, com pedidos urgentes de "verificação de credenciais" ou "descarga de documento". O volume natural de comunicações judiciais legitimas torna este vetor particularmente eficaz.
+
+**Phishing imitando a AT ou Segurança Social**: emails sobre processos fiscais de clientes, com links para "portais de verificação" falsos que capturam credenciais.
+
+**Documentos maliciosos de contraparte**: ficheiros Word ou PDF enviados pela contraparte no âmbito de negociações que contêm macros ou exploits. A pressão para abrir documentos é alta — chegam em contexto de processo ativo.
+
+**Regra prática**: qualquer pedido urgente de credenciais, ou documento inesperado que peça para ativar macros, deve ser verificado por canal alternativo — telefone para o remetente — antes de qualquer ação.
+
+## Dados de Clientes: Categorias Especiais e Obrigações RGPD
+
+Os escritórios de advocacia processam dados de clientes de grande sensibilidade. Além dos dados de identificação e contacto habituais, frequentemente tratam:
+
+**Dados de saúde** (em processos de acidente de trabalho, acidente de viação, seguros, incapacidade): são categoria especial ao abrigo do Artigo 9.º do RGPD, com proteção reforçada e base legal específica (necessidade para exercício de direitos em processo judicial — Art. 9.º(2)(f)).
+
+**Dados criminais e de infrações** (em processos penais): tratados ao abrigo do Artigo 10.º do RGPD, com proteção equivalente às categorias especiais.
+
+**Dados de situação financeira detalhada** (em processos de insolvência, divórcio, partilha): não são categoria especial, mas a sua sensibilidade é elevada e a sua exposição pode causar dano grave aos clientes.
+
+**Dados de menores** (em processos de regulação das responsabilidades parentais, adoção): proteção reforçada ao abrigo do RGPD.
+
+### Obrigações do Escritório como Responsável pelo Tratamento
+
+Um escritório de advocacia é responsável pelo tratamento dos dados dos seus clientes ao abrigo do RGPD. As obrigações práticas incluem:
+
+- **Registo de Atividades de Tratamento (RAT)**: documentar que categorias de dados são tratados, para que finalidades, com que base legal, quem tem acesso, e quanto tempo são retidos
+- **Política de privacidade** clara para clientes, explicando como os seus dados são usados e por quanto tempo
+- **DPAs com fornecedores**: o fornecedor do software de gestão, o serviço de email, o serviço de cloud storage — todos são subcontratantes e devem ter DPA celebrado
+- **Notificação de violações à CNPD em 72 horas**: qualquer breach que afete dados de clientes deve ser notificado à CNPD dentro de 72 horas de tomada de conhecimento
+
+### Tabela de Retenção de Dados
+
+| Categoria | Retenção | Fundamento |
+|---|---|---|
+| Processos findos | 5-10 anos | Prazo de prescrição de responsabilidade civil |
+| Dados fiscais e de faturação | 10 anos | Obrigações fiscais |
+| Processos de família e sucessões | 10+ anos | Prazo de prescrição |
+| Correspondência com clientes | Duração do processo + prazo prescricional | Interesse legítimo |
+| Dados de candidatos não contratados | 6 meses | RGPD (minimização) |
+| CCTV nas instalações | Máximo 30 dias | CNPD |
+
+## Comunicação Segura com Clientes
+
+A comunicação entre advogado e cliente é protegida pelo segredo profissional, mas o segredo profissional é uma obrigação deontológica — não garante a segurança técnica das comunicações.
+
+**Email**: o email não encriptado é equivalente a um postal — qualquer intermediário pode ler. Para documentos altamente sensíveis, considerar encriptação S/MIME ou PGP, ou plataformas de partilha de documentos com controlo de acesso.
+
+**Plataformas de partilha de documentos**: em vez de enviar documentos sensíveis por email, usar plataformas com autenticação e controlo de acesso (SharePoint com permissões, portais de cliente dedicados). O cliente só acede com credenciais únicas; o advogado pode revogar o acesso a qualquer momento.
+
+**WhatsApp com clientes**: o WhatsApp é amplamente usado em Portugal para comunicação com clientes, incluindo troca de documentos. Do ponto de vista de segurança e RGPD, os riscos são: a Meta processa metadados; documentos sensíveis ficam na galeria do telemóvel; e se o telemóvel do cliente for comprometido, a história de mensagens fica exposta. Para processos com dados muito sensíveis (saúde, dados financeiros, processos penais), comunicar ao cliente os riscos e preferir canais alternativos.
+
+## Trabalho Remoto e Acesso a Processos
+
+A pandemia normalizou o trabalho remoto em advocacia. O acesso a processos a partir de casa ou do telemóvel levanta questões específicas:
+
+**VPN para acesso ao servidor do escritório**: o acesso remoto ao software de gestão jurídica deve ser feito sempre através de VPN — nunca através de RDP exposto diretamente na internet.
+
+**Dispositivos pessoais vs. profissionais**: se advogados acederem a sistemas do escritório a partir de dispositivos pessoais (BYOD), os riscos incluem malware no dispositivo pessoal, dados do escritório misturados com dados pessoais, e dificuldade de auditoria. A política mínima é encriptação do disco e screen lock automático.
+
+**Impressão de documentos em casa**: documentos impressos em casa (testemunhos, minutas, dossiers) são um risco físico de exposição. Estabelecer uma política clara sobre o que pode ser impresso fora do escritório e o que acontece aos impressos (trituração segura).
+
+## Obrigações AML/BCFT: Escritórios de Advocacia como Entidades Obrigadas
+
+Os advogados que prestam determinados serviços são **entidades obrigadas** ao abrigo da Lei n.º 83/2017 (branqueamento de capitais e financiamento do terrorismo). Os serviços que ativam estas obrigações incluem:
+
+- Participação em transações imobiliárias
+- Criação de sociedades ou gestão de estruturas societárias
+- Gestão de fundos ou ativos de clientes
+- Serviços fiduciários
+
+As obrigações práticas incluem: identificação e verificação de identidade do cliente (KYC), identificação do beneficiário efetivo (via RCBE), avaliação de risco de BCFT, manutenção de registos por 7 anos, e comunicação de suspeitas ao Departamento Central de Investigação e Ação Penal (DCIAP).
+
+Do ponto de vista de cibersegurança, estas obrigações criam dados adicionais muito sensíveis: cópias de documentos de identidade, certidões, documentação de origem de fundos. Estes dados devem ter controlos de acesso específicos e retenção de exatamente 7 anos (não mais).
+
+## Checklist de Segurança para Escritórios de Advocacia
+
+**Proteção BEC**:
+- [ ] DMARC p=reject configurado no domínio do escritório
+- [ ] Protocolo documentado para clientes: IBANs nunca se alteram por email
+- [ ] Verificação telefónica obrigatória para qualquer instrução de pagamento
+- [ ] Alertas bancários em tempo real para todas as transferências
+
+**Acesso e autenticação**:
+- [ ] Contas individuais no software jurídico para cada colaborador
+- [ ] Perfis de acesso por função (advogado sócio / associado / estagiário / administrativo)
+- [ ] Gestor de passwords profissional para todas as credenciais de plataformas
+- [ ] 2FA ativado nos portais OA, Citius, AT, e email
+
+**Dados e backup**:
+- [ ] Backup diário automatizado com cópia off-site ou cloud
+- [ ] Teste de restauro realizado periodicamente
+- [ ] RAT (Registo de Atividades de Tratamento) atualizado
+- [ ] DPAs com fornecedores de software e serviços cloud
+
+**Offboarding**:
+- [ ] Processo documentado para revogação de acessos quando colaborador sai
+- [ ] Verificação de regras de reencaminhamento de email após saída de colaboradores
+- [ ] Recolha de dispositivos e revogação de VPN no dia da saída
+
+---
+
+Um escritório de advocacia que sofre um breach de dados de clientes enfrenta consequências em múltiplas dimensões simultaneamente: CNPD, Ordem dos Advogados, clientes lesados, e potencial responsabilidade civil. A combinação de segredo profissional e RGPD cria um conjunto de obrigações que os controlos básicos — que estão ao alcance de qualquer escritório — permitem cumprir de forma consistente.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-27",
+    readingTime: 16,
+    author: {
+      name: "Carlos Miranda",
+      title: "Consultor de Cibersegurança",
+    },
+  },
+  {
+    slug: "ciberseguranca-psicologos-psiquiatras-saude-mental-portugal",
+    title: "Cibersegurança para Psicólogos, Psiquiatras e Clínicas de Saúde Mental em Portugal",
+    excerpt:
+      "Os dados de saúde mental são os mais sensíveis do RGPD — revelam vulnerabilidades únicas das pessoas e têm impacto direto na vida pessoal e profissional se expostos. Saiba como proteger registos clínicos, plataformas de teleconsulta e dados de utentes de acordo com as suas obrigações legais.",
+    content: `Os dados de saúde mental — diagnósticos psiquiátricos, notas de sessão de psicoterapia, histórico de medicação psicotrópica, episódios de crise — são amplamente considerados os dados de saúde mais sensíveis que existem. Ao contrário de uma análise de colesterol ou de um raio-X, um registo de depressão major, perturbação bipolar, ou adição pode ter impacto direto no emprego, nos seguros de vida, na custódia de filhos, e nas relações pessoais de uma pessoa — décadas depois de ter sido criado.
+
+Para psicólogos clínicos, psiquiatras, psicoterapeutos, e clínicas de saúde mental que operam em Portugal, a proteção destes dados não é apenas uma obrigação legal ao abrigo do RGPD — é parte integrante do contrato de confiança com os utentes, sem o qual o trabalho terapêutico não é possível.
+
+## Por que Estes Dados São Diferentes
+
+Antes de entrar nos controlos técnicos, vale a pena compreender por que os dados de saúde mental merecem proteção especialmente robusta.
+
+**São imutáveis e retroativamente prejudiciais**: um diagnóstico de perturbação de pânico feito em 2010 pode ser usado décadas depois. Ao contrário de uma password comprometida que se pode alterar, um diagnóstico psiquiátrico não desaparece.
+
+**Revelam mais do que saúde**: notas de sessão de psicoterapia revelam conflitos familiares, situação financeira, problemas conjugais, traumas passados, e pensamentos mais íntimos de uma pessoa. A exposição destas notas é qualitivamente diferente de expor uma lista de medicamentos.
+
+**Estigma real**: apesar de avanços culturais, o estigma associado a condições de saúde mental persiste. A exposição pública de um diagnóstico pode ter consequências profissionais e sociais graves para o utente.
+
+**Risco de coerção**: em mãos erradas, dados de saúde mental podem ser usados para chantagem, para influenciar processos de guarda, ou para pressionar pessoas vulneráveis.
+
+## Software Clínico: O Sistema Central
+
+Os profissionais de saúde mental em Portugal usam uma variedade de sistemas para gerir registos clínicos: desde software especializado como **Medigest**, **Alert P1** (em contexto hospitalar), **Jane App** (muito usado por psicólogos em prática privada em Portugal), **Clinicsoft**, **ClinicManager**, até soluções simples como pastas partilhadas em cloud com documentos Word.
+
+### Contas Individuais e Acesso Mínimo
+
+Em qualquer setting clínico com mais do que um profissional, cada clínico deve ter a sua conta individual no sistema. O princípio é simples: um psicólogo não deve ter acesso às notas clínicas dos utentes de outro psicólogo sem necessidade clínica.
+
+**Perfis de acesso recomendados**:
+
+| Papel | Notas clínicas | Dados de contacto | Faturação | Prescrições |
+|---|---|---|---|---|
+| Psicólogo / Psicoterapeuta | Os seus utentes | Os seus utentes | Ver as suas | N/A |
+| Psiquiatra | Os seus utentes | Os seus utentes | Ver as suas | Os seus |
+| Recepcionista / administrativo | Não | Todos | Total | Não |
+| Diretor clínico | Todos (com log) | Todos | Total | Ver |
+
+**Log de auditoria**: o sistema clínico deve registar quem acedeu ao registo de que utente e quando. Este log deve ser revisto periodicamente — não para controlar os profissionais, mas para detetar acessos anómalos (ex: alguém a aceder a todos os registos de uma vez, o que pode indicar tentativa de exfiltração de dados).
+
+### Notas de Sessão: O Ativo Mais Sensível
+
+As notas de sessão de psicoterapia são provavelmente os dados mais sensíveis que qualquer profissional de saúde cria. Em muitas orientações clínicas, distingue-se entre notas de trabalho (working notes ou process notes) — que o clínico usa para orientar o seu trabalho e que podem ser mais detalhadas e informais — e o registo clínico formal que faz parte do processo do utente.
+
+Do ponto de vista do RGPD, ambas as categorias são dados de saúde (Artigo 9.º) e devem ter proteção equivalente. As notas de trabalho pessoais do clínico não estão fora do âmbito do RGPD só por serem "pessoais" — se contêm dados de um utente identificável, aplica-se o regulamento.
+
+**Proteções mínimas para notas de sessão**:
+- Guardadas em sistema clínico com controlo de acesso, nunca em ficheiro de texto simples no desktop
+- Se guardadas em document cloud (Google Docs, OneDrive), em pasta com acesso restrito apenas ao clínico responsável, não partilhada com toda a equipa
+- Backup encriptado com chave que o profissional controla
+- Nunca enviadas por email não encriptado ou WhatsApp pessoal
+
+## Teleconsulta: Segurança das Plataformas de Videoconsulta
+
+A pandemia acelerou dramaticamente a adoção de teleconsulta em psicologia e psiquiatria. Muitos profissionais continuam a realizar uma proporção significativa das suas consultas por vídeo. Os riscos são específicos.
+
+### Plataformas e RGPD
+
+Plataformas de videoconsulta populares em Portugal incluem **Zoom**, **Microsoft Teams**, **Google Meet**, e plataformas dedicadas à saúde como **Doxy.me** (muito usada em psicologia por ser simples e conforme HIPAA/RGPD), **TheraPlatform**, e **Healthie**.
+
+Para uso clínico, a plataforma deve:
+- Ter servidores na União Europeia (ou mecanismo de transferência adequado se fora)
+- Oferecer DPA — o fornecedor é subcontratante dos dados de saúde dos utentes
+- Não usar os dados das sessões para treino de modelos de IA ou fins de marketing (ler os termos de serviço)
+- Ter encriptação ponta-a-ponta ou, no mínimo, encriptação em trânsito
+
+**Zoom standard (plano gratuito)** não é adequado para teleconsulta clínica sem configurações específicas e DPA empresarial. **Google Meet** no Google Workspace for Healthcare com BAA assinado pode ser adequado. **Doxy.me** na versão paga com plano de conformidade RGPD é uma das opções mais simples.
+
+### Privacidade do Espaço Físico
+
+A privacidade numa teleconsulta não depende só da tecnologia — depende do espaço físico de ambos os lados.
+
+**Do lado do clínico**: garantir que a consulta é feita num espaço onde não pode ser ouvido (mesmo com headphones, o utente ouve a voz do clínico). Em casa, comunicar previamente à família que há consultas agendadas.
+
+**Do lado do utente**: a responsabilidade de garantir privacidade é do utente, mas o clínico deve perguntar no início de cada sessão remota se o utente está num espaço privado. Para utentes que vivem em situações onde a privacidade é difícil (em situação de violência doméstica, em casa com familiares que não sabem do acompanhamento), ter um plano alternativo.
+
+## Prescrição Eletrónica e Plataformas SNS
+
+Psiquiatras prescrevem frequentemente medicação psicotrópica, incluindo substâncias controladas (benzodiazepinas, opioides em dor crónica). Em Portugal, a prescrição eletrónica é obrigatória na grande maioria dos casos, usando a plataforma do **Sistema Nacional de Saúde (SNS)** ou soluções homologadas.
+
+**Credenciais SNS/SPMS**: as credenciais de acesso ao portal de prescrição são pessoais e intransmissíveis. Nunca devem ser partilhadas com assistentes ou outros profissionais. A prescrição de substâncias controladas com credenciais de outro profissional é uma infração legal para além de um risco de segurança grave.
+
+**Chave Móvel Digital**: o acesso reforçado ao portal de prescrição deve usar CMD. Psiquiatras com práticas privadas devem ter CMD associada ao seu telemóvel pessoal.
+
+**Registo de psicotrópicos**: o INFARMED exige registos específicos para substâncias psicotrópicas. Estes registos têm obrigações de retenção próprias e devem estar em sistema seguro com backup verificado.
+
+## Dados de Menores em Psicologia Infantil e Juvenil
+
+Psicólogos e psiquiatras que trabalham com crianças e adolescentes gerem dados com proteção acrescida.
+
+**Consentimento parental e assent do menor**: para menores de 16 anos, o consentimento para tratamento psicológico e para o tratamento de dados é dado pelos pais ou tutores. Contudo, em psicoterapia há uma tensão clínica: o adolescente precisa de sentir que as suas partilhas em sessão são confidenciais, mesmo perante os pais, para que o trabalho terapêutico seja possível. Clarificar com os pais no início do processo o que é e não é partilhado, e documentar esse acordo.
+
+**Casos de suspeita de abuso ou negligência**: os profissionais de saúde em Portugal têm obrigação legal de comunicar situações de suspeita de maus-tratos a menores às autoridades competentes (NHACJR, Ministério Público). Esta obrigação sobrepõe-se ao segredo profissional. Do ponto de vista de segurança, a documentação destas situações — extremamente sensível — deve ter controlos de acesso adicionais.
+
+**Separação de dados de progenitores em contexto de disputa de guarda**: em processos de regulação de responsabilidades parentais, o psicólogo da criança frequentemente recebe pressão de ambos os pais para aceder às notas clínicas. As notas pertencem à criança (como titular dos dados), não aos pais. Em situações de disputa, consultar orientações da Ordem dos Psicólogos sobre acesso a registos.
+
+## DPO e AIPD: Quando São Obrigatórios
+
+Para clínicas de saúde mental, a obrigatoriedade de DPO (Delegado de Proteção de Dados) e AIPD (Avaliação de Impacto sobre a Proteção de Dados) depende da escala e das atividades.
+
+**DPO obrigatório** para organizações que tratam dados de saúde em grande escala (Artigo 37.º RGPD). Uma clínica com múltiplos psicólogos e psiquiatras a atender centenas de utentes por mês provavelmente está no limiar que exige DPO. Um psicólogo em prática individual provavelmente não.
+
+**AIPD obrigatória** para tratamentos que "possam resultar num elevado risco" — o tratamento em larga escala de categorias especiais de dados (como dados de saúde mental) está na lista de operações que a CNPD identifica como sujeitas a AIPD.
+
+## Comunicação Urgente e Risco de Crise
+
+A saúde mental tem uma especificidade clínica com implicações de segurança: situações de crise (risco de suicídio, descompensação psicótica aguda) podem requerer comunicação urgente com familiares, linhas de apoio, ou serviços de emergência.
+
+Estas situações criam tensão com as normas habituais de privacidade. Do ponto de vista do RGPD, partilhar dados de saúde mental sem consentimento pode ser justificado quando necessário para "proteger os interesses vitais" do utente ou de terceiros (Artigo 9.º(2)(c)).
+
+O profissional deve ter documentado, no início do processo terapêutico, o que acontece em caso de emergência: com quem pode ser contactado, em que circunstâncias, e o que pode ser partilhado.
+
+## Tabela de Retenção de Dados para Profissionais de Saúde Mental
+
+| Categoria | Retenção | Fundamento |
+|---|---|---|
+| Registos clínicos de adultos | Mínimo 5 anos após último ato | Legislação de saúde portuguesa |
+| Registos clínicos de menores | Até maioridade + 5 anos | Prazo de prescrição |
+| Notas de sessão (working notes) | Duração do processo + 2 anos | Interesse legítimo |
+| Dados de faturação | 10 anos | Obrigações fiscais |
+| Dados de prescrição (psicotrópicos) | Conforme INFARMED (mínimo 3 anos) | Regulação INFARMED |
+| CCTV nas instalações | Máximo 30 dias | CNPD |
+| Dados de contacto de emergência | Duração do acompanhamento | Execução de contrato/interesse vital |
+
+## Checklist de Segurança para Profissionais de Saúde Mental
+
+**Sistema clínico e acesso**:
+- [ ] Contas individuais por profissional no sistema clínico
+- [ ] Perfis de acesso: rececionista sem acesso a notas clínicas
+- [ ] Log de auditoria de acessos ao sistema clínico
+- [ ] Backup diário automático, testado trimestralmente
+
+**Teleconsulta**:
+- [ ] Plataforma com DPA celebrado e servidores na UE
+- [ ] Verificar no início de cada sessão remota se o utente está em espaço privado
+- [ ] Não usar plataformas gratuitas sem configuração de conformidade para sessões clínicas
+
+**Credenciais e portais**:
+- [ ] CMD ativa para acesso ao portal SNS/SPMS
+- [ ] Credenciais de prescrição pessoais, nunca partilhadas
+- [ ] Gestor de passwords para todas as credenciais profissionais
+
+**RGPD**:
+- [ ] Consentimento documentado para tratamento de dados de saúde mental
+- [ ] Política de privacidade atualizada com categorias de dados e retenção
+- [ ] DPAs com fornecedores de software, teleconsulta, e cloud storage
+- [ ] Processo documentado para notificação CNPD em 72h em caso de breach
+
+---
+
+A confidencialidade em saúde mental é simultaneamente um dever deontológico, uma obrigação legal, e uma condição necessária para que o trabalho terapêutico funcione. Os controlos de segurança que protegem dados de utentes não são burocracia — são a infraestrutura técnica que garante que o pacto de confiança implícito na relação terapêutica se mantém mesmo quando sistemas falham ou são atacados.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-27",
+    readingTime: 16,
+    author: {
+      name: "Rita Santos",
+      title: "Analista de Segurança",
+    },
+  },
+  {
+    slug: "ciberseguranca-mediadores-corretores-seguros-portugal",
+    title: "Cibersegurança para Mediadores e Corretores de Seguros em Portugal",
+    excerpt:
+      "Mediadores de seguros gerem dados financeiros e de saúde dos clientes, acedem a portais de múltiplas seguradoras, e processam pagamentos de prémios e sinistros. Saiba como proteger o acesso aos portais, prevenir fraude de IBAN, e cumprir as obrigações RGPD e ASF.",
+    content: `Os mediadores e corretores de seguros operam num cruzamento de dados financeiros e dados de saúde que os torna alvos de ataques muito específicos. Uma mediadora de seguros típica tem acesso a dados de saúde de clientes (para seguros de saúde e vida), dados financeiros detalhados (para seguros de bens, responsabilidade civil, crédito), e credenciais de acesso a portais de múltiplas seguradoras.
+
+Em Portugal, a atividade de mediação de seguros é regulada pela **Autoridade de Supervisão de Seguros e Fundos de Pensões (ASF)** e sujeita à **Lei n.º 7/2019** (que transpôs a Diretiva de Distribuição de Seguros). Esta regulação cria obrigações de compliance que têm implicações diretas na gestão de dados e segurança.
+
+## Portais de Seguradoras: O Ativo Digital Mais Crítico
+
+A maior parte das interações operacionais de um mediador passa pelos portais digitais das seguradoras — emissão de apólices, gestão de sinistros, consulta de comissões, comunicações. Em Portugal, as principais seguradoras (Fidelidade, Tranquilidade, Ageas, Allianz, AXA, Generali, GNB Seguros, entre outras) disponibilizam portais de agentes com funcionalidades alargadas.
+
+### Acesso a Portais com MFA
+
+Os portais de seguradoras são alvos de credential stuffing — atacantes que testam automaticamente listas de credenciais previamente expostas noutros breaches. Se um mediador usa a mesma password em múltiplos portais, e uma dessas passwords for exposta num breach de outro site, todos os portais estão em risco.
+
+**Proteções obrigatórias**:
+- **Password única para cada portal de seguradora** — nunca a mesma em múltiplos portais
+- **Autenticação multifator (MFA) em todos os portais que o suportem** — a maioria dos portais modernos de seguradoras já disponibiliza 2FA
+- **Gestor de passwords profissional** — com as dezenas de portais que um mediador com múltiplas seguradoras gere, um gestor de passwords (Bitwarden Business, 1Password Teams, ou equivalente) é indispensável
+- **Revogar acessos de colaboradores que saem no dia da saída** — um ex-colaborador com acesso ativo a portais de seguradoras pode emitir apólices, consultar dados de clientes, ou alterar informações de comissões
+
+### Software de Gestão de Mediadora
+
+As mediadoras usam software especializado para gestão de carteira, faturação, e CRM. Em Portugal, soluções comuns incluem o **Agros** (um dos mais usados), **iGestor de Seguros**, **Segurgest**, **SeguraNet**, e plataformas internacionais como **Applied Epic** para corretoras maiores.
+
+Tal como em qualquer software de gestão com dados sensíveis:
+
+| Papel | Dados de clientes | Apólices | Sinistros | Comissões | Gestão |
+|---|---|---|---|---|---|
+| Mediador sénior / sócio | Total | Total | Total | Total | Total |
+| Mediador / agente | Os seus clientes | As suas apólices | Os seus | As suas | Não |
+| Backoffice / administrativo | Dados de contacto | Ver | Ver | Não | Parcial |
+| Estagiário | Supervisionado | Supervisionado | Não | Não | Não |
+
+**Backup**: a base de dados do software de gestão contém toda a carteira de clientes, histórico de apólices, e dados de sinistros. Um backup diário automatizado, com cópia off-site, é inegociável.
+
+## Fraude de IBAN: Prémios, Sinistros, e Comissões
+
+A fraude de IBAN afeta mediadores de seguros em três dimensões distintas.
+
+### Alteração Fraudulenta de IBAN para Pagamento de Sinistros
+
+Quando uma seguradora paga um sinistro ao cliente, o pagamento é feito para o IBAN registado. O esquema de fraude: atacante compromete o email do mediador ou da seguradora, monitoriza sinistros em curso, e envia comunicação falsa a alterar o IBAN de pagamento para uma conta sob seu controlo. O cliente fica sem o pagamento do sinistro; a seguradora pensa que pagou; o mediador fica no meio do conflito.
+
+**Protocolo para gestão de sinistros**:
+- Nunca alterar IBAN de pagamento de sinistro com base apenas num email — sempre confirmar por telefone para número pré-registado
+- Comunicar ao cliente no início de qualquer processo de sinistro que pedidos de alteração de IBAN por email não são processados sem confirmação verbal
+- Para sinistros de valor elevado, confirmar diretamente com a seguradora por canal oficial
+
+### Alteração Fraudulenta de IBAN de Comissões
+
+As comissões da mediadora são pagas pelas seguradoras. Um atacante que comprometer o email ou o portal da mediadora pode alterar o IBAN de pagamento de comissões para uma conta fraudulenta. Este ataque pode passar despercebido durante meses se as comissões não forem reconciliadas regularmente.
+
+**Proteção**:
+- Alertas bancários em tempo real para a conta de comissões
+- Reconciliação mensal de comissões recebidas vs. esperadas
+- Autorização dupla para qualquer alteração de dados bancários nos portais de seguradoras
+
+### Fraude de IBAN no Pagamento de Prémios por Clientes
+
+Em seguros não diretos, alguns clientes transferem o prémio para a conta da mediadora que depois regulariza com a seguradora. O esquema BEC clássico: atacante compromete o email do mediador e envia ao cliente "novas instruções de pagamento" com IBAN fraudulento antes da data de renovação.
+
+Solução estrutural: publicar o IBAN da mediadora de forma estática e verificável — no website, na apólice física/digital — e comunicar explicitamente aos clientes que o IBAN nunca se altera por email.
+
+## Phishing Imitando a ASF e Seguradoras
+
+Os mediadores de seguros são alvo de phishing com contextos muito específicos:
+
+**Phishing imitando a ASF**: emails alegando que o registo do mediador precisa de "verificação urgente" ou que há uma "irregularidade no registo ASF" com link para portal falso. A pressão de manter o registo ativo é alta — um mediador sem registo ASF válido não pode operar legalmente.
+
+**Phishing imitando portais de seguradoras**: emails alegando que o acesso ao portal foi suspenso por "atividade suspeita" e pedindo nova verificação de credenciais. Os logos e o design dos emails são frequentemente convincentes.
+
+**Phishing de "atualização obrigatória" de software**: emails alegando que o software de gestão precisa de "atualização urgente de segurança" com link para download de malware.
+
+**Regra prática**: qualquer comunicação urgente sobre acesso, registo, ou software deve ser verificada acedendo diretamente ao portal (sem clicar em links de email) ou por telefone para o número oficial da entidade.
+
+## Dados de Clientes: Categorias de Dados e Obrigações RGPD
+
+Uma mediadora de seguros trata dados de múltiplas categorias, com sensibilidades diferentes.
+
+### Dados de Saúde em Seguros de Vida e Saúde
+
+Para produtos como seguros de vida, seguros de saúde, e seguros de acidentes pessoais, a subscrição requer dados de saúde do tomador — estado de saúde, doenças pré-existentes, histórico médico, medicação habitual. Estes são **dados de saúde ao abrigo do Artigo 9.º do RGPD** (categoria especial).
+
+**Bases legais para tratamento de dados de saúde** em contexto de seguros:
+- Execução do contrato de seguro (Art. 6.º(1)(b) para dados não especiais)
+- Para dados de saúde (Art. 9.º): necessidade para efeitos de medicina preventiva ou do trabalho (Art. 9.º(2)(h)) em combinação com lei nacional, OU consentimento explícito (Art. 9.º(2)(a))
+
+Na prática, o processo de subscrição de um seguro de vida ou saúde deve incluir um consentimento explícito e específico para o tratamento de dados de saúde, separado do contrato principal.
+
+**Acesso restrito**: os dados de saúde de clientes recolhidos para subscrição de seguros de vida/saúde devem ter acesso restrito — não devem ser visíveis a colaboradores que lidam apenas com seguros de automóvel ou multirrisco.
+
+### Dados Financeiros
+
+Seguros de crédito, de responsabilidade civil empresarial, e de outros ramos exigem dados financeiros detalhados (faturação, volume de negócios, patrimônio, histórico de crédito). Estes dados não são categoria especial ao abrigo do RGPD, mas a sua sensibilidade é alta e devem ter controlos de acesso equivalentes.
+
+### Tabela de Retenção de Dados
+
+| Categoria | Retenção | Fundamento |
+|---|---|---|
+| Dados de apólices ativas | Duração da apólice + 5 anos | Prazo de prescrição |
+| Dados de sinistros | 10 anos | Prazo de prescrição (acidentologia) |
+| Dados de saúde (subscrição) | Duração da apólice + período de reclamação | Execução de contrato |
+| Dados financeiros (ramos comerciais) | 10 anos | Prazo de prescrição |
+| Dados de faturação e comissões | 10 anos | Obrigações fiscais |
+| Dados de candidatos não convertidos | 12 meses | Interesse legítimo |
+| CCTV | Máximo 30 dias | CNPD |
+
+## Regulação ASF: Obrigações de Segurança e Compliance
+
+A **ASF** (Autoridade de Supervisão de Seguros e Fundos de Pensões) supervisiona os mediadores de seguros e pode conduzir inspeções. A conformidade com obrigações de segurança da informação é parte do quadro regulatório.
+
+**Registo e formação contínua**: os mediadores registados na ASF têm obrigações de formação contínua. A segurança dos dados dos clientes é cada vez mais parte das avaliações de conformidade da ASF.
+
+**Conflito de interesses e segregação**: em algumas tipologias de mediação (corretagem), o mediador atua como mandatário do cliente — não da seguradora. Esta relação fiduciária reforça as obrigações de proteção dos dados.
+
+**RGPD como entidade autónoma**: a mediadora é responsável pelo tratamento dos dados dos seus clientes. As seguradoras são responsáveis pelos dados que gerem nas suas plataformas. Na relação mediadora-seguradora, deve existir clareza sobre quem é responsável e quem é subcontratante para cada conjunto de dados.
+
+## Comunicação com Clientes: Email, WhatsApp, e Plataformas
+
+Os mediadores de seguros comunicam frequentemente com clientes por WhatsApp — envio de condições, recibos, confirmações de sinistros. Do ponto de vista do RGPD, há riscos específicos:
+
+**Documentos sensíveis por WhatsApp**: apólices com dados de saúde, relatórios de sinistros com dados médicos — estes documentos não devem ser enviados por WhatsApp pessoal. Se necessário, usar o WhatsApp Business com dispositivo dedicado e política clara de retenção.
+
+**Email não encriptado**: para comunicações com dados de saúde ou dados financeiros muito sensíveis, considerar plataformas de partilha de documentos com autenticação em vez de email.
+
+**Política de comunicação digital**: estabelecer e comunicar aos clientes quais são os canais oficiais de comunicação da mediadora, especialmente para instruções de pagamento e alterações de dados.
+
+## Dispositivos e Trabalho Remoto
+
+Muitos mediadores trabalham parcialmente fora do escritório — visitas a clientes, trabalho em casa. Os dispositivos usados para aceder a portais de seguradoras e dados de clientes devem ter proteção adequada:
+
+- **Encriptação do disco** (BitLocker no Windows, FileVault no Mac) em todos os laptops que contêm dados de clientes ou acedem a portais de seguradoras
+- **Screen lock automático** após 5 minutos de inatividade
+- **VPN** para acesso remoto ao software de gestão da mediadora
+- **Política de telemóvel**: se o telemóvel pessoal é usado para apps de portais de seguradoras, PIN obrigatório, Find My Device ativo, e política clara de o que acontece ao dispositivo se for perdido
+
+## Checklist de Segurança para Mediadores e Corretores de Seguros
+
+**Portais e autenticação**:
+- [ ] Password única para cada portal de seguradora
+- [ ] MFA ativado em todos os portais que o suportam
+- [ ] Gestor de passwords profissional para toda a equipa
+- [ ] Processo de revogação de acessos no dia em que colaborador sai
+
+**Proteção anti-BEC**:
+- [ ] DMARC p=reject no domínio da mediadora
+- [ ] Protocolo documentado: IBANs de pagamento de sinistros nunca se alteram por email
+- [ ] Alertas bancários em tempo real na conta de comissões
+- [ ] Reconciliação mensal de comissões recebidas vs. esperadas
+
+**Dados e backup**:
+- [ ] Backup diário do software de gestão com cópia off-site
+- [ ] Dados de saúde (seguros de vida/saúde) com acesso restrito por função
+- [ ] RAT atualizado com categorias de dados e bases legais
+- [ ] DPAs com fornecedores de software, cloud, e portais
+
+**Offboarding**:
+- [ ] Checklist de revogação de acessos para todos os portais e software no dia da saída
+- [ ] Transferência de carteira de clientes com protocolo documentado
+
+---
+
+Um mediador de seguros que sofre um breach de dados de clientes enfrenta simultaneamente a CNPD (dados de saúde expostos são de notificação obrigatória em 72 horas), a ASF (supervisão regulatória), e clientes cujos dados mais sensíveis foram expostos. Os controlos básicos — password única por portal, MFA, backup verificado, protocolo anti-BEC — são proporcionais ao risco e estão ao alcance de qualquer mediadora, independentemente da sua dimensão.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-27",
+    readingTime: 15,
+    author: {
+      name: "Carlos Miranda",
+      title: "Consultor de Cibersegurança",
+    },
+  },
 ];
 
 export function getPostBySlug(slug: string): Post | undefined {
