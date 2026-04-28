@@ -46990,6 +46990,603 @@ Containers e Kubernetes democratizaram a infraestrutura de produção, mas a seg
       title: "Auditor de Compliance",
     },
   },
+  {
+    slug: "dmarc-spf-dkim-configuracao-email-seguro-pme-portugal",
+    title: "DMARC, SPF e DKIM: Guia Completo para PMEs Portuguesas Protegerem o Email Empresarial",
+    excerpt:
+      "Mais de 90% das fraudes BEC em Portugal começam por um domínio sem DMARC configurado. SPF, DKIM e DMARC são gratuitos, implementam-se em horas, e eliminam a possibilidade de alguém enviar email a fingir que é a sua empresa. Guia passo a passo.",
+    content: `A fraude de email empresarial — conhecida internacionalmente como BEC, Business Email Compromise — é responsável por centenas de milhões de euros em perdas anuais em empresas europeias, incluindo portuguesas. O mecanismo é simples: o atacante envia um email que parece vir do CEO, do contabilista ou de um fornecedor, pedindo uma transferência urgente ou a alteração de um IBAN. A vítima não deteta o engano porque o email aparece legítimo no cliente de correio.
+
+O que quase todas estas fraudes têm em comum: o domínio alvo não tinha DMARC configurado — ou tinha uma política permissiva que não bloqueava a entrega.
+
+SPF, DKIM e DMARC são três mecanismos de autenticação de email que trabalham em conjunto. São gratuitos, implementam-se em registos DNS em poucas horas, e quando corretamente configurados impedem que qualquer servidor no mundo envie email a fingir ser o seu domínio. Este guia explica o que é cada um, como verificar o estado atual do seu domínio, e como implementar os três do zero ou corrigir configurações incompletas.
+
+## O Problema: Como Funciona a Fraude de Email
+
+O protocolo SMTP, que governa o envio de email desde os anos 1980, não foi desenhado com autenticação em mente. Qualquer servidor pode declarar que está a enviar email de qualquer domínio — e os servidores de receção, por defeito, aceitam essa declaração.
+
+Isto significa que sem controlos adicionais, enviar um email que aparece como sendo de \`ceo@suaempresa.pt\` ou \`faturas@fornecedor.pt\` é trivial para qualquer atacante com um servidor SMTP básico.
+
+Verificar que o seu domínio está vulnerável:
+
+\`\`\`bash
+# Verificar SPF (deve existir um registo TXT no domínio raiz)
+dig TXT suaempresa.pt | grep spf
+
+# Verificar DMARC (deve existir um registo TXT em _dmarc.suaempresa.pt)
+dig TXT _dmarc.suaempresa.pt
+
+# Verificar DKIM (o seletor varia por provedor — ex. Google usa "google")
+dig TXT google._domainkey.suaempresa.pt
+\`\`\`
+
+Se estes comandos não retornarem registos, o seu domínio pode ser usado para enviar emails fraudulentos sem qualquer obstáculo técnico.
+
+Alternativa sem linha de comandos: **MXToolbox** (mxtoolbox.com) e **DMARC Analyzer** (dmarcadvisor.com/free-tools) têm verificadores online gratuitos — basta introduzir o domínio.
+
+## SPF — Sender Policy Framework
+
+### O que faz
+
+SPF define quais servidores têm autorização para enviar email em nome do seu domínio. É um registo TXT no DNS que lista IPs ou serviços autorizados. Quando um servidor recebe um email do seu domínio, consulta o SPF e verifica se o servidor que enviou está na lista.
+
+### Como criar o registo SPF
+
+O registo SPF é um registo TXT no DNS do domínio raiz (ex. \`suaempresa.pt\`). Tem este formato geral:
+
+\`\`\`
+v=spf1 [mecanismos] [política]
+\`\`\`
+
+Os mecanismos mais comuns:
+
+| Mecanismo | Significado |
+|-----------|-------------|
+| \`include:spf.protection.outlook.com\` | Autorizar Microsoft 365 |
+| \`include:_spf.google.com\` | Autorizar Google Workspace |
+| \`include:spf.brevo.com\` | Autorizar Brevo (Sendinblue) |
+| \`include:servers.mcsv.net\` | Autorizar Mailchimp |
+| \`ip4:185.12.34.0/24\` | Autorizar um IP ou bloco específico |
+| \`a\` | Autorizar o IP do registo A do domínio |
+| \`mx\` | Autorizar os servidores MX do domínio |
+
+A política final:
+- \`~all\` — SoftFail: emails de fontes não listadas são marcados suspeitos mas entregues (recomendado durante implementação)
+- \`-all\` — HardFail: emails de fontes não listadas são rejeitados (objetivo final)
+
+**Exemplos comuns**:
+
+Empresa com Microsoft 365 e Mailchimp:
+\`\`\`
+v=spf1 include:spf.protection.outlook.com include:servers.mcsv.net -all
+\`\`\`
+
+Empresa com Google Workspace e Brevo:
+\`\`\`
+v=spf1 include:_spf.google.com include:spf.brevo.com -all
+\`\`\`
+
+Empresa com servidor próprio (IP 203.0.113.10) e Microsoft 365:
+\`\`\`
+v=spf1 ip4:203.0.113.10 include:spf.protection.outlook.com -all
+\`\`\`
+
+### Erros frequentes no SPF
+
+**Múltiplos registos SPF**: Só pode existir UM registo SPF por domínio. Se criar um segundo, o primeiro é ignorado e o resultado é imprevisível. Se precisar de combinar múltiplas fontes, use \`include:\` no mesmo registo.
+
+**Demasiados lookups DNS**: O SPF tem um limite de 10 lookups DNS. Cada \`include:\` é um lookup, e os includes transitivos contam. Use ferramentas como SPF Surveyor para verificar o número real de lookups.
+
+**Esquecer subdomínios**: Se enviar email a partir de \`newsletter.suaempresa.pt\`, esse subdomínio precisa do seu próprio registo SPF (ou herda se usar wildcard — mas wildcards no SPF raramente são recomendados).
+
+**Esquecer serviços de terceiros**: Se usa Mailchimp, Brevo, ActiveCampaign, Hubspot, ou qualquer plataforma de email marketing, o SPF precisa de incluir os seus servidores. Consulte a documentação de cada plataforma para obter o \`include:\` correto.
+
+## DKIM — DomainKeys Identified Mail
+
+### O que faz
+
+DKIM adiciona uma assinatura criptográfica a cada email enviado. O servidor de envio assina o email com uma chave privada; o servidor de receção verifica a assinatura consultando a chave pública no DNS do domínio remetente. Se a assinatura for válida, prova que o email não foi modificado em trânsito e que foi enviado por um servidor com acesso à chave privada.
+
+### Como configurar DKIM
+
+O DKIM é configurado em duas partes: na plataforma de envio (que gera o par de chaves) e no DNS (onde se publica a chave pública).
+
+**Microsoft 365**:
+1. Aceder ao Microsoft Defender → Email & Collaboration → Policies & Rules → Threat Policies → Email Authentication Settings → DKIM
+2. Selecionar o domínio e clicar em "Enable" — o M365 gera automaticamente as chaves e pede-lhe para criar dois registos CNAME no DNS
+3. Criar os registos CNAME no painel de DNS do domínio
+4. Aguardar propagação (15 minutos a 48 horas) e ativar
+
+**Google Workspace**:
+1. Aceder a Admin Console → Apps → Google Workspace → Gmail → Authenticate email
+2. Selecionar o domínio e clicar em "Generate new record"
+3. Copiar o registo TXT gerado e criar no painel de DNS
+4. Após propagação, clicar em "Start authentication"
+
+**Brevo/Sendinblue**:
+Aceder a Brevo → Account → Senders, Domains & Dedicated IPs → Domains → Authenticate. Seguir as instruções para criar os registos CNAME no DNS.
+
+**Mailchimp**:
+Aceder a Audience → Manage Contacts → Settings → Domains → Authenticate Domain. Seguir as instruções para criar registos CNAME.
+
+### Verificar DKIM ativo
+
+Após configurar, enviar um email de teste para uma conta Gmail e verificar nos cabeçalhos do email recebido:
+- Clicar nos três pontos → "Show original" / "Ver original"
+- Procurar \`DKIM=PASS\` na secção de autenticação
+
+## DMARC — Domain-based Message Authentication, Reporting & Conformance
+
+### O que faz
+
+DMARC é o mecanismo de controlo que ata SPF e DKIM. Define o que os servidores de receção devem fazer quando um email falha a verificação SPF e DKIM, e para onde enviar relatórios sobre emails que usam o seu domínio.
+
+O DMARC introduz o conceito de "alinhamento": para um email passar DMARC, o domínio no cabeçalho \`From:\` (o que o utilizador vê no cliente de email) deve corresponder ao domínio verificado pelo SPF ou DKIM. Isto é o que impede a fraude — mesmo que um atacante consiga passar SPF num domínio técnico diferente, o \`From:\` visível não alinha.
+
+### Criar o registo DMARC
+
+O DMARC é um registo TXT em \`_dmarc.suaempresa.pt\`. Estrutura:
+
+\`\`\`
+v=DMARC1; p=POLÍTICA; rua=mailto:relatorios@suaempresa.pt; ruf=mailto:forense@suaempresa.pt; pct=100
+\`\`\`
+
+Parâmetros principais:
+
+| Parâmetro | Valores | Significado |
+|-----------|---------|-------------|
+| \`p=\` | \`none\`, \`quarantine\`, \`reject\` | Política para emails que falham |
+| \`rua=\` | endereço email | Relatórios agregados diários |
+| \`ruf=\` | endereço email | Relatórios forenses por mensagem |
+| \`pct=\` | 1-100 | Percentagem de emails afetados pela política |
+| \`adkim=\` | \`r\` (relaxed), \`s\` (strict) | Alinhamento DKIM |
+| \`aspf=\` | \`r\` (relaxed), \`s\` (strict) | Alinhamento SPF |
+
+### Estratégia de implementação faseada
+
+Nunca ativar \`p=reject\` imediatamente. Existe sempre o risco de ter serviços legítimos a enviar email que ainda não estão no SPF ou sem DKIM configurado — com \`p=reject\`, esses emails seriam silenciosamente bloqueados.
+
+**Fase 1 — Monitorização (semana 1-2)**:
+\`\`\`
+v=DMARC1; p=none; rua=mailto:dmarc@suaempresa.pt; pct=100
+\`\`\`
+Nenhum email é bloqueado. Os relatórios chegam diariamente com informação sobre todos os servidores que enviam email em nome do domínio. Analisar os relatórios para identificar fontes legítimas que ainda não estão no SPF/DKIM.
+
+**Fase 2 — Quarentena parcial (semana 3-4)**:
+\`\`\`
+v=DMARC1; p=quarantine; rua=mailto:dmarc@suaempresa.pt; pct=25
+\`\`\`
+25% dos emails que falham DMARC vão para spam. Monitorizar se há reclamações de emails legítimos a não chegar. Aumentar \`pct=\` gradualmente.
+
+**Fase 3 — Quarentena total (semana 5-6)**:
+\`\`\`
+v=DMARC1; p=quarantine; rua=mailto:dmarc@suaempresa.pt; pct=100
+\`\`\`
+
+**Fase 4 — Rejeição (semana 7+)**:
+\`\`\`
+v=DMARC1; p=reject; rua=mailto:dmarc@suaempresa.pt; pct=100
+\`\`\`
+Objetivo final. Emails não autenticados são rejeitados na entrega — nunca chegam ao destinatário.
+
+### Ler os relatórios DMARC
+
+Os relatórios DMARC chegam em formato XML — difíceis de ler diretamente. Usar uma das ferramentas gratuitas de visualização:
+
+- **Postmark DMARC** (dmarc.postmarkapp.com) — gratuito, recebe relatórios em nome do domínio e apresenta dashboard
+- **Dmarcian** — tier gratuito para domínios pequenos
+- **DMARC Analyzer** — trial gratuito
+
+Para configurar o Postmark DMARC: criar conta gratuita, obter o endereço de forwarding fornecido, e usar esse endereço no \`rua=\` do registo DMARC. O Postmark processa os relatórios XML e apresenta uma dashboard clara.
+
+## Subdomínios e Domínios de Email Dedicados
+
+### Subdomínios
+
+A política DMARC do domínio raiz aplica-se automaticamente aos subdomínios, a menos que estes tenham a sua própria política. Para maior controlo, pode especificar uma política separada para subdomínios com o parâmetro \`sp=\`:
+
+\`\`\`
+v=DMARC1; p=reject; sp=reject; rua=mailto:dmarc@suaempresa.pt
+\`\`\`
+
+Se usa \`marketing.suaempresa.pt\` para enviar campanhas, este subdomínio precisa do seu próprio SPF e DKIM — ou os emails irão falhar DMARC.
+
+### Domínios que não enviam email
+
+Se tiver domínios registados que nunca enviam email (ex. variantes defensivas: \`suaempresa.com\`, \`suaempresa.net\`), configure-os com uma política DMARC de bloqueio total:
+
+\`\`\`
+# SPF — rejeitar tudo
+v=spf1 -all
+
+# DMARC — rejeitar tudo
+v=DMARC1; p=reject; sp=reject
+\`\`\`
+
+Isto impede que atacantes usem estes domínios para fraude.
+
+## Contexto Português: AT, MB Way e Fraudes Locais
+
+Em Portugal, os ataques de BEC exploram frequentemente:
+
+**Phishing a imitar a Autoridade Tributária**: Emails com notificações de dívidas fiscais urgentes ou reembolsos. Se o domínio \`at.gov.pt\` tiver DMARC \`p=reject\`, emails fraudulentos que imitam este domínio são rejeitados — mas domínios de empresas privadas sem DMARC continuam vulneráveis a variantes desta técnica.
+
+**Fraude de IBAN em transações B2B**: O atacante compromete ou imita o email de um fornecedor, monitoriza correspondência de faturação, e no momento certo envia um email com "novo IBAN" para pagamento. Com DMARC \`p=reject\` no domínio do fornecedor, emails falsificados desse domínio são bloqueados.
+
+**Faturas fraudulentas de fornecedores conhecidos**: Mesmo sem comprometer o domínio real do fornecedor, atacantes usam domínios similares (typosquatting: \`suafornecedor.pt\` vs \`suafornecedores.pt\`). DMARC no domínio original não bloqueia estes ataques, mas o protocolo completo de verificação de IBAN (telefonema de confirmação) sim.
+
+## Checklist de Implementação
+
+**Fase de diagnóstico** (30 minutos):
+- [ ] Verificar SPF atual com \`dig TXT suaempresa.pt | grep spf\`
+- [ ] Verificar DMARC atual com \`dig TXT _dmarc.suaempresa.pt\`
+- [ ] Verificar DKIM para os seletores dos provedores usados
+- [ ] Inventariar todos os serviços que enviam email em nome do domínio (CRM, newsletter, ERP, faturação)
+
+**Implementar SPF** (1-2 horas):
+- [ ] Criar ou atualizar registo SPF com todos os serviços autorizados
+- [ ] Começar com \`~all\` (SoftFail)
+- [ ] Verificar com MXToolbox
+- [ ] Após 48h sem problemas, mudar para \`-all\` (HardFail)
+
+**Implementar DKIM** (1-2 horas por provedor):
+- [ ] Ativar DKIM no Microsoft 365 ou Google Workspace
+- [ ] Criar registos DNS conforme instruções do provedor
+- [ ] Verificar com email de teste (headers do Gmail)
+
+**Implementar DMARC** (1 semana faseada):
+- [ ] Criar registo \`p=none\` com endereço \`rua=\`
+- [ ] Configurar ferramenta de visualização (Postmark DMARC ou similar)
+- [ ] Analisar relatórios por 1-2 semanas
+- [ ] Resolver fontes legítimas não autenticadas
+- [ ] Progredir para \`p=quarantine\` → \`p=reject\`
+
+**Verificação final**:
+- [ ] Enviar email de teste e verificar \`DMARC=PASS\` nos headers
+- [ ] Confirmar que emails de marketing e transacionais continuam a ser entregues
+- [ ] Documentar configuração e data de implementação
+
+---
+
+Implementar SPF, DKIM e DMARC é uma das ações de segurança com maior retorno por hora investida. Não requer software, não tem custo, e elimina uma classe inteira de ataques. Uma PME que chega a \`p=reject\` com alinhamento correto torna o seu domínio significativamente mais difícil de usar para fraude — tanto para atacar os seus clientes como para atacar a própria empresa em nome de fornecedores. O processo completo, feito com atenção, leva entre quatro e seis semanas.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-28",
+    readingTime: 16,
+    author: {
+      name: "Carlos Miranda",
+      title: "Consultor de Cibersegurança",
+    },
+  },
+  {
+    slug: "ciberseguranca-transportes-logistica-transportadoras-portugal",
+    title: "Cibersegurança para Transportes, Logística e Transportadoras em Portugal",
+    excerpt:
+      "Uma transportadora comprometida não perde apenas dados — perde o controlo de frotas, rotas e cargas em trânsito. O setor dos transportes em Portugal opera com margens reduzidas e infraestrutura digital crescente: TMS, GPS, portais de clientes e CMR digital criam uma superfície de ataque que poucos gestores conhecem bem.",
+    content: `O setor dos transportes e logística em Portugal emprega mais de 200 mil pessoas e é constituído maioritariamente por PMEs: transportadoras familiares com 5 a 50 viaturas, operadores de armazéns regionais, empresas de distribuição last-mile, e agentes de transitários. A digitalização acelerou — GPS em tempo real nas viaturas, TMS (Transport Management Systems), CMR digital, portais de rastreamento para clientes, integração EDI com fornecedores e retalhistas. Com esta digitalização chegou uma superfície de ataque que o setor ainda não integrou completamente na sua gestão de risco.
+
+Em 2021, um ataque ransomware à empresa de logística australiana Toll Group — segunda maior do país — paralisou as operações durante semanas. Em 2022, a TNT (parte do FedEx) nunca recuperou totalmente após o ataque NotPetya, com prejuízos estimados em 300 milhões de dólares. Em Portugal, empresas de menor dimensão sofreram ataques semelhantes com menos cobertura mediática mas consequências proporcionalmente graves: impossibilidade de emitir guias de transporte, perda de histórico de entregas, e paragem de frotas por falta de acesso aos sistemas de coordenação.
+
+## Sistemas de Gestão de Transportes (TMS) e Software de Despacho
+
+O TMS é o sistema nervoso de uma transportadora: coordena ordens de transporte, atribui viagens a motoristas, gera documentação (CMR, guias), integra com faturação e controla KPIs operacionais. Em Portugal, os sistemas mais usados incluem:
+
+- **Primavera Logistics** e **PHC CS** (com módulo de transportes)
+- **TruckStar** da Transics
+- **Asprova** e **Ortec** para otimização de rotas
+- **Soluções próprias** baseadas em Excel avançado ou Access — ainda comuns em transportadoras familiares
+
+Os riscos específicos do TMS:
+
+**Credenciais partilhadas entre motoristas e gestores**: É frequente encontrar uma única password para "o sistema" que todos os funcionários conhecem e que nunca foi alterada desde a implementação. Se um motorista sair da empresa, o acesso mantém-se. Solução: contas individuais por utilizador, com perfis de acesso diferenciados (motorista só vê as suas viagens; gestor de frota tem acesso completo; contabilidade acede a faturação).
+
+**TMS acessível diretamente via internet sem VPN**: Alguns TMS são configurados com acesso web direto para facilitar o acesso remoto. Se o sistema não usa MFA e tem uma porta de login pública, está exposto a ataques de força bruta. Solução: acesso remoto exclusivamente via VPN; se o acesso web é necessário, ativar MFA obrigatório.
+
+**Backup do TMS**: Uma transportadora sem TMS funcional não consegue coordenar operações. O backup da base de dados do TMS (frequentemente SQL Server ou MySQL) deve ser diário, testado mensalmente, e a cópia off-site deve ser verificada.
+
+## GPS e Telemática de Frotas
+
+O rastreamento GPS das viaturas tornou-se universal no setor. Em Portugal, as plataformas mais comuns incluem **Webfleet** (da Bridgestone), **Samsara**, **Verizon Connect**, **Bsafe** e **OmniTrans**. Estas plataformas expõem informação crítica: posição em tempo real de todas as viaturas, histórico de rotas, dados de condução, e por vezes a possibilidade de bloquear remotamente uma viatura.
+
+Riscos:
+
+**Credenciais por defeito não alteradas**: Plataformas GPS são frequentemente instaladas pela empresa fornecedora com credenciais temporárias que nunca são alteradas. Um atacante com acesso à plataforma sabe em tempo real onde estão todas as viaturas e cargas — informação valiosa para roubo de mercadoria.
+
+**Contas partilhadas por toda a equipa de despacho**: Se todos os despachadores usam a mesma conta para aceder à plataforma GPS, não existe forma de rastrear quem consultou o quê, e uma conta comprometida dá acesso total.
+
+**APIs de integração sem autenticação adequada**: Algumas transportadoras integram a plataforma GPS com o TMS ou o ERP via API. Se estas APIs não usam tokens de autenticação seguros ou têm excesso de permissões, um acesso à API expõe dados de toda a frota.
+
+Medidas práticas:
+- Alterar todas as credenciais por defeito no dia da instalação
+- Criar contas individuais por utilizador em todas as plataformas GPS
+- Ativar MFA nas contas de administrador
+- Rever e revogar acessos de ex-funcionários no mesmo dia da saída
+- Se a plataforma GPS permite bloqueio remoto de viaturas, restringir esta permissão ao mínimo de utilizadores necessário
+
+## Comunicação com Motoristas
+
+A comunicação em tempo real com motoristas é operacionalmente crítica. Na prática, a maioria das transportadoras usa WhatsApp — por ser gratuito, imediato, e porque os motoristas já o têm instalado.
+
+O problema não é o WhatsApp em si, mas as práticas associadas:
+
+**Grupos de WhatsApp com todos os motoristas**: Partilhar informação de carga, valores de mercadoria, ou rotas específicas em grupos com dezenas de participantes cria um risco de exposição desnecessário.
+
+**Documentos com dados de clientes partilhados via WhatsApp**: CMRs, guias de transporte, e documentos aduaneiros contêm frequentemente dados pessoais de clientes e informação comercial sensível. Partilhados em grupos sem controlo de retenção.
+
+**Contas WhatsApp pessoais para comunicação empresarial**: Quando um motorista sai, os dados continuam no seu telemóvel pessoal. Não existe forma de revogar o acesso a histórico de conversas.
+
+Alternativas práticas para PMEs com orçamento limitado:
+- **WhatsApp Business** com número dedicado da empresa (não do motorista pessoal)
+- Para equipas maiores: **Signal for Organizations** ou soluções de despacho integradas no TMS com app para motoristas
+- Estabelecer uma política clara: rotas e cargas de alto valor comunicados apenas por canal dedicado, não em grupos gerais
+
+## Portais de Rastreamento para Clientes
+
+Muitas transportadoras oferecem portais web onde os clientes rastreiam encomendas em tempo real. Estes portais são frequentemente desenvolvidos por terceiros ou baseados em soluções white-label. Os riscos:
+
+**Enumeração de guias de transporte**: Se o número de guia é sequencial e o portal não tem rate limiting, um atacante pode testar múltiplos números e obter informação sobre expedições de clientes concorrentes.
+
+**Acesso não autenticado a informação de entrega**: Portais que apenas pedem o número de guia (sem autenticação adicional) expõem moradas de entrega e nomes de destinatários — dados pessoais com obrigações RGPD.
+
+**Gestão inadequada de contas de clientes**: Se clientes têm login no portal, a gestão de passwords fracas, ausência de MFA para contas com acesso a muitos expedidores, e ausência de log de acesso são vulnerabilidades comuns.
+
+## Phishing Direcionado ao Setor
+
+As transportadoras são alvo de três tipos específicos de phishing:
+
+**Phishing a imitar a Autoridade Tributária e a Alfândega**: Emails urgentes sobre retenção de carga, declarações aduaneiras em falta, ou regularizações fiscais. A urgência operacional (a carga está bloqueada, o cliente está à espera) leva funcionários a clicar sem verificar.
+
+**BEC para alteração de IBAN de fornecedores de combustível e portagens**: O combustível e as portagens representam custos fixos elevados. Um atacante que compromete ou imita o email de um fornecedor de gasóleo a granel ou de uma empresa de gestão de Via Verde pode solicitar "atualização de IBAN" com argumentação plausível (migração bancária, novo contrato). Processo de verificação obrigatório: telefonema para número conhecido antes de qualquer alteração de dados bancários.
+
+**Phishing a imitar plataformas de gestão de frota**: Emails a solicitar atualização de credenciais da plataforma GPS ou do portal de clientes, com link para página falsa. Os funcionários de despacho, sob pressão operacional, são alvos especialmente vulneráveis.
+
+Formação específica para o setor: os funcionários de despacho e contabilidade devem conhecer os vetores de fraude específicos da indústria — não basta formação genérica sobre phishing.
+
+## Documentação Digital: CMR Eletrónico e EDI
+
+**eCMR** (Carta de Porte Eletrónica sob a Convenção e-CMR) e integração EDI com clientes grandes (retalhistas, fabricantes) introduzem riscos adicionais:
+
+**Gestão de certificados para assinatura eletrónica de CMRs**: Os certificados têm prazo de validade. Um certificado expirado que não é renovado pode paralisar a emissão de documentação de transporte internacional.
+
+**Integração EDI sem validação de mensagens**: Conexões EDI com clientes grandes usando protocolos AS2 ou SFTP devem ter autenticação mútua e validação de mensagens. Conexões EDI configuradas com credenciais fracas ou chaves privadas mal geridas são um vetor de acesso a sistemas internos.
+
+**Portais de agentes transitários e plataformas de booking**: Portais como **Freightos**, **Flexport** ou portais proprietários de companhias de navegação têm dados de expedições internacionais. Credenciais comprometidas expõem informação de carga, valores segurados, e dados de clientes.
+
+## NIS2 e o Setor dos Transportes
+
+A Diretiva NIS2, transposta em Portugal pelo Decreto-Lei n.º 125/2025, classifica as empresas de transporte rodoviário, ferroviário, aéreo e marítimo como **entidades importantes** — desde que cumpram os limiares de dimensão (≥50 colaboradores ou ≥10M€ de volume de negócios) ou que sejam identificadas como infraestrutura crítica independentemente da dimensão.
+
+Para uma transportadora portuguesa de média dimensão (50-200 funcionários), as principais obrigações NIS2 relevantes:
+
+- **Gestão de risco de cibersegurança**: Identificação de ativos críticos (TMS, GPS, EDI), avaliação de riscos documentada, medidas de segurança proporcionais
+- **Notificação de incidentes**: Notificação ao CNCS em 24 horas para incidentes significativos (ransomware que paralisa operações, compromisso de dados de clientes)
+- **Segurança na cadeia de fornecimento**: Avaliação de fornecedores críticos (plataformas GPS, TMS, parceiros EDI)
+- **Continuidade de negócio**: Planos documentados para operação em caso de ataque (processos manuais de contingência, contactos de emergência, recuperação de dados)
+
+Para transportadoras abaixo dos limiares NIS2, as obrigações formais não se aplicam — mas os riscos operacionais são os mesmos. Implementar controlos básicos (MFA, backup, contas individuais, política de offboarding) protege a operação independentemente do enquadramento regulatório.
+
+## Checklist Prática para Transportadoras
+
+**Identidade e acessos**:
+- [ ] Contas individuais por utilizador em TMS, GPS e portal de clientes
+- [ ] MFA obrigatório em todas as plataformas com acesso remoto
+- [ ] Processo documentado de offboarding: revogar todos os acessos no dia da saída
+- [ ] Credenciais de instalação (plataformas GPS, routers) alteradas na data de setup
+
+**Dados operacionais**:
+- [ ] Backup diário do TMS com cópia off-site
+- [ ] Teste mensal de restauro de backup (pelo menos de uma viagem recente)
+- [ ] Processo manual de contingência documentado (como coordenar operações sem TMS)
+
+**Comunicações**:
+- [ ] Política para comunicação de rotas e cargas de alto valor (canal dedicado, não grupo geral)
+- [ ] Protocolo de verificação antes de alterar IBANs de fornecedores (telefonema obrigatório)
+- [ ] Formação anual para equipa de despacho e contabilidade sobre BEC e phishing do setor
+
+**Infraestrutura**:
+- [ ] Separação da rede de escritório da rede WiFi de visitantes e motoristas
+- [ ] Dispositivos de motoristas (tablets de bordo) em VLAN separada da rede de gestão
+- [ ] Antivírus atualizado em todos os computadores de escritório
+
+---
+
+O setor dos transportes opera com pressão de tempo constante — uma ordem de entrega atrasada tem custos directos e consequências contratuais. Os atacantes conhecem esta pressão e exploram-na deliberadamente: a urgência operacional é o principal fator que leva funcionários a clicar em links suspeitos ou a autorizar transferências sem verificação. Controlos técnicos básicos (MFA, backup, contas individuais) combinados com treino específico para os vetores do setor constroem uma resiliência que não abrandará as operações — pelo contrário, a capacidade de recuperar rapidamente de um incidente é, em si mesma, uma vantagem competitiva.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-28",
+    readingTime: 15,
+    author: {
+      name: "Rita Santos",
+      title: "Analista de Segurança",
+    },
+  },
+  {
+    slug: "ciberseguranca-comercio-retalho-lojas-portugal",
+    title: "Cibersegurança para o Comércio Retalhista e Lojas em Portugal",
+    excerpt:
+      "Uma loja com POS comprometido pode perder os dados de cartão de todos os clientes sem dar por isso durante semanas. O comércio a retalho em Portugal é o maior setor em número de PMEs, e combina pagamentos, dados de clientes, presença nas redes sociais, e frequentemente uma loja online — uma combinação de riscos que merece atenção específica.",
+    content: `O comércio a retalho é o setor com mais empresas em Portugal: lojas de roupa, calçado, eletrónica, ferramentas, cosméticos, livrarias, papelarias, floristas, lojas de desporto, e centenas de outras categorias. A maioria são PMEs com 1 a 20 colaboradores, sem departamento de IT, e com uma digitalização que cresceu rapidamente nos últimos anos — terminais de pagamento, software de ponto de venda, lojas online integradas com o stock físico, e presença ativa nas redes sociais como canal de vendas.
+
+Esta combinação — pagamentos em cartão, dados de clientes em programas de fidelização, presença digital, e pouca ou nenhuma proteção técnica especializada — faz do retalho um dos setores mais atacados a nível mundial. Em Portugal, o vetor mais comum não é um ataque sofisticado: é uma password fraca num sistema de ponto de venda, um computador de balcão infetado com malware que exfiltra dados de cartão, ou um perfil de Instagram sequestrado.
+
+## Sistemas de Ponto de Venda (POS)
+
+O POS é o centro nevrálgico de uma loja: processa pagamentos, gere stock, emite recibos, e frequentemente integra com a contabilidade. Em Portugal, os sistemas mais comuns incluem:
+
+- **PHC FX** e **Primavera POS** para médias lojas
+- **RUNIT** e **Lightspeed** para lojas de moda e multi-loja
+- **Linx** e soluções baseadas em tablet (Square, SumUp POS) para pequenos retalhistas
+- **Sistemas proprietários** de fabricantes de software local
+
+Os riscos específicos do POS:
+
+**Software desatualizado**: Muitos sistemas POS correm em Windows 7 ou Windows 10 sem atualizações aplicadas — o custo de atualizar o software POS ou do sistema operativo parece desnecessário enquanto "está a funcionar". Mas sistemas sem patches são vulneráveis a malware que captura dados de cartão (RAM scrapers) que se instalam silenciosamente e exfiltram dados durante semanas.
+
+**Ligação à internet com o POS em rede partilhada**: Se o computador do POS está na mesma rede que o WiFi da loja, os terminais de pagamento, e o computador do escritório, um dispositivo comprometido pode atacar o POS diretamente.
+
+**Credenciais por defeito**: Software POS instalado por parceiros de revenda frequentemente usa passwords de administrador predefinidas ("admin/admin", "1234") que nunca são alteradas. Um atacante com acesso físico ou remoto à rede da loja pode comprometer o POS em minutos.
+
+**Acesso remoto ao POS via TeamViewer ou AnyDesk sem proteção**: O suporte técnico do software POS frequentemente instala ferramentas de acesso remoto para resolver problemas. Se estas ferramentas não têm password forte e MFA, são um vetor de acesso permanente.
+
+Medidas essenciais para o POS:
+- Manter o sistema operativo e o software POS atualizados
+- Rede dedicada para POS e terminais de pagamento, separada do WiFi geral e de outros computadores
+- Alterar todas as credenciais de administrador na instalação
+- Desinstalar ferramentas de acesso remoto quando não estão a ser usadas, ou configurar com autenticação forte
+
+## Terminais Multibanco e PCI DSS Básico
+
+Os terminais de pagamento (TPA — Terminal de Pagamento Automático) em Portugal são maioritariamente geridos por SIBS, Unicre, ou bancos que fornecem os terminais em regime de aluguer. A segurança dos terminais em si é responsabilidade do fornecedor — mas os comerciantes têm obrigações PCI DSS (Payment Card Industry Data Security Standard) relevantes.
+
+**O que os retalhistas não devem fazer**:
+- Nunca armazenar dados de cartão (número completo, CVV, track data) em qualquer sistema — esta é uma violação grave do PCI DSS e uma responsabilidade legal
+- Nunca fotografar ou fotocopiar cartões de clientes
+- Nunca usar terminais que mostrem sinais de manipulação física (skimmers instalados sobre o leitor de cartão, câmeras adicionadas à caixa)
+
+**Inspeção física regular dos terminais**: Em lojas de fluxo elevado, skimmers físicos são instalados por grupos criminosos. Inspeccionar o terminal no início de cada dia: verificar se existe qualquer acessório adicional no leitor de cartão, se o teclado parece alterado, e se existem objetos estranhos na área do terminal.
+
+**Rede dedicada para os terminais**: Os terminais multibanco devem estar em rede separada do POS e dos computadores de escritório. Na prática, para uma loja pequena, isto significa uma VLAN dedicada no router ou um router secundário só para os terminais.
+
+## WiFi: Redes da Loja vs. Redes de Administração
+
+Uma loja com WiFi tem tipicamente três tipos de utilizadores de rede:
+
+1. **Clientes** que se ligam ao WiFi gratuito da loja
+2. **Funcionários** que usam dispositivos pessoais
+3. **Sistemas da loja**: POS, terminais de pagamento, sistemas de segurança (câmeras IP)
+
+Se todos partilham a mesma rede, um cliente com conhecimentos técnicos (ou malware no seu telemóvel) pode atacar o POS ou as câmeras de segurança.
+
+Configuração recomendada para uma loja com router doméstico/de escritório:
+- **Rede principal (SSID "Loja-Operacoes")**: POS, terminais, câmeras, computador do escritório — sem acesso de clientes
+- **Rede de convidados (SSID "Loja-Clientes")**: WiFi gratuito para clientes, isolado da rede principal
+
+A maioria dos routers modernos (incluindo os da NOS, MEO, e Vodafone Business) suporta redes de convidado com isolamento de clientes. Esta configuração leva 10 minutos e elimina um risco significativo.
+
+## Lojas Online Integradas com Stock Físico
+
+A combinação de loja física e loja online tornou-se o padrão para muitos retalhistas. As plataformas mais comuns em Portugal incluem:
+
+- **WooCommerce** (WordPress) — mais comum entre pequenas lojas
+- **Shopify** — crescimento rápido especialmente em moda e cosméticos
+- **PrestaShop** — base instalada significativa em PMEs portuguesas
+- **Magento/Adobe Commerce** — lojas de maior volume
+- **Looja.pt**, **E-konomista** — soluções locais
+
+Riscos específicos das lojas online:
+
+**Plugins desatualizados em WooCommerce e PrestaShop**: A maioria dos ataques a lojas online não é sofisticada — explora vulnerabilidades conhecidas em plugins populares. Um plugin de payments ou de seo não atualizado pode ter uma vulnerabilidade pública que permite ao atacante instalar código malicioso (web skimmer) que captura dados de cartão durante o checkout.
+
+Verificar frequência de atualizações: aceder ao painel de administração da loja e aplicar todas as atualizações disponíveis. Em WooCommerce, as atualizações de segurança são marcadas com urgência. Em PrestaShop, subscrever as notificações de segurança da plataforma.
+
+**Credenciais de administrador fracas na plataforma de e-commerce**: O painel \`/wp-admin\` de WordPress/WooCommerce é massivamente atacado com força bruta. Usar uma password com 20+ caracteres aleatórios e MFA (através de um plugin como WP 2FA ou Wordfence).
+
+**Chaves de API de pagamento no código da loja**: Se as chaves de API do Stripe, MB Way (via Eupago ou Ifthenpay), ou Paypal estão hardcoded no código da loja ou num ficheiro \`.env\` sem proteção, qualquer pessoa com acesso ao servidor pode usá-las. Usar variáveis de ambiente e confirmar que o ficheiro \`.env\` não está acessível publicamente.
+
+**HTTPS e certificados SSL**: A loja online DEVE usar HTTPS. Além da segurança, o Google penaliza lojas sem HTTPS nos resultados de pesquisa. Verificar que o certificado SSL não expirou — muitos retalhistas descobrem que a loja está a mostrar erros de certificado apenas quando um cliente reclama.
+
+## Redes Sociais como Canal de Vendas: Risco de Sequestro
+
+Instagram, Facebook e TikTok tornaram-se canais de venda primários para muitas lojas — especialmente em moda, beleza, e produtos artesanais. O sequestro de contas de redes sociais é um risco real e frequente em Portugal.
+
+**Como acontece o sequestro**:
+1. A loja recebe um DM (mensagem direta) no Instagram aparentemente de uma marca, influencer, ou parceiro comercial com uma proposta de colaboração
+2. O link no DM leva a uma página falsa de login do Instagram ou Facebook que captura as credenciais
+3. O atacante acede à conta, muda as credenciais de acesso, e exige resgate para devolver o acesso — ou usa a conta para scams contra os seguidores
+
+**Proteção essencial**:
+- Autenticação de dois fatores (2FA) **via app autenticadora** (Google Authenticator, Authy) — nunca via SMS que pode ser intercetado
+- Configurar o Meta Business Manager (business.facebook.com) para gerir as contas da loja: permite ter vários administradores com acesso separado do perfil pessoal, e revogar acessos sem perder a conta
+- Nunca clicar em links recebidos por DM para "validar" a conta ou aceder a "painel de parceiros"
+- Verificar regularmente as "sessões ativas" no Instagram e Facebook para detetar acessos não autorizados
+- Fazer download periódico dos dados da conta (Instagram permite exportar posts, seguidores, e mensagens)
+
+## Programas de Fidelização e Dados de Clientes
+
+Programas de fidelização — cartões de pontos, aplicações de fidelidade, newsletters promocionais — recolhem dados pessoais de clientes: nome, email, telefone, historial de compras, e por vezes data de nascimento e morada.
+
+Estes dados têm obrigações RGPD:
+
+**Base legal para o tratamento**: O programa de fidelização requer consentimento explícito para os fins específicos (acumulação de pontos, envio de promoções). O consentimento não pode ser bundled com os termos de compra — deve ser uma caixa de opt-in separada e voluntária.
+
+**Retenção de dados**: Dados de clientes inativos devem ser eliminados após um período razoável (geralmente 2-3 anos sem transação, salvo obrigações de conservação contabilística).
+
+**Gestão de fornecedores de CRM**: Se usa uma plataforma de CRM ou email marketing (Mailchimp, Brevo, Klaviyo), é necessário um DPA (Data Processing Agreement) com o fornecedor. As principais plataformas já fornecem este documento nos seus termos.
+
+**Notificação de violação**: Se a base de dados de clientes for comprometida, a notificação à CNPD deve ser feita em 72 horas se o incidente representa risco para os direitos dos titulares.
+
+## Épocas de Maior Risco: Black Friday e Natal
+
+O comércio retalhista tem um padrão sazonal de risco acentuado: Black Friday, Natal, e saldos de janeiro são períodos onde:
+
+- O volume de transações aumenta drasticamente, tornando mais difícil detetar transações fraudulentas
+- A pressão operacional leva a menos atenção a alertas de segurança
+- Funcionários temporários têm acesso a sistemas sem treino de segurança adequado
+- Atacantes aumentam a intensidade de ataques de phishing e skimming
+
+Preparação sazonal de segurança:
+- Rever e revogar acessos de funcionários temporários anteriores antes de cada época
+- Briefing de segurança para funcionários temporários contratados: password da caixa não se partilha, não se clica em links em emails de "atualização urgente do sistema"
+- Verificação física dos terminais multibanco no início de cada dia durante períodos de maior tráfego
+- Monitorizar alertas do sistema de POS para transações fora do padrão habitual
+
+## Gestão de Funcionários e Offboarding
+
+Em lojas com alta rotatividade — frequente no retalho — a gestão de acessos é crítica:
+
+**Contas individuais**: Cada funcionário deve ter a sua própria conta no sistema POS, não uma conta partilhada "balcão". Isto permite rastrear transações a um funcionário específico em caso de irregularidade.
+
+**Processo de offboarding**: No dia em que um funcionário sai:
+- Revogar acesso ao POS
+- Revogar acesso ao email da empresa (se tiver)
+- Remover do grupo de WhatsApp de comunicação da equipa
+- Alterar a password do WiFi da loja se o funcionário a conhecia
+- Recuperar quaisquer chaves físicas ou cartões de acesso
+
+**Acesso de back-office por função**: O funcionário de balcão não precisa de acesso às configurações do sistema ou ao histórico de faturação. Configurar perfis de acesso no POS com permissões mínimas necessárias por função.
+
+## Checklist de Cibersegurança para Retalhistas
+
+**Pagamentos e POS**:
+- [ ] Software POS e sistema operativo atualizados
+- [ ] Rede separada para POS e terminais multibanco
+- [ ] Credenciais de administrador do POS alteradas (não usar password de instalação)
+- [ ] Ferramentas de acesso remoto para suporte técnico protegidas com MFA
+- [ ] Inspeção física dos terminais no início de cada dia
+
+**Loja online** (se aplicável):
+- [ ] Todas as atualizações de plugins aplicadas
+- [ ] MFA ativo no painel de administração
+- [ ] Certificado SSL válido e HTTPS em toda a loja
+- [ ] Chaves de API de pagamento em variáveis de ambiente, não no código
+
+**Redes sociais e presença digital**:
+- [ ] 2FA via app autenticadora em Instagram e Facebook
+- [ ] Meta Business Manager configurado para gestão das páginas
+- [ ] Revisão mensal de sessões ativas e aplicações com acesso
+
+**Dados de clientes**:
+- [ ] Consentimento RGPD documentado para programa de fidelização
+- [ ] DPA com fornecedores de CRM e email marketing
+- [ ] Processo de eliminação de dados de clientes inativos
+
+**Equipa**:
+- [ ] Contas individuais por funcionário no POS
+- [ ] Processo de offboarding documentado e seguido na prática
+- [ ] Briefing de segurança para funcionários temporários em épocas sazonais
+
+---
+
+O comércio retalhista em Portugal opera com margens reduzidas e sob pressão operacional constante — as prioridades do dia-a-dia deixam pouco espaço para segurança informática. Mas os riscos são proporcionais à exposição: pagamentos em cartão, dados de clientes, e presença digital são ativos que os atacantes conhecem bem. Os controlos mais impactantes para uma loja — rede separada para o POS, MFA nas redes sociais, atualizar software, e processo de offboarding rigoroso — não requerem IT especializado nem orçamento significativo. Requerem atenção, uma vez, e a disciplina de manter.`,
+    category: "boas-praticas",
+    categoryLabel: "Boas Praticas",
+    publishedAt: "2026-04-28",
+    readingTime: 16,
+    author: {
+      name: "Carlos Miranda",
+      title: "Consultor de Cibersegurança",
+    },
+  },
 ];
 
 export function getPostBySlug(slug: string): Post | undefined {
